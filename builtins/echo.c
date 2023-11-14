@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 16:06:16 by juandrie          #+#    #+#             */
-/*   Updated: 2023/11/14 11:22:12 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/11/14 18:36:05 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void echo(char **av)
     int i;
     int newline;
 
-    i = 2;
+    i = 1;
     newline = 0;
     
     if(av[1] != NULL && strcmp(av[1], "-n") == 0)
