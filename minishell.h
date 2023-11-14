@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:46:13 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/14 15:20:00 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/11/14 15:22:53 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@
 
 typedef struct s_single_quotes {
 	int	number;
-} 	t_single_quotes;
+}	t_single_quotes;
 
 typedef struct s_parsed {
 	char			**command;
@@ -43,6 +43,6 @@ typedef struct s_parsed {
 	int				outfile;
 	int				error;
 	struct s_parsed	*next;
-} t_parsed;
+}	t_parsed;
 
 #endif
