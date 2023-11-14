@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:46:13 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/14 15:03:29 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/11/14 15:28:52 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,5 +32,18 @@
 # include <termios.h>
 # include <curses.h>
 # include <term.h>
+
+typedef struct s_quotes {
+	int	single_quotes;
+	int	double_quotes;
+}	t_quotes;
+
+typedef struct s_parsed {
+	char			**command;
+	int				infile;
+	int				outfile;
+	int				error;
+	struct s_parsed	*next;
+}	t_parsed;
 
 #endif
