@@ -1,30 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/14 13:45:11 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/14 17:06:19 by juandrie         ###   ########.fr       */
+/*   Created: 2023/11/14 09:11:51 by juandrie          #+#    #+#             */
+/*   Updated: 2023/11/14 11:48:21 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	main(int argc, char **argv)
+void    export()
 {
-	char	*line;
-	char	*prompt;
+    int i;
 
-	while (1)
-	{
-		prompt = "minishell > ";
-		line = readline(prompt);
-		printf("%s\n", line);
-	} 
-	// penser a la condition de sortie 
-	//gerer les entrees speciales comme CTRL+C ou CTRL+D
-	//penser a liberer la ligne renvoyee par readline 
-	
+    i = 0;
+    while(environ[i] != NULL)
+    {
+        printf("declare -x %s\n", environ[i]);
+        i++;
+    }
+}
+
+int main(int ac, char **av)
+{
+    if (ac > 1)
+        export(av[1]);
+    return(0);
 }
