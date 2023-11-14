@@ -6,13 +6,12 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:46:13 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/14 13:56:34 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/11/14 15:03:29 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
-
 
 // System Libraries
 
@@ -33,10 +32,5 @@
 # include <termios.h>
 # include <curses.h>
 # include <term.h>
-
-// // Personnal Libraries
-
-// # include "libft/libft.h"
-
 
 #endif
