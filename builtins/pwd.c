@@ -1,30 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/14 13:45:11 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/14 17:06:19 by juandrie         ###   ########.fr       */
+/*   Created: 2023/11/13 18:42:47 by juandrie          #+#    #+#             */
+/*   Updated: 2023/11/14 11:22:38 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	main(int argc, char **argv)
+void pwd() 
 {
-	char	*line;
-	char	*prompt;
-
-	while (1)
-	{
-		prompt = "minishell > ";
-		line = readline(prompt);
-		printf("%s\n", line);
-	} 
-	// penser a la condition de sortie 
-	//gerer les entrees speciales comme CTRL+C ou CTRL+D
-	//penser a liberer la ligne renvoyee par readline 
-	
+    char *cwd;
+    
+    cwd = getcwd(NULL, 0); // getcwd peut allouer la mémoire si vous passez NULL
+    if (cwd != NULL) 
+    {
+        printf("%s\n", cwd);
+        free(cwd); 
+    } 
+    else 
+    {
+        perror("pwd");
+    }
 }
+
+int main(int ac, char **av)
+{
+        (void)ac;
+        (void)av;
+        
+        pwd();
+}
+
