@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 15:01:50 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/17 02:26:15 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/11/17 02:31:42 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,20 +93,20 @@ void	embedded_quotes(char *line, t_quotes *quotes)
 // 	return (0);
 // }
 
-int	main(int argc, char **argv)
-{
-	(void)argc;
-	t_quotes quotes;
+// int	main(int argc, char **argv)
+// {
+// 	(void)argc;
+// 	t_quotes quotes;
 	
-	quotes_count(argv[1], &quotes);
-	embedded_quotes(argv[1], &quotes);
-	printf("single embedded = %d\n", quotes.single_embedded);
-	printf("double embedded = %d\n", quotes.double_embedded);
-	printf("single = %d\n", quotes.single_quotes);
-	printf("double = %d\n", quotes.double_quotes);
-	if (error_quotes(&quotes))
-		printf("error parsing\n");
-	else
-		printf("%s\n", argv[1]);
-	return (0);
-}
+// 	quotes_count(argv[1], &quotes);
+// 	embedded_quotes(argv[1], &quotes);
+// 	printf("single embedded = %d\n", quotes.single_embedded);
+// 	printf("double embedded = %d\n", quotes.double_embedded);
+// 	printf("single = %d\n", quotes.single_quotes);
+// 	printf("double = %d\n", quotes.double_quotes);
+// 	if (error_quotes(&quotes))
+// 		printf("error parsing\n");
+// 	else
+// 		printf("%s\n", argv[1]);
+// 	return (0);
+// }
