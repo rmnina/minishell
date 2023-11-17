@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expand.c                                           :+:      :+:    :+:   */
+/*   ft_putchar_fd.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/14 15:15:34 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/17 00:26:36 by jdufour          ###   ########.fr       */
+/*   Created: 2023/03/31 11:34:26 by jdufour           #+#    #+#             */
+/*   Updated: 2023/05/02 13:01:22 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "libft.h"
 
-int ft_expand(char *argvx)
+void	ft_putchar_fd(char c, int fd)
 {
-    
+	write(fd, &c, 1);
 }

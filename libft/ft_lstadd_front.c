@@ -1,18 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expand.c                                           :+:      :+:    :+:   */
+/*   ft_lstadd_front.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/14 15:15:34 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/17 00:26:36 by jdufour          ###   ########.fr       */
+/*   Created: 2023/07/09 19:07:51 by jdufour           #+#    #+#             */
+/*   Updated: 2023/09/24 19:25:15 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "libft.h"
 
-int ft_expand(char *argvx)
+void	ft_lstadd_front(t_list **lst, t_list *new)
 {
-    
+	if (!lst || !new)
+		return ;
+	new->next = *lst;
+	*lst = new;
 }

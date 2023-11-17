@@ -1,18 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expand.c                                           :+:      :+:    :+:   */
+/*   tokens.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/14 15:15:34 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/17 00:26:36 by jdufour          ###   ########.fr       */
+/*   Created: 2023/11/17 00:19:58 by jdufour           #+#    #+#             */
+/*   Updated: 2023/11/17 02:15:33 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int ft_expand(char *argvx)
+char	**get_token(char *line, t_quotes *quotes, t_alloc *garbage)
 {
-    
+	char	**tokens;
+	int		i;
+	
+	i = 0;
+	// if (quotes->is_quotes == TRUE)
+	// {
+	// 	while (line[i])
+			
+	// }
+	// else
+		tokens = ft_split(line, ' ');
+	add_to_garbage(&tokens, garbage);
+	return (tokens);
 }
