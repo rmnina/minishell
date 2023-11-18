@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 00:19:58 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/17 02:15:33 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/11/18 22:52:18 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,19 @@ char	**get_token(char *line, t_quotes *quotes, t_alloc *garbage)
 	int		i;
 	
 	i = 0;
-	// if (quotes->is_quotes == TRUE)
-	// {
-	// 	while (line[i])
+	if (quotes->is_quotes == TRUE)
+	{
+		if (error_quotes(quotes))
+		{
+			printf("syntax error near unexpected quote\n");
+			exit(2);
+		}
+		else
+		{
 			
-	// }
-	// else
+		}
+	}
+	else
 		tokens = ft_split(line, ' ');
 	add_to_garbage(&tokens, garbage);
 	return (tokens);
