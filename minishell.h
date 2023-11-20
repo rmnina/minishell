@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:46:13 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/19 02:39:50 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/11/20 16:01:23 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ enum e_type {
 	RIGHT_CHEV,
 	DB_LEFT_CHEV,
 	DB_RIGHT_CHEV,
-	EXPAND
+	EXPAND 
 };
 
 # define SINGLE_QUOTE 39
