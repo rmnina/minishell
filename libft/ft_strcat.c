@@ -1,37 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strjoinchar.c                                   :+:      :+:    :+:   */
+/*   ft_strcat.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/19 01:57:10 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/20 17:29:15 by juandrie         ###   ########.fr       */
+/*   Created: 2023/11/20 17:21:32 by juandrie          #+#    #+#             */
+/*   Updated: 2023/11/20 17:31:50 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_strjoin_char(char *s1, const char s2)
+char	*ft_strcat(char *dest, const char *src)
 {
-	int		size;
-	char	*res;
-	int		i;
+	int	i;
+	int	size;
 
+	size = ft_strlen(dest);
 	i = 0;
-	size = 0;
-	while (s1 && s1[size])
-		size++;
-	res = malloc(sizeof(char) * (size + 2));
-	if (!(res))
-		return (NULL);
-	while (s1 && s1[i])
+	while (src[i])
 	{
-		res[i] = s1[i];
+		dest[size + i] = src[i];
 		i++;
 	}
-	res[i++] = s2;
-	res[i] = '\0';
-	free(s1);
-	return (res);
+	dest[size + i] = '\0';
+	return (dest);
 }

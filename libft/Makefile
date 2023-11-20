@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+         #
+#    By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/31 12:01:53 by jdufour           #+#    #+#              #
-#    Updated: 2023/07/21 19:37:28 by jdufour          ###   ########.fr        #
+#    Updated: 2023/11/20 17:31:13 by juandrie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,6 +24,8 @@ ft_atoi.c\
 ft_isalpha.c\
 ft_memchr.c\
 ft_memset.c\
+ft_strcpy.c\
+ft_strcat.c\
 ft_putstr_fd.c\
 ft_striteri.c \
 ft_strlen.c\
