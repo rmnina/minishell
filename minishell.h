@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:46:13 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/14 15:28:52 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/11/15 17:36:10 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,10 +39,10 @@ typedef struct s_quotes {
 }	t_quotes;
 
 typedef struct s_parsed {
-	char			**command;
-	int				infile;
-	int				outfile;
-	int				error;
+	char			**command; // commande et arguments 
+	int				infile; // source de l'entree
+	int				outfile; // redirection de sortie
+	int				error; // precision sur quelle sortie
 	struct s_parsed	*next;
 }	t_parsed;
 
