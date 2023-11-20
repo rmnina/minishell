@@ -1,18 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expand.c                                           :+:      :+:    :+:   */
+/*   ft_strmapi.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/14 15:15:34 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/17 00:26:36 by jdufour          ###   ########.fr       */
+/*   Created: 2023/03/31 11:35:43 by jdufour           #+#    #+#             */
+/*   Updated: 2023/05/02 13:04:42 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "libft.h"
 
-int ft_expand(char *argvx)
+char	*ft_strmapi(const char *s, char (*f)(unsigned int, char))
 {
-    
+	unsigned int	i;
+	char			*map;
+
+	i = 0;
+	map = malloc(sizeof(char) * (ft_strlen(s) + 1));
+	if (!(map))
+		return (NULL);
+	while (s[i])
+	{
+		map[i] = (*f)(i, s[i]);
+		i++;
+	}
+	map[i] = '\0';
+	return (map);
 }
