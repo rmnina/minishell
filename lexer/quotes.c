@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 15:01:50 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/19 01:44:37 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/11/20 15:54:32 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ void quotes_count(char *line, t_quotes *quotes)
 	i = 0;
 	quotes->single_quotes = 0;
 	quotes->double_quotes = 0;
-	quotes->is_quotes = FALSE;
 	while (line[i])
 	{
 		if (line[i] == SINGLE_QUOTE)
