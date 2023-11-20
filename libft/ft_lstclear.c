@@ -1,18 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expand.c                                           :+:      :+:    :+:   */
+/*   ft_lstclear.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/14 15:15:34 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/17 00:26:36 by jdufour          ###   ########.fr       */
+/*   Created: 2023/07/09 20:07:54 by jdufour           #+#    #+#             */
+/*   Updated: 2023/09/24 19:25:49 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "libft.h"
 
-int ft_expand(char *argvx)
+void	ft_lstclear(t_list **lst, void (*del)(void *))
 {
-    
+	t_list	*pos;
+
+	pos = *lst;
+	if (!lst)
+		return ;
+	while (pos)
+	{
+		pos = (*lst)->next;
+		ft_lstdelone(*lst, del);
+		*lst = pos;
+	}
+	*lst = NULL;
 }

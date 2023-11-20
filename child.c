@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2023/11/20 15:52:50 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/11/20 16:21:57 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,12 @@ char *find_command_path(const char *command)
     char *start;
     char *end;
     
-    if (strchr(command, '/') != NULL)
-        return (strdup(command));
+    if (ft_strchr(command, '/') != NULL)
+        return (ft_strdup(command));
     path_env = getenv("PATH");
     if (!path_env)
         return (NULL);
-    path = strdup(path_env); // permet de ne pas modifier la variable d'env originale
+    path = ft_strdup(path_env); // permet de ne pas modifier la variable d'env originale
     if (!path)
         return (NULL);
     full_path = malloc(PATH_MAX); //longueur max dans le systeme 
@@ -37,11 +37,11 @@ char *find_command_path(const char *command)
         return(NULL); 
     }
     start = path;
-    while ((end = strchr(start, ':')) != NULL) 
+    while ((end = ft_strchr(start, ':')) != NULL) 
     {
         if (end != start) // si start n'est pas un ":"
         {
-            memcpy(full_path, start, end - start);
+            ft_memcpy(full_path, start, end - start);
             full_path[end - start] = '\0';
             strcat(full_path, "/");
             strcat(full_path, command);
@@ -56,9 +56,9 @@ char *find_command_path(const char *command)
     }
     if (*start) 
     {
-        if(strlen(start) + strlen(command) + 2 <= PATH_MAX)
+        if(ft_strlen(start) + ft_strlen(command) + 2 <= PATH_MAX)
         {
-            strcpy(full_path, start);
+            ft_strcpy(full_path, start);
             strcat(full_path, "/");
             strcat(full_path, command);
         }
