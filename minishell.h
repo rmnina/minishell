@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:46:13 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/18 23:21:21 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/11/19 02:39:50 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@
 # include <term.h>
 # include "libft/libft.h"
 
-enum type {
+enum e_type {
 	WORD = 1,
 	PIPE,
 	LEFT_CHEV,
@@ -52,13 +52,12 @@ typedef struct s_quotes {
 	int		double_quotes;
 	int		single_embedded;
 	int		double_embedded;
-	int		single_pairs;
-	int		double_pairs;
-	bool	is_quotes;
+	bool	case_single;
+	bool	case_double;
 }	t_quotes;
 
 typedef struct s_parsed {
-	char			*command;
+	char			*word;
 	int				type;
 }	t_parsed;
 

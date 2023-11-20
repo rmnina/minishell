@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/22 20:14:00 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/18 22:37:55 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/11/19 01:57:45 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ void		*ft_calloc(size_t nmemb, size_t size);
 char		*ft_strdup(char *src);
 char		*ft_substr(const char *s, unsigned int start, size_t len);
 char		*ft_strjoin(const char *s1, const char *s2);
+char		*ft_strjoin_char(char *s1, const char s2);
 char		*ft_strtrim(const char *s1, const char *set);
 char		**ft_split(const char *s, char c);
 char		*ft_itoa(int n);

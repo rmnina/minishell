@@ -1,33 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   allocs.c                                           :+:      :+:    :+:   */
+/*   ft_strjoinchar.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/17 00:44:08 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/19 02:35:32 by jdufour          ###   ########.fr       */
+/*   Created: 2023/11/19 01:57:10 by jdufour           #+#    #+#             */
+/*   Updated: 2023/11/19 01:57:25 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "libft.h"
 
-void	add_to_garbage(void *ptr, t_alloc *garbage)
+char	*ft_strjoin_char(char *s1, const char s2)
 {
-	garbage->adr[garbage->count] = ptr;
-	garbage->count++; 
-}
-
-void	free_garbage(t_alloc *garbage)
-{
-	int	i;
+	int		size;
+	char	*res;
+	int		i;
 
 	i = 0;
-	while (i < garbage->count)
+	size = 0;
+	while (s1 && s1[size])
+		size++;
+	res = malloc(sizeof(char) * (size + 2));
+	if (!(res))
+		return (NULL);
+	while (s1 && s1[i])
 	{
-		free(garbage->adr[i]);
-		garbage->adr[i] = NULL;
+		res[i] = s1[i];
 		i++;
 	}
-	free(garbage);
+	res[i++] = s2;
+	res[i] = '\0';
+	free(s1);
+	return (res);
 }
