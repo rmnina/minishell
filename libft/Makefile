@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+         #
+#    By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/31 12:01:53 by jdufour           #+#    #+#              #
-#    Updated: 2023/11/20 17:31:13 by juandrie         ###   ########.fr        #
+#    Updated: 2023/11/21 15:19:41 by jdufour          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,6 +36,7 @@ ft_memcmp.c\
 ft_putchar_fd.c\
 ft_split.c\
 ft_strjoin.c\
+ft_strjoinchar.c\
 ft_strmapi.c\
 ft_substr.c\
 ft_calloc.c\

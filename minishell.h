@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:46:13 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/21 14:41:33 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/11/21 15:18:33 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,10 @@ enum e_type {
 
 # define SINGLE_QUOTE 39
 # define DOUBLE_QUOTE 34
-# define PATH_MAX 1000
+
+# ifndef PATHMAX
+#  define PATHMAX 4096
+# endif
 
 typedef struct s_quotes {
 	int		single_quotes;
