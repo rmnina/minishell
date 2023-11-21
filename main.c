@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:45:11 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/18 23:23:04 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/11/21 12:14:04 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	main(int argc, char **argv, char **envp)
 		if (!line)
 		{
 			printf("exit\n");
-			break;
+			break ;
 		}
 		if (line[0] != 0)
 		{

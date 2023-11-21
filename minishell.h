@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:46:13 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/20 16:19:21 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/11/21 12:11:51 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ enum e_type {
 
 # define SINGLE_QUOTE 39
 # define DOUBLE_QUOTE 34
+
 
 typedef struct s_quotes {
 	int		single_quotes;
