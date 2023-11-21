@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:46:13 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/21 12:11:51 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/11/21 19:32:45 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,8 @@ enum e_type {
 
 # define SINGLE_QUOTE 39
 # define DOUBLE_QUOTE 34
+# define REDIRECT_OUTPUT 1
+# define REDIRECT_INPUT 2
 
 
 typedef struct s_quotes {
@@ -67,6 +69,18 @@ typedef struct s_alloc {
 	int		count;
 }	t_alloc;
 
+
+typedef struct s_exec {
+	char	*command;
+	char	*file;
+	int		redirect_type;
+}	t_exec;
+
+typedef struct s_pipe {
+	char	*command1;
+	char	*command2;
+}	t_pipe;
+
 //Lexer
 
 int		is_quote(char c);
@@ -75,12 +89,24 @@ void	embedded_quotes(char *line, t_quotes *quotes);
 void	quotes_count(char *line, t_quotes *quotes);
 
 //Parser
-
+char	**parse_command_line(char *input);
 
 
 //Utils
 
 void	add_to_garbage(void *ptr, t_alloc *garbage);
 void	free_garbage(t_alloc *garbage);
+
+//Execve
+char	*find_command_in_segment(char *segment, char *command);
+char	*find_command_path(char *command);
+void	execute_command(char *input, char **envp);
+void	handle_command(char *input, char **envp);
+
+//Redirection 
+void	redir(t_exec exec, char **argv, char **envp);
+
+//Pipe
+
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:45:11 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/21 12:14:04 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/11/21 19:11:07 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,9 @@ int	main(int argc, char **argv, char **envp)
 		{
 			printf("%s\n", line);
 			add_history(line);
+			handle_command(line, envp);
 		}
 	}
 	clear_history();
+	return (0);
 }
