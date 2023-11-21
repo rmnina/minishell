@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:46:13 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/21 12:11:51 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/11/21 14:41:33 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ enum e_type {
 
 # define SINGLE_QUOTE 39
 # define DOUBLE_QUOTE 34
-
+# define PATH_MAX 1000
 
 typedef struct s_quotes {
 	int		single_quotes;
