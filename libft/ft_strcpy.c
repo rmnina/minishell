@@ -1,18 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expand.c                                           :+:      :+:    :+:   */
+/*   ft_strcpy.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/14 15:15:34 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/17 00:26:36 by jdufour          ###   ########.fr       */
+/*   Created: 2023/11/20 17:16:19 by juandrie          #+#    #+#             */
+/*   Updated: 2023/11/20 17:31:42 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "libft.h"
 
-int ft_expand(char *argvx)
+char	*ft_strcpy(char *dest, const char *src)
 {
-    
+	int	i;
+
+	i = 0;
+	while (src[i])
+	{
+		dest[i] = src[i];
+		i++;
+	}
+	dest[i] = '\0';
+	return (dest);
 }

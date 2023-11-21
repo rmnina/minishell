@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:46:13 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/15 17:36:10 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/11/21 12:11:51 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,18 +32,55 @@
 # include <termios.h>
 # include <curses.h>
 # include <term.h>
+# include "libft/libft.h"
+
+enum e_type {
+	WORD = 1,
+	PIPE,
+	LEFT_CHEV,
+	RIGHT_CHEV,
+	DB_LEFT_CHEV,
+	DB_RIGHT_CHEV,
+	EXPAND 
+};
+
+# define SINGLE_QUOTE 39
+# define DOUBLE_QUOTE 34
+
 
 typedef struct s_quotes {
-	int	single_quotes;
-	int	double_quotes;
+	int		single_quotes;
+	int		double_quotes;
+	int		single_embedded;
+	int		double_embedded;
+	bool	case_single;
+	bool	case_double;
 }	t_quotes;
 
 typedef struct s_parsed {
-	char			**command; // commande et arguments 
-	int				infile; // source de l'entree
-	int				outfile; // redirection de sortie
-	int				error; // precision sur quelle sortie
-	struct s_parsed	*next;
+	char			*word;
+	int				type;
 }	t_parsed;
+
+typedef struct s_alloc {
+	void	**adr;
+	int		count;
+}	t_alloc;
+
+//Lexer
+
+int		is_quote(char c);
+int		error_quotes(t_quotes *quotes);
+void	embedded_quotes(char *line, t_quotes *quotes);
+void	quotes_count(char *line, t_quotes *quotes);
+
+//Parser
+
+
+
+//Utils
+
+void	add_to_garbage(void *ptr, t_alloc *garbage);
+void	free_garbage(t_alloc *garbage);
 
 #endif

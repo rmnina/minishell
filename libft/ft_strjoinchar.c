@@ -1,35 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   ft_strjoinchar.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/14 11:20:35 by juandrie          #+#    #+#             */
-/*   Updated: 2023/11/21 11:26:06 by juandrie         ###   ########.fr       */
+/*   Created: 2023/11/19 01:57:10 by jdufour           #+#    #+#             */
+/*   Updated: 2023/11/20 17:29:15 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
+#include "libft.h"
 
-# include <stdio.h>
-# include <string.h>
-# include <stdlib.h>
-# include <limits.h>
-# include <errno.h>
-# include <unistd.h>
-# include <sys/stat.h>
-# include <string.h>
-
-typedef struct s_EnvVar
+char	*ft_strjoin_char(char *s1, const char s2)
 {
-	char			*name;
-	char			*value;
-	struct EnvVar	*next;
-}	t_EnvVar;
+	int		size;
+	char	*res;
+	int		i;
 
-t_EnvVar		*g_env_vars = NULL;
-extern char		**environ;
-
-#endif 
+	i = 0;
+	size = 0;
+	while (s1 && s1[size])
+		size++;
+	res = malloc(sizeof(char) * (size + 2));
+	if (!(res))
+		return (NULL);
+	while (s1 && s1[i])
+	{
+		res[i] = s1[i];
+		i++;
+	}
+	res[i++] = s2;
+	res[i] = '\0';
+	free(s1);
+	return (res);
+}
