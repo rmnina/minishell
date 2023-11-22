@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 17:13:45 by juandrie          #+#    #+#             */
-/*   Updated: 2023/11/21 19:12:40 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/11/22 14:42:23 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,3 +39,26 @@ void	redir(t_exec exec, char **argv, char **envp)
 	}
 	waitpid(pid, NULL, 0);
 }
+
+// int	main(int argc, char **argv, char **envp) 
+// {
+// 	(void)argc;
+// 	(void)argv;
+// 	t_exec exec_out = {
+// 		.command = "ls",
+//         .file = "output.txt",
+//         .redirect_type = REDIRECT_OUTPUT
+//     };
+//     char *argv_ls[] = {"ls", NULL};
+//     redir(exec_out, argv_ls, envp);
+
+//     t_exec exec_in = {
+//         .command = "cat",
+//         .file = "output.txt",
+//         .redirect_type = REDIRECT_INPUT
+//     };
+//     char *argv_cat[] = {"cat", NULL};
+//     redir(exec_in, argv_cat, envp);
+
+//     return 0;
+// }

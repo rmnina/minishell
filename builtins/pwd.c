@@ -6,16 +6,18 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 18:42:47 by juandrie          #+#    #+#             */
-/*   Updated: 2023/11/21 10:26:41 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/11/22 17:34:38 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
-void	pwd()
+int	my_pwd(char **unused_args, char **unused_envp)
 {
 	char	*cwd;
 
+	(void)unused_args;
+	(void)unused_envp;
 	cwd = getcwd(NULL, 0);
 	if (cwd != NULL)
 	{
@@ -26,11 +28,12 @@ void	pwd()
 	{
 		perror("pwd");
 	}
+	return (0);
 }
 
-int	main(int ac, char **av)
-{
-	(void)ac;
-	(void)av;
-	pwd();
-}
+// int	main(int ac, char **av)
+// {
+// 	(void)ac;
+// 	(void)av;
+// 	pwd();
+// }

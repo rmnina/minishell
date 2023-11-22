@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:46:13 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/21 19:32:45 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/11/22 19:18:55 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,13 @@ typedef struct s_exec {
 typedef struct s_pipe {
 	char	*command1;
 	char	*command2;
+	int		pipefd[2];
+	int		dup_fd;
 }	t_pipe;
+
+typedef struct s_code {
+	int	code_status;
+}	t_code;
 
 //Lexer
 
@@ -93,7 +99,6 @@ char	**parse_command_line(char *input);
 
 
 //Utils
-
 void	add_to_garbage(void *ptr, t_alloc *garbage);
 void	free_garbage(t_alloc *garbage);
 
@@ -101,12 +106,23 @@ void	free_garbage(t_alloc *garbage);
 char	*find_command_in_segment(char *segment, char *command);
 char	*find_command_path(char *command);
 void	execute_command(char *input, char **envp);
-void	handle_command(char *input, char **envp);
+void	handle_command(char *input, t_code *code, char **envp);
 
 //Redirection 
 void	redir(t_exec exec, char **argv, char **envp);
 
 //Pipe
+void	execute_pipe(t_pipe pipes, char **argv1, char **argv2, char **envp);
+void	process_pipe(char *command, t_pipe pipes, char **argv, char **envp);
 
+//Builtins
+int		my_cd(char **args);
+int		my_echo(char **argv);
+int		my_env(char **envp);
+int		my_exit(char **cmd_args);
+int		my_export(char **envp);
+int		my_pwd(char **unused_args, char **unused_envp);
+int		my_unset(char ***envp, char **names);
+void	execute_status_builtin(t_code *code);
 
 #endif
