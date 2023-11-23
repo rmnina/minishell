@@ -6,11 +6,11 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2023/11/22 19:35:02 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/11/23 18:19:51 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 char	*find_command_in_segment(char *segment, char *command)
 {
@@ -76,6 +76,8 @@ void	execute_command(char *input, char **envp)
 	exit(EXIT_FAILURE);
 }
 
+/*AJOUTER UN STRLEN */
+
 int	execute_builtins(char **cmd_args, char **envp)
 {
 	if (cmd_args[0] == NULL)
@@ -97,11 +99,12 @@ int	execute_builtins(char **cmd_args, char **envp)
 	return (-1);
 }
 
-void	handle_command(char *input, t_code *code, char **envp)
+void	handle_command(char *input, t_code *code, char **argv, char **envp)
 {
 	pid_t	pid;
 	int		status;
 	char	**cmd_args;
+	t_exec	exec;
 
 	if (strcmp(input, "$?") == 0)
 	{
@@ -109,6 +112,11 @@ void	handle_command(char *input, t_code *code, char **envp)
 		return ;
 	}
 	cmd_args = parse_command_line(input);
+	if (handle_redirection(&exec, input, argv, envp))
+	{
+		free_parsed_command_line(cmd_args);
+		return ;
+	}
 	if (execute_builtins(cmd_args, envp) == -1)
 	{
 		pid = fork();

@@ -6,11 +6,11 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 18:17:08 by juandrie          #+#    #+#             */
-/*   Updated: 2023/11/22 11:44:55 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/11/23 15:52:35 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 char **parse_command_line(char *input)
 {
