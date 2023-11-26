@@ -6,31 +6,30 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:04:36 by juandrie          #+#    #+#             */
-/*   Updated: 2023/11/21 10:20:08 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/11/22 18:53:04 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
-void	ft_exit(const char *exit_code_str)
+int	my_exit(char **cmd_args)
 {
 	int	status;
 
 	status = 0;
-	if (exit_code_str != NULL)
-		status = atoi(exit_code_str);
-	printf("Exiting with code %d\n", status);
+	if (cmd_args[1] != NULL)
+		status = ft_atoi(cmd_args[1]);
 	exit(status);
 }
 
-int	main(int argc, char **argv)
-{
-	if (argc > 1 && strcmp(argv[1], "ft_exit") == 0)
-	{
-		if (argc > 2)
-			ft_exit(argv[2]);
-		else
-			ft_exit(NULL);
-	}
-	return (0);
-}
+// int	main(int argc, char **argv)
+// {
+// 	if (argc > 1 && strcmp(argv[1], "my_exit") == 0)
+// 	{
+// 		if (argc > 2)
+// 			my_exit(argv[2]);
+// 		else
+// 			my_exit(NULL);
+// 	}
+// 	return (0);
+// }

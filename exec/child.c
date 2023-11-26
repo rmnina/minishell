@@ -6,25 +6,11 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2023/11/21 12:12:31 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/11/23 18:19:51 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
-
-char	*build_and_check_path(char *segment, char *command)
-{
-	char	full_path[PATH_MAX];
-
-	if (ft_strlen(segment) + ft_strlen(command) + 2 > PATH_MAX)
-		return (NULL);
-	ft_strcpy(full_path, segment);
-	ft_strcat(full_path, "/");
-	ft_strcat(full_path, command);
-	if (access(full_path, X_OK) == 0)
-		return (ft_strdup(full_path));
-	return (NULL);
-}
+#include "../minishell.h"
 
 char	*find_command_in_segment(char *segment, char *command)
 {
@@ -73,7 +59,7 @@ void	execute_command(char *input, char **envp)
 	char	*path;
 	char	**cmd_args;
 
-	cmd_args = parse_commande_line(input);
+	cmd_args = parse_command_line(input);
 	if (!cmd_args)
 	{
 		perror("parse_commande_line");
@@ -90,28 +76,85 @@ void	execute_command(char *input, char **envp)
 	exit(EXIT_FAILURE);
 }
 
-int	main(int argc, char **argv, char **envp)
+/*AJOUTER UN STRLEN */
+
+int	execute_builtins(char **cmd_args, char **envp)
+{
+	if (cmd_args[0] == NULL)
+		return (0);
+	if (strcmp(cmd_args[0], "cd") == 0)
+		return (my_cd(cmd_args));
+	if (strcmp(cmd_args[0], "echo") == 0)
+		return (my_echo(cmd_args));
+	if (strcmp(cmd_args[0], "env") == 0)
+		return (my_env(envp));
+	if (strcmp(cmd_args[0], "exit") == 0)
+		return (my_exit(cmd_args));
+	if (strcmp(cmd_args[0], "export") == 0)
+		return (my_export(cmd_args));
+	if (strcmp(cmd_args[0], "pwd") == 0)
+		return (my_pwd(NULL, NULL));
+	if (strcmp(cmd_args[0], "unset") == 0)
+		return (my_unset(&envp, cmd_args + 1));
+	return (-1);
+}
+
+void	handle_command(char *input, t_code *code, char **argv, char **envp)
 {
 	pid_t	pid;
 	int		status;
-	char	*input;
+	char	**cmd_args;
+	t_exec	exec;
 
-	(void)argc;
-	pid = fork();
-	if (pid == -1)
+	if (strcmp(input, "$?") == 0)
 	{
-		perror("fork");
-		exit(EXIT_FAILURE);
+		execute_status_builtin(code);
+		return ;
 	}
-	else if (pid == 0)
+	cmd_args = parse_command_line(input);
+	if (handle_redirection(&exec, input, argv, envp))
 	{
-		execute_command(input, envp);
+		free_parsed_command_line(cmd_args);
+		return ;
 	}
-	else
+	if (execute_builtins(cmd_args, envp) == -1)
 	{
-		waitpid(pid, &status, 0);
-		if (WIFEXITED(status))
-			WEXITSTATUS(status);
+		pid = fork();
+		if (pid == -1)
+		{
+			perror("fork");
+			exit(EXIT_FAILURE);
+		}
+		else if (pid == 0)
+			execute_command(input, envp);
+		else
+		{
+			waitpid(pid, &status, 0);
+			if (WIFEXITED(status))
+				code->code_status = WEXITSTATUS(status);
+		}
 	}
-	return (0);
 }
+
+// int	main(int argc, char **argv, char **envp)
+// {
+// 	pid_t	pid;
+// 	int		status;
+
+// 	(void)argc;
+// 	pid = fork();
+// 	if (pid == -1)
+// 	{
+// 		perror("fork");
+// 		exit(EXIT_FAILURE);
+// 	}
+// 	else if (pid == 0)
+// 		execute_command(argv[1], envp);
+// 	else
+// 	{
+// 		waitpid(pid, &status, 0);
+// 		if (WIFEXITED(status))
+// 			WEXITSTATUS(status);
+// 	}
+// 	return (0);
+// }

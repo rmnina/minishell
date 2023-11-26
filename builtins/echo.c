@@ -6,40 +6,41 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 16:06:16 by juandrie          #+#    #+#             */
-/*   Updated: 2023/11/21 10:19:01 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/11/22 17:01:35 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
-void	echo(char **av)
+int	my_echo(char **argv)
 {
 	int	i;
-	int	newline;
+	int	line;
 
 	i = 1;
-	newline = 0;
-	if (av[1] != NULL && strcmp(av[1], "-n") == 0)
+	line = 1;
+	if (argv[1] != NULL && strcmp(argv[1], "-n") == 0)
 	{
-		newline = 1;
+		line = 0;
 		i++;
 	}
-	while (av[i] != NULL)
+	while (argv[i] != NULL)
 	{
-		printf("%s", av[i]);
-		if (av[i + 1] != NULL)
+		printf("%s", argv[i]);
+		if (argv[i + 1] != NULL)
 			printf(" ");
 		i++;
 	}
-	if (!newline)
-		printf("\n");
-}
-
-int	main(int ac, char **av)
-{
-	if (ac > 1)
-		echo(av);
-	else
+	if (line)
 		printf("\n");
 	return (0);
 }
+
+// int	main(int ac, char **av)
+// {
+// 	if (ac > 1)
+// 		my_echo(av);
+// 	else
+// 		printf("\n");
+// 	return (0);
+// }

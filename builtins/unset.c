@@ -6,91 +6,69 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 10:19:45 by juandrie          #+#    #+#             */
-/*   Updated: 2023/11/21 10:44:24 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/11/22 18:06:44 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
-EnvVar	*add_env_var(const char *name, const char *value)
+void	unset_single_variable(char ***envp, const char *name)
 {
-	EnvVar	*new_var;
+	int	i;
+	int	len;
+	int	j;
 
-	new_var = malloc(sizeof(EnvVar));
-	if (!new_var)
-		return (NULL);
-	new_var->name = strdup(name);
-	new_var->value = strdup(value);
-	new_var->next = env_vars;
-	env_vars = new_var;
-	return (new_var);
-}
-
-void	print_env_vars()
-{
-	EnvVar	*current;
-
-	current = env_vars;
-	while (current != NULL)
+	len = ft_strlen(name);
+	i = 0;
+	j = 0;
+	while ((*envp)[i] != NULL)
 	{
-		printf("%s=%s\n", current->name, current->value);
-		current = current->next;
-	}
-}
-
-void	unset(const char *name)
-{
-	EnvVar	*current;
-	EnvVar	*previous;
-
-	current = env_vars;
-	previous = NULL;
-	while (current != NULL)
-	{
-		if (strcmp(current->name, name) == 0)
+		if (ft_strncmp((*envp)[i], name, len) == 0 && (*envp)[i][len] == '=')
 		{
-			if (previous == NULL)
-				env_vars = current->next;
-			else
-				previous->next = current->next;
-			free(current->name);
-			free(current->value);
-			free(current);
-			return ;
+			free((*envp)[i]);
+			j = i;
+			while ((*envp)[j] != NULL)
+			{
+				(*envp)[j] = (*envp)[j + 1];
+				j++;
+			}
+			break ;
 		}
-		previous = current;
-		current = current->next;
+		i++;
 	}
 }
 
-void	free_env_vars()
+int	my_unset(char ***envp, char **names)
 {
-	EnvVar	*current;
-	EnvVar	*next;
+	int	i;
 
-	current = env_vars;
-	while (current != NULL)
+	i = 0;
+	while (names[i] != NULL)
 	{
-		next = current->next;
-		free(current->name);
-		free(current->value);
-		free(current);
-		current = next;
-	}
-}
-
-int	main(int ac, char **av)
-{
-	if (ac > 1)
-	{
-		add_env_var("PATH", "/usr/bin");
-		add_env_var("HOME", "/home/user");
-		printf("Variables avant unset:\n");
-		print_env_vars(av[1]);
-		unset("PATH");
-		printf("\nVariables après unset:\n");
-		print_env_vars(av[1]);
-		free_env_vars(av[1]);
+		unset_single_variable(envp, names[i]);
+		i++;
 	}
 	return (0);
 }
+
+// int	main(int argc, char **argv)
+// {
+// 	(void)argv;
+// 	char **fake_envp = malloc(3 * sizeof(char *));
+// 	fake_envp[0] = strdup("PATH=/usr/bin");
+// 	fake_envp[1] = strdup("HOME=/home/user");
+// 	fake_envp[2] = NULL;
+// 	if (argc > 1)
+// 	{
+// 		printf("\nVariables avant unset:\n");
+// 		for (int i = 0; fake_envp[i] != NULL; i++) {
+//             printf("%s\n", fake_envp[i]);
+//         }
+// 		my_unset(&fake_envp, argv + 1);
+// 		printf("\nVariables après unset:\n");
+// 		for (int i = 0; fake_envp[i] != NULL; i++) {
+//             printf("%s\n", fake_envp[i]);
+//         }
+// 	}
+// 	return (0);
+// }

@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:45:11 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/21 12:14:04 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/11/23 18:20:33 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,14 @@
 
 int	main(int argc, char **argv, char **envp)
 {
+	t_code	*code;
 	char	*line;
 	char	*prompt;
 
+	code = malloc(sizeof(t_code));
+	if (!code)
+		return (1);
+	code->code_status = 0;
 	while (1)
 	{
 		prompt = "minishell > ";
@@ -30,7 +35,10 @@ int	main(int argc, char **argv, char **envp)
 		{
 			printf("%s\n", line);
 			add_history(line);
+			handle_command(line, code, argv, envp);
 		}
 	}
 	clear_history();
+	free (code);
+	return (0);
 }
