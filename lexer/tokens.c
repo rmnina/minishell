@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 00:19:58 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/27 05:03:18 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/11/27 05:34:03 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,8 @@ t_command	get_token(char *line, t_quotes *quotes, int *i)
 			*i += 1;
 		else if (line[*i] == DOUBLE_QUOTE && quotes->case_single == FALSE)
 			*i += 1;
-		else if (!is_in_quote(line[*i], quotes) && special_types(line[*i]) != 0)
+		else if (!is_in_quote(line[*i], quotes) && special_types(line[*i]) != 0 \
+		&& special_types(line[*i]) != 7)
 		{
 			if (token.word != NULL)
 				break;
@@ -97,25 +98,25 @@ t_command	*get_command(char *line, t_quotes *quotes)
 	return (command);
 }
 
-// int	main(int argc, char **argv)
-// {
-// 	t_quotes	quotes;
-// 	t_command	*command;
-// 	// int			i = 0;
+int	main(int argc, char **argv)
+{
+	t_quotes	quotes;
+	t_command	*command;
+	// int			i = 0;
 
-// 	quotes.case_double = FALSE;
-// 	quotes.case_single = FALSE;
-// 	command = NULL;
-// 	if (argc == 2)
-// 	{
-// 		error_quotes(argv[1], &quotes);
-// 		command = get_command(argv[1], &quotes);
-// 		ft_error_lexer(command);
-// 		for(int i = 0; command[i].word != NULL; i++)
-// 		{
-// 			printf("word[%d] = %s\n", i, command[i].word);
-// 			printf("type[%d] = %d\n", i, command[i].type);
-// 		}
-// 	}
-// 	ft_free_command(command);
-// }
+	quotes.case_double = FALSE;
+	quotes.case_single = FALSE;
+	command = NULL;
+	if (argc == 2)
+	{
+		error_quotes(argv[1], &quotes);
+		command = get_command(argv[1], &quotes);
+		ft_error_lexer(command);
+		for(int i = 0; command[i].word != NULL; i++)
+		{
+			printf("word[%d] = %s\n", i, command[i].word);
+			printf("type[%d] = %d\n", i, command[i].type);
+		}
+	}
+	ft_free_command(command);
+}

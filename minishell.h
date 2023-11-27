@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:46:13 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/27 04:57:59 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/11/27 06:23:21 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,24 +52,30 @@ enum e_type {
 # define REDIRECT_APPEND_OUTPUT 4
 # define REDIRECT_APPEND_INPUT 5
 
-typedef struct s_quotes {
+typedef struct	s_quotes {
 	bool	case_single;
 	bool	case_double;
 }	t_quotes;
 
-typedef struct s_command {
+typedef struct	s_expand {
+	int	col;
+	int	row;
+	int space;
+}	t_expand;
+
+typedef struct	s_command {
 	char			*word;
 	int				type;
 	int				total;
 }	t_command;
 
-typedef struct s_alloc {
+typedef struct	s_alloc {
 	void	**adr;
 	int		count;
 }	t_alloc;
 
 
-typedef struct s_exec {
+typedef struct	s_exec {
 	char	*command;
 	char	*file;
 	int		redirect_type;
@@ -77,14 +83,14 @@ typedef struct s_exec {
 	int		redirection_type;
 }	t_exec;
 
-typedef struct s_pipe {
+typedef struct	s_pipe {
 	char	*command1;
 	char	*command2;
 	int		pipefd[2];
 	int		dup_fd;
 }	t_pipe;
 
-typedef struct s_code {
+typedef struct	s_code {
 	int	code_status;
 }	t_code;
 
