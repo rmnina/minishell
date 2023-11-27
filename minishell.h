@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:46:13 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/27 01:27:57 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/11/27 04:57:59 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,10 +53,6 @@ enum e_type {
 # define REDIRECT_APPEND_INPUT 5
 
 typedef struct s_quotes {
-	int		single_quotes;
-	int		double_quotes;
-	int		single_embedded;
-	int		double_embedded;
 	bool	case_single;
 	bool	case_double;
 }	t_quotes;
@@ -93,20 +89,20 @@ typedef struct s_code {
 }	t_code;
 
 //Lexer
-int		is_quote(char c);
-int		error_quotes(t_quotes *quotes);
-void	embedded_quotes(char *line, t_quotes *quotes);
-void	quotes_count(char *line, t_quotes *quotes);
+int			is_in_quote(char c, t_quotes *quotes);
+void		error_quotes(char *line, t_quotes *quotes);
+void		ft_error_lexer(t_command *command);
+int			special_types(char c);
+void		get_type(t_command *token);
 
 //Parser
 char	**parse_command_line(char *input);
 void	free_parsed_command_line(char **argv);
 
 //Utils
-void		add_to_garbage(void *ptr, t_alloc *garbage);
-void		free_garbage(t_alloc *garbage);
 t_command	*ft_struct_join(t_command *tok1, t_command tok2);
-void		ft_free_token(t_command *token);
+void		ft_free_command(t_command *command);
+char		*char_to_str(char c);
 
 //Execve
 char	*find_command_in_segment(char *segment, char *command);

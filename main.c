@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:45:11 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/23 18:20:33 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/11/27 02:34:39 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,11 @@ int	main(int argc, char **argv, char **envp)
 	char	*line;
 	char	*prompt;
 
+	if (argc != 1)
+	{
+		printf("Error arg : no argument required\n");
+		return (1);
+	}
 	code = malloc(sizeof(t_code));
 	if (!code)
 		return (1);
@@ -33,7 +38,6 @@ int	main(int argc, char **argv, char **envp)
 		}
 		if (line[0] != 0)
 		{
-			printf("%s\n", line);
 			add_history(line);
 			handle_command(line, code, argv, envp);
 		}
