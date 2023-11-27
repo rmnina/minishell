@@ -6,7 +6,7 @@
 #    By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/31 12:01:53 by jdufour           #+#    #+#              #
-#    Updated: 2023/11/20 17:31:13 by juandrie         ###   ########.fr        #
+#    Updated: 2023/11/27 12:33:49 by juandrie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -45,6 +45,7 @@ ft_putendl_fd.c\
 ft_strchr.c\
 ft_strlcat.c\
 ft_strncmp.c\
+ft_strcmp.c\
 ft_tolower.c\
 ft_itoa.c\
 ft_strtrim.c\

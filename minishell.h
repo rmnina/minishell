@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:46:13 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/23 18:20:03 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/11/27 18:08:31 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ typedef struct s_exec {
 	int		redirect_type;
 	char	*redirection_file;
 	int		redirection_type;
+	int		redirection_append;
 }	t_exec;
 
 typedef struct s_pipe {
@@ -116,6 +117,7 @@ void	handle_command(char *input, t_code *code, char **argv, char **envp);
 void	redir(t_exec *exec, char **argv, char **envp);
 void	here_doc(const char *delimiter, t_pipe *pipes, char **argv, char **envp);
 int		handle_redirection(t_exec *exec, char *input, char **argv, char **envp);
+
 //Pipe
 void	execute_pipe(t_pipe *pipes, char **argv1, char **argv2, char **envp);
 void	process_pipe(char *command, t_pipe *pipes, char **argv, char **envp);

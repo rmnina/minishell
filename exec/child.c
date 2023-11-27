@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2023/11/23 18:19:51 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/11/27 17:53:35 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,25 +76,30 @@ void	execute_command(char *input, char **envp)
 	exit(EXIT_FAILURE);
 }
 
-/*AJOUTER UN STRLEN */
-
 int	execute_builtins(char **cmd_args, char **envp)
 {
 	if (cmd_args[0] == NULL)
 		return (0);
-	if (strcmp(cmd_args[0], "cd") == 0)
+	if (ft_strcmp(cmd_args[0], "cd") == 0
+		&& ft_strlen(cmd_args[0]) == ft_strlen("cd"))
 		return (my_cd(cmd_args));
-	if (strcmp(cmd_args[0], "echo") == 0)
+	if (ft_strcmp(cmd_args[0], "echo") == 0
+		&& ft_strlen(cmd_args[0]) == ft_strlen("echo"))
 		return (my_echo(cmd_args));
-	if (strcmp(cmd_args[0], "env") == 0)
+	if (ft_strcmp(cmd_args[0], "env") == 0
+		&& ft_strlen(cmd_args[0]) == ft_strlen("env"))
 		return (my_env(envp));
-	if (strcmp(cmd_args[0], "exit") == 0)
+	if (ft_strcmp(cmd_args[0], "exit") == 0
+		&& ft_strlen(cmd_args[0]) == ft_strlen("exit"))
 		return (my_exit(cmd_args));
-	if (strcmp(cmd_args[0], "export") == 0)
+	if (ft_strcmp(cmd_args[0], "export") == 0
+		&& ft_strlen(cmd_args[0]) == ft_strlen("export"))
 		return (my_export(cmd_args));
-	if (strcmp(cmd_args[0], "pwd") == 0)
+	if (ft_strcmp(cmd_args[0], "pwd") == 0
+		&& ft_strlen(cmd_args[0]) == ft_strlen("pwd"))
 		return (my_pwd(NULL, NULL));
-	if (strcmp(cmd_args[0], "unset") == 0)
+	if (ft_strcmp(cmd_args[0], "unset") == 0
+		&& ft_strlen(cmd_args[0]) == ft_strlen("unset"))
 		return (my_unset(&envp, cmd_args + 1));
 	return (-1);
 }
@@ -106,7 +111,7 @@ void	handle_command(char *input, t_code *code, char **argv, char **envp)
 	char	**cmd_args;
 	t_exec	exec;
 
-	if (strcmp(input, "$?") == 0)
+	if (ft_strcmp(input, "$?") == 0)
 	{
 		execute_status_builtin(code);
 		return ;
