@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:46:13 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/26 21:04:37 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/11/27 01:27:57 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,10 +61,11 @@ typedef struct s_quotes {
 	bool	case_double;
 }	t_quotes;
 
-typedef struct s_parsed {
+typedef struct s_command {
 	char			*word;
 	int				type;
-}	t_parsed;
+	int				total;
+}	t_command;
 
 typedef struct s_alloc {
 	void	**adr;
@@ -92,7 +93,6 @@ typedef struct s_code {
 }	t_code;
 
 //Lexer
-
 int		is_quote(char c);
 int		error_quotes(t_quotes *quotes);
 void	embedded_quotes(char *line, t_quotes *quotes);
@@ -103,8 +103,10 @@ char	**parse_command_line(char *input);
 void	free_parsed_command_line(char **argv);
 
 //Utils
-void	add_to_garbage(void *ptr, t_alloc *garbage);
-void	free_garbage(t_alloc *garbage);
+void		add_to_garbage(void *ptr, t_alloc *garbage);
+void		free_garbage(t_alloc *garbage);
+t_command	*ft_struct_join(t_command *tok1, t_command tok2);
+void		ft_free_token(t_command *token);
 
 //Execve
 char	*find_command_in_segment(char *segment, char *command);
@@ -116,6 +118,7 @@ void	handle_command(char *input, t_code *code, char **argv, char **envp);
 void	redir(t_exec *exec, char **argv, char **envp);
 void	here_doc(const char *delimiter, t_pipe *pipes, char **argv, char **envp);
 int		handle_redirection(t_exec *exec, char *input, char **argv, char **envp);
+
 //Pipe
 void	execute_pipe(t_pipe *pipes, char **argv1, char **argv2, char **envp);
 void	process_pipe(char *command, t_pipe *pipes, char **argv, char **envp);

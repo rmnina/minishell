@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strjoinchar.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/19 01:57:10 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/20 17:29:15 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/11/27 01:31:17 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_strjoin_char(char *s1, const char s2)
+char	*ft_strjoin_char(char *s1, const char c)
 {
 	int		size;
 	char	*res;
@@ -20,17 +20,26 @@ char	*ft_strjoin_char(char *s1, const char s2)
 
 	i = 0;
 	size = 0;
-	while (s1 && s1[size])
-		size++;
+	if (s1)
+	{
+		while (s1 && s1[size])
+			size++;
+	}
 	res = malloc(sizeof(char) * (size + 2));
 	if (!(res))
 		return (NULL);
+	if (size == 0)
+	{
+		res[size] = c;
+		res[size + 1] = '\0';
+		return (res);
+	}
 	while (s1 && s1[i])
 	{
 		res[i] = s1[i];
 		i++;
 	}
-	res[i++] = s2;
+	res[i++] = c;
 	res[i] = '\0';
 	free(s1);
 	return (res);
