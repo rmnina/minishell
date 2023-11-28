@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2023/11/27 17:53:35 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/11/28 19:43:41 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,10 +104,31 @@ int	execute_builtins(char **cmd_args, char **envp)
 	return (-1);
 }
 
-void	handle_command(char *input, t_code *code, char **argv, char **envp)
+void	execute_non_builtin(char *input, char **envp, t_code *code)
 {
 	pid_t	pid;
 	int		status;
+
+	pid = fork();
+	if (pid == -1)
+	{
+		perror ("fork");
+		exit(EXIT_FAILURE);
+	}
+	else if (pid == 0)
+	{
+		execute_command(input, envp);
+	}
+	else
+	{
+		waitpid(pid, &status, 0);
+		if (WIFEXITED(status))
+			code->code_status = WEXITSTATUS(status);
+	}
+}
+
+void	handle_command(char *input, t_code *code, char **argv, char **envp)
+{
 	char	**cmd_args;
 	t_exec	exec;
 
@@ -124,21 +145,9 @@ void	handle_command(char *input, t_code *code, char **argv, char **envp)
 	}
 	if (execute_builtins(cmd_args, envp) == -1)
 	{
-		pid = fork();
-		if (pid == -1)
-		{
-			perror("fork");
-			exit(EXIT_FAILURE);
-		}
-		else if (pid == 0)
-			execute_command(input, envp);
-		else
-		{
-			waitpid(pid, &status, 0);
-			if (WIFEXITED(status))
-				code->code_status = WEXITSTATUS(status);
-		}
+		execute_non_builtin(input, envp, code);
 	}
+	free_parsed_command_line(cmd_args);
 }
 
 // int	main(int argc, char **argv, char **envp)

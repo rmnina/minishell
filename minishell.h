@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:46:13 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/27 18:08:31 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/11/28 19:11:49 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@
 # include <curses.h>
 # include <term.h>
 # include "libft/libft.h"
+# include <math.h>
 
 enum e_type {
 	WORD = 1,
@@ -91,6 +92,12 @@ typedef struct s_pipe {
 typedef struct s_code {
 	int	code_status;
 }	t_code;
+
+typedef struct s_line {
+	char			*line;
+	struct s_line	*next;
+}	t_line;
+
 
 //Lexer
 
