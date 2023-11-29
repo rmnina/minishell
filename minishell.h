@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:46:13 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/28 19:11:49 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/11/29 18:39:34 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <sys/stat.h>
+# include <sys/param.h>
 # include <dirent.h>
 # include <errno.h>
 # include <sys/ioctl.h>
@@ -119,15 +120,23 @@ char	*find_command_in_segment(char *segment, char *command);
 char	*find_command_path(char *command);
 void	execute_command(char *input, char **envp);
 void	handle_command(char *input, t_code *code, char **argv, char **envp);
+void	execute_non_builtin(char *input, char **envp, t_code *code);
+void	heredoc_child(t_pipe *pipes, char **argv, char **envp);
 
 //Redirection 
-void	redir(t_exec *exec, char **argv, char **envp);
-void	here_doc(const char *delimiter, t_pipe *pipes, char **argv, char **envp);
+void	pid_redir(t_exec *exec, char **argv, char **envp);
 int		handle_redirection(t_exec *exec, char *input, char **argv, char **envp);
+void	execute_redirection(t_exec *exec, char **argv, char **envp);
+void	set_redirection_type(t_exec *exec, char *symbol, char *file);
+void	redir_symbol(t_exec *exec, char **cmd_args);
+void	init_exec_struct(t_exec *exec);
 
 //Pipe
-void	execute_pipe(t_pipe *pipes, char **argv1, char **argv2, char **envp);
-void	process_pipe(char *command, t_pipe *pipes, char **argv, char **envp);
+void	execute_pipe(t_pipe *pipes, char **envp);
+void	process_pipe(char **cmd_args, t_pipe *pipes, char **argv, char **envp);
+void	split_command_for_pipes(char *input, t_pipe *pipes);
+int		commands_with_pipes_detected(char *input);
+pid_t	heredoc_pipe(t_pipe *pipes);
 
 //Builtins
 int		my_cd(char **args);
@@ -138,5 +147,9 @@ int		my_export(char **envp);
 int		my_pwd(char **unused_args, char **unused_envp);
 int		my_unset(char ***envp, char **names);
 void	execute_status_builtin(t_code *code);
+int		execute_builtins(char **cmd_args, char **envp);
+
+//heredoc
+void	heredoc(const char *delimiter, t_pipe *pipes, char **argv, char **envp);
 
 #endif
