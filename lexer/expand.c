@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 15:15:34 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/29 17:40:42 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/11/29 20:53:47 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	expand_size(char *var)
 	return (size);
 }
 
-int	command_size(t_command *lexer, char *var, t_expand *expand)
+int	command_size(t_command *lexer, char *var)
 {
 	int	i;
 	int	size;
@@ -40,7 +40,6 @@ int	command_size(t_command *lexer, char *var, t_expand *expand)
 	size = 0;
 	while (lexer[i].type && lexer[i].type != EXPAND)
 		i++;
-	expand->lex_index = i;
 	if (lexer[i].type == EXPAND)
 	{
 		while (lexer[i].word[size])
@@ -51,27 +50,15 @@ int	command_size(t_command *lexer, char *var, t_expand *expand)
 	return (size + (expand_size(var) - 1));
 }
 
-char	*get_var_name(t_command *lexer, t_expand *expand, char *name, t_quotes *quotes)
+char	*get_env_var_name(char *line, int *i)
 {
-	int		i;
-	int		j;
-	int		size;
+	char	*name;
 
-	i = expand->lex_index;
-	j = 0;
-	size = 0;
-	while (lexer[i].word[j] && lexer[i].word[j] != EXPAND)
-		j++;
-	if (lexer[i].word[j] == EXPAND)
-		j++;
-	while (ft_isalnum(lexer[i].word[j] || lexer[i].word[j] == UNDERSCORE))
-		size++;
-	name = malloc(sizeof(char) * (size + 1));
-	if (!name)
-		return (NULL);
-	size = 0;
-	while (ft_isalnum(lexer[i].word[i] || lexer[i].word[i] == UNDERSCORE))
-		name[size++] = lexer[i].word[j++];
-	name[size] = '\0';
+	name = NULL;
+	while (ft_isalnum(line[*i]) || line[*i] != UNDERSCORE)
+	{
+		name = ft_strjoin_char(name, line[*i]);
+		i++;
+	}
 	return (name);
 }

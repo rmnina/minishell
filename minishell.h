@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:46:13 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/29 18:54:07 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/11/29 21:46:19 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,11 +57,13 @@ enum e_type {
 typedef struct	s_quotes {
 	bool	case_single;
 	bool	case_double;
+	bool	case_quotes;
 }	t_quotes;
 
 typedef struct	s_expand {
 	int		pos;
 	int		lex_index;
+	bool	left_expand;
 }	t_expand;
 
 typedef struct	s_command {
@@ -107,12 +109,15 @@ int			is_in_quote(char c, t_quotes *quotes);
 void		error_quotes(char *line, t_quotes *quotes);
 void		ft_error_lexer(t_command *command);
 int			special_types(char c);
-void		get_type(t_command *token);
+void		get_type(t_command *token, t_quotes *quotes);
 int			is_expand(char *line);
-char		*get_env_var_name(t_command *lexer, t_expand *expand, char *name, t_quotes *quotes);
+char		*get_env_var_name(char *line, int *i);
+void		init_get_token(t_command *token, t_quotes *quotes, t_expand *expand);
+char		*init_get_expand(t_command *token, char *line, int *i, t_expand *expand);
+t_command	*get_command(char *line, t_quotes *quotes, t_expand *expand);
 
 //Parser
-char	**parse_command_line(char *input);
+char	**init_parsing(char *input);
 void	free_parsed_command_line(char **argv);
 int		 expand_size(char *var);
 

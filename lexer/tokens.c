@@ -6,13 +6,13 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 00:19:58 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/29 18:15:34 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/11/29 21:56:22 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-t_command	get_special_type_token(char *line, int *i)
+t_command	get_special_type_token(char *line, int *i, t_quotes *quotes)
 {
 	t_command	token;
 	
@@ -34,136 +34,96 @@ t_command	get_special_type_token(char *line, int *i)
 		token.word = char_to_str(line[*i]);
 		*i += 1;
 	}
-	get_type(&token);
+	get_type(&token, quotes);
 	return (token);
 }
 
-void	get_lex_expand(char *line, int *i, t_command *token, t_quotes *quotes)
+int	parse_quotes(char *line, int *i, t_quotes *quotes)
 {
-	char			*name;
+	if (line[*i] == SINGLE_QUOTE && quotes->case_double == FALSE)
+	{
+		*i += 1;
+		return (2);
+	}
+	else if (line[*i] == DOUBLE_QUOTE && quotes->case_single == FALSE)
+	{
+		*i += 1;
+		return (2);
+	}
+	else if (line[*i] == SPACE && quotes->case_double == FALSE && quotes->case_single == FALSE)
+		return (1);
+	return (0);
+}
+
+t_command	get_lex_expand(char *line, int *i, t_quotes *quotes)
+{
+	t_command		token;
+	t_expand		expand;
 	char			*var;
 	static int		j = 0;
-	int				error;
 
-	name = get_env_var_name;
-	var = getenv(name);
-	error = 0;
-	j = 0;
-	*i++;
+	var = init_get_expand(&token, line, i, &expand);
+	*i += 1;
 	while (ft_isalnum(line[*i]) || line[*i] == UNDERSCORE)
-		*i++;
+		*i += 1;
 	while (var[j])
 	{
 		is_in_quote(var[j], quotes);
 		special_types(var[j]);
-		if (special_types(var[j]) != 0)
-		{
-			error_expand(special_types(var[j]));
-			error++;
-		}
-		else if (var[j] == SINGLE_QUOTE && quotes->case_double == FALSE)
-			j++;
-		else if (var[j] == DOUBLE_QUOTE && quotes->case_single == FALSE)
-			j++;
-		else if ((var[j] == SPACE && quotes->case_double == FALSE && quotes->case_single == FALSE))
+		if (parse_quotes(var, &j, quotes) == 1)
 			break;
-		else
+		else if (!parse_quotes(var, &j, quotes))
 		{
-			token->word = ft_strjoin_char(token->word, var[j]);
+			token.word = ft_strjoin_char(token.word, var[j]);
 			j++;
 		}
 	}
-	get_type(token);
+	token.type = WORD;
+	if (var[j] != '\0')
+		expand.left_expand = TRUE;
 	return (token);
-	
 }
 
-// void	get_lex_expand(char *line, int *i, t_command *token, t_quotes *quotes)
-// {
-// 	while (line[*i] != SPACE && quotes->case_double != FALSE && quotes->case_single != FALSE)
-// 	{
-// 		special_types(line[*i]);
-// 		if (line[*i] == EXPAND && line[*i + 1] && \
-// 		(line[*i + 1] == SINGLE_QUOTE || line[*i + 1] == DOUBLE_QUOTE))
-// 		{
-// 			token->is_expand = FALSE;
-// 			*i += 1;
-// 			return;
-// 		}
-// 		else
-// 		{
-// 			token->is_expand == TRUE;
-// 			ft_strjoin_char(token->word, line[*i]);
-// 			*i += 1;
-// 		}
-// 	}
-// 	if (quotes->case_double == TRUE || quotes->case_single == TRUE)
-// 	{
-// 		if (quotes->case_double == TRUE)
-// 		{
-// 			while (line[*i] != SPACE && quotes->case_double == TRUE)
-// 			{
-// 				special_types(line[*i]);
-// 				ft_strjoin_char(token->word, line[*i]);
-// 				*i++;
-// 			}
-// 		}
-// 		else if (quotes->case_single == TRUE)
-// 		{
-// 			while (line[*i] != SPACE && quotes->case_single == TRUE)
-// 			{
-// 				special_types(line[*i]);
-// 				ft_strjoin_char(token->word, line[*i]);
-// 				*i++;
-// 			}
-// 		}
-// 	}
-// 	return;
-// }
-
-t_command	get_token(char *line, t_quotes *quotes, int *i)
+t_command	get_token(char *line, t_quotes *quotes, int *i, t_expand *expand)
 {
 	t_command	token;
-	char		*name;
-	char		*var;
-	
-	name = get_env_var_name;
-	var = getenv(name);
-	token.word = NULL;
-	quotes->case_single = FALSE;
-	quotes->case_double = FALSE;
+
+	init_get_token(&token, quotes, expand);
 	while (line[*i])
 	{
 		is_in_quote(line[*i], quotes);
 		special_types(line[*i]);
 		if (special_types(line[*i] == EXPAND) && quotes->case_single == FALSE \
 		&& quotes->case_double == FALSE)
-			get_lex_expand(line, *i, &token, quotes);
-		else if (line[*i] == SINGLE_QUOTE && quotes->case_double == FALSE)
-			*i += 1;
-		else if (line[*i] == DOUBLE_QUOTE && quotes->case_single == FALSE)
-			*i += 1;
+			token = get_lex_expand(line, i, quotes);
+		else if (parse_quotes(line, i, quotes) == 1)
+			break;
 		else if (!is_in_quote(line[*i], quotes) && special_types(line[*i]) != 0 \
 		&& special_types(line[*i]) != EXPAND)
 		{
 			if (token.word != NULL)
 				break;
 			else 
-				return (token = get_special_type_token(line, i));
+				return (token = get_special_type_token(line, i, quotes));
 		}
-		else if ((line[*i] == SPACE && quotes->case_double == FALSE && quotes->case_single == FALSE))
-			break;
-		else
+		else if (!parse_quotes(line, i, quotes))
 		{
 			token.word = ft_strjoin_char(token.word, line[*i]);
 			*i += 1;
 		}
 	}
-	get_type(&token);
 	return (token);
 }
 
-t_command	*get_command(char *line, t_quotes *quotes)
+t_command	token_null(t_command *token)
+{
+	token->word = malloc(sizeof(char));
+	token->word[0] = '\0';
+	token->type = 0;
+	return (*token);
+}
+
+t_command	*get_command(char *line, t_quotes *quotes, t_expand *expand)
 {
 	t_command	*command;
 	t_command	token;
@@ -178,17 +138,19 @@ t_command	*get_command(char *line, t_quotes *quotes)
 			while (line[i] && line[i] == SPACE)
 				i++;
 		}
-		token = get_token(line, quotes, &i);
+		if (expand->left_expand == TRUE)
+			token = get_lex_expand(line, &i, quotes);
+		else
+			token = get_token(line, quotes, &i, expand);
 		if (token.word == NULL)
 			i++;
-		else if (token.is_expand == TRUE)
-		{
-			command = ft_struct_join(command, token);
-			
-		}
 		else
+		{
+			get_type(&token, quotes);
 			command = ft_struct_join(command, token);
+		}
 	}
+	command = ft_struct_join(command, token_null(&token));
 	return (command);
 }
 
@@ -196,15 +158,17 @@ t_command	*get_command(char *line, t_quotes *quotes)
 // {
 // 	t_quotes	quotes;
 // 	t_command	*command;
+// 	t_expand	expand;
 // 	// int			i = 0;
 
+// 	expand.left_expand = FALSE;
 // 	quotes.case_double = FALSE;
 // 	quotes.case_single = FALSE;
 // 	command = NULL;
 // 	if (argc == 2)
 // 	{
 // 		error_quotes(argv[1], &quotes);
-// 		command = get_command(argv[1], &quotes);
+// 		command = get_command(argv[1], &quotes, &expand);
 // 		ft_error_lexer(command);
 // 		for(int i = 0; command[i].word != NULL; i++)
 // 		{

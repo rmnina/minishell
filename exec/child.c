@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   child.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2023/11/28 19:43:41 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/11/29 21:45:35 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	execute_command(char *input, char **envp)
 	char	*path;
 	char	**cmd_args;
 
-	cmd_args = parse_command_line(input);
+	cmd_args = init_parsing(input);
 	if (!cmd_args)
 	{
 		perror("parse_commande_line");
@@ -137,7 +137,7 @@ void	handle_command(char *input, t_code *code, char **argv, char **envp)
 		execute_status_builtin(code);
 		return ;
 	}
-	cmd_args = parse_command_line(input);
+	cmd_args = init_parsing(input);
 	if (handle_redirection(&exec, input, argv, envp))
 	{
 		free_parsed_command_line(cmd_args);

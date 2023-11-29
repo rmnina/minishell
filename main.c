@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:45:11 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/29 18:54:43 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/11/29 21:36:41 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,8 @@
 
 int	main(int argc, char **argv, char **envp)
 {
-	t_code	*code;
-	char	*line;
-	char	*prompt;
-	char	**new_argv;
+	t_code		*code;
+	char		*line;
 
 	if (argc != 1)
 	{
@@ -30,8 +28,7 @@ int	main(int argc, char **argv, char **envp)
 	code->code_status = 0;
 	while (1)
 	{
-		prompt = "minishell > ";
-		line = readline(prompt);
+		line = readline("minishell > ");
 		if (!line)
 		{
 			printf("exit\n");

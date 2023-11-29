@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 17:13:45 by juandrie          #+#    #+#             */
-/*   Updated: 2023/11/28 19:57:22 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/11/29 21:48:05 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,8 @@ int	handle_redirection(t_exec *exec, char *input, char **argv, char **envp)
 	t_pipe	pipes;
 	char	**cmd_args1;
 
-	cmd_args1 = parse_command_line(input);
+	(void)argv;
+	cmd_args1 = init_parsing(input);
 	redir_symbol(exec, cmd_args1);
 	if (exec->redirection_type == REDIRECT_APPEND_INPUT)
 	{
