@@ -1,80 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   child.c                                            :+:      :+:    :+:   */
+/*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2023/11/28 19:43:41 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/11/29 19:01:05 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-char	*find_command_in_segment(char *segment, char *command)
-{
-	char	full_path[PATH_MAX];
-
-	if (segment == NULL || command == NULL \
-		|| ft_strlen(segment) + ft_strlen(command) + 2 > PATH_MAX)
-		return (NULL);
-	ft_strcpy(full_path, segment);
-	ft_strcat(full_path, "/");
-	ft_strcat(full_path, command);
-	if (access(full_path, X_OK) == 0)
-		return (ft_strdup(full_path));
-	return (NULL);
-}
-
-char	*find_command_path(char *command)
-{
-	char	*path_env;
-	char	*start;
-	char	*end;
-	char	*found_path;
-
-	if (ft_strchr(command, '/') != NULL)
-		return (ft_strdup(command));
-	path_env = getenv("PATH");
-	if (!path_env)
-		return (NULL);
-	start = path_env;
-	end = ft_strchr(start, ':');
-	while (end != NULL)
-	{
-		*end = '\0';
-		found_path = find_command_in_segment(start, command);
-		*end = ':';
-		if (found_path != NULL)
-			return (found_path);
-		start = end + 1;
-		end = ft_strchr(start, ':');
-	}
-	return (find_command_in_segment(start, command));
-}
-
-void	execute_command(char *input, char **envp)
-{
-	char	*path;
-	char	**cmd_args;
-
-	cmd_args = parse_command_line(input);
-	if (!cmd_args)
-	{
-		perror("parse_commande_line");
-		exit(EXIT_FAILURE);
-	}
-	path = find_command_path(cmd_args[0]);
-	if (!path)
-	{
-		perror("Command not found");
-		exit(EXIT_FAILURE);
-	}
-	execve(path, cmd_args, envp);
-	perror("execve");
-	exit(EXIT_FAILURE);
-}
 
 int	execute_builtins(char **cmd_args, char **envp)
 {
@@ -127,29 +63,60 @@ void	execute_non_builtin(char *input, char **envp, t_code *code)
 	}
 }
 
+void	heredoc_child(t_pipe *pipes, char **argv, char **envp)
+{
+	char	*path;
+	char	*new_argv[2];
+
+	close(pipes->pipefd[1]);
+	if (dup2(pipes->pipefd[0], STDIN_FILENO) == -1)
+	{
+		perror("dup2");
+		exit(EXIT_FAILURE);
+	}
+	close(pipes->pipefd[0]);
+	path = find_command_path(argv[0]);
+	if (!path)
+	{
+		perror("path");
+		exit(EXIT_FAILURE);
+	}
+	new_argv[0] = ft_strdup(argv[0]);
+	new_argv[1] = NULL;
+	execve(path, new_argv, envp);
+	perror("execve");
+	exit(EXIT_FAILURE);
+}
+
 void	handle_command(char *input, t_code *code, char **argv, char **envp)
 {
 	char	**cmd_args;
 	t_exec	exec;
+	t_pipe	pipes;
 
 	if (ft_strcmp(input, "$?") == 0)
 	{
 		execute_status_builtin(code);
 		return ;
 	}
-	cmd_args = parse_command_line(input);
-	if (handle_redirection(&exec, input, argv, envp))
+	if (commands_with_pipes_detected(input))
 	{
+		split_command_for_pipes(input, &pipes);
+		execute_pipe(&pipes, envp);
+	}
+	else
+	{
+		cmd_args = parse_command_line(input);
+		if (handle_redirection(&exec, input, argv, envp))
+		{
+			free_parsed_command_line(cmd_args);
+			return ;
+		}
+		if (execute_builtins(cmd_args, envp) == -1)
+			execute_non_builtin(input, envp, code);
 		free_parsed_command_line(cmd_args);
-		return ;
 	}
-	if (execute_builtins(cmd_args, envp) == -1)
-	{
-		execute_non_builtin(input, envp, code);
-	}
-	free_parsed_command_line(cmd_args);
 }
-
 // int	main(int argc, char **argv, char **envp)
 // {
 // 	pid_t	pid;
