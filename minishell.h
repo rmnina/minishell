@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:46:13 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/29 13:35:04 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/11/29 17:44:10 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,11 +41,12 @@ enum e_type {
 	RIGHT_CHEV,
 	DB_LEFT_CHEV,
 	DB_RIGHT_CHEV,
-	EXPAND 
+	EXPAND,
 };
 
 # define SINGLE_QUOTE 39
 # define DOUBLE_QUOTE 34
+# define UNDERSCORE 95
 # define REDIRECT_OUTPUT 1
 # define REDIRECT_INPUT 2
 # define NO_REDIRECTION 3
@@ -58,11 +59,8 @@ typedef struct	s_quotes {
 }	t_quotes;
 
 typedef struct	s_expand {
-	int		col;
-	int		row;
-	int 	space;
-	char	*new_var;
-	int		words;
+	int		pos;
+	int		lex_index;
 }	t_expand;
 
 typedef struct	s_command {
@@ -102,7 +100,8 @@ void		error_quotes(char *line, t_quotes *quotes);
 void		ft_error_lexer(t_command *command);
 int			special_types(char c);
 void		get_type(t_command *token);
-int			is_expand(char *line):
+int			is_expand(char *line);
+char		*get_env_var_name(t_command *lexer, t_expand *expand, char *name, t_quotes *quotes);
 
 //Parser
 char	**parse_command_line(char *input);

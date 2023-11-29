@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 00:19:58 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/27 21:49:05 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/11/29 18:15:34 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,97 @@ t_command	get_special_type_token(char *line, int *i)
 	return (token);
 }
 
+void	get_lex_expand(char *line, int *i, t_command *token, t_quotes *quotes)
+{
+	char			*name;
+	char			*var;
+	static int		j = 0;
+	int				error;
+
+	name = get_env_var_name;
+	var = getenv(name);
+	error = 0;
+	j = 0;
+	*i++;
+	while (ft_isalnum(line[*i]) || line[*i] == UNDERSCORE)
+		*i++;
+	while (var[j])
+	{
+		is_in_quote(var[j], quotes);
+		special_types(var[j]);
+		if (special_types(var[j]) != 0)
+		{
+			error_expand(special_types(var[j]));
+			error++;
+		}
+		else if (var[j] == SINGLE_QUOTE && quotes->case_double == FALSE)
+			j++;
+		else if (var[j] == DOUBLE_QUOTE && quotes->case_single == FALSE)
+			j++;
+		else if ((var[j] == SPACE && quotes->case_double == FALSE && quotes->case_single == FALSE))
+			break;
+		else
+		{
+			token->word = ft_strjoin_char(token->word, var[j]);
+			j++;
+		}
+	}
+	get_type(token);
+	return (token);
+	
+}
+
+// void	get_lex_expand(char *line, int *i, t_command *token, t_quotes *quotes)
+// {
+// 	while (line[*i] != SPACE && quotes->case_double != FALSE && quotes->case_single != FALSE)
+// 	{
+// 		special_types(line[*i]);
+// 		if (line[*i] == EXPAND && line[*i + 1] && \
+// 		(line[*i + 1] == SINGLE_QUOTE || line[*i + 1] == DOUBLE_QUOTE))
+// 		{
+// 			token->is_expand = FALSE;
+// 			*i += 1;
+// 			return;
+// 		}
+// 		else
+// 		{
+// 			token->is_expand == TRUE;
+// 			ft_strjoin_char(token->word, line[*i]);
+// 			*i += 1;
+// 		}
+// 	}
+// 	if (quotes->case_double == TRUE || quotes->case_single == TRUE)
+// 	{
+// 		if (quotes->case_double == TRUE)
+// 		{
+// 			while (line[*i] != SPACE && quotes->case_double == TRUE)
+// 			{
+// 				special_types(line[*i]);
+// 				ft_strjoin_char(token->word, line[*i]);
+// 				*i++;
+// 			}
+// 		}
+// 		else if (quotes->case_single == TRUE)
+// 		{
+// 			while (line[*i] != SPACE && quotes->case_single == TRUE)
+// 			{
+// 				special_types(line[*i]);
+// 				ft_strjoin_char(token->word, line[*i]);
+// 				*i++;
+// 			}
+// 		}
+// 	}
+// 	return;
+// }
+
 t_command	get_token(char *line, t_quotes *quotes, int *i)
 {
 	t_command	token;
+	char		*name;
+	char		*var;
 	
+	name = get_env_var_name;
+	var = getenv(name);
 	token.word = NULL;
 	quotes->case_single = FALSE;
 	quotes->case_double = FALSE;
@@ -49,20 +136,22 @@ t_command	get_token(char *line, t_quotes *quotes, int *i)
 	{
 		is_in_quote(line[*i], quotes);
 		special_types(line[*i]);
-		if (line[*i] == SINGLE_QUOTE && quotes->case_double == FALSE)
+		if (special_types(line[*i] == EXPAND) && quotes->case_single == FALSE \
+		&& quotes->case_double == FALSE)
+			get_lex_expand(line, *i, &token, quotes);
+		else if (line[*i] == SINGLE_QUOTE && quotes->case_double == FALSE)
 			*i += 1;
 		else if (line[*i] == DOUBLE_QUOTE && quotes->case_single == FALSE)
 			*i += 1;
 		else if (!is_in_quote(line[*i], quotes) && special_types(line[*i]) != 0 \
-		&& special_types(line[*i]) != 7)
+		&& special_types(line[*i]) != EXPAND)
 		{
 			if (token.word != NULL)
 				break;
 			else 
 				return (token = get_special_type_token(line, i));
 		}
-		else if ((line[*i] == SPACE && quotes->case_double == FALSE \
-		&& quotes->case_single == FALSE))
+		else if ((line[*i] == SPACE && quotes->case_double == FALSE && quotes->case_single == FALSE))
 			break;
 		else
 		{
@@ -92,6 +181,11 @@ t_command	*get_command(char *line, t_quotes *quotes)
 		token = get_token(line, quotes, &i);
 		if (token.word == NULL)
 			i++;
+		else if (token.is_expand == TRUE)
+		{
+			command = ft_struct_join(command, token);
+			
+		}
 		else
 			command = ft_struct_join(command, token);
 	}

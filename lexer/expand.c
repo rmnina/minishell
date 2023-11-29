@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 15:15:34 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/29 13:25:44 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/11/29 17:40:42 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,40 +31,47 @@ int	expand_size(char *var)
 	return (size);
 }
 
-int	command_size(t_command *lexer, char *var)
+int	command_size(t_command *lexer, char *var, t_expand *expand)
 {
 	int	i;
+	int	size;
 
 	i = 0;
-	while (lexer[i].word)
-	{
+	size = 0;
+	while (lexer[i].type && lexer[i].type != EXPAND)
 		i++;
+	expand->lex_index = i;
+	if (lexer[i].type == EXPAND)
+	{
+		while (lexer[i].word[size])
+			size++;
 	}
-	return (i + (expand_size(var) - 1));
+	else
+		return (0);
+	return (size + (expand_size(var) - 1));
 }
 
-char	*get_var_name(t_command *lexer, int *i, char *name)
+char	*get_var_name(t_command *lexer, t_expand *expand, char *name, t_quotes *quotes)
 {
+	int		i;
 	int		j;
 	int		size;
 
+	i = expand->lex_index;
 	j = 0;
 	size = 0;
-	while (lexer[*i].word && lexer[*i].word[j] != EXPAND)
+	while (lexer[i].word[j] && lexer[i].word[j] != EXPAND)
 		j++;
-	if (lexer[*i].word[j] != EXPAND)
-	{
+	if (lexer[i].word[j] == EXPAND)
 		j++;
-		size = j;
-		while (lexer[*i].word[size])
-			size++;
-	}
-	name = malloc(sizeof(char) * (size - j) + 1);
+	while (ft_isalnum(lexer[i].word[j] || lexer[i].word[j] == UNDERSCORE))
+		size++;
+	name = malloc(sizeof(char) * (size + 1));
 	if (!name)
 		return (NULL);
 	size = 0;
-	while (lexer[*i].word[j])
-		name[size++] = lexer[*i].word[j++];
+	while (ft_isalnum(lexer[i].word[i] || lexer[i].word[i] == UNDERSCORE))
+		name[size++] = lexer[i].word[j++];
 	name[size] = '\0';
 	return (name);
 }
