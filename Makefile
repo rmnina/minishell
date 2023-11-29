@@ -6,43 +6,75 @@
 #    By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/14 14:15:25 by jdufour           #+#    #+#              #
-#    Updated: 2023/11/14 14:22:12 by jdufour          ###   ########.fr        #
+#    Updated: 2023/11/29 23:56:30 by jdufour          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
+GREEN=\033[0;32m
+TURQUOISE=\033[0;36m
+PINK=\033[0;35m
+NC=\033[0m
+
 NAME = minishell
 
-SRCS =
+SRCS = main.c \
+	builtins/cd.c \
+	builtins/code.c \
+	builtins/echo.c \
+	builtins/env.c \
+	builtins/exit.c \
+	builtins/export.c \
+	builtins/pwd.c \
+	builtins/unset.c \
+	exec/exec_pipe.c \
+	exec/exec.c \
+	exec/heredoc.c \
+	exec/path.c \
+	exec/pipe_command.c \
+	exec/redirection.c \
+	lexer/error_lexer.c \
+	lexer/expand.c \
+	lexer/init.c \
+	lexer/special_char.c \
+	lexer/tokens.c \
+	parser/parse_command.c \
+	utils/frees.c \
+	utils/joins.c \
 
-OBJS = $(SCRS:%.c=%.o)
+OBJS = $(SRCS:.c=.o)
 
 CC = gcc
 
 FLAGS = -Wall -Wextra -Werror
 
-INCLUDES = 
-
-LIB = -lreadline -lft
-
-RM = rm -rfv
+RM = rm -rf
 
 all: $(NAME)
 
-%.o : %.c
-	$(CC) $(FLAGS) $(INCLUDES) -c $< -o $@
+$(NAME) : libft/libft.a $(OBJS)
+	@echo "$(TURQUOISE)Compilation de $(NAME)...$(NC)"
+	@$(CC) $(FLAGS) $(OBJS) -L libft -lft -lreadline -o $(NAME)
 
-$(NAME) : $(OBJS)
-	# make -C libft
-	$(CC) $(FLAGS) $(INCLUDES) -o $(NAME) $(OBJS) $(LIB)
+%.o: %.c
+	@$(CC) $(FLAGS) -c $< -o $@
+
+libft/libft.a:
+	@echo "$(TURQUOISE)Compilation de la libft...$(NC)"
+	@make -C libft/
 
 clean:
-	$(RM) $(OBJS)
-	# make -C libft clean
+	@echo "$(GREEN)Suppression des fichiers objets...$(NC)"
+	@$(RM) $(OBJS)
+	@make clean -C libft/
 
 fclean: clean
-		$(RM) $(NAME)
-		# make -C libft fclean
+	@echo "$(PINK)Suppression de $(NAME)...$(NC)"
+	@$(RM) $(NAME)
+	@echo "$(PINK)Suppression de la libft...$(NC)"
+	@make fclean -C libft/
 
 re: fclean all
+
+.SILENT:
 
 .PHONY: all clean fclean re

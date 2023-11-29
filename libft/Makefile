@@ -6,7 +6,7 @@
 #    By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/31 12:01:53 by jdufour           #+#    #+#              #
-#    Updated: 2023/11/29 18:55:40 by jdufour          ###   ########.fr        #
+#    Updated: 2023/11/29 23:52:47 by jdufour          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -71,25 +71,28 @@ HEADER = libft.h
 
 CC = gcc
 
-RM = rm -rfv
+RM = rm -rf
 
 FLAGS = -Wall -Wextra -Werror
 
 all: ${NAME}
 
 ${NAME}: ${OBJS}
-	${CC} ${FLAGS} -c ${SRCS}
-	ar cr ${NAME} ${OBJS}
+	@${CC} ${FLAGS} -c ${SRCS} ${SRCS_BONUS}
+	@ar cr ${NAME} ${OBJS}
 
 bonus:  ${OBJS_BONUS}
-	${CC} ${FLAGS} -c ${SRC_BONUS}
-	ar cr ${NAME} ${OBJS_BONUS}
+	@${CC} ${FLAGS} -c ${SRCS_BONUS}
+	@ar cr ${NAME} ${OBJS_BONUS}
+
+%.o: %.c
+	@$(CC) $(FLAGS) -c $< -o $@
 
 clean: 
-	${RM} ${OBJS}
-	${RM} ${OBJS_BONUS}
+	@${RM} ${OBJS}
+	@${RM} ${OBJS_BONUS}
 		
 fclean: clean
-	${RM} ${NAME}
+	@${RM} ${NAME}
 
 re: fclean all

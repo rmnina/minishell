@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 20:18:37 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/29 21:10:02 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/11/30 00:02:56 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,4 @@ void	init_get_token(t_command *token, t_quotes *quotes, t_expand *expand)
 {
 	expand->left_expand = FALSE;
 	token->word = NULL;
-	quotes->case_single = FALSE;
-	quotes->case_double = FALSE;
 }
