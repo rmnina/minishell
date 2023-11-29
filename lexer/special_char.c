@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 04:33:44 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/27 04:57:59 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/11/28 00:02:30 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,22 @@ void	get_type(t_command *token)
 		token->type = DB_RIGHT_CHEV;
 	else if (token->word[0] == '>')
 		token->type = RIGHT_CHEV;
-	else if (token->word[0] == '$')
+	else if (is_expand(token->word))
 		token->type = EXPAND;
 	else
 		token->type = WORD;
+}
+
+int	is_expand(char *line)
+{
+	int	i;
+
+	i = 0;
+	while (line[i])
+	{
+		if (line[i] == EXPAND)
+			return (1);
+		i++;
+	}
+	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:46:13 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/27 06:23:21 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/11/29 13:35:04 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,15 +58,17 @@ typedef struct	s_quotes {
 }	t_quotes;
 
 typedef struct	s_expand {
-	int	col;
-	int	row;
-	int space;
+	int		col;
+	int		row;
+	int 	space;
+	char	*new_var;
+	int		words;
 }	t_expand;
 
 typedef struct	s_command {
 	char			*word;
 	int				type;
-	int				total;
+	bool			is_expand;
 }	t_command;
 
 typedef struct	s_alloc {
@@ -100,10 +102,12 @@ void		error_quotes(char *line, t_quotes *quotes);
 void		ft_error_lexer(t_command *command);
 int			special_types(char c);
 void		get_type(t_command *token);
+int			is_expand(char *line):
 
 //Parser
 char	**parse_command_line(char *input);
 void	free_parsed_command_line(char **argv);
+int		 expand_size(char *var);
 
 //Utils
 t_command	*ft_struct_join(t_command *tok1, t_command tok2);
