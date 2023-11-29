@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 16:22:53 by juandrie          #+#    #+#             */
-/*   Updated: 2023/11/28 19:12:47 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/11/29 10:29:36 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,49 +35,6 @@ void	free_line_nodes(t_line *head)
 		free(temp->line);
 		free(temp);
 	}
-}
-
-pid_t	heredoc_pipe(t_pipe *pipes)
-{
-	pid_t	pid;
-
-	if (pipe(pipes->pipefd) == -1)
-	{
-		perror("pipe");
-		exit(EXIT_FAILURE);
-	}
-	pid = fork();
-	if (pid == -1)
-	{
-		perror("fork");
-		exit(EXIT_FAILURE);
-	}
-	return (pid);
-}
-
-void	heredoc_child(t_pipe *pipes, char **argv, char **envp)
-{
-	char	*path;
-	char	*new_argv[2];
-
-	close(pipes->pipefd[1]);
-	if (dup2(pipes->pipefd[0], STDIN_FILENO) == -1)
-	{
-		perror("dup2");
-		exit(EXIT_FAILURE);
-	}
-	close(pipes->pipefd[0]);
-	path = find_command_path(argv[0]);
-	if (!path)
-	{
-		perror("path");
-		exit(EXIT_FAILURE);
-	}
-	new_argv[0] = ft_strdup(argv[0]);
-	new_argv[1] = NULL;
-	execve(path, new_argv, envp);
-	perror("execve");
-	exit(EXIT_FAILURE);
 }
 
 void	write_pipe(int pipefd, t_line *head)
@@ -123,7 +80,7 @@ void	read_add(int pipefd, const char *delimiter)
 	free_line_nodes(head);
 }
 
-void	here_doc(const char *delimiter, t_pipe *pipes, char **argv, char **envp)
+void	heredoc(const char *delimiter, t_pipe *pipes, char **argv, char **envp)
 {
 	pid_t	pid;
 
