@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:45:11 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/27 02:34:39 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/11/29 18:54:43 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ int	main(int argc, char **argv, char **envp)
 	t_code	*code;
 	char	*line;
 	char	*prompt;
+	char	**new_argv;
 
 	if (argc != 1)
 	{

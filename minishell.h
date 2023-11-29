@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:46:13 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/29 17:44:10 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/11/29 18:54:07 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@
 # include <curses.h>
 # include <term.h>
 # include "libft/libft.h"
+# include <math.h>
 
 enum e_type {
 	WORD = 1,
@@ -81,6 +82,7 @@ typedef struct	s_exec {
 	int		redirect_type;
 	char	*redirection_file;
 	int		redirection_type;
+	int		redirection_append;
 }	t_exec;
 
 typedef struct	s_pipe {
@@ -93,6 +95,12 @@ typedef struct	s_pipe {
 typedef struct	s_code {
 	int	code_status;
 }	t_code;
+
+typedef struct s_line {
+	char			*line;
+	struct s_line	*next;
+}	t_line;
+
 
 //Lexer
 int			is_in_quote(char c, t_quotes *quotes);

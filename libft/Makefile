@@ -6,7 +6,7 @@
 #    By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/31 12:01:53 by jdufour           #+#    #+#              #
-#    Updated: 2023/11/21 15:19:41 by jdufour          ###   ########.fr        #
+#    Updated: 2023/11/29 18:55:40 by jdufour          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -46,6 +46,7 @@ ft_putendl_fd.c\
 ft_strchr.c\
 ft_strlcat.c\
 ft_strncmp.c\
+ft_strcmp.c\
 ft_tolower.c\
 ft_itoa.c\
 ft_strtrim.c\
