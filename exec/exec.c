@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2023/11/30 15:39:22 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/11/30 16:32:53 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,6 @@ void	heredoc_child(t_pipe *pipes, char **argv, char **envp)
 	new_argv[0] = ft_strdup(argv[0]);
 	new_argv[1] = NULL;
 	execve(path, new_argv, envp);
-	perror("execve");
 	exit(EXIT_FAILURE);
 }
 

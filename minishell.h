@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:46:13 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/30 15:36:38 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/11/30 16:31:31 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,7 +159,7 @@ int		my_exit(char **cmd_args);
 int		my_export(char **envp);
 int		my_pwd(char **unused_args, char **unused_envp);
 int		my_unset(char ***envp, char **names);
-void	execute_status_builtin(t_code *code);
+int		execute_status_builtin(t_code *code);
 int		execute_builtins(char **cmd_args, char **envp);
 
 //heredoc

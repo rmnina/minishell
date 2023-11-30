@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 10:21:29 by juandrie          #+#    #+#             */
-/*   Updated: 2023/11/30 16:11:54 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/11/30 16:19:38 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void	execute_command(char *input, char **envp)
 	cmd_args = init_parsing(input);
 	if (!cmd_args)
 	{
-		perror("parse_commande_line");
+		perror("init parsing");
 		exit(EXIT_FAILURE);
 	}
 	path = find_command_path(cmd_args[0]);

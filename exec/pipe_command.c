@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 14:59:17 by juandrie          #+#    #+#             */
-/*   Updated: 2023/11/29 17:09:46 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/11/30 16:54:16 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	split_command_for_pipes(char *input, t_pipe *pipes)
 {
 	char	*pipe_ptr;
-
+	//execute que si de type pipe et pas de type word
 	pipe_ptr = ft_strchr(input, '|');
 	if (pipe_ptr)
 	{
