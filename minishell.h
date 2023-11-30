@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:46:13 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/29 22:07:28 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/11/30 15:07:20 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,7 @@ int			special_types(char c);
 void		get_type(t_command *token, t_quotes *quotes);
 int			is_expand(char *line);
 char		*get_env_var_name(char *line, int *i);
-void		init_get_token(t_command *token, t_quotes *quotes, t_expand *expand);
+void		init_get_token(t_command *token, t_expand *expand);
 char		*init_get_expand(t_command *token, char *line, int *i, t_expand *expand);
 t_command	*get_command(char *line, t_quotes *quotes, t_expand *expand);
 

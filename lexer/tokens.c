@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 00:19:58 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/30 00:02:20 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/11/30 15:07:47 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ t_command	get_token(char *line, t_quotes *quotes, int *i, t_expand *expand)
 {
 	t_command	token;
 
-	init_get_token(&token, quotes, expand);
+	init_get_token(&token, expand);
 	while (line[*i])
 	{
 		is_in_quote(line[*i], quotes);

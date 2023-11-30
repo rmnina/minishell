@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 20:18:37 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/30 00:02:56 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/11/30 15:07:06 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ char	*init_get_expand(t_command *token, char *line, int *i, t_expand *expand)
 	return (var);
 }
 
-void	init_get_token(t_command *token, t_quotes *quotes, t_expand *expand)
+void	init_get_token(t_command *token, t_expand *expand)
 {
 	expand->left_expand = FALSE;
 	token->word = NULL;
