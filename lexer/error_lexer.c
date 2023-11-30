@@ -6,25 +6,85 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 02:11:36 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/20 15:58:37 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/11/27 04:52:27 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	error_quotes(t_quotes *quotes)
+void	error_quotes(char *line, t_quotes *quotes)
 {
-	if (quotes->single_quotes % 2 == 0)
+	int	i;
+
+	i = 0;
+	while (line[i])
 	{
-		if ((quotes->double_quotes % 2 != 0 && quotes->double_embedded % 2 == 0) \
-		|| (quotes->double_quotes % 2 == 0 && quotes->double_embedded % 2 != 0))
-			return (1);
+		is_in_quote(line[i], quotes);
+		i++;
 	}
-	if (quotes->double_quotes % 2 == 0)
+	if (quotes->case_double == TRUE)
 	{
-		if ((quotes->single_quotes % 2 != 0 && quotes->single_embedded % 2 == 0) \
-		|| (quotes->single_quotes % 2 == 0 && quotes->single_embedded % 2 != 0))
-			return (1);
+		printf("minishell: syntax error near unexpected token \"\n");
+		exit(2);
 	}
-	return (0);
+	else if (quotes->case_single == TRUE)
+	{
+		printf("minishell: syntax error near unexpected token \'\n");
+		exit(2);
+	}
+}
+
+void	error_use_types(t_command *command)
+{
+	int	i;
+	
+	i = 0;
+	if (!command[0].type)
+		exit(1);
+	if (command[0].type == PIPE)
+	{
+		printf("minishell : syntax error near unexpected token '|'");
+		ft_free_command(command);
+		exit(2);
+	}
+	while (command[i].type)
+		i++;
+	i--;
+	if (command[i].type == RIGHT_CHEV || command[i].type == LEFT_CHEV \
+	|| command[i].type == DB_RIGHT_CHEV || command[i].type == DB_LEFT_CHEV)
+	{
+		printf("minishell : syntax error near unexpected token 'newline'\n");
+		ft_free_command(command);
+		exit(2);
+	}
+}
+
+void	error_nonexistent_type(t_command *command)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 1;
+	while (command[i].type && command[j].type)
+	{
+		if (command[i].type == 5 && command[j].type == 3)
+		{
+			printf("minishell: syntax error near unexpected token '<'\n");
+			exit(2);
+		}
+		else if (command[i].type == 6 && command[j].type == 4)
+		{
+			printf("minishell: syntax error near unexpected token '>'\n");
+			exit(2);
+		}
+		i++;
+		j++;
+	}
+}
+
+void	ft_error_lexer(t_command *command)
+{
+	error_nonexistent_type(command);
+	error_use_types(command);
 }

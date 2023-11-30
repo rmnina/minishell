@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_pipe.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:20:25 by juandrie          #+#    #+#             */
-/*   Updated: 2023/11/29 19:01:32 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/11/30 15:39:02 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ void	process_pipe(char **cmd_args, t_pipe *pipes, char **argv, char **envp)
 {
 	char	*path;
 
+	(void)argv;
 	path = find_command_path(cmd_args[0]);
 	dup2(pipes->pipefd[pipes->dup_fd], pipes->dup_fd);
 	close(pipes->pipefd[0]);
@@ -28,8 +29,8 @@ void	process_pipe(char **cmd_args, t_pipe *pipes, char **argv, char **envp)
 
 void	prepare_pipe_execution(t_pipe *pipes, char ***argv1, char ***argv2)
 {
-	*argv1 = parse_command_line(pipes->command1);
-	*argv2 = parse_command_line(pipes->command2);
+	*argv1 = init_parsing(pipes->command1);
+	*argv2 = init_parsing(pipes->command2);
 	pipe(pipes->pipefd);
 }
 
@@ -85,7 +86,7 @@ pid_t	heredoc_pipe(t_pipe *pipes)
 	return (pid);
 }
 
-void	pid_redir(t_exec *exec, char **argv, char **envp)
+void	pid_redir(t_command *exec, char **argv, char **envp)
 {
 	pid_t	pid;
 

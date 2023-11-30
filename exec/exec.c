@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2023/11/29 19:01:05 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/11/30 15:39:22 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,9 +90,9 @@ void	heredoc_child(t_pipe *pipes, char **argv, char **envp)
 
 void	handle_command(char *input, t_code *code, char **argv, char **envp)
 {
-	char	**cmd_args;
-	t_exec	exec;
-	t_pipe	pipes;
+	char		**cmd_args;
+	t_command	exec;
+	t_pipe		pipes;
 
 	if (ft_strcmp(input, "$?") == 0)
 	{
@@ -106,7 +106,7 @@ void	handle_command(char *input, t_code *code, char **argv, char **envp)
 	}
 	else
 	{
-		cmd_args = parse_command_line(input);
+		cmd_args = init_parsing(input);
 		if (handle_redirection(&exec, input, argv, envp))
 		{
 			free_parsed_command_line(cmd_args);
@@ -117,6 +117,7 @@ void	handle_command(char *input, t_code *code, char **argv, char **envp)
 		free_parsed_command_line(cmd_args);
 	}
 }
+
 // int	main(int argc, char **argv, char **envp)
 // {
 // 	pid_t	pid;

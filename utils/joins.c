@@ -1,46 +1,53 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strjoinchar.c                                   :+:      :+:    :+:   */
+/*   joins.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/19 01:57:10 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/27 01:31:17 by jdufour          ###   ########.fr       */
+/*   Created: 2023/11/26 23:39:05 by jdufour           #+#    #+#             */
+/*   Updated: 2023/11/27 04:28:15 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../minishell.h"
 
-char	*ft_strjoin_char(char *s1, const char c)
+t_command	*ft_struct_join(t_command *tok1, t_command tok2)
 {
-	int		size;
-	char	*res;
-	int		i;
+	int			size;
+	t_command	*res;
+	int			i;
 
 	i = 0;
 	size = 0;
-	if (s1)
+	res = NULL;
+	if (tok1 != NULL)
 	{
-		while (s1 && s1[size])
+		while (tok1[size].word != NULL)
 			size++;
 	}
-	res = malloc(sizeof(char) * (size + 2));
+	res = malloc(sizeof(t_command) * (size + 2));
 	if (!(res))
 		return (NULL);
-	if (size == 0)
+	while (i < size)
 	{
-		res[size] = c;
-		res[size + 1] = '\0';
-		return (res);
-	}
-	while (s1 && s1[i])
-	{
-		res[i] = s1[i];
+		res[i] = tok1[i];
 		i++;
 	}
-	res[i++] = c;
-	res[i] = '\0';
-	free(s1);
+	res[size++] = tok2;
+	res[size].word = NULL;
+	if (tok1)
+		free(tok1);
 	return (res);
+}
+
+
+char	*char_to_str(char c)
+{
+	char	*res;
+
+	res = malloc(sizeof(char) * 2);
+	res[1] = '\0';
+	res[0] = c;
+	return (res); 
 }

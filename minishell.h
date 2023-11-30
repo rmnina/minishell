@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:46:13 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/29 18:39:34 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/11/30 15:36:38 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,54 +43,60 @@ enum e_type {
 	RIGHT_CHEV,
 	DB_LEFT_CHEV,
 	DB_RIGHT_CHEV,
-	EXPAND 
+	EXPAND,
 };
 
 # define SINGLE_QUOTE 39
 # define DOUBLE_QUOTE 34
+# define UNDERSCORE 95
 # define REDIRECT_OUTPUT 1
 # define REDIRECT_INPUT 2
 # define NO_REDIRECTION 3
 # define REDIRECT_APPEND_OUTPUT 4
 # define REDIRECT_APPEND_INPUT 5
 
-typedef struct s_quotes {
-	int		single_quotes;
-	int		double_quotes;
-	int		single_embedded;
-	int		double_embedded;
+typedef struct	s_quotes {
 	bool	case_single;
 	bool	case_double;
+	bool	case_quotes;
 }	t_quotes;
 
-typedef struct s_parsed {
+typedef struct	s_expand {
+	int		pos;
+	int		lex_index;
+	bool	left_expand;
+}	t_expand;
+
+typedef struct	s_command {
 	char			*word;
 	int				type;
-}	t_parsed;
+	char			*file;
+	int				redirect_type;
+	char			*redirection_file;
+	int				redirection_type;
+	int				redirection_append;
+	bool			is_expand;
+}	t_command;
 
-typedef struct s_alloc {
+typedef struct	s_alloc {
 	void	**adr;
 	int		count;
 }	t_alloc;
 
 
-typedef struct s_exec {
+typedef struct	s_exec {
 	char	*command;
-	char	*file;
-	int		redirect_type;
-	char	*redirection_file;
-	int		redirection_type;
-	int		redirection_append;
-}	t_exec;
 
-typedef struct s_pipe {
+} t_exec;
+
+typedef struct	s_pipe {
 	char	*command1;
 	char	*command2;
 	int		pipefd[2];
 	int		dup_fd;
 }	t_pipe;
 
-typedef struct s_code {
+typedef struct	s_code {
 	int	code_status;
 }	t_code;
 
@@ -101,19 +107,26 @@ typedef struct s_line {
 
 
 //Lexer
-
-int		is_quote(char c);
-int		error_quotes(t_quotes *quotes);
-void	embedded_quotes(char *line, t_quotes *quotes);
-void	quotes_count(char *line, t_quotes *quotes);
+int			is_in_quote(char c, t_quotes *quotes);
+void		error_quotes(char *line, t_quotes *quotes);
+void		ft_error_lexer(t_command *command);
+int			special_types(char c);
+void		get_type(t_command *token, t_quotes *quotes);
+int			is_expand(char *line);
+char		*get_env_var_name(char *line, int *i);
+void		init_get_token(t_command *token, t_expand *expand);
+char		*init_get_expand(t_command *token, char *line, int *i, t_expand *expand);
+t_command	*get_command(char *line, t_quotes *quotes, t_expand *expand);
 
 //Parser
-char	**parse_command_line(char *input);
+char	**init_parsing(char *input);
 void	free_parsed_command_line(char **argv);
+int		 expand_size(char *var);
 
 //Utils
-void	add_to_garbage(void *ptr, t_alloc *garbage);
-void	free_garbage(t_alloc *garbage);
+t_command	*ft_struct_join(t_command *tok1, t_command tok2);
+void		ft_free_command(t_command *command);
+char		*char_to_str(char c);
 
 //Execve
 char	*find_command_in_segment(char *segment, char *command);
@@ -124,12 +137,12 @@ void	execute_non_builtin(char *input, char **envp, t_code *code);
 void	heredoc_child(t_pipe *pipes, char **argv, char **envp);
 
 //Redirection 
-void	pid_redir(t_exec *exec, char **argv, char **envp);
-int		handle_redirection(t_exec *exec, char *input, char **argv, char **envp);
-void	execute_redirection(t_exec *exec, char **argv, char **envp);
-void	set_redirection_type(t_exec *exec, char *symbol, char *file);
-void	redir_symbol(t_exec *exec, char **cmd_args);
-void	init_exec_struct(t_exec *exec);
+void	pid_redir(t_command *exec, char **argv, char **envp);
+int		handle_redirection(t_command *exec, char *input, char **argv, char **envp);
+void	execute_redirection(t_command *exec, char **argv, char **envp);
+void	set_redirection_type(t_command *exec, char *symbol, char *file);
+void	redir_symbol(t_command *exec, char **cmd_args);
+void	init_exec_struct(t_command *exec);
 
 //Pipe
 void	execute_pipe(t_pipe *pipes, char **envp);

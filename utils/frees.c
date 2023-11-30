@@ -1,33 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   allocs.c                                           :+:      :+:    :+:   */
+/*   frees.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/17 00:44:08 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/19 02:35:32 by jdufour          ###   ########.fr       */
+/*   Created: 2023/11/27 02:53:43 by jdufour           #+#    #+#             */
+/*   Updated: 2023/11/27 02:54:50 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	add_to_garbage(void *ptr, t_alloc *garbage)
-{
-	garbage->adr[garbage->count] = ptr;
-	garbage->count++; 
-}
-
-void	free_garbage(t_alloc *garbage)
+void	ft_free_command(t_command *command)
 {
 	int	i;
-
+	
+	if (!command)
+		return;
 	i = 0;
-	while (i < garbage->count)
+	while (command[i].word != NULL)
 	{
-		free(garbage->adr[i]);
-		garbage->adr[i] = NULL;
+		if (command[i].word)
+			free(command[i].word);
 		i++;
 	}
-	free(garbage);
+	free(command);
 }
