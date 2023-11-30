@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2023/11/29 22:17:11 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/11/30 15:39:22 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,9 +90,9 @@ void	heredoc_child(t_pipe *pipes, char **argv, char **envp)
 
 void	handle_command(char *input, t_code *code, char **argv, char **envp)
 {
-	char	**cmd_args;
-	t_exec	exec;
-	t_pipe	pipes;
+	char		**cmd_args;
+	t_command	exec;
+	t_pipe		pipes;
 
 	if (ft_strcmp(input, "$?") == 0)
 	{

@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:46:13 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/30 15:07:20 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/11/30 15:36:38 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,11 @@ typedef struct	s_expand {
 typedef struct	s_command {
 	char			*word;
 	int				type;
+	char			*file;
+	int				redirect_type;
+	char			*redirection_file;
+	int				redirection_type;
+	int				redirection_append;
 	bool			is_expand;
 }	t_command;
 
@@ -81,12 +86,8 @@ typedef struct	s_alloc {
 
 typedef struct	s_exec {
 	char	*command;
-	char	*file;
-	int		redirect_type;
-	char	*redirection_file;
-	int		redirection_type;
-	int		redirection_append;
-}	t_exec;
+
+} t_exec;
 
 typedef struct	s_pipe {
 	char	*command1;
@@ -136,12 +137,12 @@ void	execute_non_builtin(char *input, char **envp, t_code *code);
 void	heredoc_child(t_pipe *pipes, char **argv, char **envp);
 
 //Redirection 
-void	pid_redir(t_exec *exec, char **argv, char **envp);
-int		handle_redirection(t_exec *exec, char *input, char **argv, char **envp);
-void	execute_redirection(t_exec *exec, char **argv, char **envp);
-void	set_redirection_type(t_exec *exec, char *symbol, char *file);
-void	redir_symbol(t_exec *exec, char **cmd_args);
-void	init_exec_struct(t_exec *exec);
+void	pid_redir(t_command *exec, char **argv, char **envp);
+int		handle_redirection(t_command *exec, char *input, char **argv, char **envp);
+void	execute_redirection(t_command *exec, char **argv, char **envp);
+void	set_redirection_type(t_command *exec, char *symbol, char *file);
+void	redir_symbol(t_command *exec, char **cmd_args);
+void	init_exec_struct(t_command *exec);
 
 //Pipe
 void	execute_pipe(t_pipe *pipes, char **envp);

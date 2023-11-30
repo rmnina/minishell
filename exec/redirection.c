@@ -6,13 +6,13 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 17:13:45 by juandrie          #+#    #+#             */
-/*   Updated: 2023/11/29 22:07:41 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/11/30 15:38:08 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	set_redirection_type(t_exec *exec, char *symbol, char *file)
+void	set_redirection_type(t_command *exec, char *symbol, char *file)
 {
 	if (!ft_strcmp(symbol, "<<"))
 		exec->redirection_type = REDIRECT_APPEND_INPUT;
@@ -25,12 +25,12 @@ void	set_redirection_type(t_exec *exec, char *symbol, char *file)
 	exec->redirection_file = file;
 }
 
-void	redir_symbol(t_exec *exec, char **cmd_args)
+void	redir_symbol(t_command *exec, char **cmd_args)
 {
 	int	i;
 
 	i = 0;
-	exec->command = cmd_args[0];
+	exec->word = cmd_args[0];
 	exec->redirection_file = NULL;
 	exec->redirection_type = NO_REDIRECTION;
 
@@ -49,7 +49,7 @@ void	redir_symbol(t_exec *exec, char **cmd_args)
 	}
 }
 
-void	execute_redirection(t_exec *exec, char **argv, char **envp)
+void	execute_redirection(t_command *exec, char **argv, char **envp)
 {
 	int		fd;
 	int		flags;
@@ -71,19 +71,19 @@ void	execute_redirection(t_exec *exec, char **argv, char **envp)
 		dup2(fd, STDIN_FILENO);
 	}
 	close(fd);
-	path = find_command_path(exec->command);
+	path = find_command_path(exec->word);
 	execve(path, argv, envp);
 	perror("execve");
 	exit(EXIT_FAILURE);
 }
 
-void	init_exec_struct(t_exec *exec)
+void	init_exec_struct(t_command *exec)
 {
 	exec->file = exec->redirection_file;
 	exec->redirect_type = exec->redirection_type;
 }
 
-int	handle_redirection(t_exec *exec, char *input, char **argv, char **envp)
+int	handle_redirection(t_command *exec, char *input, char **argv, char **envp)
 {
 	t_pipe	pipes;
 	char	**cmd_args1;

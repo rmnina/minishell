@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:20:25 by juandrie          #+#    #+#             */
-/*   Updated: 2023/11/29 22:12:05 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/11/30 15:39:02 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ pid_t	heredoc_pipe(t_pipe *pipes)
 	return (pid);
 }
 
-void	pid_redir(t_exec *exec, char **argv, char **envp)
+void	pid_redir(t_command *exec, char **argv, char **envp)
 {
 	pid_t	pid;
 

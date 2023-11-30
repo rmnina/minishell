@@ -6,7 +6,7 @@
 #    By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/14 14:15:25 by jdufour           #+#    #+#              #
-#    Updated: 2023/11/29 23:56:30 by jdufour          ###   ########.fr        #
+#    Updated: 2023/11/30 15:09:58 by jdufour          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -74,7 +74,5 @@ fclean: clean
 	@make fclean -C libft/
 
 re: fclean all
-
-.SILENT:
 
 .PHONY: all clean fclean re
