@@ -6,13 +6,13 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 18:42:47 by juandrie          #+#    #+#             */
-/*   Updated: 2023/11/22 17:34:38 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/04 15:22:55 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	my_pwd(char **unused_args, char **unused_envp)
+int	ft_pwd(char **unused_args, char **unused_envp, t_code *code)
 {
 	char	*cwd;
 
@@ -23,17 +23,14 @@ int	my_pwd(char **unused_args, char **unused_envp)
 	{
 		printf("%s\n", cwd);
 		free (cwd);
+		code->code_status = 0;
 	}
 	else
 	{
 		perror("pwd");
+		code->code_status = 1;
 	}
-	return (0);
+	return (code->code_status);
 }
 
-// int	main(int ac, char **av)
-// {
-// 	(void)ac;
-// 	(void)av;
-// 	pwd();
-// }
+

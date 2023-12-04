@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/22 19:05:34 by juandrie          #+#    #+#             */
-/*   Updated: 2023/11/30 16:31:16 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/04 10:57:47 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,5 +14,6 @@
 
 int	execute_status_builtin(t_code *code)
 {
+	printf("%d\n", code->code_status);
 	return (code->code_status);
 }

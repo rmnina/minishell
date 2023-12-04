@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 17:13:45 by juandrie          #+#    #+#             */
-/*   Updated: 2023/11/30 15:38:08 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/04 18:43:24 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,24 +83,28 @@ void	init_exec_struct(t_command *exec)
 	exec->redirect_type = exec->redirection_type;
 }
 
-int	handle_redirection(t_command *exec, char *input, char **argv, char **envp)
+int	handle_redirection(t_code *code, char *input, char **argv, char **envp)
 {
-	t_pipe	pipes;
-	char	**cmd_args1;
+	t_pipe		pipes;
+	t_command	exec;
+	char		**cmd_args1;
+	int			hd_status;
 
 	(void)argv;
+	hd_status = 0;
 	cmd_args1 = init_parsing(input);
-	redir_symbol(exec, cmd_args1);
-	if (exec->redirection_type == REDIRECT_APPEND_INPUT)
+	redir_symbol(&exec, cmd_args1);
+	if (exec.redirection_type == REDIRECT_APPEND_INPUT)
 	{
-		heredoc(exec->redirection_file, &pipes, cmd_args1, envp);
+		hd_status = heredoc(exec.redirection_file, &pipes, cmd_args1, envp);
+		code->code_status = hd_status;
 		free_parsed_command_line(cmd_args1);
 		return (1);
 	}
-	else if (exec->redirection_type != NO_REDIRECTION)
+	else if (exec.redirection_type != NO_REDIRECTION)
 	{
-		init_exec_struct(exec);
-		pid_redir(exec, cmd_args1, envp);
+		init_exec_struct(&exec);
+		pid_redir(&exec, cmd_args1, envp, code);
 		free_parsed_command_line(cmd_args1);
 		return (1);
 	}
@@ -108,26 +112,3 @@ int	handle_redirection(t_command *exec, char *input, char **argv, char **envp)
 	return (0);
 }
 
-
-// int	main(int argc, char **argv, char **envp) 
-// {
-// 	(void)argc;
-// 	(void)argv;
-// 	t_exec exec_out = {
-// 		.command = "ls",
-//         .file = "output.txt",
-//         .redirect_type = REDIRECT_OUTPUT
-//     };
-//     char *argv_ls[] = {"ls", NULL};
-//     pid_redir(exec_out, argv_ls, envp);
-
-//     t_exec exec_in = {
-//         .command = "cat",
-//         .file = "output.txt",
-//         .redirect_type = REDIRECT_INPUT
-//     };
-//     char *argv_cat[] = {"cat", NULL};
-//     pid_redir(exec_in, argv_cat, envp);
-
-//     return 0;
-// }

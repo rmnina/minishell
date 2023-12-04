@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 10:21:29 by juandrie          #+#    #+#             */
-/*   Updated: 2023/11/30 16:19:38 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/04 17:43:16 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ void	execute_command(char *input, char **envp)
 	if (!path)
 	{
 		perror("Command not found");
-		exit(EXIT_FAILURE);
+		exit(127);
 	}
 	execve(path, cmd_args, envp);
 	perror("execve");

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_pipe.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:20:25 by juandrie          #+#    #+#             */
-/*   Updated: 2023/11/30 15:39:02 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/04 18:42:31 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,17 @@ void	prepare_pipe_execution(t_pipe *pipes, char ***argv1, char ***argv2)
 	pipe(pipes->pipefd);
 }
 
-void	launch_pipe(t_pipe *pipes, char **argv1, char **argv2, char **envp)
+int	launch_pipe(t_pipe *pipes, char **argv1, char **argv2, char **envp)
 {
 	pid_t	pid1;
 	pid_t	pid2;
+	int		status1;
+	int		status2;
+	int		code_status;
 
+	status1 = 0;
+	status2 = 0;
+	code_status = 0;
 	pid1 = fork();
 	if (pid1 == 0)
 	{
@@ -53,19 +59,26 @@ void	launch_pipe(t_pipe *pipes, char **argv1, char **argv2, char **envp)
 	}
 	close(pipes->pipefd[0]);
 	close(pipes->pipefd[1]);
-	waitpid(pid1, NULL, 0);
-	waitpid(pid2, NULL, 0);
+	waitpid(pid1, &status1, 0);
+	waitpid(pid2, &status2, 0);
+	if (WIFEXITED(status1))
+		code_status = WEXITSTATUS(status1);
+	if (WIFEXITED(status2) && WEXITSTATUS(status2) != 0)
+		code_status = WEXITSTATUS(status2);
 	free_parsed_command_line(argv1);
 	free_parsed_command_line(argv2);
+	return(code_status);
 }
 
-void	execute_pipe(t_pipe *pipes, char **envp)
+void	execute_pipe(t_pipe *pipes, char **envp, t_code *code)
 {
 	char	**argv1;
 	char	**argv2;
+	int		pipe_status;
 
 	prepare_pipe_execution(pipes, &argv1, &argv2);
-	launch_pipe(pipes, argv1, argv2, envp);
+	pipe_status = launch_pipe(pipes, argv1, argv2, envp);
+	code->code_status = pipe_status;
 }
 
 pid_t	heredoc_pipe(t_pipe *pipes)
@@ -86,28 +99,17 @@ pid_t	heredoc_pipe(t_pipe *pipes)
 	return (pid);
 }
 
-void	pid_redir(t_command *exec, char **argv, char **envp)
+void	pid_redir(t_command *exec, char **argv, char **envp, t_code *code)
 {
 	pid_t	pid;
+	int		status;
 
+	status = 0;
 	pid = fork();
 	if (pid == 0)
 		execute_redirection(exec, argv, envp);
-	waitpid(pid, NULL, 0);
+	waitpid(pid, &status, 0);
+	if (WIFEXITED(status))
+		code->code_status = WEXITSTATUS(status);
 }
 
-
-// int	main(int argc, char **argv, char **envp)
-// {
-// 	t_pipe pipes;
-// 	pipes.command1 = "ls";
-// 	pipes.command2 = "grep";
-// 	char	*argv_for_ls[] = {"ls", NULL};
-// 	char	*argv_for_grep[] = {"grep", "pipe", NULL};
-// 	(void)argc;
-// 	(void)argv;
-// 	//execute_pipe(command1, command2, argv_for_ls, envp);
-//     execute_pipe(&pipes, argv_for_ls, argv_for_grep, envp);
-
-//     return (0);
-// }
