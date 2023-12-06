@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 18:17:08 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/06 12:12:52 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/06 13:41:59 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,28 +52,28 @@ char	**parse_command_line(t_command *command)
 	return (arg);
 }
 
-char	**init_parsing(char *input)
-{
-	t_quotes	quotes;
-	t_command	*command;
-	t_expand	expand;
-	char		**arg;
-	int			size;
+// char	**init_parsing(char *input)
+// {
+// 	t_quotes	quotes;
+// 	t_command	*command;
+// 	t_expand	expand;
+// 	char		**arg;
+// 	int			size;
 
-	expand.left_expand = FALSE;
-	quotes.case_double = FALSE;
-	quotes.case_single = FALSE;
-	command = NULL;
-	arg = NULL;
-	error_quotes(input, &quotes);
-	command = get_command(input, &quotes, &expand);
-	ft_error_lexer(command);
-	arg = parse_command_line(command);
-	size = 0;
-	while (arg[size])
-		size++;
-	return (arg);
-}
+// 	expand.left_expand = FALSE;
+// 	quotes.case_double = FALSE;
+// 	quotes.case_single = FALSE;
+// 	command = NULL;
+// 	arg = NULL;
+// 	error_quotes(input, &quotes);
+// 	command = get_command(input, &quotes, &expand);
+// 	ft_error_lexer(command);
+// 	arg = parse_command_line(command);
+// 	size = 0;
+// 	while (arg[size])
+// 		size++;
+// 	return (arg);
+// }
 
 void	free_parsed_command_line(char **res)
 {

@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:46:13 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/06 12:13:09 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/06 13:31:04 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,7 +162,7 @@ int			ft_export(char **envp, t_code *code);
 int			ft_pwd(char **unused_args, char **unused_envp, t_code *code);
 int			ft_unset(char ***envp, char **names, t_code *code);
 int			execute_status_builtin(t_code *code);
-int			execute_builtins(char **cmd_args, char **envp, t_code *code);
+int			execute_builtins(char **cmd_args, char **envp, t_code *code, char *input);
 
 //heredoc
 int			heredoc(const char *delimiter, t_pipe *pipes, char **argv, char **envp);

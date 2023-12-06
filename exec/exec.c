@@ -6,13 +6,13 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/06 12:12:14 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/06 13:48:29 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	execute_builtins(char **cmd_args, char **envp, t_code *code)
+int	execute_builtins(char **cmd_args, char **envp, t_code *code, char *input)
 {
 	if (cmd_args[0] == NULL)
 		return (0);
@@ -37,6 +37,7 @@ int	execute_builtins(char **cmd_args, char **envp, t_code *code)
 	if (ft_strcmp(cmd_args[0], "unset") == 0
 		&& ft_strlen(cmd_args[0]) == ft_strlen("unset"))
 		return (ft_unset(&envp, cmd_args + 1, code));
+	execute_non_builtin(input, envp, code);
 	return (-1);
 }
 
@@ -126,7 +127,7 @@ void	handle_command(char *input, t_code *code, char **argv, char **envp)
 	int			i;
 	char		**cmd_args;
 
-	cmd_args = NULL;
+	cmd_args = malloc(sizeof(char **));
 	command = get_command(input, &quotes, &expand);
 	ft_error_lexer(command);
 	i = 0;
@@ -135,14 +136,14 @@ void	handle_command(char *input, t_code *code, char **argv, char **envp)
 		execute_status_builtin(code);
 		return ;
 	}
-	if (command[i].type == WORD)
+	while (command[i].word != NULL)
 	{
-		cmd_args = init_parsing(input);
-		if (execute_builtins(cmd_args, envp, code) == -1)
-			execute_non_builtin(input, envp, code);
-		free_parsed_command_line(cmd_args);
+		cmd_args[i] = ft_strdup(command[i].word);
+		i++;
 	}
-	else if (command[i].type == PIPE)
+	execute_builtins(cmd_args, envp, code, input);
+	free_parsed_command_line(cmd_args);
+	if (command[i].type == PIPE)
 	{
 		split_command_for_pipes(input, &pipes);
 		execute_pipe(&pipes, envp, code);
@@ -152,7 +153,6 @@ void	handle_command(char *input, t_code *code, char **argv, char **envp)
 		command[i].type == RIGHT_CHEV || command[i].type == DB_LEFT_CHEV \
 		|| command[i].type == DB_RIGHT_CHEV)
 	{
-		//cmd_args = init_parsing(input);
 		handle_redirection(code, &command[i], argv, envp);
 		free_parsed_command_line(cmd_args);
 		return ;
