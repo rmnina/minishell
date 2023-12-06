@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/04 18:32:55 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/06 12:12:14 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,31 +87,75 @@ void	heredoc_child(t_pipe *pipes, char **argv, char **envp)
 	exit(EXIT_FAILURE);
 }
 
+// void	handle_command(char *input, t_code *code, char **argv, char **envp)
+// {
+// 	char		**cmd_args;
+// 	t_pipe		pipes;
+
+// 	if (ft_strcmp(input, "$?") == 0)
+// 	{
+// 		execute_status_builtin(code);
+// 		return ;
+// 	}
+// 	if (commands_with_pipes_detected(input))
+// 	{
+// 		split_command_for_pipes(input, &pipes);
+// 		execute_pipe(&pipes, envp, code);
+// 	}
+// 	else
+// 	{
+// 		cmd_args = init_parsing(input);
+// 		if (handle_redirection(code, input, argv, envp))
+// 		{
+// 			free_parsed_command_line(cmd_args);
+// 			return ;
+// 		}
+// 		if (execute_builtins(cmd_args, envp, code) == -1)
+// 			execute_non_builtin(input, envp, code);
+// 		free_parsed_command_line(cmd_args);
+// 	}
+// }
+
+
 void	handle_command(char *input, t_code *code, char **argv, char **envp)
 {
-	char		**cmd_args;
+	t_command	*command;
+	t_quotes	quotes = {FALSE, FALSE, FALSE};
+	t_expand	expand = {0, 0, FALSE};
 	t_pipe		pipes;
+	int			i;
+	char		**cmd_args;
 
+	cmd_args = NULL;
+	command = get_command(input, &quotes, &expand);
+	ft_error_lexer(command);
+	i = 0;
 	if (ft_strcmp(input, "$?") == 0)
 	{
 		execute_status_builtin(code);
 		return ;
 	}
-	if (commands_with_pipes_detected(input))
-	{
-		split_command_for_pipes(input, &pipes);
-		execute_pipe(&pipes, envp, code);
-	}
-	else
+	if (command[i].type == WORD)
 	{
 		cmd_args = init_parsing(input);
-		if (handle_redirection(code, input, argv, envp))
-		{
-			free_parsed_command_line(cmd_args);
-			return ;
-		}
 		if (execute_builtins(cmd_args, envp, code) == -1)
 			execute_non_builtin(input, envp, code);
 		free_parsed_command_line(cmd_args);
 	}
+	else if (command[i].type == PIPE)
+	{
+		split_command_for_pipes(input, &pipes);
+		execute_pipe(&pipes, envp, code);
+		return ;
+	}
+	else if (command[i].type == LEFT_CHEV || \
+		command[i].type == RIGHT_CHEV || command[i].type == DB_LEFT_CHEV \
+		|| command[i].type == DB_RIGHT_CHEV)
+	{
+		//cmd_args = init_parsing(input);
+		handle_redirection(code, &command[i], argv, envp);
+		free_parsed_command_line(cmd_args);
+		return ;
+	}
+	ft_free_command(command);
 }

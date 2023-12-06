@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 00:19:58 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/30 17:05:59 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/05 11:56:13 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 t_command	get_special_type_token(char *line, int *i, t_quotes *quotes)
 {
 	t_command	token;
-	
+
 	token.word = NULL;
 	if (special_types(line[*i]) == 3 && special_types(line[*i + 1]) == 3)
 	{

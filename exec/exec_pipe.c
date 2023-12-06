@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:20:25 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/04 18:42:31 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/06 12:11:24 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ pid_t	heredoc_pipe(t_pipe *pipes)
 	return (pid);
 }
 
-void	pid_redir(t_command *exec, char **argv, char **envp, t_code *code)
+void	pid_redir(t_command *command, char **argv, char **envp, t_code *code)
 {
 	pid_t	pid;
 	int		status;
@@ -107,7 +107,7 @@ void	pid_redir(t_command *exec, char **argv, char **envp, t_code *code)
 	status = 0;
 	pid = fork();
 	if (pid == 0)
-		execute_redirection(exec, argv, envp);
+		execute_redirection(command, argv, envp);
 	waitpid(pid, &status, 0);
 	if (WIFEXITED(status))
 		code->code_status = WEXITSTATUS(status);

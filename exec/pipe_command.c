@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 14:59:17 by juandrie          #+#    #+#             */
-/*   Updated: 2023/11/30 16:54:16 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/05 15:49:57 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	split_command_for_pipes(char *input, t_pipe *pipes)
 {
 	char	*pipe_ptr;
-	//execute que si de type pipe et pas de type word
+
 	pipe_ptr = ft_strchr(input, '|');
 	if (pipe_ptr)
 	{
@@ -24,6 +24,19 @@ void	split_command_for_pipes(char *input, t_pipe *pipes)
 		pipes->command2 = pipe_ptr + 1;
 	}
 }
+
+// void	split_command_for_pipes(t_command *command, t_pipe *pipes)
+// {
+// 	char	*pipe_ptr;
+
+// 	pipe_ptr = ft_strchr(command->file, '|');
+// 	if (pipe_ptr)
+// 	{
+// 		*pipe_ptr = '\0';
+// 		pipes->command1 = command->word;
+// 		pipes->command2 = pipe_ptr + 1;
+// 	}
+// }
 
 int	commands_with_pipes_detected(char *input)
 {

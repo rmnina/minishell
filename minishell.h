@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:46:13 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/04 18:42:50 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/06 12:13:09 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,6 +122,7 @@ t_command	*get_command(char *line, t_quotes *quotes, t_expand *expand);
 char		**init_parsing(char *input);
 void		free_parsed_command_line(char **argv);
 int			expand_size(char *var);
+char		**parse_command_line(t_command *command);
 
 //Utils
 t_command	*ft_struct_join(t_command *tok1, t_command tok2);
@@ -137,8 +138,8 @@ void		execute_non_builtin(char *input, char **envp, t_code *code);
 void		heredoc_child(t_pipe *pipes, char **argv, char **envp);
 
 //Redirection 
-void		pid_redir(t_command *exec, char **argv, char **envp, t_code *code);
-int			handle_redirection(t_code *code, char *input, char **argv, char **envp);
+void		pid_redir(t_command *command, char **argv, char **envp, t_code *code);
+int			handle_redirection(t_code *code, t_command *command, char **argv, char **envp);
 void		execute_redirection(t_command *exec, char **argv, char **envp);
 void		set_redirection_type(t_command *exec, char *symbol, char *file);
 void		redir_symbol(t_command *exec, char **cmd_args);
@@ -148,6 +149,7 @@ void		init_exec_struct(t_command *exec);
 void		execute_pipe(t_pipe *pipes, char **envp, t_code *code);
 void		process_pipe(char **cmd_args, t_pipe *pipes, char **argv, char **envp);
 void		split_command_for_pipes(char *input, t_pipe *pipes);
+//void		split_command_for_pipes(t_command *commands, t_pipe *pipes);
 int			commands_with_pipes_detected(char *input);
 pid_t		heredoc_pipe(t_pipe *pipes);
 
