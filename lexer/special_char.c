@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 04:33:44 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/29 19:54:28 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/06 14:43:48 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,11 @@
 
 int	is_in_quote(char c, t_quotes *quotes)
 {
-	if (c == SINGLE_QUOTE && quotes->case_single == FALSE && quotes->case_double == FALSE)
+	if (c == SINGLE_QUOTE && quotes->case_single == FALSE \
+	&& quotes->case_double == FALSE)
 		quotes->case_single = TRUE;
-	else if (c == DOUBLE_QUOTE && quotes->case_double == FALSE && quotes->case_single == FALSE)
+	else if (c == DOUBLE_QUOTE && quotes->case_double == FALSE \
+	&& quotes->case_single == FALSE)
 		quotes->case_double = TRUE;
 	else if (c == SINGLE_QUOTE && quotes->case_single == TRUE)
 		quotes->case_single = FALSE;
@@ -39,20 +41,20 @@ int	special_types(char c)
 	if (!c)
 		return (0);
 	else if (c == '|')
-		return(PIPE);
+		return (PIPE);
 	else if (c == '<')
-		return(LEFT_CHEV);
+		return (LEFT_CHEV);
 	else if (c == '>')
-		return(RIGHT_CHEV);
+		return (RIGHT_CHEV);
 	else if (c == '$')
-		return(EXPAND);
-	return(0);
+		return (EXPAND);
+	return (0);
 }
 
 void	get_type(t_command *token, t_quotes *quotes)
 {
 	if (!token->word)
-		return;
+		return ;
 	else if (token->word[0] == '|' && quotes->case_quotes == FALSE)
 		token->type = PIPE;
 	else if (token->word[0] == '<' && token->word[1] && token->word[1] == '<' \

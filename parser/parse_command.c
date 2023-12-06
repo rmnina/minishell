@@ -6,51 +6,51 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 18:17:08 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/06 13:52:37 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/06 15:32:12 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-char	*get_word(t_command command)
-{
-	char	*word;
-	int		size;
-	int		i;
+// char	*get_word(t_command command)
+// {
+// 	char	*word;
+// 	int		size;
+// 	int		i;
 
-	i = 0;
-	size = 0;
-	while (command.word[size])
-		size++;
-	word = malloc(sizeof(char) * size + 1);
-	while (i < size)
-	{
-		word[i] = command.word[i];
-		i++;
-	}
-	word[i] = '\0';
-	return (word);
-}
+// 	i = 0;
+// 	size = 0;
+// 	while (command.word[size])
+// 		size++;
+// 	word = malloc(sizeof(char) * size + 1);
+// 	while (i < size)
+// 	{
+// 		word[i] = command.word[i];
+// 		i++;
+// 	}
+// 	word[i] = '\0';
+// 	return (word);
+// }
 
-char	**parse_command_line(t_command *command)
-{
-	int		size;
-	int		i;
-	char	**arg;
+// char	**parse_command_line(t_command *command)
+// {
+// 	int		size;
+// 	int		i;
+// 	char	**arg;
 
-	size = 0;
-	i = 0;
-	while (command[size].word)
-		size++;
-	arg = malloc(sizeof(char *) * size + 1);
-	while (i < size - 1)
-	{
-		arg[i] = get_word(command[i]);
-		i++;
-	}
-	arg[i] = NULL;
-	return (arg);
-}
+// 	size = 0;
+// 	i = 0;
+// 	while (command[size].word)
+// 		size++;
+// 	arg = malloc(sizeof(char *) * size + 1);
+// 	while (i < size - 1)
+// 	{
+// 		arg[i] = get_word(command[i]);
+// 		i++;
+// 	}
+// 	arg[i] = NULL;
+// 	return (arg);
+// }
 
 // char	**init_parsing(char *input)
 // {

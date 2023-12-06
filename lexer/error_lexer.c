@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 02:11:36 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/27 04:52:27 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/06 13:58:10 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	error_quotes(char *line, t_quotes *quotes)
 void	error_use_types(t_command *command)
 {
 	int	i;
-	
+
 	i = 0;
 	if (!command[0].type)
 		exit(1);
