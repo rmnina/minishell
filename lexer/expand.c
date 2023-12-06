@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 15:15:34 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/29 20:53:47 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/06 13:57:18 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,4 +61,33 @@ char	*get_env_var_name(char *line, int *i)
 		i++;
 	}
 	return (name);
+}
+
+t_command	get_lex_expand(char *line, int *i, t_quotes *quotes)
+{
+	t_command		token;
+	t_expand		expand;
+	char			*var;
+	static int		j = 0;
+
+	var = init_get_expand(&token, line, i, &expand);
+	*i += 1;
+	while (ft_isalnum(line[*i]) || line[*i] == UNDERSCORE)
+		*i += 1;
+	while (var[j])
+	{
+		is_in_quote(var[j], quotes);
+		special_types(var[j]);
+		if (parse_quotes(var, &j, quotes) == 1)
+			break ;
+		else if (!parse_quotes(var, &j, quotes))
+		{
+			token.word = ft_strjoin_char(token.word, var[j]);
+			j++;
+		}
+	}
+	token.type = WORD;
+	if (var[j] != '\0')
+		expand.left_expand = TRUE;
+	return (token);
 }
