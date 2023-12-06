@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:46:13 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/06 15:32:36 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/06 18:31:34 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,6 +119,7 @@ t_command	get_lex_expand(char *line, int *i, t_quotes *quotes);
 void		free_parsed_command_line(char **argv);
 int			expand_size(char *var);
 //char		**parse_command_line(t_command *command);
+int			parse_quotes(char *line, int *i, t_quotes *quotes);
 
 //Utils
 t_command	*ft_struct_join(t_command *tok1, t_command tok2);
@@ -135,10 +136,8 @@ void		heredoc_child(t_pipe *pipes, char **argv, char **envp);
 char		**create_cmd_args(t_command *command);
 
 //Redirection 
-void		pid_redir(t_command *command, char **argv, char **envp, \
-t_code *code);
-int			handle_redirection(t_code *code, t_command *command, char **argv, \
-char **envp);
+void		pid_redir(t_command *command, char **argv, char **envp, t_code *code);
+int			handle_redirection(t_code *code, t_command *command, char **argv, char **envp);
 void		execute_redirection(t_command *exec, char **argv, char **envp);
 void		set_redirection_type(t_command *exec, char *symbol, char *file);
 void		redir_symbol(t_command *exec, char **cmd_args);

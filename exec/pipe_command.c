@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 14:59:17 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/05 15:49:57 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/06 18:01:24 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,9 @@ void	split_command_for_pipes(char *input, t_pipe *pipes)
 	if (pipe_ptr)
 	{
 		*pipe_ptr = '\0';
-		pipes->command1 = input;
-		pipes->command2 = pipe_ptr + 1;
+		pipes->command1 = ft_strtrim(input, " ");
+		pipes->command2 = ft_strtrim(pipe_ptr + 1, " ");
+		printf("Commande 1: '%s', Commande 2: '%s'\n", pipes->command1, pipes->command2);
 	}
 }
 
