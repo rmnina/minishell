@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:46:13 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/30 15:36:38 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/11/30 18:12:57 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,16 +44,16 @@ enum e_type {
 	DB_LEFT_CHEV,
 	DB_RIGHT_CHEV,
 	EXPAND,
+	REDIRECT_INPUT,
+	REDIRECT_OUTPUT,
+	NO_REDIRECTION,
+	REDIRECT_APPEND_INPUT,
+	REDIRECT_APPEND_OUTPUT
 };
 
 # define SINGLE_QUOTE 39
 # define DOUBLE_QUOTE 34
 # define UNDERSCORE 95
-# define REDIRECT_OUTPUT 1
-# define REDIRECT_INPUT 2
-# define NO_REDIRECTION 3
-# define REDIRECT_APPEND_OUTPUT 4
-# define REDIRECT_APPEND_INPUT 5
 
 typedef struct	s_quotes {
 	bool	case_single;
@@ -82,12 +82,6 @@ typedef struct	s_alloc {
 	void	**adr;
 	int		count;
 }	t_alloc;
-
-
-typedef struct	s_exec {
-	char	*command;
-
-} t_exec;
 
 typedef struct	s_pipe {
 	char	*command1;

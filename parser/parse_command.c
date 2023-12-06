@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 18:17:08 by juandrie          #+#    #+#             */
-/*   Updated: 2023/11/29 22:04:12 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/11/30 18:25:55 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ char   **init_parsing(char *input)
 	command = get_command(input, &quotes, &expand);
 	ft_error_lexer(command);
     arg = parse_command_line(command);
+    ft_free_command(command);
     size = 0;
     while (arg[size])
         size++;

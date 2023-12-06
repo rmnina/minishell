@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2023/11/30 15:39:22 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/11/30 18:27:05 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,8 +114,8 @@ void	handle_command(char *input, t_code *code, char **argv, char **envp)
 		}
 		if (execute_builtins(cmd_args, envp) == -1)
 			execute_non_builtin(input, envp, code);
-		free_parsed_command_line(cmd_args);
 	}
+	free_parsed_command_line(cmd_args);
 }
 
 // int	main(int argc, char **argv, char **envp)
