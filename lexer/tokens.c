@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 00:19:58 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/06 14:53:56 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/06 15:00:49 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ t_command	get_token(char *line, t_quotes *quotes, int *i, t_expand *expand)
 		if (special_types(line[*i] == EXPAND) && quotes->case_single == FALSE \
 		&& quotes->case_double == FALSE)
 			token = get_lex_expand(line, i, quotes);
-		else if (parse_quotes(line, i, quotes) == 1)
+		else if (parse_quotes(line, i, quotes) == 1 || !line[*i])
 			break ;
 		else if (quotes->case_quotes == FALSE && special_types(line[*i]) != 0 \
 		&& special_types(line[*i]) != EXPAND)
@@ -127,38 +127,38 @@ t_command	*get_command(char *line, t_quotes *quotes, t_expand *expand)
 	return (command);
 }
 
-// int	main(void)
-// {
-// 	t_quotes	quotes;
-// 	t_command	*command;
-// 	t_expand	expand;
-// 	char		*line;
+int	main(void)
+{
+	t_quotes	quotes;
+	t_command	*command;
+	t_expand	expand;
+	char		*line;
 
-// 	expand.left_expand = FALSE;
-// 	quotes.case_double = FALSE;
-// 	quotes.case_single = FALSE;
-// 	command = NULL;
-// 	while (1)
-// 	{
-// 		line = readline("test_parsing > ");
-// 		if (!line)
-// 		{
-// 			printf("exit ctrl+D\n");
-// 			break ;
-// 		}
-// 		if (line[0] != 0)
-// 		{
-// 			add_history(line);
-// 			error_quotes(line, &quotes);
-// 			command = get_command(line, &quotes, &expand);
-// 			ft_error_lexer(command);
-// 			for (int i = 0; command[i + 1].word != NULL; i++)
-// 			{
-// 				printf("word[%d] = %s\n", i, command[i].word);
-// 				printf("type[%d] = %d\n", i, command[i].type);
-// 			}
-// 		}
-// 		clear_history();
-// 		ft_free_command(command);
-// 	}
-// }
+	expand.left_expand = FALSE;
+	quotes.case_double = FALSE;
+	quotes.case_single = FALSE;
+	command = NULL;
+	while (1)
+	{
+		line = readline("test_parsing > ");
+		if (!line)
+		{
+			printf("exit ctrl+D\n");
+			break ;
+		}
+		if (line[0] != 0)
+		{
+			add_history(line);
+			error_quotes(line, &quotes);
+			command = get_command(line, &quotes, &expand);
+			ft_error_lexer(command);
+			for (int i = 0; command[i + 1].word != NULL; i++)
+			{
+				printf("word[%d] = %s\n", i, command[i].word);
+				printf("type[%d] = %d\n", i, command[i].type);
+			}
+		}
+		clear_history();
+		ft_free_command(command);
+	}
+}
