@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokens.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 00:19:58 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/30 15:07:47 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/05 11:56:13 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 t_command	get_special_type_token(char *line, int *i, t_quotes *quotes)
 {
 	t_command	token;
-	
+
 	token.word = NULL;
 	if (special_types(line[*i]) == 3 && special_types(line[*i + 1]) == 3)
 	{
@@ -71,7 +71,7 @@ t_command	get_lex_expand(char *line, int *i, t_quotes *quotes)
 		is_in_quote(var[j], quotes);
 		special_types(var[j]);
 		if (parse_quotes(var, &j, quotes) == 1)
-			break;
+			break ;
 		else if (!parse_quotes(var, &j, quotes))
 		{
 			token.word = ft_strjoin_char(token.word, var[j]);
@@ -97,13 +97,13 @@ t_command	get_token(char *line, t_quotes *quotes, int *i, t_expand *expand)
 		&& quotes->case_double == FALSE)
 			token = get_lex_expand(line, i, quotes);
 		else if (parse_quotes(line, i, quotes) == 1)
-			break;
+			break ;
 		else if (!is_in_quote(line[*i], quotes) && special_types(line[*i]) != 0 \
 		&& special_types(line[*i]) != EXPAND)
 		{
 			if (token.word != NULL)
-				break;
-			else 
+				break ;
+			else
 				return (token = get_special_type_token(line, i, quotes));
 		}
 		else if (!parse_quotes(line, i, quotes))

@@ -6,13 +6,13 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 16:06:16 by juandrie          #+#    #+#             */
-/*   Updated: 2023/11/22 17:01:35 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/04 15:22:36 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	my_echo(char **argv)
+int	ft_echo(char **argv, t_code *code)
 {
 	int	i;
 	int	line;
@@ -33,14 +33,7 @@ int	my_echo(char **argv)
 	}
 	if (line)
 		printf("\n");
+	code->code_status = 0;
 	return (0);
 }
 
-// int	main(int ac, char **av)
-// {
-// 	if (ac > 1)
-// 		my_echo(av);
-// 	else
-// 		printf("\n");
-// 	return (0);
-// }

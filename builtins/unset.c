@@ -6,69 +6,65 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 10:19:45 by juandrie          #+#    #+#             */
-/*   Updated: 2023/11/22 18:06:44 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/04 15:51:58 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	unset_single_variable(char ***envp, const char *name)
+void	shift_env_variables(char ***envp, int deleted_index)
+{
+	int	j;
+
+	j = deleted_index;
+	while ((*envp)[j] != NULL)
+	{
+		(*envp)[j] = (*envp)[j + 1];
+		j++;
+	}
+}
+
+int	unset_single_variable(char ***envp, const char *name)
 {
 	int	i;
 	int	len;
-	int	j;
+	int	found;
 
 	len = ft_strlen(name);
 	i = 0;
-	j = 0;
+	found = 0;
 	while ((*envp)[i] != NULL)
 	{
 		if (ft_strncmp((*envp)[i], name, len) == 0 && (*envp)[i][len] == '=')
 		{
 			free((*envp)[i]);
-			j = i;
-			while ((*envp)[j] != NULL)
-			{
-				(*envp)[j] = (*envp)[j + 1];
-				j++;
-			}
+			shift_env_variables(envp, i);
+			found = 1;
 			break ;
 		}
 		i++;
 	}
+	return (found);
 }
 
-int	my_unset(char ***envp, char **names)
+
+int	ft_unset(char ***envp, char **names, t_code *code)
 {
 	int	i;
+	int	found;
 
 	i = 0;
+	found = 0;
 	while (names[i] != NULL)
 	{
-		unset_single_variable(envp, names[i]);
+		if (unset_single_variable(envp, names[i]))
+			found = 1;
 		i++;
 	}
-	return (0);
+	if (found >= 1)
+		code->code_status = 0;
+	code->code_status = 1;
+	return (code->code_status);
 }
 
-// int	main(int argc, char **argv)
-// {
-// 	(void)argv;
-// 	char **fake_envp = malloc(3 * sizeof(char *));
-// 	fake_envp[0] = strdup("PATH=/usr/bin");
-// 	fake_envp[1] = strdup("HOME=/home/user");
-// 	fake_envp[2] = NULL;
-// 	if (argc > 1)
-// 	{
-// 		printf("\nVariables avant unset:\n");
-// 		for (int i = 0; fake_envp[i] != NULL; i++) {
-//             printf("%s\n", fake_envp[i]);
-//         }
-// 		my_unset(&fake_envp, argv + 1);
-// 		printf("\nVariables après unset:\n");
-// 		for (int i = 0; fake_envp[i] != NULL; i++) {
-//             printf("%s\n", fake_envp[i]);
-//         }
-// 	}
-// 	return (0);
-// }
+

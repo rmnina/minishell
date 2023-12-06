@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:46:13 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/30 18:12:57 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/06 13:45:22 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,9 +113,10 @@ char		*init_get_expand(t_command *token, char *line, int *i, t_expand *expand);
 t_command	*get_command(char *line, t_quotes *quotes, t_expand *expand);
 
 //Parser
-char	**init_parsing(char *input);
-void	free_parsed_command_line(char **argv);
-int		 expand_size(char *var);
+char		**init_parsing(char *input);
+void		free_parsed_command_line(char **argv);
+int			expand_size(char *var);
+char		**parse_command_line(t_command *command);
 
 //Utils
 t_command	*ft_struct_join(t_command *tok1, t_command tok2);
@@ -123,40 +124,41 @@ void		ft_free_command(t_command *command);
 char		*char_to_str(char c);
 
 //Execve
-char	*find_command_in_segment(char *segment, char *command);
-char	*find_command_path(char *command);
-void	execute_command(char *input, char **envp);
-void	handle_command(char *input, t_code *code, char **argv, char **envp);
-void	execute_non_builtin(char *input, char **envp, t_code *code);
-void	heredoc_child(t_pipe *pipes, char **argv, char **envp);
+char		*find_command_in_segment(char *segment, char *command);
+char		*find_command_path(char *command);
+void		execute_command(char *input, char **envp);
+void		handle_command(char *input, t_code *code, char **argv, char **envp);
+void		execute_non_builtin(char *input, char **envp, t_code *code);
+void		heredoc_child(t_pipe *pipes, char **argv, char **envp);
 
 //Redirection 
-void	pid_redir(t_command *exec, char **argv, char **envp);
-int		handle_redirection(t_command *exec, char *input, char **argv, char **envp);
-void	execute_redirection(t_command *exec, char **argv, char **envp);
-void	set_redirection_type(t_command *exec, char *symbol, char *file);
-void	redir_symbol(t_command *exec, char **cmd_args);
-void	init_exec_struct(t_command *exec);
+void		pid_redir(t_command *command, char **argv, char **envp, t_code *code);
+int			handle_redirection(t_code *code, t_command *command, char **argv, char **envp);
+void		execute_redirection(t_command *exec, char **argv, char **envp);
+void		set_redirection_type(t_command *exec, char *symbol, char *file);
+void		redir_symbol(t_command *exec, char **cmd_args);
+void		init_exec_struct(t_command *exec);
 
 //Pipe
-void	execute_pipe(t_pipe *pipes, char **envp);
-void	process_pipe(char **cmd_args, t_pipe *pipes, char **argv, char **envp);
-void	split_command_for_pipes(char *input, t_pipe *pipes);
-int		commands_with_pipes_detected(char *input);
-pid_t	heredoc_pipe(t_pipe *pipes);
+void		execute_pipe(t_pipe *pipes, char **envp, t_code *code);
+void		process_pipe(char **cmd_args, t_pipe *pipes, char **argv, char **envp);
+void		split_command_for_pipes(char *input, t_pipe *pipes);
+//void		split_command_for_pipes(t_command *commands, t_pipe *pipes);
+int			commands_with_pipes_detected(char *input);
+pid_t		heredoc_pipe(t_pipe *pipes);
 
 //Builtins
-int		my_cd(char **args);
-int		my_echo(char **argv);
-int		my_env(char **envp);
-int		my_exit(char **cmd_args);
-int		my_export(char **envp);
-int		my_pwd(char **unused_args, char **unused_envp);
-int		my_unset(char ***envp, char **names);
-void	execute_status_builtin(t_code *code);
-int		execute_builtins(char **cmd_args, char **envp);
+int			ft_cd(char **args, t_code *code);
+int			ft_echo(char **argv, t_code *code);
+int			ft_env(char **envp, t_code *code);
+int			ft_exit(char **cmd_args, t_code *code);
+int			ft_export(char **envp, t_code *code);
+int			ft_pwd(char **unused_args, char **unused_envp, t_code *code);
+int			ft_unset(char ***envp, char **names, t_code *code);
+int			execute_status_builtin(t_code *code);
+int			execute_builtins(char **cmd_args, char **envp, t_code *code);
 
 //heredoc
-void	heredoc(const char *delimiter, t_pipe *pipes, char **argv, char **envp);
+int			heredoc(const char *delimiter, t_pipe *pipes, char **argv, char **envp);
 
 #endif

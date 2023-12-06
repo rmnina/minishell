@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   path.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 10:21:29 by juandrie          #+#    #+#             */
-/*   Updated: 2023/11/29 22:12:38 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/06 12:10:43 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,14 +62,14 @@ void	execute_command(char *input, char **envp)
 	cmd_args = init_parsing(input);
 	if (!cmd_args)
 	{
-		perror("parse_commande_line");
+		perror("init parsing");
 		exit(EXIT_FAILURE);
 	}
 	path = find_command_path(cmd_args[0]);
 	if (!path)
 	{
 		perror("Command not found");
-		exit(EXIT_FAILURE);
+		exit(127);
 	}
 	execve(path, cmd_args, envp);
 	perror("execve");

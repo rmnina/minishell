@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 16:22:53 by juandrie          #+#    #+#             */
-/*   Updated: 2023/11/29 10:29:36 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/05 16:16:21 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,21 +80,19 @@ void	read_add(int pipefd, const char *delimiter)
 	free_line_nodes(head);
 }
 
-void	heredoc(const char *delimiter, t_pipe *pipes, char **argv, char **envp)
+int	heredoc(const char *delimiter, t_pipe *pipes, char **argv, char **envp)
 {
 	pid_t	pid;
+	int		status;
+	int		code_status;
 
+	status = 0;
+	code_status = 0;
 	if (pipe(pipes->pipefd) == -1)
-	{
-		perror("erreur de creation du pipe");
 		exit(EXIT_FAILURE);
-	}
 	pid = fork();
 	if (pid == -1)
-	{
-		perror ("Erreur lors du fork");
 		exit(EXIT_FAILURE);
-	}
 	else if (pid == 0)
 		heredoc_child(pipes, argv, envp);
 	else
@@ -102,6 +100,9 @@ void	heredoc(const char *delimiter, t_pipe *pipes, char **argv, char **envp)
 		read_add(pipes->pipefd[1], delimiter);
 		close(pipes->pipefd[0]);
 		close(pipes->pipefd[1]);
-		waitpid(pid, NULL, 0);
+		waitpid(pid, &status, 0);
+		if (WIFEXITED(status))
+			code_status = WEXITSTATUS(status);
 	}
+	return (code_status);
 }
