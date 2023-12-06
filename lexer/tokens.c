@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 00:19:58 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/06 15:34:50 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/06 19:02:09 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,10 +48,10 @@ int	parse_quotes(char *line, int *i, t_quotes *quotes)
 	else if (line[*i] == DOUBLE_QUOTE && quotes->case_single == FALSE)
 	{
 		*i += 1;
-		return (2);
+		return (3);
 	}
-	else if (line[*i] == SPACE && quotes->case_double == FALSE \
-	&& quotes->case_single == FALSE)
+	else if ((line[*i] == SPACE && quotes->case_double == FALSE \
+	&& quotes->case_single == FALSE) || line[*i] == '\0')
 		return (1);
 	return (0);
 }
@@ -64,10 +64,15 @@ t_command	get_token(char *line, t_quotes *quotes, int *i, t_expand *expand)
 	while (line[*i])
 	{
 		is_in_quote(line[*i], quotes);
-		special_types(line[*i]);
-		if (special_types(line[*i] == EXPAND) && quotes->case_single == FALSE \
-		&& quotes->case_double == FALSE)
-			token = get_lex_expand(line, i, quotes);
+		// printf("case quotes = %d, type = %d, line[i] = %c\n", quotes->case_quotes, special_types(line[*i]), line[*i]);
+		if ((special_types(line[*i]) == EXPAND && quotes->case_single == FALSE) \
+		|| quotes->var != NULL)
+		{
+			if (get_lex_expand(line, i, quotes, &token) == 1)
+				break ;
+			else if (get_lex_expand(line, i, quotes, &token) == -1)
+				*i += 1;
+		}
 		else if (parse_quotes(line, i, quotes) == 1 || !line[*i])
 			break ;
 		else if (quotes->case_quotes == FALSE && special_types(line[*i]) != 0 \
@@ -110,10 +115,7 @@ t_command	*get_command(char *line, t_quotes *quotes, t_expand *expand)
 			while (line[i] && line[i] == SPACE)
 				i++;
 		}
-		if (expand->left_expand == TRUE)
-			token = get_lex_expand(line, &i, quotes);
-		else
-			token = get_token(line, quotes, &i, expand);
+		token = get_token(line, quotes, &i, expand);
 		if (token.word == NULL)
 			i++;
 		else
@@ -123,42 +125,52 @@ t_command	*get_command(char *line, t_quotes *quotes, t_expand *expand)
 			command = ft_struct_join(command, token);
 		}
 	}
+	if (!line[i] && quotes->var != NULL)
+	{
+		while (quotes->var != NULL)
+		{
+			get_lex_expand(line, &i, quotes, &token);
+			command = ft_struct_join(command, token);
+		}
+	}
 	command = ft_struct_join(command, token_null(&token));
 	return (command);
 }
 
-// int	main(void)
-// {
-// 	t_quotes	quotes;
-// 	t_command	*command;
-// 	t_expand	expand;
-// 	char		*line;
+int	main(void)
+{
+	t_quotes	quotes;
+	t_command	*command;
+	t_expand	expand;
+	char		*line;
 
-// 	expand.left_expand = FALSE;
-// 	quotes.case_double = FALSE;
-// 	quotes.case_single = FALSE;
-// 	command = NULL;
-// 	while (1)
-// 	{
-// 		line = readline("test_parsing > ");
-// 		if (!line)
-// 		{
-// 			printf("exit ctrl+D\n");
-// 			break ;
-// 		}
-// 		if (line[0] != 0)
-// 		{
-// 			add_history(line);
-// 			error_quotes(line, &quotes);
-// 			command = get_command(line, &quotes, &expand);
-// 			ft_error_lexer(command);
-// 			for (int i = 0; command[i + 1].word != NULL; i++)
-// 			{
-// 				printf("word[%d] = %s\n", i, command[i].word);
-// 				printf("type[%d] = %d\n", i, command[i].type);
-// 			}
-// 		}
-// 		clear_history();
-// 		ft_free_command(command);
-// 	}
-// }
+	expand.left_expand = FALSE;
+	quotes.case_double = FALSE;
+	quotes.case_single = FALSE;
+	quotes.var = NULL;
+	quotes.vpos = 0;
+	command = NULL;
+	while (1)
+	{
+		line = readline("> ");
+		if (!line)
+		{
+			printf("exit ctrl+D\n");
+			break ;
+		}
+		if (line[0] != 0)
+		{
+			add_history(line);
+			error_quotes(line, &quotes);
+			command = get_command(line, &quotes, &expand);
+			ft_error_lexer(command);
+			for (int i = 0; command[i + 1].word != NULL; i++)
+			{
+				printf("word[%d] = %s\n", i, command[i].word);
+				printf("type[%d] = %d\n", i, command[i].type);
+			}
+		}
+		clear_history();
+		ft_free_command(command);
+	}
+}

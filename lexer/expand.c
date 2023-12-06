@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 15:15:34 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/06 13:57:18 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/06 18:58:28 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,39 +55,44 @@ char	*get_env_var_name(char *line, int *i)
 	char	*name;
 
 	name = NULL;
-	while (ft_isalnum(line[*i]) || line[*i] != UNDERSCORE)
+	*i += 1;
+	while (line[*i] && (ft_isalnum(line[*i]) || line[*i] == UNDERSCORE))
 	{
 		name = ft_strjoin_char(name, line[*i]);
-		i++;
+		*i += 1;
 	}
 	return (name);
 }
 
-t_command	get_lex_expand(char *line, int *i, t_quotes *quotes)
+int	get_lex_expand(char *line, int *i, t_quotes *quotes, t_command *token)
 {
-	t_command		token;
-	t_expand		expand;
-	char			*var;
-	static int		j = 0;
+	int		j;
 
-	var = init_get_expand(&token, line, i, &expand);
-	*i += 1;
-	while (ft_isalnum(line[*i]) || line[*i] == UNDERSCORE)
-		*i += 1;
-	while (var[j])
+	j = quotes->vpos;
+	init_get_expand(token, line, i, quotes);
+	if (quotes->var == NULL)
+		return (-1);
+	while (quotes->var[j])
 	{
-		is_in_quote(var[j], quotes);
-		special_types(var[j]);
-		if (parse_quotes(var, &j, quotes) == 1)
-			break ;
-		else if (!parse_quotes(var, &j, quotes))
+		is_in_quote(quotes->var[j], quotes);
+		if (parse_quotes(quotes->var, &j, quotes) == 1)
 		{
-			token.word = ft_strjoin_char(token.word, var[j]);
+			j++;
+			break ;
+		}
+		else if (!parse_quotes(quotes->var, &j, quotes))
+		{
+			token->word = ft_strjoin_char(token->word, quotes->var[j]);
 			j++;
 		}
 	}
-	token.type = WORD;
-	if (var[j] != '\0')
-		expand.left_expand = TRUE;
-	return (token);
+	token->type = WORD;
+	if (quotes->var[j] == '\0')
+	{
+		quotes->var = NULL;
+		quotes->vpos = 0;
+	}
+	else
+		quotes->vpos = j;
+	return (1);
 }

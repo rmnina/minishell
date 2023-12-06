@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:46:13 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/06 14:09:38 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/06 18:31:04 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,8 @@ typedef struct s_quotes {
 	bool	case_single;
 	bool	case_double;
 	bool	case_quotes;
+	int		vpos;
+	char	*var;
 }	t_quotes;
 
 typedef struct s_expand {
@@ -109,10 +111,10 @@ void		get_type(t_command *token, t_quotes *quotes);
 int			is_expand(char *line);
 char		*get_env_var_name(char *line, int *i);
 void		init_get_token(t_command *token, t_expand *expand);
-char		*init_get_expand(t_command *token, char *line, int *i, \
-t_expand *expand);
+void		init_get_expand(t_command *token, char *line, int *i, t_quotes *quotes);
 t_command	*get_command(char *line, t_quotes *quotes, t_expand *expand);
-t_command	get_lex_expand(char *line, int *i, t_quotes *quotes);
+int			get_lex_expand(char *line, int *i, t_quotes *quotes, \
+t_command *token);
 
 //Parser
 char		**init_parsing(char *input);
