@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:20:25 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/06 12:11:24 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/06 15:05:59 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,16 @@ void	process_pipe(char **cmd_args, t_pipe *pipes, char **argv, char **envp)
 
 void	prepare_pipe_execution(t_pipe *pipes, char ***argv1, char ***argv2)
 {
-	*argv1 = init_parsing(pipes->command1);
-	*argv2 = init_parsing(pipes->command2);
+	t_quotes	quotes = {FALSE, FALSE, FALSE};
+	t_expand	expand = {0, 0, FALSE};
+	t_command	*command1;
+	t_command	*command2;
+
+	command1 = get_command(pipes->command1, &quotes, &expand);
+	command2 = get_command(pipes->command2, &quotes, &expand);
+
+	*argv1 = create_cmd_args(command1);
+	*argv2 = create_cmd_args(command2);
 	pipe(pipes->pipefd);
 }
 

@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:46:13 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/06 13:52:45 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/06 15:30:20 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,10 +113,10 @@ char		*init_get_expand(t_command *token, char *line, int *i, t_expand *expand);
 t_command	*get_command(char *line, t_quotes *quotes, t_expand *expand);
 
 //Parser
-char		**init_parsing(char *input);
+//char		**init_parsing(char *input);
 void		free_parsed_command_line(char **argv);
 int			expand_size(char *var);
-char		**parse_command_line(t_command *command);
+//char		**parse_command_line(t_command *command);
 
 //Utils
 t_command	*ft_struct_join(t_command *tok1, t_command tok2);
@@ -126,10 +126,11 @@ char		*char_to_str(char c);
 //Execve
 char		*find_command_in_segment(char *segment, char *command);
 char		*find_command_path(char *command);
-void		execute_command(char *input, char **envp);
+void		execute_command(char **cmd_args, char **envp);
 void		handle_command(char *input, t_code *code, char **argv, char **envp);
-void		execute_non_builtin(char *input, char **envp, t_code *code);
+void		execute_non_builtin(char **envp, t_code *code, char **cmd_args);
 void		heredoc_child(t_pipe *pipes, char **argv, char **envp);
+char		**create_cmd_args(t_command *command);
 
 //Redirection 
 void		pid_redir(t_command *command, char **argv, char **envp, t_code *code);
@@ -156,7 +157,7 @@ int			ft_export(char **envp, t_code *code);
 int			ft_pwd(char **unused_args, char **unused_envp, t_code *code);
 int			ft_unset(char ***envp, char **names, t_code *code);
 int			execute_status_builtin(t_code *code);
-int			execute_builtins(char **cmd_args, char **envp, t_code *code, char *input);
+int			execute_builtins(char **cmd_args, char **envp, t_code *code);
 
 //heredoc
 int			heredoc(const char *delimiter, t_pipe *pipes, char **argv, char **envp);

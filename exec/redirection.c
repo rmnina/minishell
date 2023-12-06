@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 17:13:45 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/06 12:11:46 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/06 14:15:34 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,14 +87,11 @@ int	handle_redirection(t_code *code, t_command *command, char **argv, char **env
 {
 	t_pipe		pipes;
 	char		**cmd_args1;
-	char		*command_str;
 	int			hd_status;
 
-	printf("Handling Redirection for: %s\n", command->word);
 	(void)argv;
 	hd_status = 0;
-	command_str = command->word;
-	cmd_args1 = init_parsing(command_str);
+	cmd_args1 = create_cmd_args(command);
 	redir_symbol(command, cmd_args1);
 	if (command->redirection_type == REDIRECT_APPEND_INPUT)
 	{

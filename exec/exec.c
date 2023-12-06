@@ -6,13 +6,13 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/06 13:52:21 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/06 15:30:31 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	execute_builtins(char **cmd_args, char **envp, t_code *code, char *input)
+int	execute_builtins(char **cmd_args, char **envp, t_code *code)
 {
 	if (cmd_args[0] == NULL)
 		return (0);
@@ -37,11 +37,10 @@ int	execute_builtins(char **cmd_args, char **envp, t_code *code, char *input)
 	if (ft_strcmp(cmd_args[0], "unset") == 0
 		&& ft_strlen(cmd_args[0]) == ft_strlen("unset"))
 		return (ft_unset(&envp, cmd_args + 1, code));
-	execute_non_builtin(input, envp, code);
 	return (-1);
 }
 
-void	execute_non_builtin(char *input, char **envp, t_code *code)
+void	execute_non_builtin(char **envp, t_code *code, char **cmd_args)
 {
 	pid_t	pid;
 	int		status;
@@ -54,7 +53,7 @@ void	execute_non_builtin(char *input, char **envp, t_code *code)
 	}
 	else if (pid == 0)
 	{
-		execute_command(input, envp);
+		execute_command(cmd_args, envp);
 	}
 	else
 	{
@@ -117,45 +116,64 @@ void	heredoc_child(t_pipe *pipes, char **argv, char **envp)
 // 	}
 // }
 
+char	**create_cmd_args(t_command *command)
+{
+	int		word_count;
+	int		i;
+	char	**cmd_args;
 
+	word_count = 0;
+	i = 0;
+	while (command[word_count].type != 0)
+		word_count++;
+	cmd_args = malloc(sizeof(char *) * word_count);
+	if (!cmd_args)
+		exit(EXIT_FAILURE);
+	while (i < word_count)
+	{
+		cmd_args[i] = ft_strdup(command[i].word);
+		if (cmd_args[i] == NULL)
+			exit(EXIT_FAILURE);
+		i++;
+	}
+	cmd_args[i] = NULL;
+	return (cmd_args);
+}
 void	handle_command(char *input, t_code *code, char **argv, char **envp)
 {
 	t_command	*command;
 	t_quotes	quotes = {FALSE, FALSE, FALSE};
 	t_expand	expand = {0, 0, FALSE};
 	t_pipe		pipes;
-	int			i;
 	char		**cmd_args;
 
-	cmd_args = malloc(sizeof(char **));
+
 	command = get_command(input, &quotes, &expand);
 	ft_error_lexer(command);
-	i = 0;
 	if (ft_strcmp(input, "$?") == 0)
 	{
 		execute_status_builtin(code);
 		return ;
 	}
-	while (command[i].word != NULL)
+	else if (command->type == WORD)
 	{
-		cmd_args[i] = ft_strdup(command[i].word);
-		i++;
+		cmd_args = create_cmd_args(command);
+		if (execute_builtins(cmd_args, envp, code) == -1)
+			execute_non_builtin(envp, code, cmd_args);
+		free_parsed_command_line(cmd_args);
 	}
-	execute_builtins(cmd_args, envp, code, input);
-	free_parsed_command_line(cmd_args);
-	if (command[i].type == PIPE)
+	if (command->type == PIPE)
 	{
 		split_command_for_pipes(input, &pipes);
 		execute_pipe(&pipes, envp, code);
-		return ;
 	}
-	else if (command[i].type == LEFT_CHEV || \
-		command[i].type == RIGHT_CHEV || command[i].type == DB_LEFT_CHEV \
-		|| command[i].type == DB_RIGHT_CHEV)
+	else if (command->type == LEFT_CHEV || \
+		command->type == RIGHT_CHEV || command->type == DB_LEFT_CHEV \
+		|| command->type == DB_RIGHT_CHEV)
 	{
-		handle_redirection(code, &command[i], argv, envp);
-		free_parsed_command_line(cmd_args);
+		handle_redirection(code, command, argv, envp);
 		return ;
 	}
+	//free_parsed_command_line(cmd_args);
 	ft_free_command(command);
 }

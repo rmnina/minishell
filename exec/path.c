@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 10:21:29 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/06 12:10:43 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/06 15:29:50 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,15 +54,13 @@ char	*find_command_path(char *command)
 	return (find_command_in_segment(start, command));
 }
 
-void	execute_command(char *input, char **envp)
+void	execute_command(char **cmd_args, char **envp)
 {
-	char	*path;
-	char	**cmd_args;
+	char		*path;
 
-	cmd_args = init_parsing(input);
 	if (!cmd_args)
 	{
-		perror("init parsing");
+		perror("Error creating command args");
 		exit(EXIT_FAILURE);
 	}
 	path = find_command_path(cmd_args[0]);
