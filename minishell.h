@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:46:13 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/07 14:38:45 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/07 17:23:32 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@
 # include <term.h>
 # include "libft/libft.h"
 # include <math.h>
+# include <signal.h>
 
 enum e_type {
 	WORD = 1,
@@ -99,7 +100,6 @@ typedef struct s_line {
 	struct s_line	*next;
 }	t_line;
 
-
 //Lexer
 int			is_in_quote(char c, t_quotes *quotes);
 void		error_quotes(char *line, t_quotes *quotes);
@@ -163,9 +163,13 @@ int			ft_pwd(char **unused_args, char **unused_envp, t_code *code);
 int			ft_unset(char ***envp, char **names, t_code *code);
 int			execute_status_builtin(t_code *code);
 int			execute_builtins(char **cmd_args, char **envp, t_code *code);
+void		sigint_handler(int signum);
+int			init_sigactionsa(struct sigaction *sa);
+int			init_sigactionsq(struct sigaction *sq);
 
 //heredoc
 int			heredoc(const char *delimiter, t_pipe *pipes, char **argv, \
 char **envp);
+
 
 #endif

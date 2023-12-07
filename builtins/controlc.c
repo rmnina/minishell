@@ -1,37 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipe_command.c                                     :+:      :+:    :+:   */
+/*   controlc.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/29 14:59:17 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/07 17:02:07 by juandrie         ###   ########.fr       */
+/*   Created: 2023/12/07 15:13:20 by juandrie          #+#    #+#             */
+/*   Updated: 2023/12/07 16:48:25 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+#include <signal.h>
 
-void	split_command_for_pipes(char *input, t_pipe *pipes)
+int	init_sigactionsa(struct sigaction *sa)
 {
-	char	*pipe_ptr;
-
-	pipe_ptr = ft_strchr(input, '|');
-	if (pipe_ptr)
+	if (!sa)
 	{
-		*pipe_ptr = '\0';
-		pipes->command1 = ft_strtrim(input, " ");
-		pipes->command2 = ft_strtrim(pipe_ptr + 1, " ");
+		printf("Erreur : pointeur NULL vers struct sigactionsa.\n");
+		return (-1);
 	}
+	sa->sa_handler = sigint_handler;
+    sa->sa_flags = 0;
+	sigemptyset(&sa->sa_mask);
+	sigaction(SIGINT, sa, NULL);
+
+	return (0);
 }
 
-int	commands_with_pipes_detected(char *input)
+void	sigint_handler(int signum)
 {
-	char	*pipe_position;
-
-	pipe_position = ft_strchr(input, '|');
-
-	if (pipe_position != NULL)
-		return (1);
-	return (0);
+	(void)signum;
+	write(STDOUT_FILENO, "\nminishell > ", 13);
 }

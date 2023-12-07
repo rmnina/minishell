@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 17:13:45 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/07 14:44:57 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/07 17:03:16 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 void	set_redirection_type(t_command *command, char *symbol, char *file)
 {
-	printf("set_redirection_type called with symbol: %s, file: %s\n", symbol, file);
 	if (!ft_strcmp(symbol, "<<"))
 		command->redirection_type = REDIRECT_APPEND_INPUT;
 	else if (!ft_strcmp(symbol, ">"))
@@ -24,12 +23,10 @@ void	set_redirection_type(t_command *command, char *symbol, char *file)
 	else if (!ft_strcmp(symbol, "<"))
 		command->redirection_type = REDIRECT_INPUT;
 	command->redirection_file = file;
-	printf("Redirection type set to: %d, Redirection file set to: %s\n", command->redirection_type, command->redirection_file);
 }
 
 void	redir_symbol(t_command *command, char **cmd_args)
 {
-	printf("redir_symbol called\n");
 	int	i;
 
 	i = 0;
@@ -39,7 +36,6 @@ void	redir_symbol(t_command *command, char **cmd_args)
 
 	while (cmd_args[i] != NULL)
 	{
-		printf("Checking cmd_arg[%d]: %s\n", i, cmd_args[i]);
 		if (!ft_strcmp(cmd_args[i], "<<") || !ft_strcmp(cmd_args[i], ">") || \
 			!ft_strcmp(cmd_args[i], ">>") || !ft_strcmp(cmd_args[i], "<"))
 		{
@@ -59,7 +55,6 @@ void	execute_redirection(t_command *command, char **argv, char **envp)
 	int		flags;
 	char	*path;
 
-	printf("execute_redirection started for command: %s\n", command->word);
 	if (command->redirect_type == REDIRECT_OUTPUT || \
 		command->redirect_type == REDIRECT_APPEND_OUTPUT)
 	{
@@ -68,21 +63,15 @@ void	execute_redirection(t_command *command, char **argv, char **envp)
 		else if (command->redirect_type == REDIRECT_APPEND_OUTPUT)
 			flags = O_WRONLY | O_CREAT | O_APPEND;
 		fd = open(command->file, flags, 0644);
-		printf("File descriptor for redirection: %d\n", fd);
 		dup2(fd, STDOUT_FILENO);
-		perror("Error during redirection setup");
 	}
 	else if (command->redirect_type == REDIRECT_INPUT)
 	{
 		fd = open(command->file, O_RDONLY);
-		perror("Error during redirection setup");
 		dup2(fd, STDIN_FILENO);
-		perror("Error during redirection setup");
-
 	}
 	close(fd);
 	path = find_command_path(command->word);
-	printf("Executing command with redirection: %s\n", argv[0]);
 	execve(path, argv, envp);
 	perror("execve");
 	exit(EXIT_FAILURE);
@@ -170,32 +159,24 @@ int handle_redirection(t_code *code, t_command *command, int command_start_index
 	char		**cmd_args1;
 	t_command	*redir_command;
 	t_pipe		pipes;
-	int			hd_status;
+	int			hd_status = 0;
 
-	hd_status = 0;
 	redir_command = command + 1;
 	(void)argv;
-	if (command[0].type >= LEFT_CHEV && command[0].type <= DB_RIGHT_CHEV \
-		&& command[1].type == WORD)
+	if (command[0].type >= LEFT_CHEV && command[0].type <= DB_RIGHT_CHEV && command[1].type == WORD)
 	{
 		redir_command->redirection_type = command->type;
 		redir_command->redirection_file = command[1].word;
-		printf("Redirection setup: type=%d, file=%s\n", command->redirection_type, command->redirection_file);
 		cmd_args1 = create_cmd_args(command - command_start_index);
-		printf("cmd_args1 created: %s\n", cmd_args1 ? cmd_args1[0] : "null");
 		if (redir_command->redirection_type == REDIRECT_APPEND_INPUT)
 		{
 			hd_status = heredoc(redir_command->redirection_file, &pipes, cmd_args1, envp);
 			code->code_status = hd_status;
-			printf("handle_redirection finished for heredoc\n");
 		}
 		else if (redir_command->redirection_type != NO_REDIRECTION) 
 		{
 			execute_redirection(redir_command, cmd_args1, envp);
-			printf("handle_redirection finished for regular redirection\n");
 		}
-		else
-			printf("No redirection required\n");
 	}
 	free_parsed_command_line(cmd_args1);
 	return (hd_status);

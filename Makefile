@@ -6,7 +6,7 @@
 #    By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/14 14:15:25 by jdufour           #+#    #+#              #
-#    Updated: 2023/11/30 16:58:41 by juandrie         ###   ########.fr        #
+#    Updated: 2023/12/07 16:56:01 by juandrie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,6 +26,8 @@ SRCS = main.c \
 	builtins/export.c \
 	builtins/pwd.c \
 	builtins/unset.c \
+	builtins/controlc.c \
+	builtins/control_backslash.c \
 	exec/exec_pipe.c \
 	exec/exec.c \
 	exec/heredoc.c \

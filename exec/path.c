@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 10:21:29 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/06 18:41:00 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/07 17:01:47 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,6 @@ void	execute_command(char **cmd_args, char **envp)
 		exit(EXIT_FAILURE);
 	}
 	path = find_command_path(cmd_args[0]);
-	printf("path dans exec command: %s\n", cmd_args[0]);
 	if (!path)
 	{
 		perror("Command not found");

@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/07 13:37:29 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/07 17:06:23 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,38 +116,36 @@ void	heredoc_child(t_pipe *pipes, char **argv, char **envp)
 // 	}
 // }
 
-char **create_cmd_args(t_command *command) {
-    int word_count = 0;
-    int i = 0;
-    char **cmd_args;
+char	**create_cmd_args(t_command *command)
+{
+	int		word_count;
+	int		i;
+	char	**cmd_args;
 
-    printf("create_cmd_args called\n");
-
-    // Compter seulement les tokens de type WORD
-    while (command[word_count].type == WORD) {
-        printf("Checking token at index %d: Type=%d, Word=%s\n", word_count, command[word_count].type, command[word_count].word);
-        word_count++;
-    }
-
-    printf("Number of words found: %d\n", word_count);
-    cmd_args = malloc(sizeof(char *) * (word_count + 1));
-    if (!cmd_args) {
-        perror("Allocation error in create_cmd_args");
-        exit(EXIT_FAILURE);
-    }
-
-    for (i = 0; i < word_count; i++) {
-        cmd_args[i] = ft_strdup(command[i].word);
-        printf("cmd_args[%d] = %s\n", i, cmd_args[i]);
-        if (!cmd_args[i]) {
-            perror("Allocation error in create_cmd_args");
-            exit(EXIT_FAILURE);
-        }
-    }
-    cmd_args[i] = NULL; // Marquer la fin du tableau
-
-    printf("create_cmd_args finished\n");
-    return cmd_args;
+	word_count = 0;
+	while (command[word_count].type == WORD)
+	{
+		word_count++;
+	}
+	cmd_args = malloc(sizeof(char *) * (word_count + 1));
+	if (!cmd_args)
+	{
+		perror("Allocation error in create_cmd_args");
+		exit(EXIT_FAILURE);
+	}
+	i = 0;
+	while (i < word_count)
+	{
+		cmd_args[i] = ft_strdup(command[i].word);
+		if (!cmd_args[i])
+		{
+			perror("Allocation error in create_cmd_args");
+			exit(EXIT_FAILURE);
+		}
+		i++;
+	}
+	cmd_args[i] = NULL;
+	return (cmd_args);
 }
 
 
@@ -308,7 +306,7 @@ char **create_cmd_args(t_command *command) {
 //     ft_free_command(command);
 // }
 
-void handle_command(char *input, t_code *code, char **argv, char **envp)
+void	handle_command(char *input, t_code *code, char **argv, char **envp)
 {
     t_command *command;
     t_pipe pipes;
@@ -317,7 +315,7 @@ void handle_command(char *input, t_code *code, char **argv, char **envp)
     char **cmd_args;
     int i = 0;
 
-    printf("handle_command called with input: %s\n", input);
+
     command = get_command(input, &quotes, &expand);
 
 	while (command[i].type != 0)
@@ -342,7 +340,7 @@ void handle_command(char *input, t_code *code, char **argv, char **envp)
 			{
                 split_command_for_pipes(input, &pipes);
                 execute_pipe(&pipes, envp, code);
-                break; // Après un pipe, la commande est complètement traitée
+                break;
             }
             else
 			{
@@ -354,13 +352,8 @@ void handle_command(char *input, t_code *code, char **argv, char **envp)
             }
             free_parsed_command_line(cmd_args);
         } 
-		else
-		{
-            i++; 
-        }
+        i++; 
     }
-
-    printf("handle_command finished processing\n");
     ft_free_command(command);
 }
 

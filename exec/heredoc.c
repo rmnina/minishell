@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 16:22:53 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/07 11:01:35 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/07 17:01:38 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,11 +88,9 @@ int	heredoc(const char *delimiter, t_pipe *pipes, char **argv, char **envp)
 
 	status = 0;
 	code_status = 0;
-	printf("heredoc started with delimiter: %s\n", delimiter);
 	if (pipe(pipes->pipefd) == -1)
 		exit(EXIT_FAILURE);
 	pid = fork();
-	printf("heredoc pipe and fork created\n");
 	if (pid == -1)
 		exit(EXIT_FAILURE);
 	else if (pid == 0)
@@ -105,7 +103,6 @@ int	heredoc(const char *delimiter, t_pipe *pipes, char **argv, char **envp)
 		waitpid(pid, &status, 0);
 		if (WIFEXITED(status))
 			code_status = WEXITSTATUS(status);
-		printf("heredoc read and write completed\n");
 	}
 	return (code_status);
 }
