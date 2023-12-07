@@ -3,14 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   error_lexer.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 02:11:36 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/06 13:58:10 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/07 17:36:01 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+// This function checks for lexer errors in quotes. It uses the 
+// booleand set by is_in_quotes(), and returns an error if the 
+// latter indicates the presence of an unmatch opening quote
+// without a closing quote.
 
 void	error_quotes(char *line, t_quotes *quotes)
 {
@@ -33,6 +38,11 @@ void	error_quotes(char *line, t_quotes *quotes)
 		exit(2);
 	}
 }
+
+// The 2 following functions checks for parsing error once the array
+// of structures has been created. The first one verifies the syntax 
+// of commands with pipes or redirections ; the seconds only focuses
+// on the number of > or <.
 
 void	error_use_types(t_command *command)
 {
@@ -82,6 +92,7 @@ void	error_nonexistent_type(t_command *command)
 		j++;
 	}
 }
+
 
 void	ft_error_lexer(t_command *command)
 {
