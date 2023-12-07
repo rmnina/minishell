@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_pipe.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:20:25 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/07 11:00:36 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/07 15:24:26 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	process_pipe(char **cmd_args, t_pipe *pipes, char **argv, char **envp)
 
 	(void)argv;
 	path = find_command_path(cmd_args[0]);
-	printf("Chemin de la commande: %s\n", path ? path : "Introuvable"); 
+	// printf("Chemin de la commande: %s\n", path ? path : "Introuvable"); 
 	dup2(pipes->pipefd[pipes->dup_fd], pipes->dup_fd);
 	close(pipes->pipefd[0]);
 	close(pipes->pipefd[1]);

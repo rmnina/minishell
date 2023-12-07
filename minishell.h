@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:46:13 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/07 14:52:51 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/07 15:07:40 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,12 +63,6 @@ typedef struct s_quotes {
 	char	*var;
 }	t_quotes;
 
-typedef struct s_expand {
-	int		pos;
-	int		lex_index;
-	bool	left_expand;
-}	t_expand;
-
 typedef struct s_command {
 	char			*word;
 	int				type;
@@ -110,9 +104,9 @@ int			special_types(char c);
 void		get_type(t_command *token, t_quotes *quotes);
 int			is_expand(char *line);
 char		*get_env_var_name(char *line, int *i);
-void		init_get_token(t_command *token, t_expand *expand);
+void		init_get_token(t_command *token);
 void		init_get_expand(t_command *token, char *line, int *i, t_quotes *quotes);
-t_command	*get_command(char *line, t_quotes *quotes, t_expand *expand);
+t_command	*get_command(char *line, t_quotes *quotes);
 int			get_lex_expand(char *line, int *i, t_quotes *quotes, \
 t_command *token);
 
@@ -122,6 +116,7 @@ void		free_parsed_command_line(char **argv);
 int			expand_size(char *var);
 //char		**parse_command_line(t_command *command);
 int			parse_quotes(char *line, int *i, t_quotes *quotes);
+t_command	*ft_parsing(char *line);
 
 //Utils
 t_command	*ft_struct_join(t_command *tok1, t_command tok2);

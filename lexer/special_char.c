@@ -6,11 +6,15 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 04:33:44 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/07 14:53:12 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/07 15:38:14 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+// Implementation of booleans whose changes of state
+// indicates whether the character being processed is
+// or isn't between quotes.
 
 int	is_in_quote(char c, t_quotes *quotes)
 {
@@ -36,10 +40,16 @@ int	is_in_quote(char c, t_quotes *quotes)
 	}
 }
 
+// Just a silly hardcoded function to identify the type of
+// an encountered special character. Types are defined in 
+// an enum in the header file. This function is mostly used
+// in the loop that verifies the input char by char, in order 
+// to find out in which condition to enter.
+
 int	special_types(char c)
 {
 	if (!c)
-		return (0);
+		return (-1);
 	else if (c == '|')
 		return (PIPE);
 	else if (c == '<')
@@ -51,48 +61,35 @@ int	special_types(char c)
 	return (0);
 }
 
+// This function assigns a type to a token. Unlike the previous 
+// function, which only performs a verification, this one writes 
+// the type it has assign to the token into its structure t_command. 
+
 void	get_type(t_command *token, t_quotes *quotes)
 {
 	if (!token->word)
 		return ;
 	else if (token->word[0] == '|' && quotes->case_quotes == FALSE)
-	{
 		token->type = PIPE;
-		printf("Token: %s, Type assigned: %d\n", token->word, token->type);
-	}
 	else if (token->word[0] == '<' && token->word[1] && token->word[1] == '<' \
 	&& quotes->case_quotes == FALSE)
-	{
 		token->type = DB_LEFT_CHEV;
-		printf("Token: %s, Type assigned: %d\n", token->word, token->type);
-	}
 	else if (token->word[0] == '<' && quotes->case_quotes == FALSE)
-	{
 		token->type = LEFT_CHEV;
-		printf("Token: %s, Type assigned: %d\n", token->word, token->type);
-	}
 	else if (token->word[0] == '>' && token->word[1] && token->word[1] == '>' \
 	&& quotes->case_quotes == FALSE)
-	{
 		token->type = DB_RIGHT_CHEV;
-		printf("Token: %s, Type assigned: %d\n", token->word, token->type);
-	}
 	else if (token->word[0] == '>' && quotes->case_quotes == FALSE)
-	{
 		token->type = RIGHT_CHEV;
-		printf("Token: %s, Type assigned: %d\n", token->word, token->type);
-	}
 	else if (is_expand(token->word) && quotes->case_single == FALSE)
-	{
 		token->type = EXPAND;
-		printf("Token: %s, Type assigned: %d\n", token->word, token->type);
-	}
 	else
-	{
 		token->type = WORD;
-		printf("Token: %s, Type assigned: %d\n", token->word, token->type);
-	}
 }
+
+// This function is just a loop to find if the input contains 
+// at least one variable to expand. It's also only used in the
+// loop that creates tokens.
 
 int	is_expand(char *line)
 {

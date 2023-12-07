@@ -6,49 +6,14 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 15:15:34 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/06 18:58:28 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/07 15:51:04 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	expand_size(char *var)
-{
-	int			i;
-	int			size;
-
-	i = 0;
-	size = 0;
-	while (var[i])
-	{
-		if (var[i] == SPACE || (i == 0 && var[i] != SPACE))
-		{
-			if (var[i + 1] && var[i + 1] != SPACE)
-				size++;
-		}
-		i++;
-	}
-	return (size);
-}
-
-int	command_size(t_command *lexer, char *var)
-{
-	int	i;
-	int	size;
-
-	i = 0;
-	size = 0;
-	while (lexer[i].type && lexer[i].type != EXPAND)
-		i++;
-	if (lexer[i].type == EXPAND)
-	{
-		while (lexer[i].word[size])
-			size++;
-	}
-	else
-		return (0);
-	return (size + (expand_size(var) - 1));
-}
+// This function scans the token following the $ to retrieve the
+// name of the expand, as it is required by the getenv function.
 
 char	*get_env_var_name(char *line, int *i)
 {
@@ -63,6 +28,27 @@ char	*get_env_var_name(char *line, int *i)
 	}
 	return (name);
 }
+
+// This function will be used in get_lex_expand(). It lets us know
+// whether or not the name of the environnment variable retrieved 
+// by getenv is a multi-part one.
+
+void	get_next_part_env_var(t_quotes *quotes, int j)
+{
+	if (quotes->var[j] == '\0')
+	{
+		quotes->var = NULL;
+		quotes->vpos = 0;
+	}
+	else
+		quotes->vpos = j;
+}
+
+// This function creates the token corresponding to the environnement 
+// variable retrieved by getenv. If the variable is composed of more
+// than one word, this function will be called again by get_command()
+// thanks to the elements modified in the t_quotes structs by the
+// previous function.
 
 int	get_lex_expand(char *line, int *i, t_quotes *quotes, t_command *token)
 {
@@ -87,12 +73,6 @@ int	get_lex_expand(char *line, int *i, t_quotes *quotes, t_command *token)
 		}
 	}
 	token->type = WORD;
-	if (quotes->var[j] == '\0')
-	{
-		quotes->var = NULL;
-		quotes->vpos = 0;
-	}
-	else
-		quotes->vpos = j;
+	get_next_part_env_var(quotes, j);
 	return (1);
 }

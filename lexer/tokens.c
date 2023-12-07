@@ -6,11 +6,17 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 00:19:58 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/07 14:53:40 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/07 15:59:33 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+// This functions processes built-ins, giving them a token all to
+// themselves. This makes it possible to assign a type so that the 
+// exec knows how to handle them. They are obviously considered
+// literal if they're between quotes, but this verification will 
+// be made by get_token().
 
 t_command	get_special_type_token(char *line, int *i, t_quotes *quotes)
 {
@@ -38,6 +44,12 @@ t_command	get_special_type_token(char *line, int *i, t_quotes *quotes)
 	return (token);
 }
 
+// This was originally in the get_token() function, but had to be 
+// separated so it could be used in other functions. It simply 
+// tells the get_token() function how to proceed quotes, and returns
+// one if it runs into a space that is not between quotes : this 
+// indicates the end of the token.
+
 int	parse_quotes(char *line, int *i, t_quotes *quotes)
 {
 	if (line[*i] == SINGLE_QUOTE && quotes->case_double == FALSE)
@@ -56,15 +68,18 @@ int	parse_quotes(char *line, int *i, t_quotes *quotes)
 	return (0);
 }
 
-t_command	get_token(char *line, t_quotes *quotes, int *i, t_expand *expand)
+// this function is one of the most importants as it creates the tokens,
+// which are the structures t_command that are gonna be placed in the array
+// treated by the exec. 
+
+t_command	get_token(char *line, t_quotes *quotes, int *i)
 {
 	t_command	token;
 
-	init_get_token(&token, expand);
+	init_get_token(&token);
 	while (line[*i])
 	{
 		is_in_quote(line[*i], quotes);
-		// printf("case quotes = %d, type = %d, line[i] = %c\n", quotes->case_quotes, special_types(line[*i]), line[*i]);
 		if ((special_types(line[*i]) == EXPAND && quotes->case_single == FALSE) \
 		|| quotes->var != NULL)
 		{
@@ -92,6 +107,9 @@ t_command	get_token(char *line, t_quotes *quotes, int *i, t_expand *expand)
 	return (token);
 }
 
+// This function creates a null t_command token. It will be added at the
+// end of the array, so we can iterate on it by having an exit condition.
+
 t_command	token_null(t_command *token)
 {
 	token->word = malloc(sizeof(char));
@@ -100,7 +118,11 @@ t_command	token_null(t_command *token)
 	return (*token);
 }
 
-t_command	*get_command(char *line, t_quotes *quotes, t_expand *expand)
+// This functions creates the array with all of the structures. It also
+// verifies if the env variable have been treated accordingly, and gets 
+// the rest of them if not.
+
+t_command	*get_command(char *line, t_quotes *quotes)
 {
 	t_command	*command;
 	t_command	token;
@@ -108,7 +130,6 @@ t_command	*get_command(char *line, t_quotes *quotes, t_expand *expand)
 
 	i = 0;
 	command = NULL;
-	printf("get_command called with line: %s\n", line);
 	while (line[i])
 	{
 		if (line[i] == SPACE)
@@ -116,7 +137,7 @@ t_command	*get_command(char *line, t_quotes *quotes, t_expand *expand)
 			while (line[i] && line[i] == SPACE)
 				i++;
 		}
-		token = get_token(line, quotes, &i, expand);
+		token = get_token(line, quotes, &i);
 		if (token.word == NULL)
 			i++;
 		else
@@ -135,44 +156,43 @@ t_command	*get_command(char *line, t_quotes *quotes, t_expand *expand)
 		}
 	}
 	command = ft_struct_join(command, token_null(&token));
-	printf("get_command finished processing\n");
 	return (command);
 }
 
-int	main(void)
-{
-	t_quotes	quotes;
-	t_command	*command;
-	t_expand	expand;
-	char		*line;
+// int	main(void)
+// {
+// 	t_quotes	quotes;
+// 	t_command	*command;
+// 	t_expand	expand;
+// 	char		*line;
 
-	expand.left_expand = FALSE;
-	quotes.case_double = FALSE;
-	quotes.case_single = FALSE;
-	quotes.var = NULL;
-	quotes.vpos = 0;
-	command = NULL;
-	while (1)
-	{
-		line = readline("> ");
-		if (!line)
-		{
-			printf("exit ctrl+D\n");
-			break ;
-		}
-		if (line[0] != 0)
-		{
-			add_history(line);
-			error_quotes(line, &quotes);
-			command = get_command(line, &quotes, &expand);
-			ft_error_lexer(command);
-			for (int i = 0; command[i + 1].word != NULL; i++)
-			{
-				printf("word[%d] = %s\n", i, command[i].word);
-				printf("type[%d] = %d\n", i, command[i].type);
-			}
-		}
-		clear_history();
-		ft_free_command(command);
-	}
-}
+// 	expand.left_expand = FALSE;
+// 	quotes.case_double = FALSE;
+// 	quotes.case_single = FALSE;
+// 	quotes.var = NULL;
+// 	quotes.vpos = 0;
+// 	command = NULL;
+// 	while (1)
+// 	{
+// 		line = readline("> ");
+// 		if (!line)
+// 		{
+// 			printf("exit ctrl+D\n");
+// 			break ;
+// 		}
+// 		if (line[0] != 0)
+// 		{
+// 			add_history(line);
+// 			error_quotes(line, &quotes);
+// 			command = get_command(line, &quotes, &expand);
+// 			ft_error_lexer(command);
+// 			for (int i = 0; command[i + 1].word != NULL; i++)
+// 			{
+// 				printf("word[%d] = %s\n", i, command[i].word);
+// 				printf("type[%d] = %d\n", i, command[i].type);
+// 			}
+// 		}
+// 		clear_history();
+// 		ft_free_command(command);
+// 	}
+// }

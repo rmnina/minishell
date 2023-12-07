@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/07 13:37:29 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/07 15:05:21 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -318,8 +318,7 @@ void handle_command(char *input, t_code *code, char **argv, char **envp)
     int i = 0;
 
     printf("handle_command called with input: %s\n", input);
-    command = get_command(input, &quotes, &expand);
-
+    command = ft_parsing(input);
 	while (command[i].type != 0)
 	{
         if (command[i].type == WORD)
