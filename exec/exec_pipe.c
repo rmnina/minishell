@@ -6,17 +6,16 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:20:25 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/07 17:00:34 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/07 17:39:13 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	process_pipe(char **cmd_args, t_pipe *pipes, char **argv, char **envp)
+void	process_pipe(char **cmd_args, t_pipe *pipes, char **envp)
 {
 	char	*path;
 
-	(void)argv;
 	path = find_command_path(cmd_args[0]);
 	dup2(pipes->pipefd[pipes->dup_fd], pipes->dup_fd);
 	close(pipes->pipefd[0]);
@@ -24,22 +23,6 @@ void	process_pipe(char **cmd_args, t_pipe *pipes, char **argv, char **envp)
 	execve(path, cmd_args, envp);
 	perror("execve");
 	exit(EXIT_FAILURE);
-}
-
-
-void	prepare_pipe_execution(t_pipe *pipes, char ***argv1, char ***argv2)
-{
-	t_quotes	quotes = {FALSE, FALSE, FALSE};
-	t_expand	expand = {0, 0, FALSE};
-	t_command	*command1;
-	t_command	*command2;
-
-	command1 = get_command(pipes->command1, &quotes, &expand);
-	command2 = get_command(pipes->command2, &quotes, &expand);
-
-	*argv1 = create_cmd_args(command1);
-	*argv2 = create_cmd_args(command2);
-	pipe(pipes->pipefd);
 }
 
 int	launch_pipe(t_pipe *pipes, char **argv1, char **argv2, char **envp)

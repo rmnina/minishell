@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:46:13 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/07 17:23:32 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/07 17:43:29 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,13 +60,9 @@ typedef struct s_quotes {
 	bool	case_single;
 	bool	case_double;
 	bool	case_quotes;
+	int		vpos;
+	char	*var;
 }	t_quotes;
-
-typedef struct s_expand {
-	int		pos;
-	int		lex_index;
-	bool	left_expand;
-}	t_expand;
 
 typedef struct s_command {
 	char			*word;
@@ -85,8 +81,8 @@ typedef struct s_alloc {
 }	t_alloc;
 
 typedef struct s_pipe {
-	char	*command1;
-	char	*command2;
+	char	**command1;
+	char	**command2;
 	int		pipefd[2];
 	int		dup_fd;
 }	t_pipe;
@@ -108,11 +104,11 @@ int			special_types(char c);
 void		get_type(t_command *token, t_quotes *quotes);
 int			is_expand(char *line);
 char		*get_env_var_name(char *line, int *i);
-void		init_get_token(t_command *token, t_expand *expand);
-char		*init_get_expand(t_command *token, char *line, int *i, \
-t_expand *expand);
-t_command	*get_command(char *line, t_quotes *quotes, t_expand *expand);
-t_command	get_lex_expand(char *line, int *i, t_quotes *quotes);
+void		init_get_token(t_command *token);
+void		init_get_expand(t_command *token, char *line, int *i, t_quotes *quotes);
+t_command	*get_command(char *line, t_quotes *quotes);
+int			get_lex_expand(char *line, int *i, t_quotes *quotes, \
+t_command *token);
 
 //Parser
 //char		**init_parsing(char *input);
@@ -120,6 +116,7 @@ void		free_parsed_command_line(char **argv);
 int			expand_size(char *var);
 //char		**parse_command_line(t_command *command);
 int			parse_quotes(char *line, int *i, t_quotes *quotes);
+t_command	*ft_parsing(char *line);
 
 //Utils
 t_command	*ft_struct_join(t_command *tok1, t_command tok2);
@@ -138,7 +135,7 @@ char		**create_cmd_args(t_command *command);
 //Redirection 
 void		pid_redir(t_command *command, char **argv, char **envp, t_code *code);
 //int			handle_redirection(t_code *code, t_command *command, char **argv, char **envp);
-int handle_redirection(t_code *code, t_command *command, int command_start_index, char **argv, char **envp);
+int 		handle_redirection(t_code *code, int *i, t_command *command, char **envp);
 void		execute_redirection(t_command *exec, char **argv, char **envp);
 void		set_redirection_type(t_command *exec, char *symbol, char *file);
 void		redir_symbol(t_command *exec, char **cmd_args);
@@ -148,7 +145,8 @@ void		init_exec_struct(t_command *exec);
 void		execute_pipe(t_pipe *pipes, char **envp, t_code *code);
 void		process_pipe(char **cmd_args, t_pipe *pipes, char **argv, \
 char **envp);
-void		split_command_for_pipes(char *input, t_pipe *pipes);
+void		split_command_for_pipes(char **cmd_args, t_command *command, \
+t_pipe *pipes, int *i);
 //void		split_command_for_pipes(t_command *commands, t_pipe *pipes);
 int			commands_with_pipes_detected(char *input);
 pid_t		heredoc_pipe(t_pipe *pipes);

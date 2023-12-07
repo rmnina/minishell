@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 02:11:36 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/07 17:36:01 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/07 17:42:03 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ void	error_quotes(char *line, t_quotes *quotes)
 // of structures has been created. The first one verifies the syntax 
 // of commands with pipes or redirections ; the seconds only focuses
 // on the number of > or <.
+
 
 void	error_use_types(t_command *command)
 {
@@ -92,6 +93,7 @@ void	error_nonexistent_type(t_command *command)
 		j++;
 	}
 }
+
 
 
 void	ft_error_lexer(t_command *command)

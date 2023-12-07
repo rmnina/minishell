@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/07 17:06:23 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/07 17:40:04 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -320,7 +320,7 @@ void	handle_command(char *input, t_code *code, char **argv, char **envp)
 
 	while (command[i].type != 0)
 	{
-        if (command[i].type == WORD)
+		if (command[i].type == PIPE)
 		{
             int cmd_start = i;
             while (command[i].type == WORD)

@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 17:13:45 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/07 17:03:16 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/07 17:40:58 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,7 +152,7 @@ void	init_exec_struct(t_command *command)
 //     return hd_status;
 // }
 
-int handle_redirection(t_code *code, t_command *command, int command_start_index, char **argv, char **envp)
+int handle_redirection(t_code *code, int *i, t_command *command, char **envp)
 {
 	printf("handle_redirection called\n");
 
@@ -174,7 +174,6 @@ int handle_redirection(t_code *code, t_command *command, int command_start_index
 			code->code_status = hd_status;
 		}
 		else if (redir_command->redirection_type != NO_REDIRECTION) 
-		{
 			execute_redirection(redir_command, cmd_args1, envp);
 		}
 	}
