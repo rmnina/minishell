@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:20:25 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/06 18:38:31 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/07 11:00:36 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,9 +88,11 @@ void	execute_pipe(t_pipe *pipes, char **envp, t_code *code)
 	char	**argv2;
 	int		pipe_status;
 
+	printf("execute_pipe started\n");
 	prepare_pipe_execution(pipes, &argv1, &argv2);
 	pipe_status = launch_pipe(pipes, argv1, argv2, envp);
 	code->code_status = pipe_status;
+	printf("execute_pipe ended with status: %d\n", pipe_status);
 }
 
 pid_t	heredoc_pipe(t_pipe *pipes)

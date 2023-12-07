@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:46:13 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/06 18:31:34 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/07 14:38:45 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,7 +137,8 @@ char		**create_cmd_args(t_command *command);
 
 //Redirection 
 void		pid_redir(t_command *command, char **argv, char **envp, t_code *code);
-int			handle_redirection(t_code *code, t_command *command, char **argv, char **envp);
+//int			handle_redirection(t_code *code, t_command *command, char **argv, char **envp);
+int handle_redirection(t_code *code, t_command *command, int command_start_index, char **argv, char **envp);
 void		execute_redirection(t_command *exec, char **argv, char **envp);
 void		set_redirection_type(t_command *exec, char *symbol, char *file);
 void		redir_symbol(t_command *exec, char **cmd_args);

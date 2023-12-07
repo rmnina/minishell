@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 00:19:58 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/06 15:36:00 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/07 11:11:35 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,7 @@ t_command	*get_command(char *line, t_quotes *quotes, t_expand *expand)
 
 	i = 0;
 	command = NULL;
+	printf("get_command called with line: %s\n", line);
 	while (line[i])
 	{
 		if (line[i] == SPACE)
@@ -114,6 +115,7 @@ t_command	*get_command(char *line, t_quotes *quotes, t_expand *expand)
 			token = get_lex_expand(line, &i, quotes);
 		else
 			token = get_token(line, quotes, &i, expand);
+		printf("Token found: %s, Type: %d\n", token.word, token.type);
 		if (token.word == NULL)
 			i++;
 		else
@@ -124,6 +126,7 @@ t_command	*get_command(char *line, t_quotes *quotes, t_expand *expand)
 		}
 	}
 	command = ft_struct_join(command, token_null(&token));
+	printf("get_command finished processing\n");
 	return (command);
 }
 
