@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:20:25 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/06 12:11:24 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/07 11:00:36 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ void	process_pipe(char **cmd_args, t_pipe *pipes, char **argv, char **envp)
 
 	(void)argv;
 	path = find_command_path(cmd_args[0]);
+	printf("Chemin de la commande: %s\n", path ? path : "Introuvable"); 
 	dup2(pipes->pipefd[pipes->dup_fd], pipes->dup_fd);
 	close(pipes->pipefd[0]);
 	close(pipes->pipefd[1]);
@@ -29,8 +30,16 @@ void	process_pipe(char **cmd_args, t_pipe *pipes, char **argv, char **envp)
 
 void	prepare_pipe_execution(t_pipe *pipes, char ***argv1, char ***argv2)
 {
-	*argv1 = init_parsing(pipes->command1);
-	*argv2 = init_parsing(pipes->command2);
+	t_quotes	quotes = {FALSE, FALSE, FALSE};
+	t_expand	expand = {0, 0, FALSE};
+	t_command	*command1;
+	t_command	*command2;
+
+	command1 = get_command(pipes->command1, &quotes, &expand);
+	command2 = get_command(pipes->command2, &quotes, &expand);
+
+	*argv1 = create_cmd_args(command1);
+	*argv2 = create_cmd_args(command2);
 	pipe(pipes->pipefd);
 }
 
@@ -45,17 +54,19 @@ int	launch_pipe(t_pipe *pipes, char **argv1, char **argv2, char **envp)
 	status1 = 0;
 	status2 = 0;
 	code_status = 0;
+	printf("Lancement de la première commande du pipe\n"); // Débogage
 	pid1 = fork();
 	if (pid1 == 0)
 	{
 		pipes->dup_fd = 1;
 		process_pipe(argv1, pipes, argv2, envp);
 	}
+	printf("Lancement de la deuxième commande du pipe\n"); 
 	pid2 = fork();
 	if (pid2 == 0)
 	{
 		pipes->dup_fd = 0;
-		process_pipe(argv2, pipes, argv2, envp);
+		process_pipe(argv2, pipes, argv1, envp);
 	}
 	close(pipes->pipefd[0]);
 	close(pipes->pipefd[1]);
@@ -65,6 +76,7 @@ int	launch_pipe(t_pipe *pipes, char **argv1, char **argv2, char **envp)
 		code_status = WEXITSTATUS(status1);
 	if (WIFEXITED(status2) && WEXITSTATUS(status2) != 0)
 		code_status = WEXITSTATUS(status2);
+	printf("Statut de sortie: %d\n", code_status);
 	free_parsed_command_line(argv1);
 	free_parsed_command_line(argv2);
 	return(code_status);
@@ -76,9 +88,11 @@ void	execute_pipe(t_pipe *pipes, char **envp, t_code *code)
 	char	**argv2;
 	int		pipe_status;
 
+	printf("execute_pipe started\n");
 	prepare_pipe_execution(pipes, &argv1, &argv2);
 	pipe_status = launch_pipe(pipes, argv1, argv2, envp);
 	code->code_status = pipe_status;
+	printf("execute_pipe ended with status: %d\n", pipe_status);
 }
 
 pid_t	heredoc_pipe(t_pipe *pipes)
@@ -105,11 +119,13 @@ void	pid_redir(t_command *command, char **argv, char **envp, t_code *code)
 	int		status;
 
 	status = 0;
+	printf("Creating child process for redirection\n"); // Débogage
 	pid = fork();
 	if (pid == 0)
 		execute_redirection(command, argv, envp);
 	waitpid(pid, &status, 0);
 	if (WIFEXITED(status))
 		code->code_status = WEXITSTATUS(status);
+	printf("Child process finished with status: %d\n", status); 
 }
 

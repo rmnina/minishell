@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 00:19:58 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/06 19:02:09 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/07 14:53:40 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,7 @@ t_command	*get_command(char *line, t_quotes *quotes, t_expand *expand)
 
 	i = 0;
 	command = NULL;
+	printf("get_command called with line: %s\n", line);
 	while (line[i])
 	{
 		if (line[i] == SPACE)
@@ -134,6 +135,7 @@ t_command	*get_command(char *line, t_quotes *quotes, t_expand *expand)
 		}
 	}
 	command = ft_struct_join(command, token_null(&token));
+	printf("get_command finished processing\n");
 	return (command);
 }
 

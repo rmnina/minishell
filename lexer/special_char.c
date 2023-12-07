@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 04:33:44 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/06 16:13:36 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/07 14:53:12 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,21 +56,42 @@ void	get_type(t_command *token, t_quotes *quotes)
 	if (!token->word)
 		return ;
 	else if (token->word[0] == '|' && quotes->case_quotes == FALSE)
+	{
 		token->type = PIPE;
+		printf("Token: %s, Type assigned: %d\n", token->word, token->type);
+	}
 	else if (token->word[0] == '<' && token->word[1] && token->word[1] == '<' \
 	&& quotes->case_quotes == FALSE)
+	{
 		token->type = DB_LEFT_CHEV;
+		printf("Token: %s, Type assigned: %d\n", token->word, token->type);
+	}
 	else if (token->word[0] == '<' && quotes->case_quotes == FALSE)
+	{
 		token->type = LEFT_CHEV;
+		printf("Token: %s, Type assigned: %d\n", token->word, token->type);
+	}
 	else if (token->word[0] == '>' && token->word[1] && token->word[1] == '>' \
 	&& quotes->case_quotes == FALSE)
+	{
 		token->type = DB_RIGHT_CHEV;
+		printf("Token: %s, Type assigned: %d\n", token->word, token->type);
+	}
 	else if (token->word[0] == '>' && quotes->case_quotes == FALSE)
+	{
 		token->type = RIGHT_CHEV;
+		printf("Token: %s, Type assigned: %d\n", token->word, token->type);
+	}
 	else if (is_expand(token->word) && quotes->case_single == FALSE)
+	{
 		token->type = EXPAND;
+		printf("Token: %s, Type assigned: %d\n", token->word, token->type);
+	}
 	else
+	{
 		token->type = WORD;
+		printf("Token: %s, Type assigned: %d\n", token->word, token->type);
+	}
 }
 
 int	is_expand(char *line)

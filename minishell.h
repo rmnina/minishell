@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:46:13 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/06 18:31:04 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/07 14:52:51 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,10 +117,10 @@ int			get_lex_expand(char *line, int *i, t_quotes *quotes, \
 t_command *token);
 
 //Parser
-char		**init_parsing(char *input);
+//char		**init_parsing(char *input);
 void		free_parsed_command_line(char **argv);
 int			expand_size(char *var);
-char		**parse_command_line(t_command *command);
+//char		**parse_command_line(t_command *command);
 int			parse_quotes(char *line, int *i, t_quotes *quotes);
 
 //Utils
@@ -131,16 +131,16 @@ char		*char_to_str(char c);
 //Execve
 char		*find_command_in_segment(char *segment, char *command);
 char		*find_command_path(char *command);
-void		execute_command(char *input, char **envp);
+void		execute_command(char **cmd_args, char **envp);
 void		handle_command(char *input, t_code *code, char **argv, char **envp);
-void		execute_non_builtin(char *input, char **envp, t_code *code);
+void		execute_non_builtin(char **envp, t_code *code, char **cmd_args);
 void		heredoc_child(t_pipe *pipes, char **argv, char **envp);
+char		**create_cmd_args(t_command *command);
 
 //Redirection 
-void		pid_redir(t_command *command, char **argv, char **envp, \
-t_code *code);
-int			handle_redirection(t_code *code, t_command *command, char **argv, \
-char **envp);
+void		pid_redir(t_command *command, char **argv, char **envp, t_code *code);
+//int			handle_redirection(t_code *code, t_command *command, char **argv, char **envp);
+int handle_redirection(t_code *code, t_command *command, int command_start_index, char **argv, char **envp);
 void		execute_redirection(t_command *exec, char **argv, char **envp);
 void		set_redirection_type(t_command *exec, char *symbol, char *file);
 void		redir_symbol(t_command *exec, char **cmd_args);
