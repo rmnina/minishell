@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:20:25 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/07 17:39:13 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/07 19:11:20 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,13 +40,13 @@ int	launch_pipe(t_pipe *pipes, char **argv1, char **argv2, char **envp)
 	if (pid1 == 0)
 	{
 		pipes->dup_fd = 1;
-		process_pipe(argv1, pipes, argv2, envp);
+		process_pipe(argv1, pipes, envp);
 	}
 	pid2 = fork();
 	if (pid2 == 0)
 	{
 		pipes->dup_fd = 0;
-		process_pipe(argv2, pipes, argv1, envp);
+		process_pipe(argv2, pipes, envp);
 	}
 	close(pipes->pipefd[0]);
 	close(pipes->pipefd[1]);
@@ -58,16 +58,31 @@ int	launch_pipe(t_pipe *pipes, char **argv1, char **argv2, char **envp)
 		code_status = WEXITSTATUS(status2);
 	free_parsed_command_line(argv1);
 	free_parsed_command_line(argv2);
-	return(code_status);
+	return (code_status);
 }
 
-void	execute_pipe(t_pipe *pipes, char **envp, t_code *code)
+void	prepare_pipe_execution(t_pipe *pipes, char ***argv1, char ***argv2, int word_count)
+{
+	t_quotes quotes = {FALSE, FALSE, FALSE, 0, NULL};
+	t_command	*command1;
+	t_command	*command2;
+
+	command1 = get_command(pipes->command1, &quotes);
+	command2 = get_command(pipes->command2, &quotes);
+
+	*argv1 = create_cmd_args(command1, word_count);
+	*argv2 = create_cmd_args(command2, word_count);
+	pipe(pipes->pipefd);
+}
+
+void	execute_pipe(t_pipe *pipes, char **envp, t_code *code, int word_count)
 {
 	char	**argv1;
 	char	**argv2;
 	int		pipe_status;
 
-	prepare_pipe_execution(pipes, &argv1, &argv2);
+	prepare_pipe_execution(pipes, &argv1, &argv2, word_count);
+	pipe(pipes->pipefd);
 	pipe_status = launch_pipe(pipes, argv1, argv2, envp);
 	code->code_status = pipe_status;
 }

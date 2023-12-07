@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 20:18:37 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/07 15:08:01 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/07 18:39:00 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ t_command	*ft_parsing(char *line)
 {
 	t_quotes	quotes;
 	t_command	*command;
-	char		*line;
+	//char		*line;
 
 	quotes.case_double = FALSE;
 	quotes.case_single = FALSE;

@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:46:13 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/07 17:43:29 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/07 19:14:35 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,8 +81,8 @@ typedef struct s_alloc {
 }	t_alloc;
 
 typedef struct s_pipe {
-	char	**command1;
-	char	**command2;
+	char	*command1;
+	char	*command2;
 	int		pipefd[2];
 	int		dup_fd;
 }	t_pipe;
@@ -127,26 +127,24 @@ char		*char_to_str(char c);
 char		*find_command_in_segment(char *segment, char *command);
 char		*find_command_path(char *command);
 void		execute_command(char **cmd_args, char **envp);
-void		handle_command(char *input, t_code *code, char **argv, char **envp);
+void		handle_command(char *input, t_code *code, char **envp, int word_count);
 void		execute_non_builtin(char **envp, t_code *code, char **cmd_args);
 void		heredoc_child(t_pipe *pipes, char **argv, char **envp);
-char		**create_cmd_args(t_command *command);
+char		**create_cmd_args(t_command *command, int word_count);
 
 //Redirection 
 void		pid_redir(t_command *command, char **argv, char **envp, t_code *code);
-//int			handle_redirection(t_code *code, t_command *command, char **argv, char **envp);
-int 		handle_redirection(t_code *code, int *i, t_command *command, char **envp);
+int			handle_redirection(t_code *code, t_command *command, char **argv, char **envp, int word_count);
+//int 		handle_redirection(t_code *code, int *i, t_command *command, char **envp);
 void		execute_redirection(t_command *exec, char **argv, char **envp);
 void		set_redirection_type(t_command *exec, char *symbol, char *file);
 void		redir_symbol(t_command *exec, char **cmd_args);
 void		init_exec_struct(t_command *exec);
 
 //Pipe
-void		execute_pipe(t_pipe *pipes, char **envp, t_code *code);
-void		process_pipe(char **cmd_args, t_pipe *pipes, char **argv, \
-char **envp);
-void		split_command_for_pipes(char **cmd_args, t_command *command, \
-t_pipe *pipes, int *i);
+void		execute_pipe(t_pipe *pipes, char **envp, t_code *code, int word_count);
+void		process_pipe(char **cmd_args, t_pipe *pipes, char **envp);
+void		split_command_for_pipes(char *input, t_pipe *pipes);
 //void		split_command_for_pipes(t_command *commands, t_pipe *pipes);
 int			commands_with_pipes_detected(char *input);
 pid_t		heredoc_pipe(t_pipe *pipes);

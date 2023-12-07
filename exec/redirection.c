@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 17:13:45 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/07 17:40:58 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/07 19:13:23 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,66 +118,66 @@ void	init_exec_struct(t_command *command)
 
 // }
 
-// int handle_redirection(t_code *code, t_command *command, char **argv, char **envp)
-// {
-//     printf("handle_redirection called\n");
-//     t_pipe pipes;
-//     char **cmd_args1;
-//     int hd_status = 0;
-//     t_command *redir_command = command + 1;
-
-
-//     cmd_args1 = create_cmd_args(command);
-//     printf("cmd_args1 created: %s\n", cmd_args1[0]);
-//     redir_symbol(redir_command, cmd_args1);
-//     printf("Redirection setup: type=%d, file=%s\n", redir_command->redirection_type, redir_command->redirection_file);
-
-//     if (redir_command->redirection_type == REDIRECT_APPEND_INPUT)
-// 	{
-//         hd_status = heredoc(redir_command->redirection_file, &pipes, cmd_args1, envp);
-//         code->code_status = hd_status;
-//         printf("handle_redirection finished for heredoc\n");
-//     } 
-// 	else if (redir_command->redirection_type != NO_REDIRECTION)
-// 	{
-//         execute_redirection(redir_command, argv, envp);
-//         printf("handle_redirection finished for regular redirection\n");
-//     }
-// 	else 
-// 	{
-//         printf("No redirection required\n");
-//     }
-
-//     free_parsed_command_line(cmd_args1);
-//     return hd_status;
-// }
-
-int handle_redirection(t_code *code, int *i, t_command *command, char **envp)
+int handle_redirection(t_code *code, t_command *command, char **argv, char **envp, int word_count)
 {
-	printf("handle_redirection called\n");
+    printf("handle_redirection called\n");
+    t_pipe pipes;
+    char **cmd_args1;
+    int hd_status = 0;
+    t_command *redir_command = command + 1;
 
-	char		**cmd_args1;
-	t_command	*redir_command;
-	t_pipe		pipes;
-	int			hd_status = 0;
 
-	redir_command = command + 1;
-	(void)argv;
-	if (command[0].type >= LEFT_CHEV && command[0].type <= DB_RIGHT_CHEV && command[1].type == WORD)
+    cmd_args1 = create_cmd_args(command, word_count);
+    printf("cmd_args1 created: %s\n", cmd_args1[0]);
+    redir_symbol(redir_command, cmd_args1);
+    printf("Redirection setup: type=%d, file=%s\n", redir_command->redirection_type, redir_command->redirection_file);
+
+    if (redir_command->redirection_type == REDIRECT_APPEND_INPUT)
 	{
-		redir_command->redirection_type = command->type;
-		redir_command->redirection_file = command[1].word;
-		cmd_args1 = create_cmd_args(command - command_start_index);
-		if (redir_command->redirection_type == REDIRECT_APPEND_INPUT)
-		{
-			hd_status = heredoc(redir_command->redirection_file, &pipes, cmd_args1, envp);
-			code->code_status = hd_status;
-		}
-		else if (redir_command->redirection_type != NO_REDIRECTION) 
-			execute_redirection(redir_command, cmd_args1, envp);
-		}
-	}
-	free_parsed_command_line(cmd_args1);
-	return (hd_status);
+        hd_status = heredoc(redir_command->redirection_file, &pipes, cmd_args1, envp);
+        code->code_status = hd_status;
+        printf("handle_redirection finished for heredoc\n");
+    } 
+	else if (redir_command->redirection_type != NO_REDIRECTION)
+	{
+        execute_redirection(redir_command, argv, envp);
+        printf("handle_redirection finished for regular redirection\n");
+    }
+	else 
+	{
+        printf("No redirection required\n");
+    }
+
+    free_parsed_command_line(cmd_args1);
+    return hd_status;
 }
+
+// int handle_redirection(t_code *code, int *i, t_command *command, char **envp)
+// {
+// 	printf("handle_redirection called\n");
+
+// 	char		**cmd_args1;
+// 	t_command	*redir_command;
+// 	t_pipe		pipes;
+// 	int			hd_status = 0;
+
+// 	redir_command = command + 1;
+// 	(void)argv;
+// 	if (command[0].type >= LEFT_CHEV && command[0].type <= DB_RIGHT_CHEV && command[1].type == WORD)
+// 	{
+// 		redir_command->redirection_type = command->type;
+// 		redir_command->redirection_file = command[1].word;
+// 		cmd_args1 = create_cmd_args(command - command_start_index);
+// 		if (redir_command->redirection_type == REDIRECT_APPEND_INPUT)
+// 		{
+// 			hd_status = heredoc(redir_command->redirection_file, &pipes, cmd_args1, envp);
+// 			code->code_status = hd_status;
+// 		}
+// 		else if (redir_command->redirection_type != NO_REDIRECTION) 
+// 			execute_redirection(redir_command, cmd_args1, envp);
+// 		}
+// 	}
+// 	free_parsed_command_line(cmd_args1);
+// 	return (hd_status);
+// }
 
