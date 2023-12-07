@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:03:22 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/07 16:03:27 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/07 17:22:55 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,8 +80,8 @@ typedef struct s_alloc {
 }	t_alloc;
 
 typedef struct s_pipe {
-	char	*command1;
-	char	*command2;
+	char	**command1;
+	char	**command2;
 	int		pipefd[2];
 	int		dup_fd;
 }	t_pipe;
@@ -135,7 +135,7 @@ char		**create_cmd_args(t_command *command);
 //Redirection 
 void		pid_redir(t_command *command, char **argv, char **envp, t_code *code);
 //int			handle_redirection(t_code *code, t_command *command, char **argv, char **envp);
-int handle_redirection(t_code *code, t_command *command, int command_start_index, char **argv, char **envp);
+int 		handle_redirection(t_code *code, int *i, t_command *command, char **envp);
 void		execute_redirection(t_command *exec, char **argv, char **envp);
 void		set_redirection_type(t_command *exec, char *symbol, char *file);
 void		redir_symbol(t_command *exec, char **cmd_args);
@@ -145,7 +145,8 @@ void		init_exec_struct(t_command *exec);
 void		execute_pipe(t_pipe *pipes, char **envp, t_code *code);
 void		process_pipe(char **cmd_args, t_pipe *pipes, char **argv, \
 char **envp);
-void		split_command_for_pipes(char *input, t_pipe *pipes);
+void		split_command_for_pipes(char **cmd_args, t_command *command, \
+t_pipe *pipes, int *i);
 //void		split_command_for_pipes(t_command *commands, t_pipe *pipes);
 int			commands_with_pipes_detected(char *input);
 pid_t		heredoc_pipe(t_pipe *pipes);

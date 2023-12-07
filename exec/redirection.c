@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 17:13:45 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/07 14:44:57 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/07 17:02:43 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,7 +163,7 @@ void	init_exec_struct(t_command *command)
 //     return hd_status;
 // }
 
-int handle_redirection(t_code *code, t_command *command, int command_start_index, char **argv, char **envp)
+int handle_redirection(t_code *code, int *i, t_command *command, char **envp)
 {
 	printf("handle_redirection called\n");
 
@@ -174,26 +174,19 @@ int handle_redirection(t_code *code, t_command *command, int command_start_index
 
 	hd_status = 0;
 	redir_command = command + 1;
-	(void)argv;
-	if (command[0].type >= LEFT_CHEV && command[0].type <= DB_RIGHT_CHEV \
-		&& command[1].type == WORD)
+	if (command[*i].type >= LEFT_CHEV && command[*i].type <= DB_RIGHT_CHEV \
+		&& command[*i + 1].type == WORD)
 	{
 		redir_command->redirection_type = command->type;
-		redir_command->redirection_file = command[1].word;
-		printf("Redirection setup: type=%d, file=%s\n", command->redirection_type, command->redirection_file);
-		cmd_args1 = create_cmd_args(command - command_start_index);
-		printf("cmd_args1 created: %s\n", cmd_args1 ? cmd_args1[0] : "null");
+		redir_command->redirection_file = command[*i + 1].word;
+		cmd_args1 = create_cmd_args(command, i);
 		if (redir_command->redirection_type == REDIRECT_APPEND_INPUT)
 		{
 			hd_status = heredoc(redir_command->redirection_file, &pipes, cmd_args1, envp);
 			code->code_status = hd_status;
-			printf("handle_redirection finished for heredoc\n");
 		}
 		else if (redir_command->redirection_type != NO_REDIRECTION) 
-		{
 			execute_redirection(redir_command, cmd_args1, envp);
-			printf("handle_redirection finished for regular redirection\n");
-		}
 		else
 			printf("No redirection required\n");
 	}

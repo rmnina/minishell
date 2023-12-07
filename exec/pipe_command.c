@@ -3,27 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_command.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 14:59:17 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/07 11:33:31 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/07 17:20:49 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	split_command_for_pipes(char *input, t_pipe *pipes)
+void	split_command_for_pipes(char **cmd_args, t_command *command, \
+t_pipe *pipes, int *i)
 {
-	char	*pipe_ptr;
-
-	pipe_ptr = ft_strchr(input, '|');
-	if (pipe_ptr)
-	{
-		*pipe_ptr = '\0';
-		pipes->command1 = ft_strtrim(input, " ");
-		pipes->command2 = ft_strtrim(pipe_ptr + 1, " ");
-		printf("Commande 1: '%s', Commande 2: '%s'\n", pipes->command1, pipes->command2);
-	}
+	pipes->command1 = cmd_args;
+	*i += 1;
+	pipes->command2 = create_cmd_args(command, i, cmd_args);
+	return (pipes);
 }
 
 // void	split_command_for_pipes(t_command *command, t_pipe *pipes)
