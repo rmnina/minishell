@@ -1,0 +1,3 @@
+echo "y'o"t"mer'e" 'l"a' pute
+
+echo "y'o"t"" a "mer'e" 'l"a' pute

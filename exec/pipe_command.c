@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 14:59:17 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/07 17:20:49 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/08 17:56:39 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@ t_pipe *pipes, int *i)
 	pipes->command1 = cmd_args;
 	*i += 1;
 	pipes->command2 = create_cmd_args(command, i, cmd_args);
-	return (pipes);
 }
 
 // void	split_command_for_pipes(t_command *command, t_pipe *pipes)

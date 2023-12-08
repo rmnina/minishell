@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 17:13:45 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/07 17:02:43 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/08 17:57:55 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,13 +173,14 @@ int handle_redirection(t_code *code, int *i, t_command *command, char **envp)
 	int			hd_status;
 
 	hd_status = 0;
+	cmd_args1 = NULL;
 	redir_command = command + 1;
 	if (command[*i].type >= LEFT_CHEV && command[*i].type <= DB_RIGHT_CHEV \
 		&& command[*i + 1].type == WORD)
 	{
 		redir_command->redirection_type = command->type;
 		redir_command->redirection_file = command[*i + 1].word;
-		cmd_args1 = create_cmd_args(command, i);
+		cmd_args1 = create_cmd_args(command, i, cmd_args1);
 		if (redir_command->redirection_type == REDIRECT_APPEND_INPUT)
 		{
 			hd_status = heredoc(redir_command->redirection_file, &pipes, cmd_args1, envp);

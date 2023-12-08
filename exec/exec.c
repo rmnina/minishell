@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/07 17:16:37 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/08 19:28:03 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,16 @@ void	heredoc_child(t_pipe *pipes, char **argv, char **envp)
 	exit(EXIT_FAILURE);
 }
 
+int	ft_count(t_command *command, int *i)
+{
+	int	size;
+
+	size = 0;
+	while (command[*i + size].type && command[*i + size].type == WORD)
+		size++;
+	return (size);
+}
+
 char	**create_cmd_args(t_command *command, int *i, char **cmd_args)
 {
 	int	j;
@@ -97,16 +107,26 @@ char	**create_cmd_args(t_command *command, int *i, char **cmd_args)
 		free_parsed_command_line(cmd_args);
 		cmd_args = NULL;
 	}
+	if (cmd_args == NULL)
+	{
+		cmd_args = malloc(sizeof(char *) * ft_count(command, i) + 1);
+		if (!cmd_args)
+			return (NULL);
+	}
 	while (command[*i].type == WORD)
 	{
+		cmd_args[j] = malloc(sizeof(char));
+		if (!cmd_args[j])
+			return (NULL);
 		cmd_args[j] = ft_strjoin(cmd_args[j], command[*i].word);
+		printf("args = %s\n", command[*i].word); //debug
 		*i += 1;
 		j++;
 	}
 	return (cmd_args);
 }
 
-void	handle_command(char *input, t_code *code, char **argv, char **envp)
+void	handle_command(char *input, t_code *code, char **envp, t_alloc *garbage)
 {
 	t_command	*command;
 	char		**cmd_args;
@@ -114,7 +134,7 @@ void	handle_command(char *input, t_code *code, char **argv, char **envp)
 	t_pipe		pipe;
 
 	i = 0;
-	command = ft_parsing(input);
+	command = ft_parsing(input, garbage);
 	cmd_args = NULL;
 	while (command[i].type != 0)
 	{

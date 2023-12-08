@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 02:11:36 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/07 15:44:22 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/08 21:06:45 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,18 +44,17 @@ void	error_quotes(char *line, t_quotes *quotes)
 // of commands with pipes or redirections ; the seconds only focuses
 // on the number of > or <.
 
-void	error_use_types(t_command *command)
+void	error_use_types(t_command *command, t_alloc *garbage)
 {
 	int	i;
 
 	i = 0;
 	if (!command[0].type)
-		exit(1);
+		return ;
 	if (command[0].type == PIPE)
 	{
 		printf("minishell : syntax error near unexpected token '|'");
-		ft_free_command(command);
-		exit(2);
+		free_garbage(garbage);
 	}
 	while (command[i].type)
 		i++;
@@ -64,12 +63,11 @@ void	error_use_types(t_command *command)
 	|| command[i].type == DB_RIGHT_CHEV || command[i].type == DB_LEFT_CHEV)
 	{
 		printf("minishell : syntax error near unexpected token 'newline'\n");
-		ft_free_command(command);
-		exit(2);
+		free_garbage(garbage);
 	}
 }
 
-void	error_nonexistent_type(t_command *command)
+void	error_nonexistent_type(t_command *command, t_alloc *garbage)
 {
 	int	i;
 	int	j;
@@ -81,12 +79,12 @@ void	error_nonexistent_type(t_command *command)
 		if (command[i].type == 5 && command[j].type == 3)
 		{
 			printf("minishell: syntax error near unexpected token '<'\n");
-			exit(2);
+			free_garbage(garbage);
 		}
 		else if (command[i].type == 6 && command[j].type == 4)
 		{
 			printf("minishell: syntax error near unexpected token '>'\n");
-			exit(2);
+			free_garbage(garbage);
 		}
 		i++;
 		j++;
@@ -94,8 +92,8 @@ void	error_nonexistent_type(t_command *command)
 }
 
 
-void	ft_error_lexer(t_command *command)
+void	ft_error_lexer(t_command *command, t_alloc *garbage)
 {
-	error_nonexistent_type(command);
-	error_use_types(command);
+	error_nonexistent_type(command, garbage);
+	error_use_types(command, garbage);
 }

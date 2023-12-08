@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 20:18:37 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/07 15:08:01 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/08 19:26:55 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,17 +33,17 @@ void	init_get_token(t_command *token)
 	token->type = 0;
 }
 
-t_command	*ft_parsing(char *line)
+t_command	*ft_parsing(char *line, t_alloc *garbage)
 {
 	t_quotes	quotes;
 	t_command	*command;
-	char		*line;
 
 	quotes.case_double = FALSE;
 	quotes.case_single = FALSE;
 	quotes.var = NULL;
 	quotes.vpos = 0;
-	command = get_command(line, &quotes);
+	error_quotes(line, &quotes);
+	command = get_command(line, &quotes, garbage);
 	ft_error_lexer(command);
 	return (command);
 }
