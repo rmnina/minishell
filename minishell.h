@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:03:22 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/08 21:06:35 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/08 21:27:59 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,11 +74,6 @@ typedef struct s_command {
 	bool			is_expand;
 }	t_command;
 
-typedef struct s_alloc {
-	void			*adr;
-	struct s_alloc	*next;
-}	t_alloc;
-
 typedef struct s_pipe {
 	char	**command1;
 	char	**command2;
@@ -106,20 +101,18 @@ int			is_expand(char *line);
 //Parser
 void		free_parsed_command_line(char **argv);
 int			parse_quotes(char *line, int *i, t_quotes *quotes);
-char		*get_env_var_name(char *line, int *i);
+char		*get_env_var_name(char *line, int *i, t_alloc *garbage);
 void		init_get_token(t_command *token);
-void		init_get_expand(t_command *token, char *line, int *i, t_quotes *quotes);
+void		init_get_expand(t_command *token, char *line, int *i, t_quotes *quotes, t_alloc *garbage);
 t_command	*get_command(char *line, t_quotes *quotes, t_alloc *garbage);
 int			get_lex_expand(char *line, int *i, t_quotes *quotes, \
-t_command *token);
+t_command *token, t_alloc *garbage);
 t_command	*ft_parsing(char *line, t_alloc *garbage);
 
 //Utils
-t_command	*ft_struct_join(t_command *tok1, t_command tok2);
+t_command	*ft_struct_join(t_command *tok1, t_command tok2, t_alloc *garbage);
 void		ft_free_command(t_command *command);
-char		*char_to_str(char c);
-void		free_garbage(t_alloc **garbage);
-void		*garb_malloc(size_t type, size_t size, t_alloc **garbage);
+char		*char_to_str(char c, t_alloc *garbage);
 
 //Execve
 char		*find_command_in_segment(char *segment, char *command);

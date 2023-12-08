@@ -6,19 +6,19 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 20:18:37 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/08 19:26:55 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/08 21:27:50 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	init_get_expand(t_command *token, char *line, int *i, t_quotes *quotes)
+void	init_get_expand(t_command *token, char *line, int *i, t_quotes *quotes, t_alloc *garbage)
 {
 	char	*name;
 
 	if (quotes->var == NULL)
 	{
-		name = get_env_var_name(line, i);
+		name = get_env_var_name(line, i, garbage);
 		quotes->var = getenv(name);
 		free(name);
 	}
@@ -44,6 +44,6 @@ t_command	*ft_parsing(char *line, t_alloc *garbage)
 	quotes.vpos = 0;
 	error_quotes(line, &quotes);
 	command = get_command(line, &quotes, garbage);
-	ft_error_lexer(command);
+	ft_error_lexer(command, garbage);
 	return (command);
 }

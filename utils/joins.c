@@ -6,13 +6,13 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/26 23:39:05 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/27 04:28:15 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/08 21:22:30 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-t_command	*ft_struct_join(t_command *tok1, t_command tok2)
+t_command	*ft_struct_join(t_command *tok1, t_command tok2, t_alloc *garbage)
 {
 	int			size;
 	t_command	*res;
@@ -26,7 +26,7 @@ t_command	*ft_struct_join(t_command *tok1, t_command tok2)
 		while (tok1[size].word != NULL)
 			size++;
 	}
-	res = malloc(sizeof(t_command) * (size + 2));
+	res = garb_malloc(sizeof(t_command), (size + 2), &garbage);
 	if (!(res))
 		return (NULL);
 	while (i < size)
@@ -42,11 +42,11 @@ t_command	*ft_struct_join(t_command *tok1, t_command tok2)
 }
 
 
-char	*char_to_str(char c)
+char	*char_to_str(char c, t_alloc *garbage)
 {
 	char	*res;
 
-	res = malloc(sizeof(char) * 2);
+	res = garb_malloc(sizeof(char), 2, &garbage);
 	res[1] = '\0';
 	res[0] = c;
 	return (res); 

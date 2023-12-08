@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:04:36 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/08 19:50:50 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/08 21:28:58 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,26 +18,26 @@
 // literal if they're between quotes, but this verification will 
 // be made by get_token().
 
-t_command	get_special_type_token(char *line, int *i, t_quotes *quotes)
+t_command	get_special_type_token(char *line, int *i, t_quotes *quotes, t_alloc *garbage)
 {
 	t_command	token;
 
 	token.word = NULL;
 	if (special_types(line[*i]) == 3 && special_types(line[*i + 1]) == 3)
 	{
-		token.word = char_to_str(line[*i]);
-		token.word = ft_strjoin_char(token.word, line[*i + 1]);
+		token.word = char_to_str(line[*i], &garbage);
+		token.word = ft_strjoin_char(token.word, line[*i + 1], &garbage);
 		*i += 2;
 	}
 	else if (special_types(line[*i]) == 4 && special_types(line[*i + 1]) == 4)
 	{
-		token.word = char_to_str(line[*i]);
-		token.word = ft_strjoin_char(token.word, line[*i + 1]);
+		token.word = char_to_str(line[*i], &garbage);
+		token.word = ft_strjoin_char(token.word, line[*i + 1], &garbage);
 		*i += 2;
 	}
 	else
 	{
-		token.word = char_to_str(line[*i]);
+		token.word = char_to_str(line[*i], &garbage);
 		*i += 1;
 	}
 	get_type(&token, quotes);
@@ -83,9 +83,9 @@ t_command	get_token(char *line, t_quotes *quotes, int *i, t_alloc *garbage)
 		if ((special_types(line[*i]) == EXPAND && quotes->case_single == FALSE) \
 		|| quotes->var != NULL)
 		{
-			if (get_lex_expand(line, i, quotes, &token) == 1)
+			if (get_lex_expand(line, i, quotes, &token, garbage) == 1)
 				break ;
-			else if (get_lex_expand(line, i, quotes, &token) == -1)
+			else if (get_lex_expand(line, i, quotes, &token, garbage) == -1)
 				*i += 1;
 		}
 		else if (parse_quotes(line, i, quotes) == 1 || !line[*i])
@@ -96,24 +96,23 @@ t_command	get_token(char *line, t_quotes *quotes, int *i, t_alloc *garbage)
 			if (token.word != NULL)
 				break ;
 			else
-				return (token = get_special_type_token(line, i, quotes));
+				return (token = get_special_type_token(line, i, quotes, &garbage));
 		}
 		else if (!parse_quotes(line, i, quotes))
 		{
-			token.word = ft_strjoin_char(token.word, line[*i]);
+			token.word = ft_strjoin_char(token.word, line[*i], &garbage);
 			*i += 1;
 		}
 	}
-	add_to_garbage(&token, garbage);
 	return (token);
 }
 
 // This function creates a null t_command token. It will be added at the
 // end of the array, so we can iterate on it by having an exit condition.
 
-t_command	token_null(t_command *token)
+t_command	token_null(t_command *token, t_alloc *garbage)
 {
-	token->word = malloc(sizeof(char));
+	token->word = garb_malloc(sizeof(char), 1, garbage);
 	token->word[0] = '\0';
 	token->type = 0;
 	return (*token);
@@ -145,18 +144,18 @@ t_command	*get_command(char *line, t_quotes *quotes, t_alloc *garbage)
 		{
 			if (!token.type || token.type < 1 || token.type > 8)
 				token.type = WORD;
-			command = ft_struct_join(command, token);
+			command = ft_struct_join(command, token, &garbage);
 		}
 	}
 	if (!line[i] && quotes->var != NULL)
 	{
 		while (quotes->var != NULL)
 		{
-			get_lex_expand(line, &i, quotes, &token);
-			command = ft_struct_join(command, token);
+			get_lex_expand(line, &i, quotes, &token, garbage);
+			command = ft_struct_join(command, token, garbage);
 		}
 	}
-	command = ft_struct_join(command, token_null(&token));
+	command = ft_struct_join(command, token_null(&token, garbage), garbage);
 	return (command);
 }
 
