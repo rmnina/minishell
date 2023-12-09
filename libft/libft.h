@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/22 20:14:00 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/08 21:17:47 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/09 23:24:39 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,11 +63,11 @@ int			ft_memcmp(const void *s1, const void *s2, size_t n);
 char		*ft_strnstr(const char *big, const char *little, size_t len);
 long int	ft_atoi(const char *str);
 void		*ft_calloc(size_t nmemb, size_t size);
-char		*ft_strdup(char *src);
-char		*ft_substr(const char *s, unsigned int start, size_t len);
+char		*ft_strdup(char *src, t_alloc *garbage);
+char		*ft_substr(const char *s, unsigned int start, size_t len, t_alloc *garbage);
 char		*ft_strjoin(char *s1, const char *s2, t_alloc *garbage);
 char		*ft_strjoin_char(char *s1, const char c, t_alloc *garbage);
-char		*ft_strtrim(const char *s1, const char *set);
+char		*ft_strtrim(const char *s1, const char *set, t_alloc *garbage);
 char		**ft_split(const char *s, char c);
 char		*ft_itoa(int n);
 char		*ft_strmapi(const char *s, char (*f)(unsigned int, char));
@@ -93,7 +93,7 @@ int			choose_format(char *format, va_list args);
 int			ft_putstr(char *s);
 int			ft_putchar(char c);
 int			ft_putnbr(int n);
-void		free_garbage(t_alloc **garbage);
+void		free_garbage(t_alloc **garbage, int i);
 void		*garb_malloc(size_t type, size_t size, t_alloc **garbage);
 
 #endif

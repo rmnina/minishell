@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 20:18:37 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/08 21:27:50 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/09 23:18:51 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	init_get_expand(t_command *token, char *line, int *i, t_quotes *quotes, t_a
 	{
 		name = get_env_var_name(line, i, garbage);
 		quotes->var = getenv(name);
-		free(name);
+		// free(name);
 	}
 	name = NULL;
 	token->word = NULL;

@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 17:13:45 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/08 17:57:55 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/09 23:31:22 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void	redir_symbol(t_command *command, char **cmd_args)
 	}
 }
 
-void	execute_redirection(t_command *command, char **argv, char **envp)
+void	execute_redirection(t_command *command, char **argv, char **envp, t_alloc *garbage)
 {
 	int		fd;
 	int		flags;
@@ -81,7 +81,7 @@ void	execute_redirection(t_command *command, char **argv, char **envp)
 
 	}
 	close(fd);
-	path = find_command_path(command->word);
+	path = find_command_path(command->word, garbage);
 	printf("Executing command with redirection: %s\n", argv[0]);
 	execve(path, argv, envp);
 	perror("execve");
@@ -163,7 +163,7 @@ void	init_exec_struct(t_command *command)
 //     return hd_status;
 // }
 
-int handle_redirection(t_code *code, int *i, t_command *command, char **envp)
+int handle_redirection(t_code *code, int *i, t_command *command, char **envp, t_alloc *garbage)
 {
 	printf("handle_redirection called\n");
 
@@ -180,14 +180,14 @@ int handle_redirection(t_code *code, int *i, t_command *command, char **envp)
 	{
 		redir_command->redirection_type = command->type;
 		redir_command->redirection_file = command[*i + 1].word;
-		cmd_args1 = create_cmd_args(command, i, cmd_args1);
+		cmd_args1 = create_cmd_args(command, i, garbage);
 		if (redir_command->redirection_type == REDIRECT_APPEND_INPUT)
 		{
-			hd_status = heredoc(redir_command->redirection_file, &pipes, cmd_args1, envp);
+			hd_status = heredoc(redir_command->redirection_file, &pipes, cmd_args1, envp, garbage);
 			code->code_status = hd_status;
 		}
 		else if (redir_command->redirection_type != NO_REDIRECTION) 
-			execute_redirection(redir_command, cmd_args1, envp);
+			execute_redirection(redir_command, cmd_args1, envp, garbage);
 		else
 			printf("No redirection required\n");
 	}

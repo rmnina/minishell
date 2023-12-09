@@ -3,23 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 16:22:53 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/07 11:01:35 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/09 22:57:45 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-t_line	*new_line(char *line)
+t_line	*new_line(char *line, t_alloc *garbage)
 {
 	t_line	*node;
 
 	node = malloc(sizeof(t_line));
 	if (!node)
 		return (NULL);
-	node->line = ft_strdup(line);
+	node->line = ft_strdup(line, garbage);
 	node->next = NULL;
 	return (node);
 }
@@ -44,14 +44,14 @@ void	write_pipe(int pipefd, t_line *head)
 	current = head;
 	while (current)
 	{
-		write(pipefd, current->line, strlen(current->line));
+		write(pipefd, current->line, ft_strlen(current->line));
 		write(pipefd, "\n", 1);
 		current = current->next;
 	}
 }
 
 
-void	read_add(int pipefd, const char *delimiter)
+void	read_add(int pipefd, const char *delimiter, t_alloc *garbage)
 {
 	char	*line;
 	t_line	*node;
@@ -68,7 +68,7 @@ void	read_add(int pipefd, const char *delimiter)
 			free(line);
 			break ;
 		}
-		node = new_line(line);
+		node = new_line(line, garbage);
 		if (!head)
 			head = node;
 		else
@@ -80,7 +80,7 @@ void	read_add(int pipefd, const char *delimiter)
 	free_line_nodes(head);
 }
 
-int	heredoc(const char *delimiter, t_pipe *pipes, char **argv, char **envp)
+int	heredoc(const char *delimiter, t_pipe *pipes, char **argv, char **envp, t_alloc *garbage)
 {
 	pid_t	pid;
 	int		status;
@@ -88,24 +88,24 @@ int	heredoc(const char *delimiter, t_pipe *pipes, char **argv, char **envp)
 
 	status = 0;
 	code_status = 0;
-	printf("heredoc started with delimiter: %s\n", delimiter);
+	// printf("heredoc started with delimiter: %s\n", delimiter);
 	if (pipe(pipes->pipefd) == -1)
 		exit(EXIT_FAILURE);
 	pid = fork();
-	printf("heredoc pipe and fork created\n");
+	// printf("heredoc pipe and fork created\n");
 	if (pid == -1)
 		exit(EXIT_FAILURE);
 	else if (pid == 0)
-		heredoc_child(pipes, argv, envp);
+		heredoc_child(pipes, argv, envp, garbage);
 	else
 	{
-		read_add(pipes->pipefd[1], delimiter);
+		read_add(pipes->pipefd[1], delimiter, garbage);
 		close(pipes->pipefd[0]);
 		close(pipes->pipefd[1]);
 		waitpid(pid, &status, 0);
 		if (WIFEXITED(status))
 			code_status = WEXITSTATUS(status);
-		printf("heredoc read and write completed\n");
+		// printf("heredoc read and write completed\n");
 	}
 	return (code_status);
 }

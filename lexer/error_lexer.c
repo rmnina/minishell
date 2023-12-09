@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 02:11:36 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/08 21:06:45 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/09 23:32:37 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void	error_use_types(t_command *command, t_alloc *garbage)
 	if (command[0].type == PIPE)
 	{
 		printf("minishell : syntax error near unexpected token '|'");
-		free_garbage(garbage);
+		free_garbage(&garbage, 2);
 	}
 	while (command[i].type)
 		i++;
@@ -63,7 +63,7 @@ void	error_use_types(t_command *command, t_alloc *garbage)
 	|| command[i].type == DB_RIGHT_CHEV || command[i].type == DB_LEFT_CHEV)
 	{
 		printf("minishell : syntax error near unexpected token 'newline'\n");
-		free_garbage(garbage);
+		free_garbage(&garbage, 2);
 	}
 }
 
@@ -79,12 +79,12 @@ void	error_nonexistent_type(t_command *command, t_alloc *garbage)
 		if (command[i].type == 5 && command[j].type == 3)
 		{
 			printf("minishell: syntax error near unexpected token '<'\n");
-			free_garbage(garbage);
+			free_garbage(&garbage, 2);
 		}
 		else if (command[i].type == 6 && command[j].type == 4)
 		{
 			printf("minishell: syntax error near unexpected token '>'\n");
-			free_garbage(garbage);
+			free_garbage(&garbage, 2);
 		}
 		i++;
 		j++;

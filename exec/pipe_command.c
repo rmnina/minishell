@@ -6,18 +6,18 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 14:59:17 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/08 17:56:39 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/09 23:30:52 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
 void	split_command_for_pipes(char **cmd_args, t_command *command, \
-t_pipe *pipes, int *i)
+t_pipe *pipes, int *i, t_alloc *garbage)
 {
 	pipes->command1 = cmd_args;
 	*i += 1;
-	pipes->command2 = create_cmd_args(command, i, cmd_args);
+	pipes->command2 = create_cmd_args(command, i, garbage);
 }
 
 // void	split_command_for_pipes(t_command *command, t_pipe *pipes)
@@ -33,13 +33,13 @@ t_pipe *pipes, int *i)
 // 	}
 // }
 
-int	commands_with_pipes_detected(char *input)
-{
-	char	*pipe_position;
+// int	commands_with_pipes_detected(char *input)
+// {
+// 	char	*pipe_position;
 
-	pipe_position = ft_strchr(input, '|');
+// 	pipe_position = ft_strchr(input, '|');
 
-	if (pipe_position != NULL)
-		return (1);
-	return (0);
-}
+// 	if (pipe_position != NULL)
+// 		return (1);
+// 	return (0);
+// }

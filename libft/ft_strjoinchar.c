@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/19 01:57:10 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/08 21:12:47 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/10 00:38:43 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,6 @@ char	*ft_strjoin_char(char *s1, const char c, t_alloc *garbage)
 	}
 	res[i++] = c;
 	res[i] = '\0';
-	free(s1);
+	// free(s1);
 	return (res);
 }

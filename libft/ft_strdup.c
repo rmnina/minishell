@@ -6,19 +6,19 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 11:35:08 by jdufour           #+#    #+#             */
-/*   Updated: 2023/05/02 12:24:27 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/08 21:34:47 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_strdup(char *src)
+char	*ft_strdup(char *src, t_alloc *garbage)
 {
 	int		i;
 	char	*dest;
 
 	i = 0;
-	dest = malloc(sizeof(char) * (ft_strlen(src) + 1));
+	dest = garb_malloc(sizeof(char), (ft_strlen(src) + 1), &garbage);
 	if (!(dest))
 		return (NULL);
 	while (src[i])

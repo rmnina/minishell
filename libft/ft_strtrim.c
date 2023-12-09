@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 23:31:41 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/07 15:15:03 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/09 23:09:32 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ static unsigned int	ft_last_set(const char *s1, const char *set)
 	return (i);
 }
 
-char	*ft_strtrim(const char *s1, const char *set)
+char	*ft_strtrim(const char *s1, const char *set, t_alloc *garbage)
 {
 	char	*res;
 	size_t	i;
@@ -54,8 +54,8 @@ char	*ft_strtrim(const char *s1, const char *set)
 	if (!s1 || !set)
 		return (NULL);
 	if (*s1 == '\0')
-		return (ft_strdup(""));
+		return (ft_strdup("", garbage));
 	i = (ft_last_set(s1, set) - ft_first_set(s1, set) + 1);
-	res = ft_substr(s1, ft_first_set(s1, set), i);
+	res = ft_substr(s1, ft_first_set(s1, set), i, garbage);
 	return (res);
 }

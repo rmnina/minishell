@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 19:16:31 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/08 21:16:27 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/10 00:38:09 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,8 @@ void	*garb_malloc(size_t type, size_t size, t_alloc **garbage)
 	void	*ptr;
 	t_alloc	*new;
 
-	ptr = malloc(type * size);
+	new = NULL;
+	ptr = malloc(type * size + 1);
 	if (!ptr)
 		return (NULL);
 	new = create_garbage_node(ptr);
@@ -64,7 +65,7 @@ void	*garb_malloc(size_t type, size_t size, t_alloc **garbage)
 	return (ptr);
 }
 
-void	free_garbage(t_alloc **garbage)
+void	free_garbage(t_alloc **garbage, int i)
 {
 	t_alloc	*pos;
 
@@ -82,6 +83,8 @@ void	free_garbage(t_alloc **garbage)
 		*garbage = pos;
 	}
 	*garbage = NULL;
+	if (i == 1)
+		printf("Error malloc : plase try again\n");
 }
 
 // int main(void)

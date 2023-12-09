@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/08 19:28:03 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/09 23:40:50 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int	execute_builtins(char **cmd_args, char **envp, t_code *code)
 	return (-1);
 }
 
-void	execute_non_builtin(char **envp, t_code *code, char **cmd_args)
+void	execute_non_builtin(char **envp, t_code *code, char **cmd_args, t_alloc *garbage)
 {
 	pid_t	pid;
 	int		status;
@@ -53,7 +53,7 @@ void	execute_non_builtin(char **envp, t_code *code, char **cmd_args)
 	}
 	else if (pid == 0)
 	{
-		execute_command(cmd_args, envp);
+		execute_command(cmd_args, envp, garbage);
 	}
 	else
 	{
@@ -63,7 +63,7 @@ void	execute_non_builtin(char **envp, t_code *code, char **cmd_args)
 	}
 }
 
-void	heredoc_child(t_pipe *pipes, char **argv, char **envp)
+void	heredoc_child(t_pipe *pipes, char **argv, char **envp, t_alloc *garbage)
 {
 	char	*path;
 	char	*new_argv[2];
@@ -75,13 +75,13 @@ void	heredoc_child(t_pipe *pipes, char **argv, char **envp)
 		exit(EXIT_FAILURE);
 	}
 	close(pipes->pipefd[0]);
-	path = find_command_path(argv[0]);
+	path = find_command_path(argv[0], garbage);
 	if (!path)
 	{
 		perror("path");
 		exit(EXIT_FAILURE);
 	}
-	new_argv[0] = ft_strdup(argv[0]);
+	new_argv[0] = ft_strdup(argv[0], garbage);
 	new_argv[1] = NULL;
 	execve(path, new_argv, envp);
 	exit(EXIT_FAILURE);
@@ -97,28 +97,22 @@ int	ft_count(t_command *command, int *i)
 	return (size);
 }
 
-char	**create_cmd_args(t_command *command, int *i, char **cmd_args)
+char	**create_cmd_args(t_command *command, int *i, t_alloc *garbage)
 {
-	int	j;
+	char	**cmd_args;
+	int		j;
 
 	j = 0;
-	if (cmd_args != NULL)
-	{
-		free_parsed_command_line(cmd_args);
-		cmd_args = NULL;
-	}
-	if (cmd_args == NULL)
-	{
-		cmd_args = malloc(sizeof(char *) * ft_count(command, i) + 1);
-		if (!cmd_args)
-			return (NULL);
-	}
+	cmd_args = garb_malloc(sizeof(char *), ft_count(command, i) + 1, &garbage);
+	if (!cmd_args)
+		return (NULL);
 	while (command[*i].type == WORD)
 	{
-		cmd_args[j] = malloc(sizeof(char));
-		if (!cmd_args[j])
-			return (NULL);
-		cmd_args[j] = ft_strjoin(cmd_args[j], command[*i].word);
+		// cmd_args[j] = garb_malloc(sizeof(char), 1, &garbage);
+		// if (!cmd_args[j])
+		// 	return (NULL);
+		cmd_args[j] = NULL;
+		cmd_args[j] = ft_strjoin(cmd_args[j], command[*i].word, garbage);
 		printf("args = %s\n", command[*i].word); //debug
 		*i += 1;
 		j++;
@@ -140,18 +134,18 @@ void	handle_command(char *input, t_code *code, char **envp, t_alloc *garbage)
 	{
 		if (command[i].type == PIPE)
 		{
-			split_command_for_pipes(cmd_args, command, &pipe, &i); // a corriger
-			execute_pipe(&pipe, envp, code);
+			split_command_for_pipes(cmd_args, command, &pipe, &i, garbage); // a corriger
+			execute_pipe(&pipe, envp, code, garbage);
 		}
 		if (command[i].type <= LEFT_CHEV && command[i].type >= DB_RIGHT_CHEV)
-			handle_redirection(code, &i, command, envp);
+			handle_redirection(code, &i, command, envp, garbage);
 		if (command[i].type == 0)
 			break;
 		else if (command[i].type == WORD)
 		{
-			cmd_args = create_cmd_args(command, &i, cmd_args);
+			cmd_args = create_cmd_args(command, &i, garbage);
 			if (execute_builtins(cmd_args, envp, code) == -1)
-				execute_non_builtin(envp, code, cmd_args);
+				execute_non_builtin(envp, code, cmd_args, garbage);
 		}
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 15:15:34 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/08 21:28:15 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/09 23:12:11 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ char	*get_env_var_name(char *line, int *i, t_alloc *garbage)
 	*i += 1;
 	while (line[*i] && (ft_isalnum(line[*i]) || line[*i] == UNDERSCORE))
 	{
-		name = ft_strjoin_char(name, line[*i], &garbage);
+		name = ft_strjoin_char(name, line[*i], garbage);
 		*i += 1;
 	}
 	return (name);
@@ -68,7 +68,7 @@ int	get_lex_expand(char *line, int *i, t_quotes *quotes, t_command *token, t_all
 		}
 		else if (!parse_quotes(quotes->var, &j, quotes))
 		{
-			token->word = ft_strjoin_char(token->word, quotes->var[j], &garbage);
+			token->word = ft_strjoin_char(token->word, quotes->var[j], garbage);
 			j++;
 		}
 	}

@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   path.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 10:21:29 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/06 18:41:00 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/09 22:56:14 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-char	*find_command_in_segment(char *segment, char *command)
+char	*find_command_in_segment(char *segment, char *command, t_alloc *garbage)
 {
 	char	full_path[PATH_MAX];
 
@@ -23,11 +23,11 @@ char	*find_command_in_segment(char *segment, char *command)
 	ft_strcat(full_path, "/");
 	ft_strcat(full_path, command);
 	if (access(full_path, X_OK) == 0)
-		return (ft_strdup(full_path));
+		return (ft_strdup(full_path, garbage));
 	return (NULL);
 }
 
-char	*find_command_path(char *command)
+char	*find_command_path(char *command, t_alloc *garbage)
 {
 	char	*path_env;
 	char	*start;
@@ -35,7 +35,7 @@ char	*find_command_path(char *command)
 	char	*found_path;
 
 	if (ft_strchr(command, '/') != NULL)
-		return (ft_strdup(command));
+		return (ft_strdup(command, garbage));
 	path_env = getenv("PATH");
 	if (!path_env)
 		return (NULL);
@@ -44,17 +44,17 @@ char	*find_command_path(char *command)
 	while (end != NULL)
 	{
 		*end = '\0';
-		found_path = find_command_in_segment(start, command);
+		found_path = find_command_in_segment(start, command, garbage);
 		*end = ':';
 		if (found_path != NULL)
 			return (found_path);
 		start = end + 1;
 		end = ft_strchr(start, ':');
 	}
-	return (find_command_in_segment(start, command));
+	return (find_command_in_segment(start, command, garbage));
 }
 
-void	execute_command(char **cmd_args, char **envp)
+void	execute_command(char **cmd_args, char **envp, t_alloc *garbage)
 {
 	char		*path;
 
@@ -63,7 +63,7 @@ void	execute_command(char **cmd_args, char **envp)
 		perror("Error creating command args");
 		exit(EXIT_FAILURE);
 	}
-	path = find_command_path(cmd_args[0]);
+	path = find_command_path(cmd_args[0], garbage);
 	printf("path dans exec command: %s\n", cmd_args[0]);
 	if (!path)
 	{

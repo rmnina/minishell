@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:03:22 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/08 21:27:59 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/09 23:28:33 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,30 +115,30 @@ void		ft_free_command(t_command *command);
 char		*char_to_str(char c, t_alloc *garbage);
 
 //Execve
-char		*find_command_in_segment(char *segment, char *command);
-char		*find_command_path(char *command);
-void		execute_command(char **cmd_args, char **envp);
+char		*find_command_in_segment(char *segment, char *command, t_alloc *garbage);
+char		*find_command_path(char *command, t_alloc *garbage);
+void		execute_command(char **cmd_args, char **envp, t_alloc *garbage);
 void		handle_command(char *input, t_code *code, char **envp, t_alloc *garbage);
-void		execute_non_builtin(char **envp, t_code *code, char **cmd_args);
-void		heredoc_child(t_pipe *pipes, char **argv, char **envp);
-char		**create_cmd_args(t_command *command, int *i, char **cmd_args);
+void		execute_non_builtin(char **envp, t_code *code, char **cmd_args, t_alloc *garbage);
+void		heredoc_child(t_pipe *pipes, char **argv, char **envp, t_alloc *garbage);
+char		**create_cmd_args(t_command *command, int *i, t_alloc *garbage);
 
 //Redirection 
-void		pid_redir(t_command *command, char **argv, char **envp, t_code *code);
+void		pid_redir(t_command *command, char **argv, char **envp, t_code *code, t_alloc *garbage);
 //int			handle_redirection(t_code *code, t_command *command, char **argv, char **envp);
-int 		handle_redirection(t_code *code, int *i, t_command *command, char **envp);
-void		execute_redirection(t_command *exec, char **argv, char **envp);
+int 		handle_redirection(t_code *code, int *i, t_command *command, char **envp, t_alloc *garbage);
+void		execute_redirection(t_command *exec, char **argv, char **envp, t_alloc *garbage);
 void		set_redirection_type(t_command *exec, char *symbol, char *file);
 void		redir_symbol(t_command *exec, char **cmd_args);
 void		init_exec_struct(t_command *exec);
 
 //Pipe
-void		execute_pipe(t_pipe *pipes, char **envp, t_code *code);
-void		process_pipe(char **cmd_args, t_pipe *pipes, char **envp);
+void		execute_pipe(t_pipe *pipes, char **envp, t_code *code, t_alloc *garbage);
+void		process_pipe(char **cmd_args, t_pipe *pipes, char **envp, t_alloc *garbage);
 void		split_command_for_pipes(char **cmd_args, t_command *command, \
-t_pipe *pipes, int *i);
+t_pipe *pipes, int *i, t_alloc *garbage);
 //void		split_command_for_pipes(t_command *commands, t_pipe *pipes);
-int			commands_with_pipes_detected(char *input);
+// int			commands_with_pipes_detected(char *input);
 pid_t		heredoc_pipe(t_pipe *pipes);
 
 //Builtins
@@ -154,6 +154,6 @@ int			execute_builtins(char **cmd_args, char **envp, t_code *code);
 
 //heredoc
 int			heredoc(const char *delimiter, t_pipe *pipes, char **argv, \
-char **envp);
+char **envp, t_alloc *garbage);
 
 #endif
