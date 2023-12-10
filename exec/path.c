@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 10:21:29 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/09 22:56:14 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/10 00:51:49 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ char	*find_command_path(char *command, t_alloc *garbage)
 	char	*end;
 	char	*found_path;
 
+	found_path = NULL;
 	if (ft_strchr(command, '/') != NULL)
 		return (ft_strdup(command, garbage));
 	path_env = getenv("PATH");
@@ -64,7 +65,6 @@ void	execute_command(char **cmd_args, char **envp, t_alloc *garbage)
 		exit(EXIT_FAILURE);
 	}
 	path = find_command_path(cmd_args[0], garbage);
-	printf("path dans exec command: %s\n", cmd_args[0]);
 	if (!path)
 	{
 		perror("Command not found");

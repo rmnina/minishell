@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/09 23:40:50 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/10 01:10:23 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,12 +108,9 @@ char	**create_cmd_args(t_command *command, int *i, t_alloc *garbage)
 		return (NULL);
 	while (command[*i].type == WORD)
 	{
-		// cmd_args[j] = garb_malloc(sizeof(char), 1, &garbage);
-		// if (!cmd_args[j])
-		// 	return (NULL);
-		cmd_args[j] = NULL;
 		cmd_args[j] = ft_strjoin(cmd_args[j], command[*i].word, garbage);
-		printf("args = %s\n", command[*i].word); //debug
+		if (!cmd_args[j])
+			return (NULL);
 		*i += 1;
 		j++;
 	}

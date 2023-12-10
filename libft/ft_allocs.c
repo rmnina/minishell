@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 19:16:31 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/10 00:38:09 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/10 01:07:14 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,10 +53,11 @@ void	*garb_malloc(size_t type, size_t size, t_alloc **garbage)
 	void	*ptr;
 	t_alloc	*new;
 
-	new = NULL;
-	ptr = malloc(type * size + 1);
+	if (size && type)
+		ptr = malloc(type * size + 1);
 	if (!ptr)
 		return (NULL);
+	ft_memset(ptr, 0, type * size + 1);
 	new = create_garbage_node(ptr);
 	if (*garbage == NULL)
 		*garbage = new;
