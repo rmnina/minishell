@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:20:25 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/07 19:11:20 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/11 18:32:58 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ int	launch_pipe(t_pipe *pipes, char **argv1, char **argv2, char **envp)
 	return (code_status);
 }
 
-void	prepare_pipe_execution(t_pipe *pipes, char ***argv1, char ***argv2, int word_count)
+void	prepare_pipe_execution(t_pipe *pipes, char ***argv1, char ***argv2)
 {
 	t_quotes quotes = {FALSE, FALSE, FALSE, 0, NULL};
 	t_command	*command1;
@@ -70,18 +70,18 @@ void	prepare_pipe_execution(t_pipe *pipes, char ***argv1, char ***argv2, int wor
 	command1 = get_command(pipes->command1, &quotes);
 	command2 = get_command(pipes->command2, &quotes);
 
-	*argv1 = create_cmd_args(command1, word_count);
-	*argv2 = create_cmd_args(command2, word_count);
+	*argv1 = create_cmd_args(command1);
+	*argv2 = create_cmd_args(command2);
 	pipe(pipes->pipefd);
 }
 
-void	execute_pipe(t_pipe *pipes, char **envp, t_code *code, int word_count)
+void	execute_pipe(t_pipe *pipes, char **envp, t_code *code)
 {
 	char	**argv1;
 	char	**argv2;
 	int		pipe_status;
 
-	prepare_pipe_execution(pipes, &argv1, &argv2, word_count);
+	prepare_pipe_execution(pipes, &argv1, &argv2);
 	pipe(pipes->pipefd);
 	pipe_status = launch_pipe(pipes, argv1, argv2, envp);
 	code->code_status = pipe_status;
@@ -105,7 +105,7 @@ pid_t	heredoc_pipe(t_pipe *pipes)
 	return (pid);
 }
 
-void	pid_redir(t_command *command, char **argv, char **envp, t_code *code)
+void	pid_redir(t_command *command, t_code *code, char **argv, char **envp)
 {
 	pid_t	pid;
 	int		status;

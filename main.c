@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:45:11 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/07 19:12:59 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/11 18:51:27 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 int	main(int argc, char **argv, char **envp)
 {
 	t_code				*code;
+	t_command			command;
 	char				*line;
 	struct sigaction	sa;
 	struct sigaction	sq;
@@ -44,7 +45,7 @@ int	main(int argc, char **argv, char **envp)
 		if (line[0] != 0)
 		{
 			add_history(line);
-			handle_command(line, code, envp);
+			handle_command(line,  envp, &command, code);
 		}
 	}
 	clear_history();

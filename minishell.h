@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:46:13 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/07 19:14:35 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/11 18:58:39 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,8 @@ enum e_type {
 	PIPE,
 	LEFT_CHEV,
 	RIGHT_CHEV,
-	DB_LEFT_CHEV,
 	DB_RIGHT_CHEV,
+	DB_LEFT_CHEV,
 	EXPAND,
 	REDIRECT_INPUT,
 	REDIRECT_OUTPUT,
@@ -127,22 +127,23 @@ char		*char_to_str(char c);
 char		*find_command_in_segment(char *segment, char *command);
 char		*find_command_path(char *command);
 void		execute_command(char **cmd_args, char **envp);
-void		handle_command(char *input, t_code *code, char **envp, int word_count);
+void		handle_command(char *input, char **envp, t_command *command, t_code *code);
 void		execute_non_builtin(char **envp, t_code *code, char **cmd_args);
 void		heredoc_child(t_pipe *pipes, char **argv, char **envp);
-char		**create_cmd_args(t_command *command, int word_count);
+char		**create_cmd_args(t_command *command);
 
 //Redirection 
-void		pid_redir(t_command *command, char **argv, char **envp, t_code *code);
-int			handle_redirection(t_code *code, t_command *command, char **argv, char **envp, int word_count);
+void		pid_redir(t_command *command,t_code *code, char **argv, char **envp);
+int			handle_redirection(t_code *code, t_command *command, char **envp);
 //int 		handle_redirection(t_code *code, int *i, t_command *command, char **envp);
-void		execute_redirection(t_command *exec, char **argv, char **envp);
+// void		execute_redirection(t_command *exec, char **argv, char **envp);
+void		execute_redirection(t_command *command, char **cmd_args, char **envp);
 void		set_redirection_type(t_command *exec, char *symbol, char *file);
-void		redir_symbol(t_command *exec, char **cmd_args);
+void		redir_symbol(t_command *command);
 void		init_exec_struct(t_command *exec);
 
 //Pipe
-void		execute_pipe(t_pipe *pipes, char **envp, t_code *code, int word_count);
+void		execute_pipe(t_pipe *pipes, char **envp, t_code *code);
 void		process_pipe(char **cmd_args, t_pipe *pipes, char **envp);
 void		split_command_for_pipes(char *input, t_pipe *pipes);
 //void		split_command_for_pipes(t_command *commands, t_pipe *pipes);
@@ -164,8 +165,7 @@ int			init_sigactionsa(struct sigaction *sa);
 int			init_sigactionsq(struct sigaction *sq);
 
 //heredoc
-int			heredoc(const char *delimiter, t_pipe *pipes, char **argv, \
-char **envp);
+int			heredoc(const char *delimiter, t_pipe *pipes, char **argv, char **envp);
 
 
 #endif
