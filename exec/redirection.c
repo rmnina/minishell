@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 17:13:45 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/12 14:58:10 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/12 16:26:45 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,9 +105,13 @@ void execute_redirection(t_command *command, char **cmd_args, char **envp)
 	int		fd;
 	int		flags;
 	char	*path;
-
+	pid_t	pid;
+	
 	fd = 0;
 	flags = 0;
+	pid = fork();
+	if (pid == 0)
+	{
 		printf("execute_redirection: dans le processus enfant\n");
 		if (command->type == RIGHT_CHEV || 
 			command->type == DB_RIGHT_CHEV
@@ -146,10 +150,11 @@ void execute_redirection(t_command *command, char **cmd_args, char **envp)
             printf("execute_redirection: chemin de commande introuvable\n");
             exit(EXIT_FAILURE);
         }
-		printf("contenu avant execve de printf: %s\n", command->word);
+		printf("contenu de path avant execve de printf: %s\n", path);
 		execve(path, cmd_args, envp);
 		perror("execve");
 		exit(EXIT_FAILURE);
+	}
 }
 
 void	init_exec_struct(t_command *command)
@@ -194,49 +199,81 @@ void	init_exec_struct(t_command *command)
 
 // }
 
+// int handle_redirection(t_code *code, t_command *command, char **envp)
+// {
+// 	char **cmd_args;
+
+
+// 	printf("handle_redirection called\n");
+// 	t_pipe	pipes;
+// 	int		hd_status;
+
+// 	hd_status = 0;
+// 	redir_symbol(command);
+// 	cmd_args = create_cmd_args(command);
+// 	printf("cmd_args: %s\n", cmd_args[0]);
+// 	if (command->type >= LEFT_CHEV && command->type <= DB_RIGHT_CHEV)
+// 	{
+// 		execute_redirection(command, cmd_args, envp);
+// 	}
+// 	if (command->type == WORD)
+// 	{
+// 		char **cmd_args = create_cmd_args(command);
+// 		printf("command args are created for WORD type:\n");
+// 		for (int i = 0; cmd_args[i] != NULL; i++)
+// 		{
+// 			printf("  Arg %d: %s\n", i, cmd_args[i]);
+// 		}
+// 		printf("Executing command: %s\n", cmd_args[0]);
+// 		execute_command(cmd_args, envp);
+// 		free_parsed_command_line (cmd_args);
+// 	}
+// 	else if (command->type == DB_LEFT_CHEV)
+// 	{
+// 		cmd_args = create_cmd_args(command);
+// 		printf("cmd_args created for heredoc: %s\n", cmd_args[0]);
+// 		hd_status = heredoc(command->redirection_file, &pipes, cmd_args, envp);
+// 		code->code_status = hd_status;
+// 		printf("handle_redirection finished for heredoc\n");
+// 		free_parsed_command_line(cmd_args);
+// 	}
+// 	printf("Redirection handling complete. Status: %d\n", hd_status);
+// 	return (hd_status);
+// }
+
 int handle_redirection(t_code *code, t_command *command, char **envp)
 {
-	char **cmd_args;
+    char **cmd_args;
 
+    if (!command) {
+        fprintf(stderr, "Command structure is NULL in handle_redirection.\n");
+        return -1;
+    }
+    printf("handle_redirection called\n");
+    t_pipe pipes;
+    int hd_status = 0;
 
-	printf("handle_redirection called\n");
-	t_pipe	pipes;
-	int		hd_status;
+    redir_symbol(command);
+    cmd_args = create_cmd_args(command); 
+    printf("cmd_args: %s\n", cmd_args[0]);
 
-	hd_status = 0;
-	redir_symbol(command);
-	cmd_args = create_cmd_args(command);
-	if (command->type >= LEFT_CHEV && command->type <= DB_RIGHT_CHEV)
-	{
-		printf("cmd_args: %s\n", cmd_args[0]);
-		execute_redirection(command, cmd_args, envp);
-		
-	}
-	else if (command->type == WORD)
-	{
-		char **cmd_args = create_cmd_args(command);
-		printf("command args are created for WORD type:\n");
-		for (int i = 0; cmd_args[i] != NULL; i++)
-		{
-			printf("  Arg %d: %s\n", i, cmd_args[i]);
-		}
-		printf("Executing command: %s\n", cmd_args[0]);
-		execute_command(cmd_args, envp);
-		free_parsed_command_line (cmd_args);
-	}
-	else if (command->type == DB_LEFT_CHEV)
-	{
-		cmd_args = create_cmd_args(command);
-		printf("cmd_args created for heredoc: %s\n", cmd_args[0]);
-		hd_status = heredoc(command->redirection_file, &pipes, cmd_args, envp);
-		code->code_status = hd_status;
-		printf("handle_redirection finished for heredoc\n");
-		free_parsed_command_line(cmd_args);
-	}
-	printf("Redirection handling complete. Status: %d\n", hd_status);
-	return (hd_status);
+    if (command->type != NO_REDIRECTION) {
+        execute_redirection(command, cmd_args, envp);
+    } else {
+        printf("Executing command: %s\n", cmd_args[0]);
+        execute_command(cmd_args, envp);
+    }
+
+    if (command->type == DB_LEFT_CHEV) {
+        hd_status = heredoc(command->redirection_file, &pipes, cmd_args, envp);
+        code->code_status = hd_status;
+        printf("handle_redirection finished for heredoc\n");
+    }
+
+    free_parsed_command_line(cmd_args);
+    printf("Redirection handling complete. Status: %d\n", hd_status);
+    return hd_status;
 }
-
 
 
 // int handle_redirection(t_code *code, int *i, t_command *command, char **envp)

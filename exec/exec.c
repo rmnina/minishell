@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/12 14:31:08 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/12 16:29:22 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,13 +165,7 @@ void handle_command(char *input, char **envp, t_command *command, t_code *code)
     int i = 0;
 	
     command = get_command(input, &quotes);
-    if (command != NULL && command->word != NULL)
-        printf("First command: %s\n", command->word);
-    else 
-        printf("No command found or first command word is NULL.\n");
-
     ft_error_lexer(command);
-
     while (command[i].type != 0)
     {
 		if (command[i].type == WORD)
@@ -187,19 +181,12 @@ void handle_command(char *input, char **envp, t_command *command, t_code *code)
                 end_of_command++;
             }
             cmd_args = create_cmd_args(command + i);
-            printf("Command args created after redirection handling:\n");
-            for (int j = 0; cmd_args[j] != NULL; j++) {
-                printf("  Arg %d: %s\n", j, cmd_args[j]);
-            }
-
-            printf("Executing command: %s\n", cmd_args[0]);
             execute_command(cmd_args, envp);
             free_parsed_command_line(cmd_args);
             i = end_of_command - 1;
         }
         i++;
     }
-
     ft_free_command(command);
 }
 
