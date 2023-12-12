@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/11 18:50:55 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/12 14:31:08 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,7 +176,6 @@ void handle_command(char *input, char **envp, t_command *command, t_code *code)
     {
 		if (command[i].type == WORD)
         {
-            // Trouver la fin de la commande actuelle et traiter les redirections si nécessaire
             int end_of_command = i;
             while (command[end_of_command].type == WORD || (command[end_of_command].type >= LEFT_CHEV && command[end_of_command].type <= DB_RIGHT_CHEV))
             {
@@ -196,8 +195,6 @@ void handle_command(char *input, char **envp, t_command *command, t_code *code)
             printf("Executing command: %s\n", cmd_args[0]);
             execute_command(cmd_args, envp);
             free_parsed_command_line(cmd_args);
-
-            // Avancer l'index jusqu'à la fin de la commande
             i = end_of_command - 1;
         }
         i++;

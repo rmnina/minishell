@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 17:13:45 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/11 18:58:50 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/12 14:58:10 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,18 +104,10 @@ void execute_redirection(t_command *command, char **cmd_args, char **envp)
 	printf("execute_redirection started\n");
 	int		fd;
 	int		flags;
-	pid_t	pid;
 	char	*path;
 
 	fd = 0;
 	flags = 0;
-	pid = fork();
-	if (pid == -1) {
-        perror("fork");
-        exit(EXIT_FAILURE);
-    }
-	if (pid == 0)
-	{
 		printf("execute_redirection: dans le processus enfant\n");
 		if (command->type == RIGHT_CHEV || 
 			command->type == DB_RIGHT_CHEV
@@ -146,19 +138,18 @@ void execute_redirection(t_command *command, char **cmd_args, char **envp)
 			printf("Input redirection set up successfully\n");
 		}
 		close(fd);
-		path = find_command_path(cmd_args[0]);
-		printf("Path found for command '%s': %s\n", cmd_args[0], path ? path : "NULL");
-		if (path == NULL) {
+		printf("contenu de cmd args[0] avant path de printf: %s\n", command->word);
+		path = find_command_path(command->word);
+		printf("Path found for command '%s': %s\n", command->word, path ? path : "NULL");
+		if (path == NULL) 
+		{
             printf("execute_redirection: chemin de commande introuvable\n");
             exit(EXIT_FAILURE);
         }
-		printf("contenu avant execve de printf: %s\n", cmd_args[0]);
+		printf("contenu avant execve de printf: %s\n", command->word);
 		execve(path, cmd_args, envp);
 		perror("execve");
 		exit(EXIT_FAILURE);
-	}
-	else
-		waitpid(pid, NULL, 0);
 }
 
 void	init_exec_struct(t_command *command)
@@ -206,22 +197,18 @@ void	init_exec_struct(t_command *command)
 int handle_redirection(t_code *code, t_command *command, char **envp)
 {
 	char **cmd_args;
-	
-	if (!command) {
-        fprintf(stderr, "Command structure is NULL in handle_redirection.\n");
-        return -1;
-    }
+
+
 	printf("handle_redirection called\n");
 	t_pipe	pipes;
 	int		hd_status;
 
 	hd_status = 0;
 	redir_symbol(command);
-	printf("redir symbol : %d\n", command->type);
+	cmd_args = create_cmd_args(command);
 	if (command->type >= LEFT_CHEV && command->type <= DB_RIGHT_CHEV)
 	{
-		cmd_args = create_cmd_args(command);
-		printf("command->type: %d\n", command->type);
+		printf("cmd_args: %s\n", cmd_args[0]);
 		execute_redirection(command, cmd_args, envp);
 		
 	}
