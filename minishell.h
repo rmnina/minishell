@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/14 13:46:13 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/11 18:58:39 by juandrie         ###   ########.fr       */
+/*   Created: 2023/12/07 16:03:22 by jdufour           #+#    #+#             */
+/*   Updated: 2023/12/12 18:36:40 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,11 +75,6 @@ typedef struct s_command {
 	bool			is_expand;
 }	t_command;
 
-typedef struct s_alloc {
-	void	**adr;
-	int		count;
-}	t_alloc;
-
 typedef struct s_pipe {
 	char	*command1;
 	char	*command2;
@@ -99,55 +94,52 @@ typedef struct s_line {
 //Lexer
 int			is_in_quote(char c, t_quotes *quotes);
 void		error_quotes(char *line, t_quotes *quotes);
-void		ft_error_lexer(t_command *command);
+void		ft_error_lexer(t_command *command, t_alloc *garbage);
 int			special_types(char c);
 void		get_type(t_command *token, t_quotes *quotes);
 int			is_expand(char *line);
-char		*get_env_var_name(char *line, int *i);
-void		init_get_token(t_command *token);
-void		init_get_expand(t_command *token, char *line, int *i, t_quotes *quotes);
-t_command	*get_command(char *line, t_quotes *quotes);
-int			get_lex_expand(char *line, int *i, t_quotes *quotes, \
-t_command *token);
 
 //Parser
-//char		**init_parsing(char *input);
 void		free_parsed_command_line(char **argv);
-int			expand_size(char *var);
-//char		**parse_command_line(t_command *command);
 int			parse_quotes(char *line, int *i, t_quotes *quotes);
-t_command	*ft_parsing(char *line);
+char		*get_env_var_name(char *line, int *i, t_alloc *garbage);
+void		init_get_token(t_command *token);
+void		init_get_expand(t_command *token, char *line, int *i, t_quotes *quotes, t_alloc *garbage);
+t_command	*get_command(char *line, t_quotes *quotes, t_alloc *garbage);
+int			get_lex_expand(char *line, int *i, t_quotes *quotes, \
+t_command *token, t_alloc *garbage);
+t_command	*ft_parsing(char *line, t_alloc *garbage);
 
 //Utils
-t_command	*ft_struct_join(t_command *tok1, t_command tok2);
+t_command	*ft_struct_join(t_command *tok1, t_command tok2, t_alloc *garbage);
 void		ft_free_command(t_command *command);
-char		*char_to_str(char c);
+char		*char_to_str(char c, t_alloc *garbage);
 
 //Execve
-char		*find_command_in_segment(char *segment, char *command);
-char		*find_command_path(char *command);
-void		execute_command(char **cmd_args, char **envp);
-void		handle_command(char *input, char **envp, t_command *command, t_code *code);
-void		execute_non_builtin(char **envp, t_code *code, char **cmd_args);
-void		heredoc_child(t_pipe *pipes, char **argv, char **envp);
-char		**create_cmd_args(t_command *command);
+char		*find_command_in_segment(char *segment, char *command, t_alloc *garbage);
+char		*find_command_path(char *command, t_alloc *garbage);
+void		execute_command(char **cmd_args, char **envp, t_alloc *garbage);
+void		handle_command(char *input, t_code *code, char **envp, t_alloc *garbage);
+void		execute_non_builtin(char **envp, t_code *code, char **cmd_args, t_alloc *garbage);
+void		heredoc_child(t_pipe *pipes, char **argv, char **envp, t_alloc *garbage);
+char		**create_cmd_args(t_command *command, int *i, t_alloc *garbage);
 
 //Redirection 
-void		pid_redir(t_command *command,t_code *code, char **argv, char **envp);
-int			handle_redirection(t_code *code, t_command *command, char **envp);
-//int 		handle_redirection(t_code *code, int *i, t_command *command, char **envp);
-// void		execute_redirection(t_command *exec, char **argv, char **envp);
-void		execute_redirection(t_command *command, char **cmd_args, char **envp);
+void		pid_redir(t_command *command, char **argv, char **envp, t_code *code, t_alloc *garbage);
+//int			handle_redirection(t_code *code, t_command *command, char **argv, char **envp);
+int 		handle_redirection(t_code *code, int *i, t_command *command, char **envp, t_alloc *garbage);
+void		execute_redirection(t_command *exec, char **argv, char **envp, t_alloc *garbage);
 void		set_redirection_type(t_command *exec, char *symbol, char *file);
 void		redir_symbol(t_command *command);
 void		init_exec_struct(t_command *exec);
 
 //Pipe
-void		execute_pipe(t_pipe *pipes, char **envp, t_code *code);
-void		process_pipe(char **cmd_args, t_pipe *pipes, char **envp);
-void		split_command_for_pipes(char *input, t_pipe *pipes);
+void		execute_pipe(t_pipe *pipes, char **envp, t_code *code, t_alloc *garbage);
+void		process_pipe(char **cmd_args, t_pipe *pipes, char **envp, t_alloc *garbage);
+void		split_command_for_pipes(char **cmd_args, t_command *command, \
+t_pipe *pipes, int *i, t_alloc *garbage);
 //void		split_command_for_pipes(t_command *commands, t_pipe *pipes);
-int			commands_with_pipes_detected(char *input);
+// int			commands_with_pipes_detected(char *input);
 pid_t		heredoc_pipe(t_pipe *pipes);
 
 //Builtins
@@ -165,7 +157,7 @@ int			init_sigactionsa(struct sigaction *sa);
 int			init_sigactionsq(struct sigaction *sq);
 
 //heredoc
-int			heredoc(const char *delimiter, t_pipe *pipes, char **argv, char **envp);
-
+int			heredoc(const char *delimiter, t_pipe *pipes, char **argv, \
+char **envp, t_alloc *garbage);
 
 #endif

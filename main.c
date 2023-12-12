@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:45:11 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/12 16:04:22 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/12 18:36:05 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	main(int argc, char **argv, char **envp)
 		printf("Error arg : no argument required\n");
 		return (1);
 	}
-	code = malloc(sizeof(t_code));
+	code = garb_malloc(sizeof(t_code), 1, &garbage);
 	if (!code)
 		return (1);
 	code->code_status = 0;
@@ -40,15 +40,17 @@ int	main(int argc, char **argv, char **envp)
 		if (!line)
 		{
 			printf("exit\n");
+			if (garbage)
+				free_garbage(&garbage, 0);
 			break ;
 		}
 		if (line[0] != 0)
 		{
 			add_history(line);
-			handle_command(line, envp, &command, code);
+			handle_command(line, code, envp, garbage);
 		}
 	}
 	clear_history();
-	free (code);
+	// free (code);
 	return (0);
 }
