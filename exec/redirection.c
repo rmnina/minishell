@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 17:13:45 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/12 18:33:50 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/12 19:05:35 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,11 +50,11 @@ void	set_redirection_type(t_command *command, char *symbol, char *file)
 // 		i++;
 // 	}
 // }
-void redir_symbol(t_command *command)
+void redir_symbol(t_command *command, int *j, t_alloc *garbage)
 {
 	printf("redir symbol started\n");
 	int i = 0;
-	char	**cmd_args = create_cmd_args(command);
+	char	**cmd_args = create_cmd_args(command, j, garbage);
 
 	while (cmd_args[i] != NULL)
 	{
@@ -243,18 +243,13 @@ void	init_exec_struct(t_command *command)
 
 int handle_redirection(t_code *code, int *i, t_command *command, char **envp, t_alloc *garbage)
 {
-	char **cmd_args;
 
-	if (!command) {
-		fprintf(stderr, "Command structure is NULL in handle_redirection.\n");
-		return -1;
-	}
-	printf("handle_redirection called\n");
+
 	t_pipe pipes;
 	int hd_status = 0;
 
-	redir_symbol(command);
-	cmd_args = create_cmd_args(command, garbage); 
+	//redir_symbol(command, i, garbage);
+	//cmd_args = create_cmd_args(command, i, garbage); 
 	printf("cmd_args: %s\n", cmd_args[0]);
 
 	if (command->type != NO_REDIRECTION) 
@@ -276,7 +271,7 @@ int handle_redirection(t_code *code, int *i, t_command *command, char **envp, t_
 	// hd_status = 0;
 	// cmd_args1 = NULL;
 	// redir_command = command + 1;
-	// if (command[*i].type >= LEFT_CHEV && command[*i].type <= DB_RIGHT_CHEV \
+	// if (command[*i].type >= LEFT_CHEV && command[*i].type <= DB_RIGHT_CHEV 
 	// 	&& command[*i + 1].type == WORD)
 	// {
 	// 	redir_command->redirection_type = command->type;

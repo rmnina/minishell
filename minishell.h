@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:03:22 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/12 18:36:40 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/12 18:42:51 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,8 +76,8 @@ typedef struct s_command {
 }	t_command;
 
 typedef struct s_pipe {
-	char	*command1;
-	char	*command2;
+	char	**command1;
+	char	**command2;
 	int		pipefd[2];
 	int		dup_fd;
 }	t_pipe;
@@ -130,7 +130,7 @@ void		pid_redir(t_command *command, char **argv, char **envp, t_code *code, t_al
 int 		handle_redirection(t_code *code, int *i, t_command *command, char **envp, t_alloc *garbage);
 void		execute_redirection(t_command *exec, char **argv, char **envp, t_alloc *garbage);
 void		set_redirection_type(t_command *exec, char *symbol, char *file);
-void		redir_symbol(t_command *command);
+void		redir_symbol(t_command *command, int *j, t_alloc *garbage);
 void		init_exec_struct(t_command *exec);
 
 //Pipe

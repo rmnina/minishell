@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:45:11 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/12 18:36:05 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/12 18:38:57 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 int	main(int argc, char **argv, char **envp)
 {
 	t_code				*code;
-	t_command			command;
+	t_alloc				*garbage;
 	char				*line;
 	struct sigaction	sa;
 	struct sigaction	sq;
