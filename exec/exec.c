@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/12 16:29:22 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/12 16:33:46 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ void	heredoc_child(t_pipe *pipes, char **argv, char **envp)
 	new_argv[0] = ft_strdup(argv[0]);
 	new_argv[1] = NULL;
 	execve(path, new_argv, envp);
-	exit(EXIT_FAILURE);
+	exit(EXIT_FAILURE)create_cmd_args(command); ;
 }
 
 // void	handle_command(char *input, t_code *code, char **argv, char **envp)
