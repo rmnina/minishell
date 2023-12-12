@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 17:13:45 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/09 23:31:22 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/12 17:15:14 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -190,6 +190,7 @@ int handle_redirection(t_code *code, int *i, t_command *command, char **envp, t_
 			execute_redirection(redir_command, cmd_args1, envp, garbage);
 		else
 			printf("No redirection required\n");
+		*i += 1;
 	}
 	free_parsed_command_line(cmd_args1);
 	return (hd_status);
