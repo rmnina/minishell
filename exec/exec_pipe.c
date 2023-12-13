@@ -6,86 +6,82 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:20:25 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/13 10:58:30 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/13 19:33:29 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-//#include "../minishell.h"
+#include "../minishell.h"
 
-# include <stdlib.h>
-# include <stdio.h>
-# include <unistd.h>
-# include <limits.h>
-# include <readline/readline.h>
-# include <readline/history.h>
-# include <fcntl.h>
-# include <sys/syscall.h>
-# include <sys/types.h>
-# include <sys/wait.h>
-# include <sys/stat.h>
-# include <sys/param.h>
-# include <dirent.h>
-# include <errno.h>
-# include <sys/ioctl.h>
-# include <termios.h>
-# include <curses.h>
-# include <term.h>
-# include <math.h>
-# include <signal.h>
-
-
-typedef struct s_pipe {
-	char	**command2;
-	int		fd[2];
-}	t_pipe;
-
-typedef struct s_command {
-	char			*word;
-	int				type;
-	char			*file;
-	int				redirect_type;
-	char			*redirection_file;
-	int				redirection_type;
-	int				redirection_append;
-	bool			is_expand;
-}	t_command;
-
-void	multipipes(t_command *command)
+void	ft_multipipes(t_command *command, t_alloc *garbage, char **envp, \
+char **cmd_args, int *i, t_code *code)
 {
 	t_pipe	pipes;
 	pid_t	pid;
-	int		i;
+	int		status;
+	int		old_fd;
 
-	i = 0;
-	while (command[i].type != 0)
+	status = 0;
+	old_fd = -1;
+	while (command[*i].type != 0)
 	{
-
-		if (command[i].type == WORD)
+		cmd_args = create_cmd_args(command, i, garbage);
+		if (command[*i].type == PIPE || *i > 0)
 		{
-			pid = fork();
-			if (pid == -1)
+			pipe(pipes.fd);
+		}
+		pid = fork();
+		if (pid == -1)
+		{
+			perror("pid");
+			exit(EXIT_FAILURE);
+		}
+		if (pid == 0)
+		{
+			if (*i > 0 && old_fd != -1)
 			{
-				perror("pid");
-				exit(EXIT_FAILURE);
+				dup2(old_fd, STDIN_FILENO);
+				close(old_fd);
 			}
-			if (pid == 0)
+			if (command[*i].type == PIPE)
 			{
-				if(command[i].type == PIPE)
-				{
-					pipe(pipes.fd);
-					
-				}
+				dup2(pipes.fd[1], STDOUT_FILENO);
+				close(pipes.fd[1]);
 			}
-			else 
+			close(pipes.fd[0]);
+			if (execute_builtins(cmd_args, envp, code, garbage) == -1)
 			{
-				waitpid(pid, 0, NULL);
-				
+				execute_non_builtin(envp, code, cmd_args, garbage);
+			}
+			exit(EXIT_SUCCESS);
+		}
+		else
+		{
+			if (*i > 0 && old_fd != -1)
+			{
+				close(old_fd);
+				//close(pipes.fd[1]);
+			}
+			if (command[*i].type == PIPE)
+			{
+				old_fd = pipes.fd[0];
+				close(pipes.fd[1]);
+			}
+			else
+			{
+				close(pipes.fd[1]);
 			}
 		}
-		i++;
+		waitpid(pid, &status, 0);
+		if (WIFEXITED(status))
+		{
+			code->code_status = WEXITSTATUS(status);
+		}
+		(*i)++;
 	}
-
+	if (old_fd != -1)
+		close(old_fd);
 }
+
 
 // void	process_pipe(char **cmd_args, t_pipe *pipes, char **envp, t_alloc *garbage)
 // {

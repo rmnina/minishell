@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:03:22 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/13 10:43:09 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/13 16:47:59 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,11 +45,6 @@ enum e_type {
 	DB_RIGHT_CHEV,
 	DB_LEFT_CHEV,
 	EXPAND,
-	REDIRECT_INPUT,
-	REDIRECT_OUTPUT,
-	NO_REDIRECTION,
-	REDIRECT_APPEND_INPUT,
-	REDIRECT_APPEND_OUTPUT
 };
 
 # define SINGLE_QUOTE 39
@@ -67,19 +62,12 @@ typedef struct s_quotes {
 typedef struct s_command {
 	char			*word;
 	int				type;
-	char			*file;
-	int				redirect_type;
-	char			*redirection_file;
-	int				redirection_type;
-	int				redirection_append;
-	bool			is_expand;
 }	t_command;
 
 typedef struct s_pipe {
 	char	**command1;
 	char	**command2;
-	int		pipefd[2];
-	int		dup_fd;
+	int		fd[2];
 }	t_pipe;
 
 typedef struct s_code {
@@ -123,9 +111,11 @@ void		handle_command(char *input, t_code *code, char **envp, t_alloc *garbage);
 void		execute_non_builtin(char **envp, t_code *code, char **cmd_args, t_alloc *garbage);
 void		heredoc_child(t_pipe *pipes, char **argv, char **envp, t_alloc *garbage);
 char		**create_cmd_args(t_command *command, int *i, t_alloc *garbage);
+void		pick_command(char **cmd_args, char **envp, t_code *code, t_alloc *garbage);
 
 //Redirection 
 void		pid_redir(t_command *command, char **argv, char **envp, t_code *code, t_alloc *garbage);
+int			init_redirection(t_command *command, int *i, t_alloc *garbage);
 //int			handle_redirection(t_code *code, t_command *command, char **argv, char **envp);
 int 		handle_redirection(t_code *code, int *i, t_command *command, char **envp, t_alloc *garbage);
 void		execute_redirection(t_command *exec, char **argv, char **envp, t_alloc *garbage);
@@ -141,18 +131,18 @@ void		init_exec_struct(t_command *exec);
 // //void		split_command_for_pipes(t_command *commands, t_pipe *pipes);
 // // int			commands_with_pipes_detected(char *input);
 pid_t		heredoc_pipe(t_pipe *pipes);
-void	ft_pipe(t_command **command, char **envp, t_alloc *garbage);
+void		ft_multipipes(t_command *command, t_alloc *garbage, char **envp, char **cmd_args, int *i, t_code *code);
 
 //Builtins
 int			ft_cd(char **args, t_code *code);
 int			ft_echo(char **argv, t_code *code);
 int			ft_env(char **envp, t_code *code);
-int			ft_exit(char **cmd_args, t_code *code);
+int			ft_exit(char **cmd_args, t_code *code, t_alloc *garbage);
 int			ft_export(char **envp, t_code *code);
 int			ft_pwd(char **unused_args, char **unused_envp, t_code *code);
 int			ft_unset(char ***envp, char **names, t_code *code);
 int			execute_status_builtin(t_code *code);
-int			execute_builtins(char **cmd_args, char **envp, t_code *code);
+int			execute_builtins(char **cmd_args, char **envp, t_code *code, t_alloc *garbage);
 void		sigint_handler(int signum);
 int			init_sigactionsa(struct sigaction *sa);
 int			init_sigactionsq(struct sigaction *sq);

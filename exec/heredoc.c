@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 16:22:53 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/12 18:25:14 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/13 13:34:05 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,21 +37,21 @@ void	free_line_nodes(t_line *head)
 	}
 }
 
-void	write_pipe(int pipefd, t_line *head)
+void	write_pipe(int fd, t_line *head)
 {
 	t_line	*current;
 
 	current = head;
 	while (current)
 	{
-		write(pipefd, current->line, ft_strlen(current->line));
-		write(pipefd, "\n", 1);
+		write(fd, current->line, ft_strlen(current->line));
+		write(fd, "\n", 1);
 		current = current->next;
 	}
 }
 
 
-void	read_add(int pipefd, const char *delimiter, t_alloc *garbage)
+void	read_add(int fd, const char *delimiter, t_alloc *garbage)
 {
 	char	*line;
 	t_line	*node;
@@ -76,7 +76,7 @@ void	read_add(int pipefd, const char *delimiter, t_alloc *garbage)
 		tail = node;
 		free(line);
 	}
-	write_pipe(pipefd, head);
+	write_pipe(fd, head);
 	free_line_nodes(head);
 }
 
@@ -88,7 +88,7 @@ int	heredoc(const char *delimiter, t_pipe *pipes, char **argv, char **envp, t_al
 
 	status = 0;
 	code_status = 0;
-	if (pipe(pipes->pipefd) == -1)
+	if (pipe(pipes->fd) == -1)
 		exit(EXIT_FAILURE);
 	pid = fork();
 	if (pid == -1)
@@ -97,9 +97,9 @@ int	heredoc(const char *delimiter, t_pipe *pipes, char **argv, char **envp, t_al
 		heredoc_child(pipes, argv, envp, garbage);
 	else
 	{
-		read_add(pipes->pipefd[1], delimiter, garbage);
-		close(pipes->pipefd[0]);
-		close(pipes->pipefd[1]);
+		read_add(pipes->fd[1], delimiter, garbage);
+		close(pipes->fd[0]);
+		close(pipes->fd[1]);
 		waitpid(pid, &status, 0);
 		if (WIFEXITED(status))
 			code_status = WEXITSTATUS(status);
