@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 19:16:31 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/10 01:07:14 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/13 18:16:22 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ void	free_garbage(t_alloc **garbage, int i)
 	}
 	*garbage = NULL;
 	if (i == 1)
-		printf("Error malloc : plase try again\n");
+		printf("Error malloc : please try again\n");
 }
 
 // int main(void)

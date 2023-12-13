@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:45:11 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/12 18:38:57 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/13 18:15:52 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,14 @@
 
 int	main(int argc, char **argv, char **envp)
 {
-	t_code				*code;
-	t_alloc				*garbage;
-	char				*line;
-	struct sigaction	sa;
-	struct sigaction	sq;
+	t_code		*code;
+	char		*line;
+	t_alloc		*garbage;
 
 	(void)argv;
+	code = NULL;
+	line = NULL;
+	garbage = NULL;
 	if (argc != 1)
 	{
 		printf("Error arg : no argument required\n");
@@ -30,11 +31,7 @@ int	main(int argc, char **argv, char **envp)
 	if (!code)
 		return (1);
 	code->code_status = 0;
-	if (init_sigactionsa(&sa) == -1)
-		return (1);
-	if (init_sigactionsq(&sq) == -1)
-		return (1);
-	while (1)
+	while (2 + 2 == 4)
 	{
 		line = readline("minishell > ");
 		if (!line)
