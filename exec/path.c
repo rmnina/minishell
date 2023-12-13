@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 10:21:29 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/12 18:25:56 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/12 20:31:42 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ void	execute_command(char **cmd_args, char **envp, t_alloc *garbage)
 		perror("Error creating command args");
 		exit(EXIT_FAILURE);
 	}
-	path = find_command_path(cmd_args[0], garbage);
+	path = find_command_path(cmd_args, garbage);
 	if (!path)
 	{
 		perror("Command not found");

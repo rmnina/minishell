@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/12 18:24:19 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/13 10:59:38 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,13 +68,13 @@ void	heredoc_child(t_pipe *pipes, char **argv, char **envp, t_alloc *garbage)
 	char	*path;
 	char	*new_argv[2];
 
-	close(pipes->pipefd[1]);
-	if (dup2(pipes->pipefd[0], STDIN_FILENO) == -1)
+	close(pipes->fd[1]);
+	if (dup2(pipes->fd[0], STDIN_FILENO) == -1)
 	{
 		perror("dup2");
 		exit(EXIT_FAILURE);
 	}
-	close(pipes->pipefd[0]);
+	close(pipes->fd[0]);
 	path = find_command_path(argv[0], garbage);
 	if (!path)
 	{
@@ -122,7 +122,7 @@ void	handle_command(char *input, t_code *code, char **envp, t_alloc *garbage)
 	t_command	*command;
 	char		**cmd_args;
 	int			i;
-	t_pipe		pipe;
+	//t_pipe		pipes;
 
 	i = 0;
 	command = ft_parsing(input, garbage);
@@ -131,8 +131,9 @@ void	handle_command(char *input, t_code *code, char **envp, t_alloc *garbage)
 	{
 		if (command[i].type == PIPE)
 		{
-			split_command_for_pipes(cmd_args, command, &pipe, &i, garbage); // a corriger
-			execute_pipe(&pipe, envp, code, garbage);
+			// split_command_for_pipes(cmd_args, command, &pipe, &i, garbage); // a corriger
+			// execute_pipe(&pipe, envp, code, garbage);
+			
 		}
 		if (command[i].type <= LEFT_CHEV && command[i].type >= DB_RIGHT_CHEV)
 			handle_redirection(code, &i, command, envp, garbage);

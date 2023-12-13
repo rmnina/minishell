@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:03:22 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/12 18:42:51 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/13 10:43:09 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,13 +134,14 @@ void		redir_symbol(t_command *command, int *j, t_alloc *garbage);
 void		init_exec_struct(t_command *exec);
 
 //Pipe
-void		execute_pipe(t_pipe *pipes, char **envp, t_code *code, t_alloc *garbage);
-void		process_pipe(char **cmd_args, t_pipe *pipes, char **envp, t_alloc *garbage);
-void		split_command_for_pipes(char **cmd_args, t_command *command, \
-t_pipe *pipes, int *i, t_alloc *garbage);
-//void		split_command_for_pipes(t_command *commands, t_pipe *pipes);
-// int			commands_with_pipes_detected(char *input);
+// void		execute_pipe(t_pipe *pipes, char **envp, t_code *code, t_alloc *garbage);
+// void		process_pipe(char **cmd_args, t_pipe *pipes, char **envp, t_alloc *garbage);
+// void		split_command_for_pipes(char **cmd_args, t_command *command, 
+// t_pipe *pipes, int *i, t_alloc *garbage);
+// //void		split_command_for_pipes(t_command *commands, t_pipe *pipes);
+// // int			commands_with_pipes_detected(char *input);
 pid_t		heredoc_pipe(t_pipe *pipes);
+void	ft_pipe(t_command **command, char **envp, t_alloc *garbage);
 
 //Builtins
 int			ft_cd(char **args, t_code *code);
