@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_pipe.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:20:25 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/12 18:20:42 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/12 22:56:38 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,10 +91,14 @@ void	pid_redir(t_command *command, char **argv, char **envp, t_code *code, t_all
 	pid_t	pid;
 	int		status;
 
+	(void)envp;
+	(void)argv;
+	(void)command;
+	(void)garbage;
 	status = 0;
 	pid = fork();
-	if (pid == 0)
-		execute_redirection(command, argv, envp, garbage);
+	// if (pid == 0)
+	// 	execute_redirection(command, argv, envp, garbage);
 	waitpid(pid, &status, 0);
 	if (WIFEXITED(status))
 		code->code_status = WEXITSTATUS(status);

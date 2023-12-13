@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:03:22 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/12 18:42:51 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/12 23:40:50 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,9 +123,11 @@ void		handle_command(char *input, t_code *code, char **envp, t_alloc *garbage);
 void		execute_non_builtin(char **envp, t_code *code, char **cmd_args, t_alloc *garbage);
 void		heredoc_child(t_pipe *pipes, char **argv, char **envp, t_alloc *garbage);
 char		**create_cmd_args(t_command *command, int *i, t_alloc *garbage);
+void		pick_command(char **cmd_args, char **envp, t_code *code, t_alloc *garbage);
 
 //Redirection 
 void		pid_redir(t_command *command, char **argv, char **envp, t_code *code, t_alloc *garbage);
+int			init_redirection(t_command *command, int *i, t_alloc *garbage);
 //int			handle_redirection(t_code *code, t_command *command, char **argv, char **envp);
 int 		handle_redirection(t_code *code, int *i, t_command *command, char **envp, t_alloc *garbage);
 void		execute_redirection(t_command *exec, char **argv, char **envp, t_alloc *garbage);
@@ -146,12 +148,12 @@ pid_t		heredoc_pipe(t_pipe *pipes);
 int			ft_cd(char **args, t_code *code);
 int			ft_echo(char **argv, t_code *code);
 int			ft_env(char **envp, t_code *code);
-int			ft_exit(char **cmd_args, t_code *code);
+int			ft_exit(char **cmd_args, t_code *code, t_alloc *garbage);
 int			ft_export(char **envp, t_code *code);
 int			ft_pwd(char **unused_args, char **unused_envp, t_code *code);
 int			ft_unset(char ***envp, char **names, t_code *code);
 int			execute_status_builtin(t_code *code);
-int			execute_builtins(char **cmd_args, char **envp, t_code *code);
+int			execute_builtins(char **cmd_args, char **envp, t_code *code, t_alloc *garbage);
 void		sigint_handler(int signum);
 int			init_sigactionsa(struct sigaction *sa);
 int			init_sigactionsq(struct sigaction *sq);
