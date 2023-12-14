@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/13 18:36:50 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/14 15:17:08 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ int	execute_non_builtin(char **envp, t_code *code, char **cmd_args, t_alloc *gar
 	pid_t	pid;
 	int		status;
 
+	status = 0;
 	pid = fork();
 	if (pid == -1)
 	{
@@ -69,13 +70,13 @@ void	heredoc_child(t_pipe *pipes, char **argv, char **envp, t_alloc *garbage)
 	char	*path;
 	char	*new_argv[2];
 
-	close(pipes->pipefd[1]);
-	if (dup2(pipes->pipefd[0], STDIN_FILENO) == -1)
+	close(pipes->fd[1]);
+	if (dup2(pipes->fd[0], STDIN_FILENO) == -1)
 	{
 		perror("dup2");
 		exit(EXIT_FAILURE);
 	}
-	close(pipes->pipefd[0]);
+	close(pipes->fd[0]);
 	path = find_command_path(argv[0], garbage);
 	if (!path)
 	{
@@ -123,8 +124,8 @@ void	handle_command(char *input, t_code *code, char **envp, t_alloc *garbage)
 	t_command	*command;
 	char		**cmd_args;
 	int			i;
-	t_pipe		pipe;
 	int			exec;
+	int			fd;
 
 	i = 0;
 	exec = 0;
@@ -136,8 +137,7 @@ void	handle_command(char *input, t_code *code, char **envp, t_alloc *garbage)
 			cmd_args = create_cmd_args(command, &i, garbage);
 		if (command[i].type == PIPE)
 		{
-			split_command_for_pipes(cmd_args, command, &pipe, &i, garbage); // a corriger
-			execute_pipe(&pipe, envp, code, garbage);
+			ft_multipipes(command, garbage, envp, cmd_args, &i, code);
 		}
 		if (command[i].type >= LEFT_CHEV && command[i].type <= DB_RIGHT_CHEV)
 			exec = init_redirection(command, &i, cmd_args, envp, code);
