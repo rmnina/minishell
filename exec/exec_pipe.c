@@ -6,28 +6,41 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:20:25 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/13 19:33:29 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/14 15:30:00 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	ft_multipipes(t_command *command, t_alloc *garbage, char **envp, \
+
+
+
+
+
+void	ft_multipipes(t_command *command, t_alloc *garbage, char **envp, 
 char **cmd_args, int *i, t_code *code)
 {
 	t_pipe	pipes;
 	pid_t	pid;
 	int		status;
 	int		old_fd;
+	int		j;
 
 	status = 0;
 	old_fd = -1;
 	while (command[*i].type != 0)
 	{
-		cmd_args = create_cmd_args(command, i, garbage);
+		printf("Traitement de la commande à l'index %d: %s\n", *i, command[*i].word);
+		if (command[*i].type == WORD)
+		{
+			cmd_args = create_cmd_args(command, i, garbage);
+			for (j = 0; cmd_args[j]; j++)
+				printf("Argument de la commande %d: %s\n", j, cmd_args[j]);
+		}
 		if (command[*i].type == PIPE || *i > 0)
 		{
 			pipe(pipes.fd);
+			printf("Pipe créé, fd de lecture = %d, fd d'écriture = %d\n", pipes.fd[0], pipes.fd[1]);
 		}
 		pid = fork();
 		if (pid == -1)
@@ -37,15 +50,18 @@ char **cmd_args, int *i, t_code *code)
 		}
 		if (pid == 0)
 		{
+			printf("Dans le processus enfant, PID = %d\n", getpid());
 			if (*i > 0 && old_fd != -1)
 			{
 				dup2(old_fd, STDIN_FILENO);
 				close(old_fd);
+				printf("Redirection de stdin depuis old_fd = %d\n", old_fd);
 			}
 			if (command[*i].type == PIPE)
 			{
 				dup2(pipes.fd[1], STDOUT_FILENO);
 				close(pipes.fd[1]);
+				printf("Redirection stdout vers fd d'écriture: %d\n", pipes.fd[1]);
 			}
 			close(pipes.fd[0]);
 			if (execute_builtins(cmd_args, envp, code, garbage) == -1)
@@ -56,30 +72,38 @@ char **cmd_args, int *i, t_code *code)
 		}
 		else
 		{
+			printf("Dans le processus parent, PID = %d\n", getpid());
 			if (*i > 0 && old_fd != -1)
 			{
 				close(old_fd);
-				//close(pipes.fd[1]);
+				printf("Fermeture de old_fd = %d dans le processus parent\n", old_fd);
+				close(pipes.fd[1]);
 			}
 			if (command[*i].type == PIPE)
 			{
 				old_fd = pipes.fd[0];
+				printf("Mise à jour de old_fd = %d\n", old_fd);
 				close(pipes.fd[1]);
 			}
 			else
 			{
 				close(pipes.fd[1]);
+				printf("Fermeture fd d'écriture dans le parent: %d\n", pipes.fd[1]);
 			}
 		}
 		waitpid(pid, &status, 0);
 		if (WIFEXITED(status))
 		{
 			code->code_status = WEXITSTATUS(status);
+			printf("Processus enfant terminé, PID = %d, statut = %d\n", pid, code->code_status);
 		}
 		(*i)++;
 	}
 	if (old_fd != -1)
+	{
 		close(old_fd);
+		printf("Fermeture finale de old_fd = %d\n", old_fd);
+	}
 }
 
 
