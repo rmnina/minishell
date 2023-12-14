@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 17:13:45 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/13 15:55:50 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/13 18:33:01 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,16 +54,18 @@ int	redir_input(char *filename)
 	return (fd *= -1);
 }
 
-int	init_redirection(t_command *command, int *i, t_alloc *garbage, char **cmd_args, char **envp, t_code *code)
+int	init_redirection(t_command *command, int *i, char **cmd_args, char **envp, t_code *code)
 {
 	char	*filename;
 	int		fd;
 	pid_t	pid;
 	int		status;
+	t_alloc	*son_garb;
 
 	// if (command[*i].type == DB_LEFT_CHEV)
 	// 	return (-1);
 	// 	//heredoc;
+	son_garb = NULL;
 	fd = 0;
 	pid = fork();
 	if (pid == 0)
@@ -71,7 +73,7 @@ int	init_redirection(t_command *command, int *i, t_alloc *garbage, char **cmd_ar
 		if (command[*i].type == DB_RIGHT_CHEV || \
 		command[*i].type == RIGHT_CHEV)
 		{
-			filename = ft_strdup(command[*i + 1].word, garbage);
+			filename = ft_strdup(command[*i + 1].word, son_garb);
 			if (!filename)
 				return (-1);
 			if (command[*i].type == RIGHT_CHEV)
@@ -84,8 +86,9 @@ int	init_redirection(t_command *command, int *i, t_alloc *garbage, char **cmd_ar
 			filename = command[*i - 1].word;
 			fd = redir_input(filename);
 		}
-		if (execute_builtins(cmd_args, envp, code, garbage) == -1)
-			execute_non_builtin(envp, code, cmd_args, garbage);
+		if (execute_builtins(cmd_args, envp, code, son_garb) == -1)
+			execute_non_builtin(envp, code, cmd_args, son_garb);
+		free_garbage(&son_garb, 0);
 		exit(0);
 	}
 	else if (pid > 0)

@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/13 16:16:23 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/13 18:36:50 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,7 +140,7 @@ void	handle_command(char *input, t_code *code, char **envp, t_alloc *garbage)
 			execute_pipe(&pipe, envp, code, garbage);
 		}
 		if (command[i].type >= LEFT_CHEV && command[i].type <= DB_RIGHT_CHEV)
-			exec = init_redirection(command, &i, garbage, cmd_args, envp, code);
+			exec = init_redirection(command, &i, cmd_args, envp, code);
 		if (cmd_args != NULL && exec == 0)
 		{
 			if (execute_builtins(cmd_args, envp, code, garbage) == -1)

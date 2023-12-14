@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:03:22 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/13 15:51:31 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/13 18:31:22 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,7 +127,7 @@ void		pick_command(char **cmd_args, char **envp, t_code *code, t_alloc *garbage)
 
 //Redirection 
 void		pid_redir(t_command *command, char **argv, char **envp, t_code *code, t_alloc *garbage);
-int			init_redirection(t_command *command, int *i, t_alloc *garbage, char **cmd_args, char **envp, t_code *code);
+int			init_redirection(t_command *command, int *i, char **cmd_args, char **envp, t_code *code);
 //int			handle_redirection(t_code *code, t_command *command, char **argv, char **envp);
 int 		handle_redirection(t_code *code, int *i, t_command *command, char **envp, t_alloc *garbage);
 void		execute_redirection(t_command *exec, char **argv, char **envp, t_alloc *garbage);

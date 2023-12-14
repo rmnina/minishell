@@ -1,5 +1,6 @@
 builtins
 exec
+file1.txt
 file.txt
 lexer
 libft
