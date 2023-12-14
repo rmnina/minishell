@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/14 15:17:08 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/14 15:21:44 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,6 @@ void	handle_command(char *input, t_code *code, char **envp, t_alloc *garbage)
 	char		**cmd_args;
 	int			i;
 	int			exec;
-	int			fd;
 
 	i = 0;
 	exec = 0;
