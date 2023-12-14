@@ -6,12 +6,11 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:20:25 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/14 15:49:41 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/14 16:07:11 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
 
 void	ft_multipipes(t_command *command, t_alloc *garbage, char **envp, 
 char **cmd_args, int *i, t_code *code)

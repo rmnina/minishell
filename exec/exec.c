@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/14 14:53:29 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/14 15:40:04 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int	execute_builtins(char **cmd_args, char **envp, t_code *code, t_alloc *garbag
 	return (-1);
 }
 
-void	execute_non_builtin(char **envp, t_code *code, char **cmd_args, t_alloc *garbage)
+int	execute_non_builtin(char **envp, t_code *code, char **cmd_args, t_alloc *garbage)
 {
 	pid_t	pid;
 	int		status;
@@ -62,6 +62,7 @@ void	execute_non_builtin(char **envp, t_code *code, char **cmd_args, t_alloc *ga
 		if (WIFEXITED(status))
 			code->code_status = WEXITSTATUS(status);
 	}
+	return (-1);
 }
 
 void	heredoc_child(t_pipe *pipes, char **argv, char **envp, t_alloc *garbage)
@@ -123,30 +124,28 @@ void	handle_command(char *input, t_code *code, char **envp, t_alloc *garbage)
 	t_command	*command;
 	char		**cmd_args;
 	int			i;
-	int			fd;
-	int			status;
+	int			exec;
 
 	i = 0;
-	(void)fd;
+	exec = 0;
 	command = ft_parsing(input, garbage);
 	cmd_args = NULL;
-	while (command[i].type != 0 && command[i].type)
+	while (command[i].type != 0)
 	{
-		if (command[i].type == WORD)
+		if (command[i].type == WORD || command[i].type == 0)
 			cmd_args = create_cmd_args(command, &i, garbage);
 		if (command[i].type == PIPE)
 		{
 			ft_multipipes(command, garbage, envp, cmd_args, &i, code);
+			exec++;
 		}
 		if (command[i].type >= LEFT_CHEV && command[i].type <= DB_RIGHT_CHEV)
-			fd = init_redirection(command, &i, garbage);
-		if (execute_builtins(cmd_args, envp, code, garbage) == -1)
-			execute_non_builtin(envp, code, cmd_args, garbage);
-		waitpid(-1, &status, 0);
-		if (fd < -1)
-			dup2(STDIN_FILENO, fd * -1);
-		else if (fd > 0)
-			dup2(STDOUT_FILENO, fd);
+			exec = init_redirection(command, &i, cmd_args, envp, code);
+		if (cmd_args != NULL && exec == 0)
+		{
+			if (execute_builtins(cmd_args, envp, code, garbage) == -1)
+				execute_non_builtin(envp, code, cmd_args, garbage);
+		}
 	}
 }
 

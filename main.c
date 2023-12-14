@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:45:11 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/12 18:38:57 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/14 18:26:10 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,15 @@
 int	main(int argc, char **argv, char **envp)
 {
 	t_code				*code;
-	t_alloc				*garbage;
 	char				*line;
+	t_alloc				*garbage;
 	struct sigaction	sa;
 	struct sigaction	sq;
 
 	(void)argv;
+	code = NULL;
+	line = NULL;
+	garbage = NULL;
 	if (argc != 1)
 	{
 		printf("Error arg : no argument required\n");
@@ -34,7 +37,7 @@ int	main(int argc, char **argv, char **envp)
 		return (1);
 	if (init_sigactionsq(&sq) == -1)
 		return (1);
-	while (1)
+	while (2 + 2 == 4)
 	{
 		line = readline("minishell > ");
 		if (!line)
@@ -51,6 +54,5 @@ int	main(int argc, char **argv, char **envp)
 		}
 	}
 	clear_history();
-	// free (code);
 	return (0);
 }

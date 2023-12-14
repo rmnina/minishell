@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   controlc.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 15:13:20 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/12 23:00:22 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/14 18:08:56 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ int	init_sigactionsa(struct sigaction *sa)
 	}
 	sa->sa_handler = sigint_handler;
     sa->sa_flags = 0;
-	// sigemptyset(&sa->sa_mask);
 	sigaction(SIGINT, sa, NULL);
 
 	return (0);
@@ -31,5 +30,5 @@ int	init_sigactionsa(struct sigaction *sa)
 void	sigint_handler(int signum)
 {
 	(void)signum;
-	write(STDOUT_FILENO, "\nminishell > ", 13);
+	write(STDOUT_FILENO, "\n", 1);
 }

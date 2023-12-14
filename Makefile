@@ -6,7 +6,7 @@
 #    By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/14 14:15:25 by jdufour           #+#    #+#              #
-#    Updated: 2023/12/12 18:36:23 by juandrie         ###   ########.fr        #
+#    Updated: 2023/12/14 16:07:51 by juandrie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,7 +32,6 @@ SRCS = main.c \
 	exec/exec.c \
 	exec/heredoc.c \
 	exec/path.c \
-	exec/pipe_command.c \
 	exec/redirection.c \
 	lexer/error_lexer.c \
 	lexer/expand.c \
