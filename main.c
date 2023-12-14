@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:45:11 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/13 18:15:52 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/14 17:07:35 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,5 @@ int	main(int argc, char **argv, char **envp)
 		}
 	}
 	clear_history();
-	// free (code);
 	return (0);
 }

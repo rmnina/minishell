@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+         #
+#    By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/14 14:15:25 by jdufour           #+#    #+#              #
-#    Updated: 2023/12/12 18:36:23 by juandrie         ###   ########.fr        #
+#    Updated: 2023/12/14 15:58:59 by jdufour          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,14 +32,12 @@ SRCS = main.c \
 	exec/exec.c \
 	exec/heredoc.c \
 	exec/path.c \
-	exec/pipe_command.c \
 	exec/redirection.c \
-	lexer/error_lexer.c \
-	lexer/expand.c \
-	lexer/init.c \
-	lexer/special_char.c \
-	lexer/tokens.c \
-	parser/parse_command.c \
+	parser/error_lexer.c \
+	parser/expand.c \
+	parser/init.c \
+	parser/special_char.c \
+	parser/tokens.c \
 	utils/frees.c \
 	utils/joins.c \
 
