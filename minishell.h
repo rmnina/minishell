@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:03:22 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/14 17:14:14 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/18 15:41:01 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@
 # include "libft/libft.h"
 # include <math.h>
 # include <signal.h>
+# include <errno.h>
 
 enum e_type {
 	WORD = 1,
@@ -78,6 +79,8 @@ typedef struct s_line {
 	char			*line;
 	struct s_line	*next;
 }	t_line;
+
+extern volatile int	g_sigint;
 
 //Lexer
 int			is_in_quote(char c, t_quotes *quotes);
