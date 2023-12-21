@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/14 17:39:08 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/18 15:25:19 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,8 +116,8 @@ char	**create_cmd_args(t_command *command, int *i, t_alloc *garbage)
 		*i += 1;
 		j++;
 	}
-	for (int j = 0; cmd_args[j]; j++)
-		printf("%s, i = %d\n", cmd_args[j], *i);
+	// for (int j = 0; cmd_args[j]; j++)
+		// printf("%s, i = %d\n", cmd_args[j], *i);
 	return (cmd_args);
 }
 
@@ -134,7 +134,7 @@ void	handle_command(char *input, t_code *code, char **envp, t_alloc *garbage)
 	cmd_args = NULL;
 	while (command[i].type != 0)
 	{
-		printf("token[%d].type = %d, word = %s\n", i, command[i].type, command[i].word);
+		// printf("token[%d].type = %d, word = %s\n", i, command[i].type, command[i].word);
 		if (command[i].type == WORD || command[i].type == CODE)
 			cmd_args = create_cmd_args(command, &i, garbage);
 		if (command[i].type == PIPE)
@@ -151,7 +151,7 @@ void	handle_command(char *input, t_code *code, char **envp, t_alloc *garbage)
 			if (execute_builtins(cmd_args, envp, code, garbage) == -1)
 				execute_non_builtin(envp, code, cmd_args, garbage);
 		}
-		printf("cmd %d type = %d\n", i, command[i].type);
+		// printf("cmd %d type = %d\n", i, command[i].type);
 	}
 }
 
