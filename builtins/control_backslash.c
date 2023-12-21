@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 15:13:39 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/18 15:45:29 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/21 15:36:05 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	init_sigactionsq(struct sigaction *sq)
 	{
 		perror("SIGQUIT");
 		return (-1);
-	}
+	}					
 	return (0);
 }
 

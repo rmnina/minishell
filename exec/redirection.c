@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 17:13:45 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/13 18:33:01 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/21 14:05:52 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,9 +62,6 @@ int	init_redirection(t_command *command, int *i, char **cmd_args, char **envp, t
 	int		status;
 	t_alloc	*son_garb;
 
-	// if (command[*i].type == DB_LEFT_CHEV)
-	// 	return (-1);
-	// 	//heredoc;
 	son_garb = NULL;
 	fd = 0;
 	pid = fork();

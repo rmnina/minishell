@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 15:13:20 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/18 16:13:39 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/21 15:20:40 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,26 +23,34 @@ int	init_sigactionsa(struct sigaction *sa)
 	}
 	ft_bzero(sa, sizeof(sa));
 	sa->sa_handler = sigint_handler;
-	sigemptyset(&sa->sa_mask);
-    sa->sa_flags = 0;
+	//sigemptyset(&sa->sa_mask);
+    sa->sa_flags = SA_RESTART;
 	sigaction(SIGINT, sa, NULL);
 
 	return (0);
 }
 
+void	sigint_child(int signum)
+{
+	
+}
+
 void	sigint_handler(int signum)
 {
-	(void)signum;;
-	g_sigint = 1;
-	//printf("Signal SIGINT reçu\n"); 
-	rl_replace_line("", 0);
-	//printf("rl_replace_line(\"\", 0) exécuté.\n");
-	write(STDOUT_FILENO, "\n", 1);
-	//printf("Nouvelle ligne affichée\n");
-	rl_on_new_line();
-	//printf("rl_on_new_line() exécuté.\n");
-	rl_redisplay();
-	//printf("rl_redisplay() exécuté.\n");
 
+	if (signum == SIGINT)
+	{
+		rl_replace_line("", 0);
+		write(STDOUT_FILENO, "\n", 1);
+		rl_on_new_line();
+		printf("getpid = %d\n", getpid());
+			//rl_redisplay();
+		g_sigint = 1;
+	}
+	else if (signum == SIGQUIT)
+	{
+		perror("SIGQUIT");
+		return (-1);
+	}
 }
 
