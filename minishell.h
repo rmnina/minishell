@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:03:22 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/21 18:56:16 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/21 19:34:41 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,6 +140,7 @@ void		child_handler(int signum);
 int			process_prompt(void);
 void		sigint_handler(int signum);
 int			init_sigactionsa(struct sigaction *sa);
+int			init_sigquit(void);
 
 //heredoc
 int			heredoc(const char *delimiter, t_pipe *pipes, char **argv, \
