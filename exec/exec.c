@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/21 15:57:54 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/21 19:01:40 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,22 +117,20 @@ char	**create_cmd_args(t_command *command, int *i, t_alloc *garbage)
 	cmd_args = garb_malloc(sizeof(char *), ft_count(command, i) + 1, &garbage);
 	if (!cmd_args)
 		return (NULL);
-	while (command[*i].type == WORD)
+	while (command[*i].type == WORD || command[*i].type == CODE)
 	{
 		cmd_args[j] = ft_strjoin(cmd_args[j], command[*i].word, garbage);
+		printf("args = %s\n", cmd_args[j]);
 		if (!cmd_args[j])
 			return (NULL);
 		*i += 1;
 		j++;
 	}
-	// for (int j = 0; cmd_args[j]; j++)
-		// printf("%s, i = %d\n", cmd_args[j], *i);
 	return (cmd_args);
 }
 
 void	handle_command(char *input, t_code *code, char **envp, t_alloc *garbage)
 {
-	//printf("handle_command: Entrée\n");
 	t_command	*command;
 	t_pipe		pipes;
 	char		**cmd_args;
@@ -142,50 +140,32 @@ void	handle_command(char *input, t_code *code, char **envp, t_alloc *garbage)
 	i = 0;
 	exec = 0;
 	command = ft_parsing(input, garbage);
-	//printf("handle_command: Commande parsée\n"); 
+	if (command == NULL)
+		return ;
 	cmd_args = NULL;
 	while (command[i].type != 0)
 	{
-		//printf("handle_command: Boucle while, index i = %d\n, exec = %d\n", i, exec); 
-		if (command[i].type == WORD || command[i].type == 0)
-		{
-			//printf("handle_command: Création des arguments de commande\n");
+		if (command[i].type == WORD || command[i].type == 0 || command[i].type == CODE)
 			cmd_args = create_cmd_args(command, &i, garbage);
-		}
 		if (command[i].type == PIPE)
 		{
-			// printf("handle_command: Traitement du pipe\n"); 
 			ft_multipipes(command, garbage, envp, cmd_args, &i, code);
 			exec++;
-			//printf("handle_command: Après traitement du pipe, exec = %d\n", exec);
 		}
 		if (command[i].type >= LEFT_CHEV && command[i].type <= DB_RIGHT_CHEV)
-		{
-			//printf("handle_command: Traitement d'une redirection\n"); 
 			exec = init_redirection(command, &i, cmd_args, envp, code);
-			//printf("handle_command: Après traitement d'une redirection, exec = %d\n", exec);
-		}
 		if (command[i].type == DB_LEFT_CHEV)
 		{
-			//printf("handle_command: Entrée dans heredoc\n"); 
 			heredoc(command[i + 1].word, &pipes, cmd_args, envp, garbage);
-			//printf("handle_command: Sortie de heredoc\n");
-			exec = 0;
 		}
 		if (cmd_args != NULL && exec == 0)
 		{
-			//printf("handle_command: Exécution de la commande\n"); 
 			if (execute_builtins(cmd_args, envp, code, garbage) == -1)
-			{
-				//printf("handle_command: Exécution d'une commande non intégrée\n");
 				execute_non_builtin(envp, code, cmd_args, garbage);
-				//printf("handle_command: Retour d'une commande non intégrée\n");
-			}
-			//printf("handle_command: Après exécution de la commande, exec = %d\n", exec);
 		}
-		//printf("handle_command: Fin de l'itération, i = %d\n, exec = %d\n", i, exec); 
+		else
+			i++;
 	}
-	//printf("handle_command: Sortie\n");
 }
 
 

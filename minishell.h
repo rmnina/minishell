@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:03:22 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/21 15:59:12 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/21 19:01:46 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,8 +85,8 @@ extern volatile int	g_sigint;
 
 //Lexer
 int			is_in_quote(char c, t_quotes *quotes);
-void		error_quotes(char *line, t_quotes *quotes);
-void		ft_error_lexer(t_command *command, t_alloc *garbage);
+int			error_quotes(char *line, t_quotes *quotes);
+int			ft_error_lexer(t_command *command);
 int			special_types(char c1, char c2);
 void		get_type(t_command *token, t_quotes *quotes);
 int			is_expand(char *line);
@@ -112,7 +112,7 @@ int			special_type_expand(char c1, char c2);
 char		*find_command_in_segment(char *segment, char *command, t_alloc *garbage);
 char		*find_command_path(char *command, t_alloc *garbage);
 void		execute_command(char **cmd_args, char **envp, t_alloc *garbage);
-void		handle_command(char *input, t_code *code, char **envp, t_alloc *garbage);
+void			handle_command(char *input, t_code *code, char **envp, t_alloc *garbage);
 int			execute_non_builtin(char **envp, t_code *code, char **cmd_args, t_alloc *garbage);
 void		heredoc_child(t_pipe *pipes, char **argv, char **envp, t_alloc *garbage);
 char		**create_cmd_args(t_command *command, int *i, t_alloc *garbage);

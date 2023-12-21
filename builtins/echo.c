@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 16:06:16 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/04 15:22:36 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/21 16:52:06 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,15 +19,23 @@ int	ft_echo(char **argv, t_code *code)
 
 	i = 1;
 	line = 1;
-	if (argv[1] != NULL && strcmp(argv[1], "-n") == 0)
+	if (argv[1] != NULL && ft_strcmp(argv[1], "-n") == 0)
 	{
 		line = 0;
 		i++;
 	}
-	while (argv[i] != NULL)
+	while (argv[i])
 	{
-		printf("%s", argv[i]);
-		if (argv[i + 1] != NULL)
+		if (argv[i] && ft_strcmp(argv[i], "$?") == 0)
+		{
+			if (!code->code_status)
+				printf("0");
+			else
+				printf("%d", code->code_status);
+		}
+		else
+			printf("%s", argv[i]);
+		if (argv[i + 1])
 			printf(" ");
 		i++;
 	}

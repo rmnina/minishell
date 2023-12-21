@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:45:11 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/21 15:58:27 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/21 19:19:19 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ int	main(int argc, char **argv, char **envp)
 	char				*line;
 	t_alloc				*garbage;
 	struct sigaction	sa;
-	struct sigaction	sq;
 
 	(void)argv;
 	code = NULL;
@@ -52,10 +51,11 @@ int	main(int argc, char **argv, char **envp)
 		{
 			add_history(line);
 			handle_command(line, code, envp, garbage);
-			//printf("Boucle principale: après handle_command\n");
 			free(line);
 		}
 	}
 	clear_history();
+	if (garbage)
+		free_garbage(&garbage, 0);
 	return (0);
 }

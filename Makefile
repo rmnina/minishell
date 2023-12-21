@@ -6,7 +6,7 @@
 #    By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/14 14:15:25 by jdufour           #+#    #+#              #
-#    Updated: 2023/12/21 15:58:43 by jdufour          ###   ########.fr        #
+#    Updated: 2023/12/21 16:50:49 by jdufour          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,6 @@ NAME = minishell
 
 SRCS = main.c \
 	builtins/cd.c \
-	builtins/code.c \
 	builtins/echo.c \
 	builtins/env.c \
 	builtins/exit.c \
@@ -45,7 +44,7 @@ OBJS = $(SRCS:.c=.o)
 
 CC = gcc
 
-FLAGS = -g -Wall -Wextra -Werror
+FLAGS = -g -ggdb -Wall -Wextra -Werror
 
 RM = rm -rf
 

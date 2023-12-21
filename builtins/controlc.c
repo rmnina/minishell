@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   controlc.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 15:13:20 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/21 15:20:40 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/21 16:02:55 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,10 @@ int	init_sigactionsa(struct sigaction *sa)
 	return (0);
 }
 
-void	sigint_child(int signum)
-{
+// void	sigint_child(int signum)
+// {
 	
-}
+// }
 
 void	sigint_handler(int signum)
 {
@@ -50,7 +50,7 @@ void	sigint_handler(int signum)
 	else if (signum == SIGQUIT)
 	{
 		perror("SIGQUIT");
-		return (-1);
+		// return (-1);
 	}
 }
 

@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:04:36 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/14 17:31:36 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/21 18:41:23 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,9 @@ t_command	get_token(char *line, t_quotes *quotes, int *i, t_alloc *garbage)
 	while (line[*i])
 	{
 		is_in_quote(line[*i], quotes);
-		if ((special_types(line[*i], line[*i + 1]) == EXPAND \
+		if (parse_quotes(line, i, quotes) == 1 || !line[*i])
+			break ;
+		else if ((special_types(line[*i], line[*i + 1]) == EXPAND \
 		&& quotes->case_single == FALSE) || quotes->var != NULL)
 		{
 			if (get_lex_expand(line, i, quotes, &token, garbage) == 1)
@@ -84,8 +86,6 @@ t_command	get_token(char *line, t_quotes *quotes, int *i, t_alloc *garbage)
 			else if (get_lex_expand(line, i, quotes, &token, garbage) == -1)
 				*i += 1;
 		}
-		else if (parse_quotes(line, i, quotes) == 1 || !line[*i])
-			break ;
 		else if (quotes->case_quotes == FALSE && special_types(line[*i], line[*i + 1]) != 0 \
 		&& special_types(line[*i], line[*i + 1]) != EXPAND)
 		{
@@ -152,6 +152,8 @@ t_command	*get_command(char *line, t_quotes *quotes, t_alloc *garbage)
 		}
 	}
 	command = ft_struct_join(command, token_null(&token, garbage), garbage);
+	for (int j = 0; command[j].type != 0; j++)
+		printf("token = %s\n", command[j].word);
 	return (command);
 }
 
