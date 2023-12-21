@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:03:22 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/14 17:20:26 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/21 15:59:12 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@
 # include "libft/libft.h"
 # include <math.h>
 # include <signal.h>
+# include <errno.h>
 
 enum e_type {
 	WORD = 1,
@@ -80,6 +81,8 @@ typedef struct s_line {
 	struct s_line	*next;
 }	t_line;
 
+extern volatile int	g_sigint;
+
 //Lexer
 int			is_in_quote(char c, t_quotes *quotes);
 void		error_quotes(char *line, t_quotes *quotes);
@@ -116,22 +119,10 @@ char		**create_cmd_args(t_command *command, int *i, t_alloc *garbage);
 void		pick_command(char **cmd_args, char **envp, t_code *code, t_alloc *garbage);
 
 //Redirection 
-void		pid_redir(t_command *command, char **argv, char **envp, t_code *code, t_alloc *garbage);
 int			init_redirection(t_command *command, int *i, char **cmd_args, char **envp, t_code *code);
-//int			handle_redirection(t_code *code, t_command *command, char **argv, char **envp);
-int 		handle_redirection(t_code *code, int *i, t_command *command, char **envp, t_alloc *garbage);
-void		execute_redirection(t_command *exec, char **argv, char **envp, t_alloc *garbage);
-void		set_redirection_type(t_command *exec, char *symbol, char *file);
-void		redir_symbol(t_command *command, int *j, t_alloc *garbage);
-void		init_exec_struct(t_command *exec);
+
 
 //Pipe
-// void		execute_pipe(t_pipe *pipes, char **envp, t_code *code, t_alloc *garbage);
-// void		process_pipe(char **cmd_args, t_pipe *pipes, char **envp, t_alloc *garbage);
-// void		split_command_for_pipes(char **cmd_args, t_command *command, 
-// t_pipe *pipes, int *i, t_alloc *garbage);
-// //void		split_command_for_pipes(t_command *commands, t_pipe *pipes);
-// // int			commands_with_pipes_detected(char *input);
 pid_t		heredoc_pipe(t_pipe *pipes);
 void		ft_multipipes(t_command *command, t_alloc *garbage, char **envp, char **cmd_args, int *i, t_code *code);
 

@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 10:21:29 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/13 13:34:30 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/21 15:07:25 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,20 +57,25 @@ char	*find_command_path(char *command, t_alloc *garbage)
 
 void	execute_command(char **cmd_args, char **envp, t_alloc *garbage)
 {
-	char		*path;
+	char	*path;
 
+	///printf("execute_command: Entrée\n");
 	if (!cmd_args)
 	{
 		perror("Error creating command args");
 		exit(EXIT_FAILURE);
 	}
 	path = find_command_path(cmd_args[0], garbage);
+	//printf("execute_command: Chemin de la commande: %s\n", path ? path : "NULL");
 	if (!path)
 	{
 		perror("Command not found");
 		exit(127);
 	}
+	//printf("execute_command: Exécution de execve\n");
 	execve(path, cmd_args, envp);
+	//printf("execute_command: execve échoué, sortie\n");
 	perror("execve");
+	//printf("execute_command: execve échoué, sortie\n");
 	exit(EXIT_FAILURE);
 }

@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   controlc.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 15:13:20 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/12 23:00:22 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/21 15:20:40 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 #include <signal.h>
+
 
 int	init_sigactionsa(struct sigaction *sa)
 {
@@ -20,16 +21,36 @@ int	init_sigactionsa(struct sigaction *sa)
 		printf("Erreur : pointeur NULL vers struct sigactionsa.\n");
 		return (-1);
 	}
+	ft_bzero(sa, sizeof(sa));
 	sa->sa_handler = sigint_handler;
-    sa->sa_flags = 0;
-	// sigemptyset(&sa->sa_mask);
+	//sigemptyset(&sa->sa_mask);
+    sa->sa_flags = SA_RESTART;
 	sigaction(SIGINT, sa, NULL);
 
 	return (0);
 }
 
+void	sigint_child(int signum)
+{
+	
+}
+
 void	sigint_handler(int signum)
 {
-	(void)signum;
-	write(STDOUT_FILENO, "\nminishell > ", 13);
+
+	if (signum == SIGINT)
+	{
+		rl_replace_line("", 0);
+		write(STDOUT_FILENO, "\n", 1);
+		rl_on_new_line();
+		printf("getpid = %d\n", getpid());
+			//rl_redisplay();
+		g_sigint = 1;
+	}
+	else if (signum == SIGQUIT)
+	{
+		perror("SIGQUIT");
+		return (-1);
+	}
 }
+

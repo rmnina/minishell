@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/18 15:25:19 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/21 15:57:54 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ int	execute_builtins(char **cmd_args, char **envp, t_code *code, t_alloc *garbag
 
 int	execute_non_builtin(char **envp, t_code *code, char **cmd_args, t_alloc *garbage)
 {
+	//printf("execute_non_builtin: Entrée\n");
 	pid_t	pid;
 	int		status;
 
@@ -54,14 +55,22 @@ int	execute_non_builtin(char **envp, t_code *code, char **cmd_args, t_alloc *gar
 	}
 	else if (pid == 0)
 	{
+		//printf("execute_non_builtin: Dans le processus enfant\n");
 		execute_command(cmd_args, envp, garbage);
+		//printf("execute_non_builtin: Processus enfant terminé\n");
+        exit(EXIT_SUCCESS);
 	}
 	else
 	{
+		//printf("execute_non_builtin: Dans le processus parent, en attente de l'enfant\n");
 		waitpid(pid, &status, 0);
 		if (WIFEXITED(status))
+		{
 			code->code_status = WEXITSTATUS(status);
+			//printf("execute_non_builtin: Processus enfant s'est terminé avec le statut: %d\n", code->code_status);
+		}
 	}
+	//printf("execute_non_builtin: Sortie\n");
 	return (-1);
 }
 
@@ -123,7 +132,9 @@ char	**create_cmd_args(t_command *command, int *i, t_alloc *garbage)
 
 void	handle_command(char *input, t_code *code, char **envp, t_alloc *garbage)
 {
+	//printf("handle_command: Entrée\n");
 	t_command	*command;
+	t_pipe		pipes;
 	char		**cmd_args;
 	int			i;
 	int			exec;
@@ -131,28 +142,50 @@ void	handle_command(char *input, t_code *code, char **envp, t_alloc *garbage)
 	i = 0;
 	exec = 0;
 	command = ft_parsing(input, garbage);
+	//printf("handle_command: Commande parsée\n"); 
 	cmd_args = NULL;
 	while (command[i].type != 0)
 	{
-		// printf("token[%d].type = %d, word = %s\n", i, command[i].type, command[i].word);
-		if (command[i].type == WORD || command[i].type == CODE)
+		//printf("handle_command: Boucle while, index i = %d\n, exec = %d\n", i, exec); 
+		if (command[i].type == WORD || command[i].type == 0)
+		{
+			//printf("handle_command: Création des arguments de commande\n");
 			cmd_args = create_cmd_args(command, &i, garbage);
+		}
 		if (command[i].type == PIPE)
 		{
+			// printf("handle_command: Traitement du pipe\n"); 
 			ft_multipipes(command, garbage, envp, cmd_args, &i, code);
 			exec++;
+			//printf("handle_command: Après traitement du pipe, exec = %d\n", exec);
 		}
 		if (command[i].type >= LEFT_CHEV && command[i].type <= DB_RIGHT_CHEV)
+		{
+			//printf("handle_command: Traitement d'une redirection\n"); 
 			exec = init_redirection(command, &i, cmd_args, envp, code);
-		if (command[i].type == CODE)
-			exec = execute_status_builtin(code, &i);
+			//printf("handle_command: Après traitement d'une redirection, exec = %d\n", exec);
+		}
+		if (command[i].type == DB_LEFT_CHEV)
+		{
+			//printf("handle_command: Entrée dans heredoc\n"); 
+			heredoc(command[i + 1].word, &pipes, cmd_args, envp, garbage);
+			//printf("handle_command: Sortie de heredoc\n");
+			exec = 0;
+		}
 		if (cmd_args != NULL && exec == 0)
 		{
+			//printf("handle_command: Exécution de la commande\n"); 
 			if (execute_builtins(cmd_args, envp, code, garbage) == -1)
+			{
+				//printf("handle_command: Exécution d'une commande non intégrée\n");
 				execute_non_builtin(envp, code, cmd_args, garbage);
+				//printf("handle_command: Retour d'une commande non intégrée\n");
+			}
+			//printf("handle_command: Après exécution de la commande, exec = %d\n", exec);
 		}
-		// printf("cmd %d type = %d\n", i, command[i].type);
+		//printf("handle_command: Fin de l'itération, i = %d\n, exec = %d\n", i, exec); 
 	}
+	//printf("handle_command: Sortie\n");
 }
 
 
