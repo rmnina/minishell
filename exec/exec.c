@@ -6,11 +6,13 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/21 19:01:40 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/21 19:41:45 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+
 
 int	execute_builtins(char **cmd_args, char **envp, t_code *code, t_alloc *garbage)
 {
@@ -40,9 +42,9 @@ int	execute_builtins(char **cmd_args, char **envp, t_code *code, t_alloc *garbag
 	return (-1);
 }
 
+
 int	execute_non_builtin(char **envp, t_code *code, char **cmd_args, t_alloc *garbage)
 {
-	//printf("execute_non_builtin: Entrée\n");
 	pid_t	pid;
 	int		status;
 
@@ -55,22 +57,20 @@ int	execute_non_builtin(char **envp, t_code *code, char **cmd_args, t_alloc *gar
 	}
 	else if (pid == 0)
 	{
-		//printf("execute_non_builtin: Dans le processus enfant\n");
+	
 		execute_command(cmd_args, envp, garbage);
-		//printf("execute_non_builtin: Processus enfant terminé\n");
-        exit(EXIT_SUCCESS);
+        exit(EXIT_FAILURE);
 	}
 	else
 	{
-		//printf("execute_non_builtin: Dans le processus parent, en attente de l'enfant\n");
+		process_prompt();
 		waitpid(pid, &status, 0);
 		if (WIFEXITED(status))
 		{
 			code->code_status = WEXITSTATUS(status);
-			//printf("execute_non_builtin: Processus enfant s'est terminé avec le statut: %d\n", code->code_status);
 		}
+		
 	}
-	//printf("execute_non_builtin: Sortie\n");
 	return (-1);
 }
 
@@ -95,6 +95,7 @@ void	heredoc_child(t_pipe *pipes, char **argv, char **envp, t_alloc *garbage)
 	new_argv[0] = ft_strdup(argv[0], garbage);
 	new_argv[1] = NULL;
 	execve(path, new_argv, envp);
+	perror("execeve failed");
 	exit(EXIT_FAILURE);
 }
 
@@ -132,7 +133,6 @@ char	**create_cmd_args(t_command *command, int *i, t_alloc *garbage)
 void	handle_command(char *input, t_code *code, char **envp, t_alloc *garbage)
 {
 	t_command	*command;
-	t_pipe		pipes;
 	char		**cmd_args;
 	int			i;
 	int			exec;
@@ -152,12 +152,8 @@ void	handle_command(char *input, t_code *code, char **envp, t_alloc *garbage)
 			ft_multipipes(command, garbage, envp, cmd_args, &i, code);
 			exec++;
 		}
-		if (command[i].type >= LEFT_CHEV && command[i].type <= DB_RIGHT_CHEV)
+		if (command[i].type >= LEFT_CHEV && command[i].type <= DB_LEFT_CHEV)
 			exec = init_redirection(command, &i, cmd_args, envp, code);
-		if (command[i].type == DB_LEFT_CHEV)
-		{
-			heredoc(command[i + 1].word, &pipes, cmd_args, envp, garbage);
-		}
 		if (cmd_args != NULL && exec == 0)
 		{
 			if (execute_builtins(cmd_args, envp, code, garbage) == -1)
@@ -168,58 +164,6 @@ void	handle_command(char *input, t_code *code, char **envp, t_alloc *garbage)
 	}
 }
 
-
-
-
-// void	handle_command(char *input, t_code *code, char **argv, char **envp)
-// {
-//     t_command *command;
-//     t_pipe pipes;
-//     t_quotes quotes = {FALSE, FALSE, FALSE, 0, NULL};
-//     char **cmd_args;
-//     int i = 0;
-
-
-//     command = get_command(input, &quotes);
-
-// 	while (command[i].type != 0)
-// 	{
-// 		if (command[i].type == PIPE)
-// 		{
-//             int cmd_start = i;
-//             while (command[i].type == WORD)
-//                 i++;
-// 			if (command[i].type >= LEFT_CHEV && 
-// 				command[i].type <= DB_RIGHT_CHEV && command[i + 1].type == WORD)
-// 			{
-// 				// cmd_args = create_cmd_args(command + cmd_start);
-// 				// printf("cmd_args created: %s\n", cmd_args[0]);
-// 				// if (command[i + 1].type == WORD)
-// 				// {
-// 					handle_redirection(code, command, argv, envp);
-// 					i += 2;
-// 				// }
-// 			}
-//             else if (command[i].type == PIPE)
-// 			{
-//                 split_command_for_pipes(input, &pipes);
-//                 execute_pipe(&pipes, envp, code);
-//                 break;
-//             }
-//             else
-// 			{
-//                 cmd_args = create_cmd_args(command + cmd_start);
-//                 if (execute_builtins(cmd_args, envp, code) == -1) {
-//                     execute_non_builtin(envp, code, cmd_args);
-//                 }
-//                 i = cmd_start;
-//             }
-//             free_parsed_command_line(cmd_args);
-//         } 
-//         i++; 
-//     }
-//     ft_free_command(command);
-// }
 
 
 
