@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 16:22:53 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/21 15:07:37 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/21 18:16:46 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,6 @@ void	read_add(int fd, const char *delimiter, t_alloc *garbage)
 
 	head = NULL;
 	tail = NULL;
-	printf("read_add: Entrée\n"); 
 	while (1)
 	{
 		line = readline("heredoc> ");
@@ -79,7 +78,6 @@ void	read_add(int fd, const char *delimiter, t_alloc *garbage)
 	}
 	write_pipe(fd, head);
 	free_line_nodes(head);
-	printf("read_add: Sortie\n");
 }
 
 int	heredoc(const char *delimiter, t_pipe *pipes, char **argv, char **envp, t_alloc *garbage)
@@ -91,24 +89,29 @@ int	heredoc(const char *delimiter, t_pipe *pipes, char **argv, char **envp, t_al
 	status = 0;
 	code_status = 0;
 	if (pipe(pipes->fd) == -1)
+	{
+		perror("pipe failed");
 		exit(EXIT_FAILURE);
+	}
 	pid = fork();
 	if (pid == -1)
+	{
+		perror("fork failed");
 		exit(EXIT_FAILURE);
+	}
 	else if (pid == 0)
+	{
 		heredoc_child(pipes, argv, envp, garbage);
+		exit (EXIT_SUCCESS);
+	}
 	else
 	{
-		//printf("heredoc: Dans le processus parent, avant read_add\n"); // Debug
 		read_add(pipes->fd[1], delimiter, garbage);
-		//printf("heredoc: Dans le processus parent, après read_add\n"); // Debug
 		close(pipes->fd[0]);
 		close(pipes->fd[1]);
 		waitpid(pid, &status, 0);
-		//printf("heredoc: Processus parent, après waitpid\n");
 		if (WIFEXITED(status))
 			code_status = WEXITSTATUS(status);
 	}
-	//printf("heredoc: Sortie\n"); 
 	return (code_status);
 }

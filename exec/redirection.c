@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 17:13:45 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/21 14:05:52 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/21 18:13:20 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,12 +61,20 @@ int	init_redirection(t_command *command, int *i, char **cmd_args, char **envp, t
 	pid_t	pid;
 	int		status;
 	t_alloc	*son_garb;
+	t_pipe	pipes;
 
 	son_garb = NULL;
 	fd = 0;
 	pid = fork();
+	if (pid == -1)
+	{
+		perror("fork failed");
+		exit(EXIT_FAILURE);
+	}
 	if (pid == 0)
 	{
+		if (command[*i].type == DB_LEFT_CHEV)
+			heredoc(command[*i + 1].word, &pipes, cmd_args, envp, son_garb);
 		if (command[*i].type == DB_RIGHT_CHEV || \
 		command[*i].type == RIGHT_CHEV)
 		{

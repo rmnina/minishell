@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:45:11 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/21 15:21:40 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/21 18:46:22 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	main(int argc, char **argv, char **envp)
 	char				*line;
 	t_alloc				*garbage;
 	struct sigaction	sa;
-	struct sigaction	sq;
+
 
 	(void)argv;
 	code = NULL;
@@ -36,10 +36,10 @@ int	main(int argc, char **argv, char **envp)
 	if (!code)
 		return (1);
 	code->code_status = 0;
-	if (init_sigactionsa(&sa) == -1)
-		return (1);
 	while (1)
 	{
+		if (init_sigactionsa(&sa) == -1)
+			return (1);
 		line = readline("minishell > ");
 		if (line == NULL)
 		{
@@ -52,11 +52,9 @@ int	main(int argc, char **argv, char **envp)
 		{
 			add_history(line);
 			handle_command(line, code, envp, garbage);
-			//printf("Boucle principale: après handle_command\n");
-			free(line);
 		}
+		free(line);
 	}
 	clear_history();
-	//printf("Fin du minishell.\n");
 	return (0);
 }

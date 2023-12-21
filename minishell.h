@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:03:22 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/18 15:41:01 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/21 18:56:16 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ typedef struct s_line {
 	struct s_line	*next;
 }	t_line;
 
-extern volatile int	g_sigint;
+
 
 //Lexer
 int			is_in_quote(char c, t_quotes *quotes);
@@ -134,9 +134,12 @@ int			ft_pwd(char **unused_args, char **unused_envp, t_code *code);
 int			ft_unset(char ***envp, char **names, t_code *code);
 int			execute_status_builtin(t_code *code);
 int			execute_builtins(char **cmd_args, char **envp, t_code *code, t_alloc *garbage);
+
+//Signaux
+void		child_handler(int signum);
+int			process_prompt(void);
 void		sigint_handler(int signum);
 int			init_sigactionsa(struct sigaction *sa);
-int			init_sigactionsq(struct sigaction *sq);
 
 //heredoc
 int			heredoc(const char *delimiter, t_pipe *pipes, char **argv, \

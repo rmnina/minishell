@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 15:13:20 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/21 15:20:40 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/21 18:55:00 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,15 +24,29 @@ int	init_sigactionsa(struct sigaction *sa)
 	ft_bzero(sa, sizeof(sa));
 	sa->sa_handler = sigint_handler;
 	//sigemptyset(&sa->sa_mask);
-    sa->sa_flags = SA_RESTART;
+    sa->sa_flags = 0;
 	sigaction(SIGINT, sa, NULL);
 
 	return (0);
 }
 
-void	sigint_child(int signum)
+
+void	child_handler(int signum)
 {
-	
+	(void)signum;
+	printf("\n");
+}
+
+int	process_prompt(void)
+{
+	struct sigaction	prompt;
+
+	ft_bzero(&prompt, sizeof(prompt));
+	prompt.sa_handler = child_handler;
+    prompt.sa_flags = 0;
+	sigaction(SIGINT, &prompt, NULL);
+
+	return (0);
 }
 
 void	sigint_handler(int signum)
@@ -43,14 +57,11 @@ void	sigint_handler(int signum)
 		rl_replace_line("", 0);
 		write(STDOUT_FILENO, "\n", 1);
 		rl_on_new_line();
-		printf("getpid = %d\n", getpid());
-			//rl_redisplay();
-		g_sigint = 1;
+		rl_redisplay();
 	}
 	else if (signum == SIGQUIT)
 	{
 		perror("SIGQUIT");
-		return (-1);
 	}
 }
 
