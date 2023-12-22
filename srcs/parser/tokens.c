@@ -6,11 +6,11 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:04:36 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/21 18:41:23 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/22 14:49:43 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../../includes/minishell.h"
 
 // This functions processes built-ins, giving them a token all to
 // themselves. This makes it possible to assign a type so that the 

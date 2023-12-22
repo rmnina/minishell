@@ -6,13 +6,11 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 15:13:20 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/22 14:36:50 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/22 14:50:29 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
-#include <signal.h>
-
+#include "../../includes/minishell.h"
 
 int	init_sigactionsa(struct sigaction *sa)
 {
@@ -39,7 +37,7 @@ int init_sigquit(void)
 	sigemptyset(&quit.sa_mask);
     quit.sa_handler = sigquit_handler;
     quit.sa_flags = 0;
-    sigaction(, &quit, NULL);
+    sigaction(0, &quit, NULL);
 
 	return(0);
 }

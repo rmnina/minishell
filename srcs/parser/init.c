@@ -6,11 +6,11 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 20:18:37 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/21 19:21:11 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/22 14:49:38 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../../includes/minishell.h"
 
 void	init_get_expand(t_command *token, char *line, int *i, t_quotes *quotes, t_alloc *garbage)
 {

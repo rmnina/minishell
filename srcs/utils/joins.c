@@ -6,11 +6,11 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/26 23:39:05 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/10 00:41:11 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/22 14:49:51 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../../includes/minishell.h"
 
 t_command	*ft_struct_join(t_command *tok1, t_command tok2, t_alloc *garbage)
 {

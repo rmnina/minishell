@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:03:22 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/22 14:37:08 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/22 14:48:17 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@
 # include <termios.h>
 # include <curses.h>
 # include <term.h>
-# include "libft/libft.h"
+# include "../libft/libft.h"
 # include <math.h>
 # include <signal.h>
 # include <errno.h>

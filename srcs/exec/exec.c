@@ -6,13 +6,11 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/21 19:41:45 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/22 14:49:19 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
-
-
+#include "../../includes/minishell.h"
 
 int	execute_builtins(char **cmd_args, char **envp, t_code *code, t_alloc *garbage)
 {

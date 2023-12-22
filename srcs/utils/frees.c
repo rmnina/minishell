@@ -1,29 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env.c                                              :+:      :+:    :+:   */
+/*   frees.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/14 11:20:46 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/04 15:22:40 by juandrie         ###   ########.fr       */
+/*   Created: 2023/11/27 02:53:43 by jdufour           #+#    #+#             */
+/*   Updated: 2023/12/22 14:49:48 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../../includes/minishell.h"
 
-int	ft_env(char **envp, t_code *code)
+void	ft_free_command(t_command *command)
 {
 	int	i;
-
+	
+	if (!command)
+		return;
 	i = 0;
-	while (envp[i] != NULL)
+	while (command[i].word != NULL)
 	{
-		printf("%s\n", envp[i]);
+		if (command[i].word)
+			free(command[i].word);
 		i++;
 	}
-	code->code_status = 0;
-	return (0);
+	free(command);
 }
-
-

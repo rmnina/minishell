@@ -6,11 +6,11 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:04:36 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/13 18:19:26 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/22 14:49:05 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../../includes/minishell.h"
 
 // bool	is_valid_number(const char *str, int *num)
 // {
