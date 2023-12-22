@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:45:11 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/21 19:42:52 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/22 14:36:59 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ int	main(int argc, char **argv, char **envp)
 	if (!code)
 		return (1);
 	code->code_status = 0;
+	if (init_sigquit() == -1)
+		return(-1);
 	while (1)
 	{
 		if (init_sigactionsa(&sa) == -1)
