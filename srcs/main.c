@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:45:11 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/22 14:48:03 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/22 15:10:54 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,29 +14,26 @@
 
 volatile int	g_sigint = 0;
 
-
-int	main(int argc, char **argv, char **envp)
+int	init_main(t_code **code, t_alloc *garbage, int argc)
 {
-	t_code				*code;
-	char				*line;
-	t_alloc				*garbage;
-	struct sigaction	sa;
-
-	(void)argv;
-	code = NULL;
-	line = NULL;
-	garbage = NULL;
 	if (argc != 1)
 	{
 		printf("Error arg : no argument required\n");
 		return (1);
 	}
-	code = garb_malloc(sizeof(t_code), 1, &garbage);
-	if (!code)
+	*code = garb_malloc(sizeof(t_code), 1, &garbage);
+	if (!*code)
 		return (1);
-	code->code_status = 0;
+	(*code)->code_status = 0;
 	if (init_sigquit() == -1)
-		return(-1);
+		return (-1);
+	return (0);
+}
+
+int	ft_minishell(char *line, t_code *code, char **envp, t_alloc *garbage)
+{
+	struct sigaction	sa;
+
 	while (1)
 	{
 		if (init_sigactionsa(&sa) == -1)
@@ -56,6 +53,21 @@ int	main(int argc, char **argv, char **envp)
 		}
 		free(line);
 	}
+	return (0);
+}
+
+int	main(int argc, char **argv, char **envp)
+{
+	t_code				*code;
+	char				*line;
+	t_alloc				*garbage;
+
+	(void)argv;
+	code = NULL;
+	line = NULL;
+	garbage = NULL;
+	init_main(&code, garbage, argc);
+	ft_minishell(line, code, envp, garbage);
 	clear_history();
 	if (garbage)
 		free_garbage(&garbage, 0);

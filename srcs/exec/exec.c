@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/22 14:49:19 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/22 15:12:09 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,6 @@ int	execute_non_builtin(char **envp, t_code *code, char **cmd_args, t_alloc *gar
 	}
 	else if (pid == 0)
 	{
-	
 		execute_command(cmd_args, envp, garbage);
         exit(EXIT_FAILURE);
 	}
@@ -64,10 +63,7 @@ int	execute_non_builtin(char **envp, t_code *code, char **cmd_args, t_alloc *gar
 		process_prompt();
 		waitpid(pid, &status, 0);
 		if (WIFEXITED(status))
-		{
 			code->code_status = WEXITSTATUS(status);
-		}
-		
 	}
 	return (-1);
 }
@@ -119,7 +115,7 @@ char	**create_cmd_args(t_command *command, int *i, t_alloc *garbage)
 	while (command[*i].type == WORD || command[*i].type == CODE)
 	{
 		cmd_args[j] = ft_strjoin(cmd_args[j], command[*i].word, garbage);
-		printf("args = %s\n", cmd_args[j]);
+		// printf("args = %s\n", cmd_args[j]);
 		if (!cmd_args[j])
 			return (NULL);
 		*i += 1;

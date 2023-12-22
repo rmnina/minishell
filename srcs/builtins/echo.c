@@ -6,11 +6,24 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 16:06:16 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/22 14:48:36 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/22 14:55:45 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+
+int	code_status(char *str, t_code *code)
+{
+	if (str && ft_strcmp(str, "$?") == 0)
+	{
+		if (!code->code_status)
+			printf("0");
+		else
+			printf("%d", code->code_status);
+		return (1);
+	}
+	return (0);
+}
 
 int	ft_echo(char **argv, t_code *code)
 {
@@ -26,14 +39,7 @@ int	ft_echo(char **argv, t_code *code)
 	}
 	while (argv[i])
 	{
-		if (argv[i] && ft_strcmp(argv[i], "$?") == 0)
-		{
-			if (!code->code_status)
-				printf("0");
-			else
-				printf("%d", code->code_status);
-		}
-		else
+		if (!code_status(argv[i], code))
 			printf("%s", argv[i]);
 		if (argv[i + 1])
 			printf(" ");

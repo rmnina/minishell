@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 10:19:45 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/22 14:49:11 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/22 14:57:29 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,6 @@ int	unset_single_variable(char ***envp, const char *name)
 	return (found);
 }
 
-
 int	ft_unset(char ***envp, char **names, t_code *code)
 {
 	int	i;
@@ -66,5 +65,3 @@ int	ft_unset(char ***envp, char **names, t_code *code)
 	code->code_status = 1;
 	return (code->code_status);
 }
-
-
