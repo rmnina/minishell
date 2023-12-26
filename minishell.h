@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: julietteandrieux <julietteandrieux@stud    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:03:22 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/21 19:34:41 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/25 19:09:55 by julietteand      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ enum e_type {
 # define SINGLE_QUOTE 39
 # define DOUBLE_QUOTE 34
 # define UNDERSCORE 95
+# define SPACE 32
 
 typedef struct s_quotes {
 	bool	case_single;
@@ -80,6 +81,10 @@ typedef struct s_line {
 	struct s_line	*next;
 }	t_line;
 
+typedef struct s_heredocNode {
+    char *delimiter;
+    struct s_heredocNode *next;
+} t_heredocNode;
 
 
 //Lexer
@@ -112,7 +117,7 @@ char		*find_command_path(char *command, t_alloc *garbage);
 void		execute_command(char **cmd_args, char **envp, t_alloc *garbage);
 void		handle_command(char *input, t_code *code, char **envp, t_alloc *garbage);
 int			execute_non_builtin(char **envp, t_code *code, char **cmd_args, t_alloc *garbage);
-void		heredoc_child(t_pipe *pipes, char **argv, char **envp, t_alloc *garbage);
+void		heredoc_child(int read_fd, char **argv, char **envp, t_alloc *garbage);
 char		**create_cmd_args(t_command *command, int *i, t_alloc *garbage);
 void		pick_command(char **cmd_args, char **envp, t_code *code, t_alloc *garbage);
 
@@ -143,7 +148,6 @@ int			init_sigactionsa(struct sigaction *sa);
 int			init_sigquit(void);
 
 //heredoc
-int			heredoc(const char *delimiter, t_pipe *pipes, char **argv, \
-char **envp, t_alloc *garbage);
+int			heredoc(t_heredocNode *heredocList, char **argv, char **envp, t_alloc *garbage);
 
 #endif

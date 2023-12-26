@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   controlc.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: julietteandrieux <julietteandrieux@stud    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 15:13:20 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/21 19:44:02 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/22 12:08:41 by julietteand      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,17 +32,17 @@ void	sigquit_handler(int signum)
 		printf("Quit (core dumped)\n");
 	}
 }
-int init_sigquit(void)
-{
-	struct sigaction	quit;
+//int init_sigquit(void)
+//{
+//	struct sigaction	quit;
 
-	sigemptyset(&quit.sa_mask);
-    quit.sa_handler = sigquit_handler;
-    quit.sa_flags = 0;
-    sigaction(, &quit, NULL);
+//	sigemptyset(&quit.sa_mask);
+//  quit.sa_handler = sigquit_handler;
+//  quit.sa_flags = 0;
+//  sigaction(, &quit, NULL);
 
-	return(0);
-}
+//	return(0);
+//}
 
 void	child_handler(int signum)
 {
@@ -66,7 +66,7 @@ void	sigint_handler(int signum)
 {	
 	if (signum == SIGINT)
 	{
-		rl_replace_line("", 0);
+		//rl_replace_line("", 0);
 		write(STDOUT_FILENO, "\n", 1);
 		rl_on_new_line();
 		rl_redisplay();
