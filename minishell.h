@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julietteandrieux <julietteandrieux@stud    +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:03:22 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/25 19:09:55 by julietteand      ###   ########.fr       */
+/*   Updated: 2023/12/27 12:30:39 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,12 +46,12 @@ enum e_type {
 	DB_RIGHT_CHEV,
 	DB_LEFT_CHEV,
 	EXPAND,
+	CODE,
 };
 
 # define SINGLE_QUOTE 39
 # define DOUBLE_QUOTE 34
 # define UNDERSCORE 95
-# define SPACE 32
 
 typedef struct s_quotes {
 	bool	case_single;
@@ -82,15 +82,14 @@ typedef struct s_line {
 }	t_line;
 
 typedef struct s_heredocNode {
-    char *delimiter;
-    struct s_heredocNode *next;
-} t_heredocNode;
-
+	char					*delimiter;
+	struct s_heredocNode	*next;
+}	t_heredocNode;
 
 //Lexer
 int			is_in_quote(char c, t_quotes *quotes);
-void		error_quotes(char *line, t_quotes *quotes);
-void		ft_error_lexer(t_command *command, t_alloc *garbage);
+int			error_quotes(char *line, t_quotes *quotes);
+int			ft_error_lexer(t_command *command);
 int			special_types(char c);
 void		get_type(t_command *token, t_quotes *quotes);
 int			is_expand(char *line);
@@ -110,14 +109,15 @@ t_command	*ft_parsing(char *line, t_alloc *garbage);
 t_command	*ft_struct_join(t_command *tok1, t_command tok2, t_alloc *garbage);
 void		ft_free_command(t_command *command);
 char		*char_to_str(char c, t_alloc *garbage);
+int			special_type_expand(char c1, char c2);
 
 //Execve
 char		*find_command_in_segment(char *segment, char *command, t_alloc *garbage);
 char		*find_command_path(char *command, t_alloc *garbage);
 void		execute_command(char **cmd_args, char **envp, t_alloc *garbage);
-void		handle_command(char *input, t_code *code, char **envp, t_alloc *garbage);
+void			handle_command(char *input, t_code *code, char **envp, t_alloc *garbage);
 int			execute_non_builtin(char **envp, t_code *code, char **cmd_args, t_alloc *garbage);
-void		heredoc_child(int read_fd, char **argv, char **envp, t_alloc *garbage);
+void		heredoc_child(t_pipe *pipes, char **argv, char **envp, t_alloc *garbage);
 char		**create_cmd_args(t_command *command, int *i, t_alloc *garbage);
 void		pick_command(char **cmd_args, char **envp, t_code *code, t_alloc *garbage);
 
@@ -137,7 +137,7 @@ int			ft_exit(char **cmd_args, t_code *code, t_alloc *garbage);
 int			ft_export(char **envp, t_code *code);
 int			ft_pwd(char **unused_args, char **unused_envp, t_code *code);
 int			ft_unset(char ***envp, char **names, t_code *code);
-int			execute_status_builtin(t_code *code);
+//int			execute_status_builtin(t_code *code, int *i);
 int			execute_builtins(char **cmd_args, char **envp, t_code *code, t_alloc *garbage);
 
 //Signaux
@@ -145,9 +145,9 @@ void		child_handler(int signum);
 int			process_prompt(void);
 void		sigint_handler(int signum);
 int			init_sigactionsa(struct sigaction *sa);
-int			init_sigquit(void);
+// int			init_sigquit(void);
 
 //heredoc
-int			heredoc(t_heredocNode *heredocList, char **argv, char **envp, t_alloc *garbage);
+int			heredoc(t_heredocNode *heredoclist, t_pipe *pipes, char **argv, char **envp, t_alloc *garbage);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:20:25 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/14 16:07:11 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/27 12:13:53 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,4 +74,3 @@ char **cmd_args, int *i, t_code *code)
 	if (old_fd != -1)
 		close(old_fd);
 }
-

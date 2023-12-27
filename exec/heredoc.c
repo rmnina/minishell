@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julietteandrieux <julietteandrieux@stud    +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 16:22:53 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/25 19:26:07 by julietteand      ###   ########.fr       */
+/*   Updated: 2023/12/27 12:13:11 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,6 @@ void	write_pipe(int fd, t_line *head)
 		write(fd, "\n", 1);
 		current = current->next;
 	}
-
 }
 
 
@@ -58,50 +57,47 @@ void	read_add(int fd, const char *delimiter, t_alloc *garbage)
 	t_line	*node;
 	t_line	*head;
 	t_line	*tail;
-	
+
 	head = NULL;
 	tail = NULL;
 	while (1)
 	{
-		line = readline("heredoc> ");
+		line = readline("> ");
 		if (!line || ft_strcmp(line, delimiter) == 0)
 		{
 			free(line);
 			break ;
 		}
 		node = new_line(line, garbage);
-		free(line);
 		if (!head)
 			head = node;
 		else
 			tail->next = node;
 		tail = node;
+		free(line);
 	}
 	write_pipe(fd, head);
 	free_line_nodes(head);
-	close(fd);
+	close (fd);
 }
 
-/*
-int	heredoc(t_heredocNode *heredocList, t_pipe *pipes, char **argv, char **envp, t_alloc *garbage)
+
+int	heredoc(t_heredocNode *heredoclist, t_pipe *pipes, char **argv, char **envp, t_alloc *garbage)
 {
-	pid_t	pid;
-	int		status;
-	int		code_status;
-	t_heredocNode *current = heredocList;
+	pid_t			pid;
+	int				status;
+	int				code_status;
+	t_heredocNode	*current;
 
 	status = 0;
 	code_status = 0;
-	printf("Début de la fonction heredoc\n");
+	current = heredoclist;
 	while (current != NULL)
 	{
 		pipe(pipes->fd);
-		printf("Pipe créé avec succès. pipes->fd[0]=%d, pipes->fd[1]=%d\n", pipes->fd[0], pipes->fd[1]);
 		read_add(pipes->fd[1], current->delimiter, garbage);
-		//close(pipes->fd[1]);
-    	current = current->next;
+		current = current->next;
 	}
-	printf("Lancement du processus parent\n");
 	pid = fork();
 	if (pid == -1)
 	{
@@ -110,7 +106,6 @@ int	heredoc(t_heredocNode *heredocList, t_pipe *pipes, char **argv, char **envp,
 	}
 	else if (pid == 0)
 	{
-        printf("rentre dans la fonction heredoc child");
 		heredoc_child(pipes, argv, envp, garbage);
 		exit (EXIT_SUCCESS);
 	}
@@ -118,74 +113,9 @@ int	heredoc(t_heredocNode *heredocList, t_pipe *pipes, char **argv, char **envp,
 	{
 		close(pipes->fd[0]);
 		close(pipes->fd[1]);
-		printf("Attente de la fin du processus parent\n");
 		waitpid(pid, &status, 0);
 		if (WIFEXITED(status))
 			code_status = WEXITSTATUS(status);
 	}
 	return (code_status);
-}
-*/
-
-
-int heredoc(t_heredocNode *heredocList, char **argv, char **envp, t_alloc *garbage) {
-    pid_t pid;
-    int status;
-    int common_pipe[2]; // Pipe commun pour le contenu des heredocs
-	int code_status = 0;
-	
-    if (pipe(common_pipe) == -1) {
-        perror("pipe failed");
-        exit(EXIT_FAILURE);
-    }
-
-    t_heredocNode *current = heredocList;
-    printf("Début de la fonction heredoc\n");
-
-    while (current != NULL) {
-        int heredoc_pipe[2];
-        if (pipe(heredoc_pipe) == -1) {
-            perror("pipe failed");
-            exit(EXIT_FAILURE);
-        }
-
-        pid = fork();
-        if (pid == -1) {
-            perror("fork failed");
-            exit(EXIT_FAILURE);
-        } else if (pid == 0) { // Processus enfant
-            close(heredoc_pipe[0]);
-            read_add(heredoc_pipe[1], current->delimiter, garbage);
-            exit(EXIT_SUCCESS);
-        } else { // Processus parent
-            close(heredoc_pipe[1]);
-            // Lire depuis heredoc_pipe[0] et écrire dans common_pipe[1]
-            char buffer[1024];
-            ssize_t bytesRead;
-            while ((bytesRead = read(heredoc_pipe[0], buffer, sizeof(buffer))) > 0) {
-                write(common_pipe[1], buffer, bytesRead);
-            }
-            close(heredoc_pipe[0]);
-            waitpid(pid, NULL, 0);
-        }
-        current = current->next;
-    }
-    close(common_pipe[1]); // Ferme l'écriture du pipe commun
-
-    // Processus final pour exécuter la commande
-    pid = fork();
-    if (pid == -1) {
-        perror("fork failed");
-        exit(EXIT_FAILURE);
-    } else if (pid == 0) {
-        heredoc_child(common_pipe[0], argv, envp, garbage);
-        exit(EXIT_SUCCESS);
-    } else {
-        close(common_pipe[0]); // Ferme la lecture du pipe commun
-        waitpid(pid, &status, 0);
-		if (WIFEXITED(status))
-			code_status = WEXITSTATUS(status);
-		printf("Processus final heredoc_child terminé.\n");
-    }
-    return (code_status);
 }

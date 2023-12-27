@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 20:18:37 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/13 16:10:13 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/27 12:30:17 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,10 @@ t_command	*ft_parsing(char *line, t_alloc *garbage)
 	quotes.case_single = FALSE;
 	quotes.var = NULL;
 	quotes.vpos = 0;
-	error_quotes(line, &quotes);
+	if (error_quotes(line, &quotes) == -1)
+		return (command = NULL);
 	command = get_command(line, &quotes, garbage);
-	ft_error_lexer(command, garbage);
+	if (ft_error_lexer(command) == -1)
+		return (command = NULL);
 	return (command);
 }

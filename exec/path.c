@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   path.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julietteandrieux <julietteandrieux@stud    +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 10:21:29 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/22 12:41:43 by julietteand      ###   ########.fr       */
+/*   Updated: 2023/12/27 12:14:09 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ char	*find_command_path(char *command, t_alloc *garbage)
 void	execute_command(char **cmd_args, char **envp, t_alloc *garbage)
 {
 	char	*path;
-	
+
 	path = NULL;
 	if (!cmd_args)
 	{

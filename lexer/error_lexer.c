@@ -6,18 +6,24 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 02:11:36 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/12 18:34:18 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/27 12:26:30 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+int	ft_error(char *str)
+{
+	printf("%s\n", str);
+	return (-1);
+}
 
 // This function checks for lexer errors in quotes. It uses the 
 // booleand set by is_in_quotes(), and returns an error if the 
 // latter indicates the presence of an unmatch opening quote
 // without a closing quote.
 
-void	error_quotes(char *line, t_quotes *quotes)
+int	error_quotes(char *line, t_quotes *quotes)
 {
 	int	i;
 
@@ -28,15 +34,10 @@ void	error_quotes(char *line, t_quotes *quotes)
 		i++;
 	}
 	if (quotes->case_double == TRUE)
-	{
-		printf("minishell: syntax error near unexpected token \"\n");
-		exit(2);
-	}
+		return (ft_error("minishell: syntax error near unexpected token \""));
 	else if (quotes->case_single == TRUE)
-	{
-		printf("minishell: syntax error near unexpected token \'\n");
-		exit(2);
-	}
+		return (ft_error("minishell: syntax error near unexpected token \'"));
+	return (0);
 }
 
 // The 2 following functions checks for parsing error once the array
@@ -44,30 +45,27 @@ void	error_quotes(char *line, t_quotes *quotes)
 // of commands with pipes or redirections ; the seconds only focuses
 // on the number of > or <.
 
-void	error_use_types(t_command *command, t_alloc *garbage)
+int	error_use_types(t_command *command)
 {
 	int	i;
 
 	i = 0;
 	if (!command[0].type)
-		return ;
+		return (-1);
 	if (command[0].type == PIPE)
-	{
-		printf("minishell : syntax error near unexpected token '|'");
-		free_garbage(&garbage, 2);
-	}
+		return \
+		(ft_error("minishell : syntax error near unexpected token '|'"));
 	while (command[i].type)
 		i++;
 	i--;
 	if (command[i].type == RIGHT_CHEV || command[i].type == LEFT_CHEV \
 	|| command[i].type == DB_RIGHT_CHEV || command[i].type == DB_LEFT_CHEV)
-	{
-		printf("minishell : syntax error near unexpected token 'newline'\n");
-		free_garbage(&garbage, 2);
-	}
+		return \
+		(ft_error("minishell : syntax error near unexpected token 'newline'"));
+	return (0);
 }
 
-void	error_nonexistent_type(t_command *command, t_alloc *garbage)
+int	error_nonexistent_type(t_command *command)
 {
 	int	i;
 	int	j;
@@ -76,24 +74,26 @@ void	error_nonexistent_type(t_command *command, t_alloc *garbage)
 	j = 1;
 	while (command[i].type && command[j].type)
 	{
-		if (command[i].type == 5 && command[j].type == 3)
-		{
-			printf("minishell: syntax error near unexpected token '<'\n");
-			free_garbage(&garbage, 2);
-		}
-		else if (command[i].type == 6 && command[j].type == 4)
-		{
-			printf("minishell: syntax error near unexpected token '>'\n");
-			free_garbage(&garbage, 2);
-		}
+		if (command[i].type && command[j].type && \
+		((command[i].type == 5 && command[j].type == 4) || \
+		(command[i].type == 5 && command[j].type == 5)))
+			return \
+			(ft_error("minishell: syntax error near unexpected token '>'"));
+		else if (command[i].type && command[j].type && \
+		((command[i].type == 6 && command[j].type == 3) || \
+		(command[i].type == 6 && command[j].type == 6)))
+			return \
+			(ft_error("minishell: syntax error near unexpected token '<'"));
 		i++;
 		j++;
 	}
+	return (0);
 }
 
-
-void	ft_error_lexer(t_command *command, t_alloc *garbage)
+int	ft_error_lexer(t_command *command)
 {
-	error_nonexistent_type(command, garbage);
-	error_use_types(command, garbage);
+	if (error_nonexistent_type(command) == -1 \
+	|| error_use_types(command) == -1)
+		return (-1);
+	return (0);
 }

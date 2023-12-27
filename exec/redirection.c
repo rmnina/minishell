@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julietteandrieux <julietteandrieux@stud    +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 17:13:45 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/25 19:17:41 by julietteand      ###   ########.fr       */
+/*   Updated: 2023/12/27 12:14:24 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,42 +54,45 @@ int	redir_input(char *filename)
 	return (fd *= -1);
 }
 
-t_heredocNode *buildHeredocList(t_command *command, int *i)
+
+t_heredocNode	*build_heredoclist(t_command *command, int *i)
 {
-    t_heredocNode *head = NULL, *current = NULL;
+	t_heredocNode	*head;
+	t_heredocNode	*current;
+	t_heredocNode	*new_node;
 
-    while (command[*i].type == DB_LEFT_CHEV)
-    {
-        t_heredocNode *newNode = malloc(sizeof(t_heredocNode));
-        if (!newNode) {
-            perror("Failed to allocate memory for heredoc node");
-            break;
-        }
-        newNode->delimiter = command[*i + 1].word;
-        newNode->next = NULL;
-
-        if (!head) {
-            head = newNode;
-        } else {
-            current->next = newNode;
-        }
-        current = newNode;
-        *i += 2;
-    }
-
-    return head;
+	head = NULL;
+	current = NULL;
+	new_node = NULL;
+	while (command[*i].type == DB_LEFT_CHEV)
+	{
+		new_node = malloc(sizeof(t_heredocNode));
+		if (!new_node)
+		{
+			perror("Failed to allocate memory for heredoc node");
+			break ;
+		}
+		new_node->delimiter = command[*i + 1].word;
+		new_node->next = NULL;
+		if (!head)
+			head = new_node;
+		else
+			current->next = new_node;
+		current = new_node;
+		*i += 2;
+	}
+	return (head);
 }
-
-
 
 int	init_redirection(t_command *command, int *i, char **cmd_args, char **envp, t_code *code)
 {
-	char	*filename;
-	int		fd;
-	pid_t	pid;
-	int		status;
-	t_alloc	*son_garb;
-	//t_pipe	pipes;
+	char			*filename;
+	int				fd;
+	pid_t			pid;
+	int				status;
+	t_alloc			*son_garb;
+	t_pipe			pipes;
+	t_heredocNode	*heredoclist;
 
 	son_garb = NULL;
 	fd = 0;
@@ -101,18 +104,12 @@ int	init_redirection(t_command *command, int *i, char **cmd_args, char **envp, t
 	}
 	if (pid == 0)
 	{
-		t_heredocNode *heredocList = buildHeredocList(command, i);
-		if (heredocList)
-        {
-			heredoc(heredocList, cmd_args, envp, son_garb);
+		heredoclist = build_heredoclist(command, i);
+		if (heredoclist)
+		{
+			heredoc(heredoclist, &pipes, cmd_args, envp, son_garb);
 			exit(EXIT_SUCCESS);
-        }
-		//if (command[*i].type == DB_LEFT_CHEV)
-		//{
-			//heredoc(command[*i + 1].word, &pipes, cmd_args, envp, son_garb);
-			
-			//exit(EXIT_SUCCESS);
-		//}
+		}
 		if (command[*i].type == DB_RIGHT_CHEV || \
 		command[*i].type == RIGHT_CHEV)
 		{
@@ -132,19 +129,19 @@ int	init_redirection(t_command *command, int *i, char **cmd_args, char **envp, t
 		if (execute_builtins(cmd_args, envp, code, son_garb) == -1)
 			execute_non_builtin(envp, code, cmd_args, son_garb);
 		free_garbage(&son_garb, 0);
-		exit(EXIT_SUCCESS);
+		exit(0);
 	}
 	else if (pid > 0)
 	{
 		waitpid(pid, &status, 0);
 		if (WIFEXITED(status))
 		{
-		if (fd < -1)
-			dup2(STDIN_FILENO, fd * -1);
-		else if (fd > 0)
-			dup2(STDOUT_FILENO, fd);
+			if (fd < -1)
+				dup2(STDIN_FILENO, fd * -1);
+			else if (fd > 0)
+				dup2(STDOUT_FILENO, fd);
 		}
 	}
 	*i += 2;
-	return (1); 
+	return (1);
 }

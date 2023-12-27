@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julietteandrieux <julietteandrieux@stud    +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/26 10:00:46 by julietteand      ###   ########.fr       */
+/*   Updated: 2023/12/27 12:13:35 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,32 +57,24 @@ int	execute_non_builtin(char **envp, t_code *code, char **cmd_args, t_alloc *gar
 	}
 	else if (pid == 0)
 	{
-	
 		execute_command(cmd_args, envp, garbage);
-        exit(EXIT_FAILURE);
+		exit(EXIT_FAILURE);
 	}
 	else
 	{
 		process_prompt();
 		waitpid(pid, &status, 0);
 		if (WIFEXITED(status))
-		{
 			code->code_status = WEXITSTATUS(status);
-		}
-		
 	}
 	return (-1);
 }
 
-/*
 void	heredoc_child(t_pipe *pipes, char **argv, char **envp, t_alloc *garbage)
 {
 	char	*path;
 	char	*new_argv[2];
 
-	printf("Début de heredoc_child.\n");
-    printf("pipes->fd[0] (entrée standard): %d\n", pipes->fd[0]);
-    printf("pipes->fd[1] (sortie standard): %d\n", pipes->fd[1]);
 	close(pipes->fd[1]);
 	if (dup2(pipes->fd[0], STDIN_FILENO) == -1)
 	{
@@ -101,34 +93,6 @@ void	heredoc_child(t_pipe *pipes, char **argv, char **envp, t_alloc *garbage)
 	execve(path, new_argv, envp);
 	perror("execeve failed");
 	exit(EXIT_FAILURE);
-}
-*/
-
-
-void heredoc_child(int read_fd, char **argv, char **envp, t_alloc *garbage) {
-    char *path;
-    char *new_argv[2];
-
-    printf("Début de heredoc_child.\n");
-	printf("read fd: %d\n", read_fd);
-    if (dup2(read_fd, STDIN_FILENO) == -1) {
-        perror("dup2");
-        exit(EXIT_FAILURE);
-    }
-    close(read_fd);
-
-    path = find_command_path(argv[0], garbage);
-    if (!path) {
-        perror("path");
-        exit(EXIT_FAILURE);
-    }
-   // new_argv[0] = ft_strdup(argv[0], garbage);
-   // new_argv[1] = NULL;
-   	new_argv[0] = path;
-    new_argv[1] = NULL;
-    execve(path, new_argv, envp);
-    perror("execve failed");
-    exit(EXIT_FAILURE);
 }
 
 
@@ -151,7 +115,7 @@ char	**create_cmd_args(t_command *command, int *i, t_alloc *garbage)
 	cmd_args = garb_malloc(sizeof(char *), ft_count(command, i) + 1, &garbage);
 	if (!cmd_args)
 		return (NULL);
-	while (command[*i].type == WORD)
+	while (command[*i].type == WORD || command[*i].type == CODE)
 	{
 		cmd_args[j] = ft_strjoin(cmd_args[j], command[*i].word, garbage);
 		if (!cmd_args[j])
@@ -172,10 +136,12 @@ void	handle_command(char *input, t_code *code, char **envp, t_alloc *garbage)
 	i = 0;
 	exec = 0;
 	command = ft_parsing(input, garbage);
+	if (command == NULL)
+		return ;
 	cmd_args = NULL;
 	while (command[i].type != 0)
 	{
-		if (command[i].type == WORD || command[i].type == 0)
+		if (command[i].type == WORD || command[i].type == 0 || command[i].type == CODE)
 			cmd_args = create_cmd_args(command, &i, garbage);
 		if (command[i].type == PIPE)
 		{
@@ -189,9 +155,10 @@ void	handle_command(char *input, t_code *code, char **envp, t_alloc *garbage)
 			if (execute_builtins(cmd_args, envp, code, garbage) == -1)
 				execute_non_builtin(envp, code, cmd_args, garbage);
 		}
+		else
+			i++;
 	}
 }
-
 
 
 
