@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:03:22 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/27 12:30:39 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/27 17:14:44 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ typedef struct s_heredocNode {
 int			is_in_quote(char c, t_quotes *quotes);
 int			error_quotes(char *line, t_quotes *quotes);
 int			ft_error_lexer(t_command *command);
-int			special_types(char c);
+int			special_types(char c1, char c2);
 void		get_type(t_command *token, t_quotes *quotes);
 int			is_expand(char *line);
 
@@ -134,7 +134,7 @@ int			ft_cd(char **args, t_code *code);
 int			ft_echo(char **argv, t_code *code);
 int			ft_env(char **envp, t_code *code);
 int			ft_exit(char **cmd_args, t_code *code, t_alloc *garbage);
-int			ft_export(char **envp, t_code *code);
+int			ft_export(char ***envp, char **argv, t_code *code, t_alloc *garbage);
 int			ft_pwd(char **unused_args, char **unused_envp, t_code *code);
 int			ft_unset(char ***envp, char **names, t_code *code);
 //int			execute_status_builtin(t_code *code, int *i);

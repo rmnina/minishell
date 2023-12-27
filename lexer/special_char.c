@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:04:44 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/12 18:34:51 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/27 14:20:41 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,18 +46,33 @@ int	is_in_quote(char c, t_quotes *quotes)
 // in the loop that verifies the input char by char, in order 
 // to find out in which condition to enter.
 
-int	special_types(char c)
+int	special_types(char c1, char c2)
 {
-	if (!c)
+	if (!c1)
 		return (-1);
-	else if (c == '|')
+	else if (c1 == '|')
 		return (PIPE);
-	else if (c == '<')
-		return (LEFT_CHEV);
-	else if (c == '>')
-		return (RIGHT_CHEV);
-	else if (c == '$')
-		return (EXPAND);
+	else if (c1 == '<')
+	{
+		if (c2 && c2 == '<')
+			return (DB_LEFT_CHEV);
+		else
+			return (LEFT_CHEV);
+	}
+	else if (c1 == '>')
+	{
+		if (c2 && c2 == '>')
+			return (DB_RIGHT_CHEV);
+		else
+			return (RIGHT_CHEV);
+	}
+	else if (c1 == '$')
+	{
+		if (c2 && c2 == '?')
+			return (CODE);
+		else if (c2 && ft_isalnum(c2))
+			return (EXPAND);
+	}
 	return (0);
 }
 
@@ -81,6 +96,9 @@ void	get_type(t_command *token, t_quotes *quotes)
 		token->type = DB_RIGHT_CHEV;
 	else if (token->word[0] == '>' && quotes->case_quotes == FALSE)
 		token->type = RIGHT_CHEV;
+	else if (token->word[0] == '$' && token->word[1] && token->word[1] == '?' \
+	&& quotes->case_quotes == FALSE)
+		token->type = CODE;
 	else if (is_expand(token->word) && quotes->case_single == FALSE)
 		token->type = EXPAND;
 	else
@@ -98,7 +116,7 @@ int	is_expand(char *line)
 	i = 0;
 	while (line[i])
 	{
-		if (line[i] == EXPAND)
+		if (line[i] == EXPAND && line[i + 1] && ft_isalnum(line[i + 1]))
 			return (1);
 		i++;
 	}

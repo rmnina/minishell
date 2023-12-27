@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   controlc.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julietteandrieux <julietteandrieux@stud    +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 15:13:20 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/22 12:08:41 by julietteand      ###   ########.fr       */
+/*   Updated: 2023/12/27 12:34:52 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@ int	init_sigactionsa(struct sigaction *sa)
 {
 	ft_bzero(sa, sizeof(sa));
 	sa->sa_handler = sigint_handler;
-	//sigemptyset(&sa->sa_mask);
     sa->sa_flags = 0;
 	sigaction(SIGINT, sa, NULL);
 

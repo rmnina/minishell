@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/27 12:13:35 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/27 17:18:21 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	execute_builtins(char **cmd_args, char **envp, t_code *code, t_alloc *garbag
 		return (ft_exit(cmd_args, code, garbage));
 	if (ft_strcmp(cmd_args[0], "export") == 0
 		&& ft_strlen(cmd_args[0]) == ft_strlen("export"))
-		return (ft_export(envp, code));
+		return (ft_export(&envp, cmd_args, code, garbage));
 	if (ft_strcmp(cmd_args[0], "pwd") == 0
 		&& ft_strlen(cmd_args[0]) == ft_strlen("pwd"))
 		return (ft_pwd(NULL, NULL, code));
