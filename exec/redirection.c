@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 17:13:45 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/27 12:14:24 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/28 14:35:26 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ t_heredocNode	*build_heredoclist(t_command *command, int *i)
 	return (head);
 }
 
-int	init_redirection(t_command *command, int *i, char **cmd_args, char **envp, t_code *code)
+int	init_redirection(t_command *command, int *i, char **cmd_args, char ***envp, t_code *code)
 {
 	char			*filename;
 	int				fd;

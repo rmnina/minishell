@@ -6,21 +6,40 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 20:18:37 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/27 17:10:04 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/28 15:42:57 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	init_get_expand(t_command *token, char *line, int *i, t_quotes *quotes, t_alloc *garbage)
+char	*ft_getenv(char ***envp, const char *name)
+{
+	int	i;
+	int	len;
+
+	i = 0;
+	len = ft_strlen(name);
+	while ((*envp)[i] != NULL)
+	{
+		if (ft_strncmp((*envp)[i], name, len) == 0 && (*envp)[i][len] == '=')
+		{
+			return &((*envp)[i][len + 1]);
+		}
+		i++;
+	}
+	return (NULL);
+}
+
+
+void	init_get_expand(t_command *token, char *line, int *i, t_quotes *quotes, t_alloc *garbage, char ***envp)
 {
 	char	*name;
 
 	if (quotes->var == NULL)
 	{
 		name = get_env_var_name(line, i, garbage);
-		quotes->var = getenv(name);
-		// free(name);
+		quotes->var = ft_getenv(envp, name);
+		//free(name);
 	}
 	name = NULL;
 	token->word = NULL;
@@ -33,7 +52,7 @@ void	init_get_token(t_command *token)
 	token->type = 0;
 }
 
-t_command	*ft_parsing(char *line, t_alloc *garbage)
+t_command	*ft_parsing(char *line, t_alloc *garbage, char ***envp)
 {
 	t_quotes	quotes;
 	t_command	*command;
@@ -44,7 +63,7 @@ t_command	*ft_parsing(char *line, t_alloc *garbage)
 	quotes.vpos = 0;
 	if (error_quotes(line, &quotes) == -1)
 		return (command = NULL);
-	command = get_command(line, &quotes, garbage);
+	command = get_command(line, &quotes, garbage, envp);
 	if (ft_error_lexer(command) == -1)
 		return (command = NULL);
 	return (command);

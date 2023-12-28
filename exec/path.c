@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 10:21:29 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/27 12:14:09 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/28 14:34:54 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ char	*find_command_path(char *command, t_alloc *garbage)
 	return (find_command_in_segment(start, command, garbage));
 }
 
-void	execute_command(char **cmd_args, char **envp, t_alloc *garbage)
+void	execute_command(char **cmd_args, char ***envp, t_alloc *garbage)
 {
 	char	*path;
 
@@ -71,7 +71,7 @@ void	execute_command(char **cmd_args, char **envp, t_alloc *garbage)
 		perror("Command not found");
 		exit(127);
 	}
-	execve(path, cmd_args, envp);
+	execve(path, cmd_args, *envp);
 	perror("execve");
 	exit(EXIT_FAILURE);
 }

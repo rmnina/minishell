@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 16:22:53 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/27 12:13:11 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/28 14:35:46 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ void	read_add(int fd, const char *delimiter, t_alloc *garbage)
 }
 
 
-int	heredoc(t_heredocNode *heredoclist, t_pipe *pipes, char **argv, char **envp, t_alloc *garbage)
+int	heredoc(t_heredocNode *heredoclist, t_pipe *pipes, char **argv, char ***envp, t_alloc *garbage)
 {
 	pid_t			pid;
 	int				status;

@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 09:11:51 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/27 19:16:13 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/28 18:07:11 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,6 @@ char	**copy_envp(char **envp, int new_size, t_alloc *garbage)
 	new_envp = malloc(sizeof(char *) * (new_size + 1));
 	if (new_envp == NULL)
 	{
-		//printf("Échec de l'allocation pour new_envp\n");
 		return (NULL);
 	}
 	while (i < new_size)
@@ -56,16 +55,15 @@ char	**copy_envp(char **envp, int new_size, t_alloc *garbage)
 		if (envp[i] != NULL)
 		{
 			new_envp[i] = ft_strdup(envp[i], garbage);
-			//printf("export %s\n", new_envp[i]);
 			if (new_envp[i] == NULL)
 			{
-                perror("Failed to duplicate string");
-                while (i > 0)
+				perror("Failed to duplicate string");
+				while (i > 0)
 				{
-                    free(new_envp[--i]);
-                }
-                free(new_envp);
-                return NULL;
+					free(new_envp[--i]);
+				}
+				free(new_envp);
+				return (NULL);
 			}
 		}
 		else
@@ -75,13 +73,11 @@ char	**copy_envp(char **envp, int new_size, t_alloc *garbage)
 		i++;
 	}
 	new_envp[new_size] = NULL;
-	//printf("Copie de envp terminée avec succès.\n");
 	return (new_envp);
 }
 
 void	add_or_update_env_var(char ***envp, char *var, t_alloc *garbage)
 {
-	printf("Ajout ou mise à jour de la variable d'environnement: %s\n", var);
 	int		len;
 	int		envp_len;
 	char	**new_envp;
@@ -102,14 +98,13 @@ void	add_or_update_env_var(char ***envp, char *var, t_alloc *garbage)
 	{
 		if (ft_strncmp(new_envp[i], var, len) == 0 && new_envp[i][len] == '=')
 		{
-			printf("Mise à jour de la variable '%s'\n", var);
 			free(new_envp[i]);
 			new_envp[i] = ft_strdup(var, garbage);
 			if (new_envp[i] == NULL)
 			{
-                free(new_envp);
-                return ;
-            }
+				free(new_envp);
+				return ;
+			}
 			found = true;
             break;
 			//free(*envp);
@@ -118,54 +113,77 @@ void	add_or_update_env_var(char ***envp, char *var, t_alloc *garbage)
 		}
 		i++;
 	}
-	printf("Ajout de la nouvelle variable '%s'\n", var);
 	if (!found)
 	{
-		printf("Ajout de la nouvelle variable '%s'\n", var);
 		new_envp[envp_len] = ft_strdup(var, garbage);
 		new_envp[envp_len + 1] = NULL;
-		printf("nouvelle variable: %s\n", var);
 	}
-	// if (new_envp[envp_len] == NULL)
-	// {
-    //     free(new_envp);
-    //     return;
-    // }
-	// new_envp[envp_len + 1] = NULL;
-	printf("Avant la mise à jour: *envp = %p\n", (void *)*envp);
 	*envp = new_envp;
-	printf("Après la mise à jour: *envp = %p\n", (void *)*envp);
+}
+
+bool	is_valid_identifier(const char *str)
+{
+	if (!str || !(*str == '_' || ft_isalpha(*str)))
+		return (false);
+	str++;
+	while (*str)
+	{
+		if (!(*str == '_' || ft_isalnum(*str)))
+			return (false);
+		str++;
+	}
+	return (true);
 }
 
 int	ft_export(char ***envp, char **argv, t_code *code, t_alloc *garbage)
 {
-	//printf("Exécution de ft_export...\n");
-	int	i;
+	int		i;
+	char	*equal;
+	char	*identifier;
 
-	i = 0;
+	equal = NULL;
 	if (argv[1] == NULL) 
 	{
-        while((*envp)[i] != NULL)
+
+		i = 0;
+		while ((*envp)[i] != NULL)
 		{
-			printf("export %s\n", (*envp)[i]);
+			equal = ft_strchr((*envp)[i], '=');
+			if (equal && *(equal + 1) == '\0')
+				printf("export %.*s=\"\"\n", (int)(equal - (*envp)[i]), (*envp)[i]);
+			else
+				printf("export %s\n", (*envp)[i]);
 			i++;
 		}
 		code->code_status = 0;
-		return code->code_status;
+		return (code->code_status);
 	}
 	else
 	{
 		i = 1;
 		while (argv[i] != NULL)
 		{
-			printf("Avant modification, envp[%d] = %s\n", i, (*envp)[i]);
-            printf("Ajout ou mise à jour de: %s\n", argv[i]);
+			equal = ft_strchr(argv[i], '=');
+			if (equal != NULL)
+			{
+				identifier = ft_strndup(argv[i], equal - argv[i], garbage);
+				printf("identifier: %s\n", identifier);
+			}
+			else
+			{
+				identifier = ft_strdup(argv[i], garbage);
+				printf("identifier: %s\n", identifier);
+			}
+			if (!is_valid_identifier(identifier))
+			{
+				printf("export: '%s': not a valid identifier\n", identifier);
+				code->code_status = 1;
+                break ;
+			}
 			add_or_update_env_var(envp, argv[i], garbage);
-			printf("Après modification, envp[%d] = %s\n", i, (*envp)[i]);
 			i++;
 		}
 	}
-	//printf("ft_export terminé avec succès.\n");
 	code->code_status = 0;
 	return (code->code_status);
 }

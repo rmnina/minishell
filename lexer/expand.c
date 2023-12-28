@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 15:15:34 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/09 23:12:11 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/28 16:26:34 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,12 +50,12 @@ void	get_next_part_env_var(t_quotes *quotes, int j)
 // thanks to the elements modified in the t_quotes structs by the
 // previous function.
 
-int	get_lex_expand(char *line, int *i, t_quotes *quotes, t_command *token, t_alloc *garbage)
+int	get_lex_expand(char *line, int *i, t_quotes *quotes, t_command *token, t_alloc *garbage, char ***envp)
 {
 	int		j;
 
 	j = quotes->vpos;
-	init_get_expand(token, line, i, quotes, garbage);
+	init_get_expand(token, line, i, quotes, garbage, envp);
 	if (quotes->var == NULL)
 		return (-1);
 	while (quotes->var[j])

@@ -1,31 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strdup.c                                        :+:      :+:    :+:   */
+/*   ft_strndup.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/31 11:35:08 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/28 17:08:20 by juandrie         ###   ########.fr       */
+/*   Created: 2023/12/28 17:07:39 by juandrie          #+#    #+#             */
+/*   Updated: 2023/12/28 17:12:21 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_strdup(char *src, t_alloc *garbage)
+char	*ft_strndup(char *src, size_t n, t_alloc *garbage)
 {
-	int		i;
 	char	*dest;
+	size_t	len;
 
-	i = 0;
+	len = ft_strlen(src);
+	if (n < len)
+		len = n;
 	dest = garb_malloc(sizeof(char), (ft_strlen(src) + 1), &garbage);
 	if (!(dest))
 		return (NULL);
-	while (src[i])
+	dest[len] = '\0';
+	while (len > 0)
 	{
-		dest[i] = src[i];
-		i++;
+		dest[len] = src[len];
+		len--;
 	}
-	dest[i] = '\0';
 	return (dest);
 }

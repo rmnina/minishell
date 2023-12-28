@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/22 20:14:00 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/12 18:38:23 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/28 17:12:42 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ char		*ft_strnstr(const char *big, const char *little, size_t len);
 long int	ft_atoi(const char *str);
 void		*ft_calloc(size_t nmemb, size_t size);
 char		*ft_strdup(char *src, t_alloc *garbage);
+char		*ft_strndup(char *src, size_t n, t_alloc *garbage);
 char		*ft_substr(const char *s, unsigned int start, size_t len, t_alloc *garbage);
 char		*ft_strjoin(char *s1, const char *s2, t_alloc *garbage);
 char		*ft_strjoin_char(char *s1, const char c, t_alloc *garbage);
