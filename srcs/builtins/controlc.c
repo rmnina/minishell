@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 15:13:20 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/22 14:50:29 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/02 13:25:58 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ int	init_sigactionsa(struct sigaction *sa)
 {
 	ft_bzero(sa, sizeof(sa));
 	sa->sa_handler = sigint_handler;
-	//sigemptyset(&sa->sa_mask);
     sa->sa_flags = 0;
 	sigaction(SIGINT, sa, NULL);
 
@@ -30,17 +29,17 @@ void	sigquit_handler(int signum)
 		printf("Quit (core dumped)\n");
 	}
 }
-int init_sigquit(void)
-{
-	struct sigaction	quit;
+//int init_sigquit(void)
+//{
+//	struct sigaction	quit;
 
-	sigemptyset(&quit.sa_mask);
-    quit.sa_handler = sigquit_handler;
-    quit.sa_flags = 0;
-    sigaction(0, &quit, NULL);
+//	sigemptyset(&quit.sa_mask);
+//  quit.sa_handler = sigquit_handler;
+//  quit.sa_flags = 0;
+//  sigaction(, &quit, NULL);
 
-	return(0);
-}
+//	return(0);
+//}
 
 void	child_handler(int signum)
 {
@@ -64,7 +63,7 @@ void	sigint_handler(int signum)
 {	
 	if (signum == SIGINT)
 	{
-		rl_replace_line("", 0);
+		//rl_replace_line("", 0);
 		write(STDOUT_FILENO, "\n", 1);
 		rl_on_new_line();
 		rl_redisplay();

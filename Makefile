@@ -6,7 +6,7 @@
 #    By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/14 14:15:25 by jdufour           #+#    #+#              #
-#    Updated: 2023/12/22 14:47:49 by jdufour          ###   ########.fr        #
+#    Updated: 2024/01/02 13:30:35 by jdufour          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,7 +36,6 @@ SRCS = srcs/main.c \
 	srcs/parser/init.c \
 	srcs/parser/special_char.c \
 	srcs/parser/tokens.c \
-	srcs/utils/frees.c \
 	srcs/utils/joins.c \
 
 OBJS = $(SRCS:.c=.o)

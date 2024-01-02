@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 02:11:36 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/22 14:49:32 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/02 13:28:48 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ int	ft_error(char *str)
 	printf("%s\n", str);
 	return (-1);
 }
-
 
 // This function checks for lexer errors in quotes. It uses the 
 // booleand set by is_in_quotes(), and returns an error if the 
@@ -90,7 +89,6 @@ int	error_nonexistent_type(t_command *command)
 	}
 	return (0);
 }
-
 
 int	ft_error_lexer(t_command *command)
 {

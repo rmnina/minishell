@@ -6,13 +6,13 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/22 15:12:09 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/02 13:27:27 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int	execute_builtins(char **cmd_args, char **envp, t_code *code, t_alloc *garbage)
+int	execute_builtins(char **cmd_args, char ***envp, t_code *code, t_alloc *garbage)
 {
 	if (cmd_args[0] == NULL)
 		return (0);
@@ -24,24 +24,24 @@ int	execute_builtins(char **cmd_args, char **envp, t_code *code, t_alloc *garbag
 		return (ft_echo(cmd_args, code));
 	if (ft_strcmp(cmd_args[0], "env") == 0
 		&& ft_strlen(cmd_args[0]) == ft_strlen("env"))
-		return (ft_env(envp, code));
+		return (ft_env(*envp, code));
 	if (ft_strcmp(cmd_args[0], "exit") == 0
 		&& ft_strlen(cmd_args[0]) == ft_strlen("exit"))
 		return (ft_exit(cmd_args, code, garbage));
 	if (ft_strcmp(cmd_args[0], "export") == 0
 		&& ft_strlen(cmd_args[0]) == ft_strlen("export"))
-		return (ft_export(envp, code));
+		return (ft_export(envp, cmd_args, code, garbage));
 	if (ft_strcmp(cmd_args[0], "pwd") == 0
 		&& ft_strlen(cmd_args[0]) == ft_strlen("pwd"))
 		return (ft_pwd(NULL, NULL, code));
 	if (ft_strcmp(cmd_args[0], "unset") == 0
 		&& ft_strlen(cmd_args[0]) == ft_strlen("unset"))
-		return (ft_unset(&envp, cmd_args + 1, code));
+		return (ft_unset(envp, cmd_args + 1, code));
 	return (-1);
 }
 
 
-int	execute_non_builtin(char **envp, t_code *code, char **cmd_args, t_alloc *garbage)
+int	execute_non_builtin(char ***envp, t_code *code, char **cmd_args, t_alloc *garbage)
 {
 	pid_t	pid;
 	int		status;
@@ -56,7 +56,7 @@ int	execute_non_builtin(char **envp, t_code *code, char **cmd_args, t_alloc *gar
 	else if (pid == 0)
 	{
 		execute_command(cmd_args, envp, garbage);
-        exit(EXIT_FAILURE);
+		exit(EXIT_FAILURE);
 	}
 	else
 	{
@@ -68,7 +68,7 @@ int	execute_non_builtin(char **envp, t_code *code, char **cmd_args, t_alloc *gar
 	return (-1);
 }
 
-void	heredoc_child(t_pipe *pipes, char **argv, char **envp, t_alloc *garbage)
+void	heredoc_child(t_pipe *pipes, char **argv, char ***envp, t_alloc *garbage)
 {
 	char	*path;
 	char	*new_argv[2];
@@ -88,10 +88,11 @@ void	heredoc_child(t_pipe *pipes, char **argv, char **envp, t_alloc *garbage)
 	}
 	new_argv[0] = ft_strdup(argv[0], garbage);
 	new_argv[1] = NULL;
-	execve(path, new_argv, envp);
+	execve(path, new_argv, *envp);
 	perror("execeve failed");
 	exit(EXIT_FAILURE);
 }
+
 
 int	ft_count(t_command *command, int *i)
 {
@@ -124,7 +125,7 @@ char	**create_cmd_args(t_command *command, int *i, t_alloc *garbage)
 	return (cmd_args);
 }
 
-void	handle_command(char *input, t_code *code, char **envp, t_alloc *garbage)
+void	handle_command(char *input, t_code *code, char ***envp, t_alloc *garbage)
 {
 	t_command	*command;
 	char		**cmd_args;
@@ -133,7 +134,11 @@ void	handle_command(char *input, t_code *code, char **envp, t_alloc *garbage)
 
 	i = 0;
 	exec = 0;
+<<<<<<< HEAD:srcs/exec/exec.c
 	command = ft_parsing(input, garbage);
+=======
+	command = ft_parsing(input, garbage, envp);
+>>>>>>> juliette:exec/exec.c
 	if (command == NULL)
 		return ;
 	cmd_args = NULL;
@@ -154,10 +159,15 @@ void	handle_command(char *input, t_code *code, char **envp, t_alloc *garbage)
 				execute_non_builtin(envp, code, cmd_args, garbage);
 		}
 		else
+<<<<<<< HEAD:srcs/exec/exec.c
 			i++;
+=======
+		{
+			i++;
+		}
+>>>>>>> juliette:exec/exec.c
 	}
 }
-
 
 
 

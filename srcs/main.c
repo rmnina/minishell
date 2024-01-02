@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:45:11 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/22 15:10:54 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/02 13:24:51 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,8 @@ int	ft_minishell(char *line, t_code *code, char **envp, t_alloc *garbage)
 
 	while (1)
 	{
-		if (init_sigactionsa(&sa) == -1)
-			return (1);
+		//if (init_sigactionsa(&sa) == -1)
+		//	return (1);
 		line = readline("minishell > ");
 		if (line == NULL)
 		{
@@ -49,7 +49,7 @@ int	ft_minishell(char *line, t_code *code, char **envp, t_alloc *garbage)
 		if (line[0] != 0)
 		{
 			add_history(line);
-			handle_command(line, code, envp, garbage);
+			handle_command(line, code, &envp, garbage);
 		}
 		free(line);
 	}

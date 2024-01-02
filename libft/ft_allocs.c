@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_allocs.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
+/*   By: julietteandrieux <julietteandrieux@stud    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 19:16:31 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/13 18:16:22 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/22 12:05:22 by julietteand      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ void	*garb_malloc(size_t type, size_t size, t_alloc **garbage)
 	void	*ptr;
 	t_alloc	*new;
 
+	ptr = NULL;
 	if (size && type)
 		ptr = malloc(type * size + 1);
 	if (!ptr)

@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:04:36 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/22 15:11:35 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/02 13:30:02 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ int	parse_quotes(char *line, int *i, t_quotes *quotes)
 // which are the structures t_command that are gonna be placed in the array
 // treated by the exec. 
 
-t_command	get_token(char *line, t_quotes *quotes, int *i, t_alloc *garbage)
+t_command	get_token(char *line, t_quotes *quotes, int *i, t_alloc *garbage, char ***envp)
 {
 	t_command	token;
 
@@ -81,9 +81,9 @@ t_command	get_token(char *line, t_quotes *quotes, int *i, t_alloc *garbage)
 		else if ((special_types(line[*i], line[*i + 1]) == EXPAND \
 		&& quotes->case_single == FALSE) || quotes->var != NULL)
 		{
-			if (get_lex_expand(line, i, quotes, &token, garbage) == 1)
+			if (get_lex_expand(line, i, quotes, &token, garbage, envp) == 1)
 				break ;
-			else if (get_lex_expand(line, i, quotes, &token, garbage) == -1)
+			else if (get_lex_expand(line, i, quotes, &token, garbage, envp) == -1)
 				*i += 1;
 		}
 		else if (quotes->case_quotes == FALSE && special_types(line[*i], line[*i + 1]) != 0 \
@@ -118,7 +118,7 @@ t_command	token_null(t_command *token, t_alloc *garbage)
 // verifies if the env variable have been treated accordingly, and gets 
 // the rest of them if not.
 
-t_command	*get_command(char *line, t_quotes *quotes, t_alloc *garbage)
+t_command	*get_command(char *line, t_quotes *quotes, t_alloc *garbage, char ***envp)
 {
 	t_command	*command;
 	t_command	token;
@@ -133,7 +133,7 @@ t_command	*get_command(char *line, t_quotes *quotes, t_alloc *garbage)
 			while (line[i] && line[i] == SPACE)
 				i++;
 		}
-		token = get_token(line, quotes, &i, garbage);
+		token = get_token(line, quotes, &i, garbage, envp);
 		if (token.word == NULL)
 			i++;
 		else
@@ -147,7 +147,7 @@ t_command	*get_command(char *line, t_quotes *quotes, t_alloc *garbage)
 	{
 		while (quotes->var != NULL)
 		{
-			get_lex_expand(line, &i, quotes, &token, garbage);
+			get_lex_expand(line, &i, quotes, &token, garbage, envp);
 			command = ft_struct_join(command, token, garbage);
 		}
 	}
@@ -156,41 +156,3 @@ t_command	*get_command(char *line, t_quotes *quotes, t_alloc *garbage)
 	// 	printf("token = %s\n", command[j].word);
 	return (command);
 }
-
-// int	main(void)
-// {
-// 	t_quotes	quotes;
-// 	t_command	*command;
-// 	t_expand	expand;
-// 	char		*line;
-
-// 	expand.left_expand = FALSE;
-// 	quotes.case_double = FALSE;
-// 	quotes.case_single = FALSE;
-// 	quotes.var = NULL;
-// 	quotes.vpos = 0;
-// 	command = NULL;
-// 	while (1)
-// 	{
-// 		line = readline("> ");
-// 		if (!line)
-// 		{
-// 			printf("exit ctrl+D\n");
-// 			break ;
-// 		}
-// 		if (line[0] != 0)
-// 		{
-// 			add_history(line);
-// 			error_quotes(line, &quotes);
-// 			command = get_command(line, &quotes, &expand);
-// 			ft_error_lexer(command);
-// 			for (int i = 0; command[i + 1].word != NULL; i++)
-// 			{
-// 				printf("word[%d] = %s\n", i, command[i].word);
-// 				printf("type[%d] = %d\n", i, command[i].type);
-// 			}
-// 		}
-// 		clear_history();
-// 		ft_free_command(command);
-// 	}
-// }
