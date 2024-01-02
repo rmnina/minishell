@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   special_char.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:04:44 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/27 14:20:41 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/02 13:29:38 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../../includes/minishell.h"
 
 // Implementation of booleans whose changes of state
 // indicates whether the character being processed is

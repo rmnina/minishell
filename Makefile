@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+         #
+#    By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/14 14:15:25 by jdufour           #+#    #+#              #
-#    Updated: 2023/12/21 16:08:30 by juandrie         ###   ########.fr        #
+#    Updated: 2024/01/02 13:30:35 by jdufour          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,35 +17,32 @@ NC=\033[0m
 
 NAME = minishell
 
-SRCS = main.c \
-	builtins/cd.c \
-	builtins/code.c \
-	builtins/echo.c \
-	builtins/env.c \
-	builtins/exit.c \
-	builtins/export.c \
-	builtins/pwd.c \
-	builtins/unset.c \
-	builtins/controlc.c \
-	exec/exec_pipe.c \
-	exec/exec.c \
-	exec/heredoc.c \
-	exec/path.c \
-	exec/redirection.c \
-	lexer/error_lexer.c \
-	lexer/expand.c \
-	lexer/init.c \
-	lexer/special_char.c \
-	lexer/tokens.c \
-	parser/parse_command.c \
-	utils/frees.c \
-	utils/joins.c \
+SRCS = srcs/main.c \
+	srcs/builtins/cd.c \
+	srcs/builtins/echo.c \
+	srcs/builtins/env.c \
+	srcs/builtins/exit.c \
+	srcs/builtins/export.c \
+	srcs/builtins/pwd.c \
+	srcs/builtins/unset.c \
+	srcs/builtins/controlc.c \
+	srcs/exec/exec_pipe.c \
+	srcs/exec/exec.c \
+	srcs/exec/heredoc.c \
+	srcs/exec/path.c \
+	srcs/exec/redirection.c \
+	srcs/lexer/lexer.c \
+	srcs/parser/expand.c \
+	srcs/parser/init.c \
+	srcs/parser/special_char.c \
+	srcs/parser/tokens.c \
+	srcs/utils/joins.c \
 
 OBJS = $(SRCS:.c=.o)
 
 CC = gcc
 
-FLAGS = -g -Wall -Wextra -Werror
+FLAGS = -g -ggdb -Wall -Wextra -Werror
 
 RM = rm -rf
 

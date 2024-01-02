@@ -6,14 +6,13 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:20:25 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/28 14:33:22 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/02 14:22:21 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../../includes/minishell.h"
 
-void	ft_multipipes(t_command *command, t_alloc *garbage, char ***envp, 
-char **cmd_args, int *i, t_code *code)
+void	ft_multipipes(t_command *command, t_alloc *garbage, char ***envp, char **cmd_args, int *i, t_code *code)
 {
 	t_pipe	pipes;
 	pid_t	pid;

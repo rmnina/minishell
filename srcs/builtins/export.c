@@ -6,11 +6,11 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 09:11:51 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/02 13:24:01 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/02 19:36:26 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../../includes/minishell.h"
 
 
 int	envp_length(char **envp)
@@ -84,7 +84,7 @@ void	add_or_update_env_var(char ***envp, char *var, t_alloc *garbage)
 		return ;
 	while (i < envp_len)
 	{
-		if (ft_strncmp(new_envp[i], var, len) == 0 && new_envp[i][len] == '=')
+		if (ft_strncmp(new_envp[i], var, len) == 0)
 		{
 			free(new_envp[i]);
 			new_envp[i] = ft_strdup(var, garbage);
@@ -111,9 +111,11 @@ bool	is_valid_identifier(const char *str)
 	const char	*ptr;
 	bool		equals_encountered;
 	bool		non_space_after_equals;
+	// bool		space_encountered;
 
 	equals_encountered = false;
 	non_space_after_equals = false;
+	// space_encountered = false;
 	if (!str || !(*str == '_' || ft_isalpha(*str)))
 		return (false);
 	ptr = str + 1;
@@ -142,15 +144,22 @@ bool	is_valid_identifier(const char *str)
 }
 
 
+
 void	handle_value_case(char ***envp, char *var_name, char *value, t_alloc *garbage)
 {
 	char	*new_var;
 	char	*formatted_value;
 
-	if (!value || *value == '\0' || *value == ' ')
+	if (!value || *value == '\0')
 	{
 		new_var = ft_strjoin(var_name, "=\"\"", garbage);
 		add_or_update_env_var(envp, new_var, garbage);
+	}
+	else if (*value == '"' || *value == '\'')
+	{
+		formatted_value = ft_strdup(value, garbage);
+		new_var = ft_strjoin(var_name, "=", garbage);
+		new_var = ft_strjoin(new_var, formatted_value, garbage);
 	}
 	else
 	{
@@ -192,27 +201,35 @@ int ft_export(char ***envp, char **argv, t_code *code, t_alloc *garbage)
 		while (argv[i] != NULL)
 		{
 			equal = ft_strchr(argv[i], '=');
-			printf("equal: %s\n", equal);
+			if (equal == NULL)
+			{
+				i++;
+				printf("export:`%s': not a valid identifier\n", equal);
+			}
 			if (equal)
 			{
 				*equal = '\0';
 				identifier = argv[i];
-				printf("identifier: %s\n", identifier);
 				if (is_valid_identifier(identifier))
 				{
 					handle_value_case(envp, identifier, equal + 1, garbage);
-					printf("identifier apres handle: %s\n", identifier);
 				}
 				else
+				{
 					printf("export:`%s': not a valid identifier\n", identifier);
+				}
 				*equal = '=';
 			}
 			else
 			{
 				if (is_valid_identifier(argv[i]))
+				{
 					add_or_update_env_var(envp, argv[i], garbage);
+				}
 				else
+				{
 					printf("export: '%s': not a valid identifier\n", argv[i]);
+				}
 			}
 			i++;
 		}

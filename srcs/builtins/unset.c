@@ -6,11 +6,11 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 10:19:45 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/04 15:51:58 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/02 16:56:42 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../../includes/minishell.h"
 
 void	shift_env_variables(char ***envp, int deleted_index)
 {
@@ -35,7 +35,7 @@ int	unset_single_variable(char ***envp, const char *name)
 	found = 0;
 	while ((*envp)[i] != NULL)
 	{
-		if (ft_strncmp((*envp)[i], name, len) == 0 && (*envp)[i][len] == '=')
+		if (ft_strncmp((*envp)[i], name, len) == 0)
 		{
 			free((*envp)[i]);
 			shift_env_variables(envp, i);
@@ -46,7 +46,6 @@ int	unset_single_variable(char ***envp, const char *name)
 	}
 	return (found);
 }
-
 
 int	ft_unset(char ***envp, char **names, t_code *code)
 {
@@ -66,5 +65,3 @@ int	ft_unset(char ***envp, char **names, t_code *code)
 	code->code_status = 1;
 	return (code->code_status);
 }
-
-

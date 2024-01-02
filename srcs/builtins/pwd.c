@@ -1,29 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   frees.c                                            :+:      :+:    :+:   */
+/*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/27 02:53:43 by jdufour           #+#    #+#             */
-/*   Updated: 2023/11/27 02:54:50 by jdufour          ###   ########.fr       */
+/*   Created: 2023/11/13 18:42:47 by juandrie          #+#    #+#             */
+/*   Updated: 2023/12/22 14:49:09 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../../includes/minishell.h"
 
-void	ft_free_command(t_command *command)
+int	ft_pwd(char **unused_args, char **unused_envp, t_code *code)
 {
-	int	i;
-	
-	if (!command)
-		return;
-	i = 0;
-	while (command[i].word != NULL)
+	char	*cwd;
+
+	(void)unused_args;
+	(void)unused_envp;
+	cwd = getcwd(NULL, 0);
+	if (cwd != NULL)
 	{
-		if (command[i].word)
-			free(command[i].word);
-		i++;
+		printf("%s\n", cwd);
+		free (cwd);
+		code->code_status = 0;
 	}
-	free(command);
+	else
+	{
+		perror("pwd");
+		code->code_status = 1;
+	}
+	return (code->code_status);
 }
+
+

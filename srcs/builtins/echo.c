@@ -3,14 +3,27 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 16:06:16 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/04 15:22:36 by juandrie         ###   ########.fr       */
+/*   Updated: 2023/12/22 14:55:45 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../../includes/minishell.h"
+
+int	code_status(char *str, t_code *code)
+{
+	if (str && ft_strcmp(str, "$?") == 0)
+	{
+		if (!code->code_status)
+			printf("0");
+		else
+			printf("%d", code->code_status);
+		return (1);
+	}
+	return (0);
+}
 
 int	ft_echo(char **argv, t_code *code)
 {
@@ -19,15 +32,16 @@ int	ft_echo(char **argv, t_code *code)
 
 	i = 1;
 	line = 1;
-	if (argv[1] != NULL && strcmp(argv[1], "-n") == 0)
+	if (argv[1] != NULL && ft_strcmp(argv[1], "-n") == 0)
 	{
 		line = 0;
 		i++;
 	}
-	while (argv[i] != NULL)
+	while (argv[i])
 	{
-		printf("%s", argv[i]);
-		if (argv[i + 1] != NULL)
+		if (!code_status(argv[i], code))
+			printf("%s", argv[i]);
+		if (argv[i + 1])
 			printf(" ");
 		i++;
 	}

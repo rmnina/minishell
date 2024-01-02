@@ -6,13 +6,11 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/28 15:19:45 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/02 14:24:07 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
-
-
+#include "../../includes/minishell.h"
 
 int	execute_builtins(char **cmd_args, char ***envp, t_code *code, t_alloc *garbage)
 {
@@ -118,6 +116,7 @@ char	**create_cmd_args(t_command *command, int *i, t_alloc *garbage)
 	while (command[*i].type == WORD || command[*i].type == CODE)
 	{
 		cmd_args[j] = ft_strjoin(cmd_args[j], command[*i].word, garbage);
+		// printf("args = %s\n", cmd_args[j]);
 		if (!cmd_args[j])
 			return (NULL);
 		*i += 1;
@@ -156,9 +155,7 @@ void	handle_command(char *input, t_code *code, char ***envp, t_alloc *garbage)
 				execute_non_builtin(envp, code, cmd_args, garbage);
 		}
 		else
-		{
 			i++;
-		}
 	}
 }
 

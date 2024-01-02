@@ -6,11 +6,11 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/26 23:39:05 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/10 00:41:11 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/12/22 14:57:58 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../../includes/minishell.h"
 
 t_command	*ft_struct_join(t_command *tok1, t_command tok2, t_alloc *garbage)
 {
@@ -36,8 +36,6 @@ t_command	*ft_struct_join(t_command *tok1, t_command tok2, t_alloc *garbage)
 	}
 	res[size++] = tok2;
 	res[size].word = NULL;
-	// if (tok1)
-	// 	free(tok1);
 	return (res);
 }
 
@@ -49,5 +47,5 @@ char	*char_to_str(char c, t_alloc *garbage)
 	res = garb_malloc(sizeof(char), 2, &garbage);
 	res[1] = '\0';
 	res[0] = c;
-	return (res); 
+	return (res);
 }

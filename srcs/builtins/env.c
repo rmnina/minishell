@@ -1,19 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   code.c                                             :+:      :+:    :+:   */
+/*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/22 19:05:34 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/04 10:57:47 by juandrie         ###   ########.fr       */
+/*   Created: 2023/11/14 11:20:46 by juandrie          #+#    #+#             */
+/*   Updated: 2023/12/22 14:49:03 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../../includes/minishell.h"
 
-int	execute_status_builtin(t_code *code)
+int	ft_env(char **envp, t_code *code)
 {
-	printf("%d\n", code->code_status);
-	return (code->code_status);
+	int	i;
+
+	i = 0;
+	while (envp[i] != NULL)
+	{
+		printf("%s\n", envp[i]);
+		i++;
+	}
+	code->code_status = 0;
+	return (0);
 }
+
+

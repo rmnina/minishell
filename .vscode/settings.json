@@ -1,7 +1,0 @@
-{
-    "files.associations": {
-        "minishell.h": "c",
-        "new": "c",
-        "typeinfo": "c"
-    }
-}

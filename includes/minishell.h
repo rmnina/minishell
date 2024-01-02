@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:03:22 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/28 15:19:21 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/02 14:22:59 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@
 # include <termios.h>
 # include <curses.h>
 # include <term.h>
-# include "libft/libft.h"
+# include "../libft/libft.h"
 # include <math.h>
 # include <signal.h>
 # include <errno.h>
@@ -114,6 +114,10 @@ int			special_type_expand(char c1, char c2);
 //Execve
 char		*find_command_in_segment(char *segment, char *command, t_alloc *garbage);
 char		*find_command_path(char *command, t_alloc *garbage);
+// void		execute_command(char **cmd_args, char **envp, t_alloc *garbage);
+// void			handle_command(char *input, t_code *code, char **envp, t_alloc *garbage);
+// int			execute_non_builtin(char **envp, t_code *code, char **cmd_args, t_alloc *garbage);
+// void		heredoc_child(t_pipe *pipes, char **argv, char **envp, t_alloc *garbage);
 void		execute_command(char **cmd_args, char ***envp, t_alloc *garbage);
 void		handle_command(char *input, t_code *code, char ***envp, t_alloc *garbage);
 int			execute_non_builtin(char ***envp, t_code *code, char **cmd_args, t_alloc *garbage);
@@ -137,7 +141,7 @@ int			ft_exit(char **cmd_args, t_code *code, t_alloc *garbage);
 int			ft_export(char ***envp, char **argv, t_code *code, t_alloc *garbage);
 int			ft_pwd(char **unused_args, char **unused_envp, t_code *code);
 int			ft_unset(char ***envp, char **names, t_code *code);
-//int			execute_status_builtin(t_code *code, int *i);
+int			execute_status_builtin(t_code *code, int *i);
 int			execute_builtins(char **cmd_args, char ***envp, t_code *code, t_alloc *garbage);
 
 //Signaux
