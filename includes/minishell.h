@@ -6,11 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:03:22 by jdufour           #+#    #+#             */
-<<<<<<< HEAD:includes/minishell.h
-/*   Updated: 2023/12/22 14:48:17 by jdufour          ###   ########.fr       */
-=======
-/*   Updated: 2023/12/28 15:19:21 by juandrie         ###   ########.fr       */
->>>>>>> juliette:minishell.h
+/*   Updated: 2024/01/02 21:25:24 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +86,14 @@ typedef struct s_heredocNode {
 	struct s_heredocNode	*next;
 }	t_heredocNode;
 
+typedef	struct s_main_items {
+	t_command	*command;
+	t_command	token;
+	char		**cmd_args;
+	char		**envp;
+	char		*line;
+}	t_main_items;
+
 //Lexer
 int			is_in_quote(char c, t_quotes *quotes);
 int			error_quotes(char *line, t_quotes *quotes);
@@ -99,7 +103,6 @@ void		get_type(t_command *token, t_quotes *quotes);
 int			is_expand(char *line);
 
 //Parser
-void		free_parsed_command_line(char **argv);
 int			parse_quotes(char *line, int *i, t_quotes *quotes);
 char		*get_env_var_name(char *line, int *i, t_alloc *garbage);
 void		init_get_token(t_command *token);
@@ -116,29 +119,21 @@ char		*char_to_str(char c, t_alloc *garbage);
 int			special_type_expand(char c1, char c2);
 
 //Execve
-char		*find_command_in_segment(char *segment, char *command, t_alloc *garbage);
-char		*find_command_path(char *command, t_alloc *garbage);
-<<<<<<< HEAD:includes/minishell.h
-void		execute_command(char **cmd_args, char **envp, t_alloc *garbage);
-void			handle_command(char *input, t_code *code, char **envp, t_alloc *garbage);
-int			execute_non_builtin(char **envp, t_code *code, char **cmd_args, t_alloc *garbage);
-void		heredoc_child(t_pipe *pipes, char **argv, char **envp, t_alloc *garbage);
-=======
+char		*find_command_in_segment(char *segment, t_main_items *main, t_alloc *garbage);
+char		*find_command_path(t_main_items *main,, t_alloc *garbage);
 void		execute_command(char **cmd_args, char ***envp, t_alloc *garbage);
-void		handle_command(char *input, t_code *code, char ***envp, t_alloc *garbage);
-int			execute_non_builtin(char ***envp, t_code *code, char **cmd_args, t_alloc *garbage);
-void		heredoc_child(t_pipe *pipes, char **argv, char ***envp, t_alloc *garbage);
->>>>>>> juliette:minishell.h
-char		**create_cmd_args(t_command *command, int *i, t_alloc *garbage);
-void		pick_command(char **cmd_args, char **envp, t_code *code, t_alloc *garbage);
+void		handle_command(t_main_items *main, t_code *code, t_alloc *garbage);
+int			execute_non_builtin(t_main_items *main, t_code *code, t_alloc *garbage);
+void		heredoc_child(t_pipe *pipes, t_main_items *main, t_alloc *garbage);
+char		**create_cmd_args(t_main_items *main, int *i, t_alloc *garbage);
 
 //Redirection 
-int			init_redirection(t_command *command, int *i, char **cmd_args, char ***envp, t_code *code);
+int			init_redirection(t_main_items *main, int *i, t_code *code);
 
 
 //Pipe
 pid_t		heredoc_pipe(t_pipe *pipes);
-void		ft_multipipes(t_command *command, t_alloc *garbage, char ***envp, char **cmd_args, int *i, t_code *code);
+void		ft_multipipes(t_main_items *main, int *i, t_code *code, t_alloc *garbage);
 
 //Builtins
 int			ft_cd(char **args, t_code *code);
@@ -148,13 +143,8 @@ int			ft_exit(char **cmd_args, t_code *code, t_alloc *garbage);
 int			ft_export(char ***envp, char **argv, t_code *code, t_alloc *garbage);
 int			ft_pwd(char **unused_args, char **unused_envp, t_code *code);
 int			ft_unset(char ***envp, char **names, t_code *code);
-<<<<<<< HEAD:includes/minishell.h
-int			execute_status_builtin(t_code *code, int *i);
-int			execute_builtins(char **cmd_args, char **envp, t_code *code, t_alloc *garbage);
-=======
 //int			execute_status_builtin(t_code *code, int *i);
-int			execute_builtins(char **cmd_args, char ***envp, t_code *code, t_alloc *garbage);
->>>>>>> juliette:minishell.h
+int			execute_builtins(t_main_items *main, t_code *code, t_alloc *garbage);
 
 //Signaux
 void		child_handler(int signum);
@@ -164,6 +154,6 @@ int			init_sigactionsa(struct sigaction *sa);
 // int			init_sigquit(void);
 
 //heredoc
-int			heredoc(t_heredocNode *heredoclist, t_pipe *pipes, char **argv, char ***envp, t_alloc *garbage);
+int			heredoc(t_heredocNode *heredoclist, t_pipe *pipes, t_main_items *main, t_alloc *garbage)
 
 #endif

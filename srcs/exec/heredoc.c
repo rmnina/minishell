@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 16:22:53 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/02 13:27:33 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/02 20:51:09 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,6 @@ void	write_pipe(int fd, t_line *head)
 	}
 }
 
-
 void	read_add(int fd, const char *delimiter, t_alloc *garbage)
 {
 	char	*line;
@@ -82,7 +81,7 @@ void	read_add(int fd, const char *delimiter, t_alloc *garbage)
 }
 
 
-int	heredoc(t_heredocNode *heredoclist, t_pipe *pipes, char **argv, char ***envp, t_alloc *garbage)
+int	heredoc(t_heredocNode *heredoclist, t_pipe *pipes, t_main_items *main, t_alloc *garbage)
 {
 	pid_t			pid;
 	int				status;
@@ -106,7 +105,7 @@ int	heredoc(t_heredocNode *heredoclist, t_pipe *pipes, char **argv, char ***envp
 	}
 	else if (pid == 0)
 	{
-		heredoc_child(pipes, argv, envp, garbage);
+		heredoc_child(pipes, main, garbage);
 		exit (EXIT_SUCCESS);
 	}
 	else

@@ -6,14 +6,13 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:20:25 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/02 13:27:03 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/02 20:54:52 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	ft_multipipes(t_command *command, t_alloc *garbage, char ***envp, 
-char **cmd_args, int *i, t_code *code)
+void	ft_multipipes(t_main_items *main, int *i, t_code *code, t_alloc *garbage)
 {
 	t_pipe	pipes;
 	pid_t	pid;
@@ -22,11 +21,11 @@ char **cmd_args, int *i, t_code *code)
 
 	status = 0;
 	old_fd = -1;
-	while (command[*i].type != 0)
+	while (main->command[*i].type != 0)
 	{
-		if (command[*i].type == WORD)
-			cmd_args = create_cmd_args(command, i, garbage);
-		if (command[*i].type == PIPE || *i > 0)
+		if (main->command[*i].type == WORD)
+			main->cmd_args = create_cmd_args(main->command, i, garbage);
+		if (main->command[*i].type == PIPE || *i > 0)
 			pipe(pipes.fd);
 		pid = fork();
 		if (pid == -1)
@@ -41,14 +40,14 @@ char **cmd_args, int *i, t_code *code)
 				dup2(old_fd, STDIN_FILENO);
 				close(old_fd);
 			}
-			if (command[*i].type == PIPE)
+			if (main->command[*i].type == PIPE)
 			{
 				dup2(pipes.fd[1], STDOUT_FILENO);
 				close(pipes.fd[1]);
 			}
 			close(pipes.fd[0]);
-			if (execute_builtins(cmd_args, envp, code, garbage) == -1)
-				execute_non_builtin(envp, code, cmd_args, garbage);
+			if (execute_builtins(main, code, garbage) == -1)
+				execute_non_builtin(main, code, garbage);
 			exit(EXIT_SUCCESS);
 		}
 		else
@@ -58,7 +57,7 @@ char **cmd_args, int *i, t_code *code)
 				close(old_fd);
 				close(pipes.fd[1]);
 			}
-			if (command[*i].type == PIPE)
+			if (main->command[*i].type == PIPE)
 			{
 				old_fd = pipes.fd[0];
 				close(pipes.fd[1]);

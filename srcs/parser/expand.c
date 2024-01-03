@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 15:15:34 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/02 13:29:03 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/02 21:30:04 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,12 +50,12 @@ void	get_next_part_env_var(t_quotes *quotes, int j)
 // thanks to the elements modified in the t_quotes structs by the
 // previous function.
 
-int	get_lex_expand(char *line, int *i, t_quotes *quotes, t_command *token, t_alloc *garbage, char ***envp)
+int	get_lex_expand(t_main_items *main, int *i, t_quotes *quotes, t_alloc *garbage)
 {
 	int		j;
 
 	j = quotes->vpos;
-	init_get_expand(token, line, i, quotes, garbage, envp);
+	init_get_expand(&main->token, main->line, i, quotes, garbage, main->envp);
 	if (quotes->var == NULL)
 		return (-1);
 	while (quotes->var[j])
@@ -68,11 +68,11 @@ int	get_lex_expand(char *line, int *i, t_quotes *quotes, t_command *token, t_all
 		}
 		else if (!parse_quotes(quotes->var, &j, quotes))
 		{
-			token->word = ft_strjoin_char(token->word, quotes->var[j], garbage);
+			main->token.word = ft_strjoin_char(main->token.word, quotes->var[j], garbage);
 			j++;
 		}
 	}
-	token->type = WORD;
+	main->token.type = WORD;
 	get_next_part_env_var(quotes, j);
 	return (1);
 }
