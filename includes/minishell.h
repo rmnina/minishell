@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:03:22 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/02 14:22:59 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/04 17:31:25 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,6 +139,7 @@ int			ft_echo(char **argv, t_code *code);
 int			ft_env(char **envp, t_code *code);
 int			ft_exit(char **cmd_args, t_code *code, t_alloc *garbage);
 int			ft_export(char ***envp, char **argv, t_code *code, t_alloc *garbage);
+void		add_or_update_env_var(char ***envp, char *var, t_alloc *garbage);
 int			ft_pwd(char **unused_args, char **unused_envp, t_code *code);
 int			ft_unset(char ***envp, char **names, t_code *code);
 int			execute_status_builtin(t_code *code, int *i);
