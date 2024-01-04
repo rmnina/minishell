@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/04 17:24:40 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/04 19:55:35 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,19 +80,26 @@ void	heredoc_child(t_pipe *pipes, char **argv, char ***envp, t_alloc *garbage)
 		exit(EXIT_FAILURE);
 	}
 	close(pipes->fd[0]);
-	path = find_command_path(argv[0], garbage);
+	// if (ft_strcmp(argv[0], "<<") == 0)
+    // {
+    //     path = find_command_path(argv[2], garbage);
+    //     new_argv[0] = ft_strdup(argv[2], garbage);
+    // }
+    // else
+    {
+        path = find_command_path(argv[0], garbage);
+        new_argv[0] = ft_strdup(argv[0], garbage);
+    }
 	if (!path)
 	{
 		perror("path");
 		exit(EXIT_FAILURE);
 	}
-	new_argv[0] = ft_strdup(argv[0], garbage);
 	new_argv[1] = NULL;
 	execve(path, new_argv, *envp);
 	perror("execeve failed");
 	exit(EXIT_FAILURE);
 }
-
 
 int	ft_count(t_command *command, int *i)
 {

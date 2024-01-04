@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:04:36 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/04 17:27:45 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/04 20:08:24 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,19 +48,13 @@ t_command	get_special_type_token(char *line, int *i, t_quotes *quotes, t_alloc *
 
 int	parse_quotes(char *line, int *i, t_quotes *quotes)
 {
-	if (line[*i] == SINGLE_QUOTE && quotes->case_double == FALSE)
-	{
-		*i += 1;
-		return (2);
-	}
-	else if (line[*i] == DOUBLE_QUOTE && quotes->case_single == FALSE)
-	{
-		*i += 1;
-		return (3);
-	}
-	else if ((line[*i] == SPACE && quotes->case_double == FALSE \
+	if ((line[*i] == SPACE && quotes->case_double == FALSE \
 	&& quotes->case_single == FALSE) || line[*i] == '\0')
 		return (1);
+	else if (line[*i] == SINGLE_QUOTE && quotes->case_double == FALSE)
+		return (*i += 1, 2);
+	else if (line[*i] == DOUBLE_QUOTE && quotes->case_single == FALSE)
+		return (*i += 1, 3);
 	return (0);
 }
 

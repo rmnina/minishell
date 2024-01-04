@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 16:22:53 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/02 13:27:33 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/04 19:52:31 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,9 +92,9 @@ int	heredoc(t_heredocNode *heredoclist, t_pipe *pipes, char **argv, char ***envp
 	status = 0;
 	code_status = 0;
 	current = heredoclist;
+	pipe(pipes->fd);
 	while (current != NULL)
 	{
-		pipe(pipes->fd);
 		read_add(pipes->fd[1], current->delimiter, garbage);
 		current = current->next;
 	}
@@ -107,7 +107,7 @@ int	heredoc(t_heredocNode *heredoclist, t_pipe *pipes, char **argv, char ***envp
 	else if (pid == 0)
 	{
 		heredoc_child(pipes, argv, envp, garbage);
-		exit (EXIT_SUCCESS);
+		exit(EXIT_SUCCESS);
 	}
 	else
 	{

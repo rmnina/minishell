@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 17:13:45 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/02 13:27:59 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/04 23:23:42 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int	redir_input(char *filename)
 }
 
 
-t_heredocNode	*build_heredoclist(t_command *command, int *i)
+t_heredocNode	*build_heredoclist(t_command *command, int *i, t_alloc *garbage)
 {
 	t_heredocNode	*head;
 	t_heredocNode	*current;
@@ -63,24 +63,18 @@ t_heredocNode	*build_heredoclist(t_command *command, int *i)
 
 	head = NULL;
 	current = NULL;
-	new_node = NULL;
-	while (command[*i].type == DB_LEFT_CHEV)
-	{
-		new_node = malloc(sizeof(t_heredocNode));
-		if (!new_node)
-		{
-			perror("Failed to allocate memory for heredoc node");
-			break ;
-		}
-		new_node->delimiter = command[*i + 1].word;
-		new_node->next = NULL;
-		if (!head)
-			head = new_node;
-		else
-			current->next = new_node;
-		current = new_node;
-		*i += 2;
-	}
+	new_node = garb_malloc(sizeof(t_heredocNode), 1, &garbage);
+	if (!new_node)
+		return (perror("Failed to allocate memory for heredoc node"), new_node);
+	*i += 1;
+	new_node->delimiter = command[*i].word;
+	new_node->next = NULL;
+	if (!head)
+		head = new_node;
+	else
+		current->next = new_node;
+	current = new_node;
+	*i += 1;
 	return (head);
 }
 
@@ -104,11 +98,14 @@ int	init_redirection(t_command *command, int *i, char **cmd_args, char ***envp, 
 	}
 	if (pid == 0)
 	{
-		heredoclist = build_heredoclist(command, i);
-		if (heredoclist)
+		if (command[*i].type == DB_LEFT_CHEV)
 		{
-			heredoc(heredoclist, &pipes, cmd_args, envp, son_garb);
-			exit(EXIT_SUCCESS);
+			heredoclist = build_heredoclist(command, i, son_garb);
+			if (heredoclist)
+			{
+				heredoc(heredoclist, &pipes, cmd_args, envp, son_garb);
+				exit(EXIT_SUCCESS);
+			}
 		}
 		if (command[*i].type == DB_RIGHT_CHEV || \
 		command[*i].type == RIGHT_CHEV)
