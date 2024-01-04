@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:03:22 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/04 17:31:25 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/04 17:58:15 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ typedef struct s_quotes {
 	bool	case_double;
 	bool	case_quotes;
 	int		vpos;
+	int		npos;
 	char	*var;
 }	t_quotes;
 
@@ -74,6 +75,8 @@ typedef struct s_pipe {
 
 typedef struct s_code {
 	int	code_status;
+	char	*current;
+	char	*last;
 }	t_code;
 
 typedef struct s_line {
@@ -85,6 +88,7 @@ typedef struct s_heredocNode {
 	char					*delimiter;
 	struct s_heredocNode	*next;
 }	t_heredocNode;
+
 
 //Lexer
 int			is_in_quote(char c, t_quotes *quotes);
