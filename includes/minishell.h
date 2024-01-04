@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:03:22 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/04 17:58:15 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/04 19:22:33 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ typedef struct s_pipe {
 }	t_pipe;
 
 typedef struct s_code {
-	int	code_status;
+	int		code_status;
 	char	*current;
 	char	*last;
 }	t_code;
@@ -154,7 +154,7 @@ void		child_handler(int signum);
 int			process_prompt(void);
 void		sigint_handler(int signum);
 int			init_sigactionsa(struct sigaction *sa);
-// int			init_sigquit(void);
+int			init_sigquit(void);
 
 //heredoc
 int			heredoc(t_heredocNode *heredoclist, t_pipe *pipes, char **argv, char ***envp, t_alloc *garbage);

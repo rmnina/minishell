@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/04 18:13:32 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/04 19:25:46 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ int	execute_non_builtin(char ***envp, t_code *code, char **cmd_args, t_alloc *ga
 	}
 	else if (pid == 0)
 	{
+		init_sigquit();
 		execute_command(cmd_args, envp, garbage);
 		exit(EXIT_FAILURE);
 	}

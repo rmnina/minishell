@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   controlc.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 15:13:20 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/02 13:25:58 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/04 19:23:43 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,9 @@ int	init_sigactionsa(struct sigaction *sa)
 	sa->sa_handler = sigint_handler;
     sa->sa_flags = 0;
 	sigaction(SIGINT, sa, NULL);
-
+	signal(SIGQUIT, SIG_IGN);
 	return (0);
 }
-
 void	sigquit_handler(int signum)
 {
 	if (signum == SIGQUIT)
@@ -29,17 +28,19 @@ void	sigquit_handler(int signum)
 		printf("Quit (core dumped)\n");
 	}
 }
-//int init_sigquit(void)
-//{
-//	struct sigaction	quit;
 
-//	sigemptyset(&quit.sa_mask);
-//  quit.sa_handler = sigquit_handler;
-//  quit.sa_flags = 0;
-//  sigaction(, &quit, NULL);
 
-//	return(0);
-//}
+int init_sigquit(void)
+{
+	struct sigaction	quit;
+	
+	sigemptyset(&quit.sa_mask);
+ 	quit.sa_handler = sigquit_handler;
+ 	quit.sa_flags = 0;
+ 	sigaction(SIGQUIT, &quit, NULL);
+	//signal(SIGQUIT, SIG_IGN);
+	return(0);
+}
 
 void	child_handler(int signum)
 {
@@ -63,10 +64,13 @@ void	sigint_handler(int signum)
 {	
 	if (signum == SIGINT)
 	{
-		//rl_replace_line("", 0);
 		write(STDOUT_FILENO, "\n", 1);
 		rl_on_new_line();
 		rl_redisplay();
+	}
+	if (signum == SIGQUIT)
+	{
+		printf("Quit (core dumped)\n");
 	}
 }
 
