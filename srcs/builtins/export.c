@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 09:11:51 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/04 16:45:31 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/04 18:21:28 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,7 +188,7 @@ void	handle_value_case(char ***envp, char *arg, t_alloc *garbage)
 		}
 		return ;
 	}
-	var_name = strndup(arg, equal - arg);
+	var_name = ft_strndup(arg, equal - arg, garbage);
 	value = equal + 1;
 	if (!value || *value == '\0')
 		new_var = ft_strjoin(var_name, "=\"\"", garbage);

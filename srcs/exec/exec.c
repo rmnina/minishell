@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/04 17:56:45 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/04 18:13:32 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,6 @@ char	**create_cmd_args(t_command *command, int *i, t_alloc *garbage)
 	while (command[*i].type == WORD || command[*i].type == CODE)
 	{
 		cmd_args[j] = ft_strjoin(cmd_args[j], command[*i].word, garbage);
-		// printf("args = %s\n", cmd_args[j]);
 		if (!cmd_args[j])
 			return (NULL);
 		*i += 1;
