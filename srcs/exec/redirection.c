@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 17:13:45 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/02 20:59:57 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/02 13:27:59 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int	redir_input(char *filename)
 }
 
 
-t_heredocNode	*build_heredoclist(t_main_items *main, int *i)
+t_heredocNode	*build_heredoclist(t_command *command, int *i)
 {
 	t_heredocNode	*head;
 	t_heredocNode	*current;
@@ -64,7 +64,7 @@ t_heredocNode	*build_heredoclist(t_main_items *main, int *i)
 	head = NULL;
 	current = NULL;
 	new_node = NULL;
-	while (main->command[*i].type == DB_LEFT_CHEV)
+	while (command[*i].type == DB_LEFT_CHEV)
 	{
 		new_node = malloc(sizeof(t_heredocNode));
 		if (!new_node)
@@ -72,7 +72,7 @@ t_heredocNode	*build_heredoclist(t_main_items *main, int *i)
 			perror("Failed to allocate memory for heredoc node");
 			break ;
 		}
-		new_node->delimiter = main->command[*i + 1].word;
+		new_node->delimiter = command[*i + 1].word;
 		new_node->next = NULL;
 		if (!head)
 			head = new_node;
@@ -84,7 +84,7 @@ t_heredocNode	*build_heredoclist(t_main_items *main, int *i)
 	return (head);
 }
 
-int	init_redirection(t_main_items *main, int *i, t_code *code)
+int	init_redirection(t_command *command, int *i, char **cmd_args, char ***envp, t_code *code)
 {
 	char			*filename;
 	int				fd;
@@ -104,30 +104,30 @@ int	init_redirection(t_main_items *main, int *i, t_code *code)
 	}
 	if (pid == 0)
 	{
-		heredoclist = build_heredoclist(main, i);
+		heredoclist = build_heredoclist(command, i);
 		if (heredoclist)
 		{
-			heredoc(heredoclist, &pipes, main, son_garb);
+			heredoc(heredoclist, &pipes, cmd_args, envp, son_garb);
 			exit(EXIT_SUCCESS);
 		}
-		if (main->command[*i].type == DB_RIGHT_CHEV || \
-		main->command[*i].type == RIGHT_CHEV)
+		if (command[*i].type == DB_RIGHT_CHEV || \
+		command[*i].type == RIGHT_CHEV)
 		{
-			filename = ft_strdup(main->command[*i + 1].word, son_garb);
+			filename = ft_strdup(command[*i + 1].word, son_garb);
 			if (!filename)
 				return (-1);
-			if (main->command[*i].type == RIGHT_CHEV)
+			if (command[*i].type == RIGHT_CHEV)
 				fd = redir_output(filename);
-			else if (main->command[*i].type == DB_RIGHT_CHEV)
+			else if (command[*i].type == DB_RIGHT_CHEV)
 				fd = redir_append(filename);
 		}
-		else if (main->command[*i].type == LEFT_CHEV)
+		else if (command[*i].type == LEFT_CHEV)
 		{
-			filename = main->command[*i - 1].word;
+			filename = command[*i - 1].word;
 			fd = redir_input(filename);
 		}
-		if (execute_builtins(main, code, son_garb) == -1)
-			execute_non_builtin(main, code, son_garb);
+		if (execute_builtins(cmd_args, envp, code, son_garb) == -1)
+			execute_non_builtin(envp, code, cmd_args, son_garb);
 		free_garbage(&son_garb, 0);
 		exit(0);
 	}
