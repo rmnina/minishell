@@ -3,14 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:03:22 by jdufour           #+#    #+#             */
-<<<<<<< HEAD:includes/minishell.h
-/*   Updated: 2023/12/22 14:48:17 by jdufour          ###   ########.fr       */
-=======
-/*   Updated: 2023/12/28 15:19:21 by juandrie         ###   ########.fr       */
->>>>>>> juliette:minishell.h
+/*   Updated: 2024/01/02 14:22:59 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,17 +114,14 @@ int			special_type_expand(char c1, char c2);
 //Execve
 char		*find_command_in_segment(char *segment, char *command, t_alloc *garbage);
 char		*find_command_path(char *command, t_alloc *garbage);
-<<<<<<< HEAD:includes/minishell.h
-void		execute_command(char **cmd_args, char **envp, t_alloc *garbage);
-void			handle_command(char *input, t_code *code, char **envp, t_alloc *garbage);
-int			execute_non_builtin(char **envp, t_code *code, char **cmd_args, t_alloc *garbage);
-void		heredoc_child(t_pipe *pipes, char **argv, char **envp, t_alloc *garbage);
-=======
+// void		execute_command(char **cmd_args, char **envp, t_alloc *garbage);
+// void			handle_command(char *input, t_code *code, char **envp, t_alloc *garbage);
+// int			execute_non_builtin(char **envp, t_code *code, char **cmd_args, t_alloc *garbage);
+// void		heredoc_child(t_pipe *pipes, char **argv, char **envp, t_alloc *garbage);
 void		execute_command(char **cmd_args, char ***envp, t_alloc *garbage);
 void		handle_command(char *input, t_code *code, char ***envp, t_alloc *garbage);
 int			execute_non_builtin(char ***envp, t_code *code, char **cmd_args, t_alloc *garbage);
 void		heredoc_child(t_pipe *pipes, char **argv, char ***envp, t_alloc *garbage);
->>>>>>> juliette:minishell.h
 char		**create_cmd_args(t_command *command, int *i, t_alloc *garbage);
 void		pick_command(char **cmd_args, char **envp, t_code *code, t_alloc *garbage);
 
@@ -148,13 +141,8 @@ int			ft_exit(char **cmd_args, t_code *code, t_alloc *garbage);
 int			ft_export(char ***envp, char **argv, t_code *code, t_alloc *garbage);
 int			ft_pwd(char **unused_args, char **unused_envp, t_code *code);
 int			ft_unset(char ***envp, char **names, t_code *code);
-<<<<<<< HEAD:includes/minishell.h
 int			execute_status_builtin(t_code *code, int *i);
-int			execute_builtins(char **cmd_args, char **envp, t_code *code, t_alloc *garbage);
-=======
-//int			execute_status_builtin(t_code *code, int *i);
 int			execute_builtins(char **cmd_args, char ***envp, t_code *code, t_alloc *garbage);
->>>>>>> juliette:minishell.h
 
 //Signaux
 void		child_handler(int signum);

@@ -3,19 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 09:11:51 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/02 13:26:12 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/03 18:27:27 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-
-int	envp_length(char **envp)
+int envp_length(char **envp)
 {
-	int	length;
+	int length;
 
 	length = 0;
 	while (envp[length] != NULL)
@@ -25,11 +24,10 @@ int	envp_length(char **envp)
 	return (length);
 }
 
-
-char	**copy_envp(char **envp, int new_size, t_alloc *garbage)
+char **copy_envp(char **envp, int new_size, t_alloc *garbage)
 {
-	int		i;
-	char	**new_envp;
+	int i;
+	char **new_envp;
 
 	i = 0;
 	new_envp = malloc(sizeof(char *) * (new_size + 1));
@@ -63,13 +61,13 @@ char	**copy_envp(char **envp, int new_size, t_alloc *garbage)
 	return (new_envp);
 }
 
-void	add_or_update_env_var(char ***envp, char *var, t_alloc *garbage)
+void add_or_update_env_var(char ***envp, char *var, t_alloc *garbage)
 {
-	int		len;
-	int		envp_len;
-	char	**new_envp;
-	int		i;
-	bool	found;
+	int len;
+	int envp_len;
+	char **new_envp;
+	int i;
+	bool found;
 
 	i = 0;
 	len = 0;
@@ -81,20 +79,20 @@ void	add_or_update_env_var(char ***envp, char *var, t_alloc *garbage)
 	envp_len = envp_length(*envp);
 	new_envp = copy_envp(*envp, envp_len + 1, garbage);
 	if (new_envp == NULL)
-		return ;
+		return;
 	while (i < envp_len)
 	{
-		if (ft_strncmp(new_envp[i], var, len) == 0 && new_envp[i][len] == '=')
+		if (ft_strncmp(new_envp[i], var, len) == 0)
 		{
 			free(new_envp[i]);
 			new_envp[i] = ft_strdup(var, garbage);
 			if (new_envp[i] == NULL)
 			{
 				free(new_envp);
-				return ;
+				return;
 			}
 			found = true;
-			break ;
+			break;
 		}
 		i++;
 	}
@@ -106,6 +104,7 @@ void	add_or_update_env_var(char ***envp, char *var, t_alloc *garbage)
 	*envp = new_envp;
 }
 
+
 bool	is_valid_identifier(const char *str)
 {
 	const char	*ptr;
@@ -114,8 +113,13 @@ bool	is_valid_identifier(const char *str)
 
 	equals_encountered = false;
 	non_space_after_equals = false;
-	if (!str || !(*str == '_' || ft_isalpha(*str)))
+	if (!str)
 		return (false);
+	if (*str == ' ' || *str == '=' || !(*str == '_' || ft_isalpha(*str)))
+	{
+		printf("export: `%s': not a valid identifier\n", str);
+		return (false);
+	}
 	ptr = str + 1;
 	while (*ptr)
 	{
@@ -141,16 +145,94 @@ bool	is_valid_identifier(const char *str)
 	return (true);
 }
 
+// void handle_value_case(char ***envp, char *var_name, char *value, t_alloc *garbage)
+// {
+// 	char *new_var;
+// 	char *formatted_value;
 
-void	handle_value_case(char ***envp, char *var_name, char *value, t_alloc *garbage)
+// 	if (!value || *value == '\0')
+// 	{
+// 		new_var = ft_strjoin(var_name, "=\"\"", garbage);
+// 		add_or_update_env_var(envp, new_var, garbage);
+// 	}
+// 	else if (*value == '$')
+// 	{
+// 		printf("avant formatage\n");
+// 		formatted_value = ft_strjoin("\\", value, garbage);
+// 		new_var = ft_strjoin(var_name, "=", garbage);
+// 		new_var = ft_strjoin(new_var, formatted_value, garbage);
+// 		printf("apres formatage, new var : %s\n", new_var);
+// 	}
+// 	else if (*value == '"' || *value == '\'')
+// 	{
+// 		formatted_value = ft_strdup(value, garbage);
+// 		new_var = ft_strjoin(var_name, "=", garbage);
+// 		new_var = ft_strjoin(new_var, formatted_value, garbage);
+// 	}
+// 	else
+// 	{
+// 		formatted_value = ft_strjoin("\"", value, garbage);
+// 		formatted_value = ft_strjoin(formatted_value, "\"", garbage);
+// 		new_var = ft_strjoin(var_name, "=", garbage);
+// 		new_var = ft_strjoin(new_var, formatted_value, garbage);
+// 	}
+// 	add_or_update_env_var(envp, new_var, garbage);
+// }
+
+// char *escape_special_chars(const char *value)
+// {
+//     char *escaped_value;
+//     int i, j, len;
+
+//     len = strlen(value);
+//     escaped_value = malloc(sizeof(char) * (2 * len + 1)); // Allouer suffisamment d'espace pour les caractères échappés
+//     if (!escaped_value) return NULL;
+
+//     for (i = 0, j = 0; i < len; ++i, ++j)
+//     {
+//         if (value[i] == '\\' || value[i] == '$')
+//         {
+//             escaped_value[j++] = '\\'; // Ajouter un backslash supplémentaire
+//         }
+//         escaped_value[j] = value[i];
+//     }
+//     escaped_value[j] = '\0';
+
+//     return escaped_value;
+// }
+void	handle_value_case(char ***envp, char *arg, t_alloc *garbage)
 {
+	char	*equal;
+	char	*var_name;
+	char	*value;
 	char	*new_var;
 	char	*formatted_value;
 
-	if (!value || *value == '\0' || *value == ' ')
+	equal = ft_strchr(arg, '=');
+	if (!equal)
 	{
+		if (is_valid_identifier(arg))
+		{
+			new_var = ft_strjoin(arg, "=\"\"", garbage);
+			add_or_update_env_var(envp, new_var, garbage);
+		}
+		return ;
+	}
+	var_name = strndup(arg, equal - arg);
+	value = equal + 1;
+	if (!value || *value == '\0')
 		new_var = ft_strjoin(var_name, "=\"\"", garbage);
-		add_or_update_env_var(envp, new_var, garbage);
+	else if (*value == '$')
+	{
+		formatted_value = ft_strjoin("\\", value, garbage);
+		new_var = ft_strjoin(var_name, "=", garbage);
+		new_var = ft_strjoin(new_var, formatted_value, garbage);
+	}
+	else if (*value == '"' || *value == '\'')
+	{
+		formatted_value = ft_strdup(value, garbage);
+		new_var = ft_strjoin(var_name, "=", garbage);
+		new_var = ft_strjoin(new_var, formatted_value, garbage);
 	}
 	else
 	{
@@ -160,17 +242,60 @@ void	handle_value_case(char ***envp, char *var_name, char *value, t_alloc *garba
 		new_var = ft_strjoin(new_var, formatted_value, garbage);
 	}
 	add_or_update_env_var(envp, new_var, garbage);
+	free(var_name);
 }
+
+
+// void handle_value_case(char ***envp, char *arg, t_alloc *garbage)
+// {
+//     char *equal = ft_strchr(arg, '=');
+//     char *var_name;
+//     char *value;
+//     char *new_var;
+//     char *formatted_value;
+
+//     if (!equal)
+//     {
+//         // Gestion des cas où il n'y a pas de valeur (juste un nom de variable)
+//         if (is_valid_identifier(arg))
+//         {
+//             new_var = ft_strjoin(arg, "=\"\"", garbage);
+//             add_or_update_env_var(envp, new_var, garbage);
+//         }
+//         return;
+//     }
+
+//     // Séparation du nom de la variable et de la valeur
+//     var_name = strndup(arg, equal - arg);
+//     value = equal + 1;
+
+//     // Traiter et échapper la valeur
+//     if (!value || *value == '\0')
+//     {
+//         new_var = ft_strjoin(var_name, "=\"\"", garbage);
+//     }
+//     else
+//     {
+//         // Créer une nouvelle chaîne pour la valeur formatée en échappant les caractères spéciaux
+//         formatted_value = escape_special_chars(value);
+//         new_var = ft_strjoin(var_name, "=", garbage);
+//         new_var = ft_strjoin(new_var, formatted_value, garbage);
+// 		new_var = ft_strjoin(new_var, "\"", garbage);
+//     }
+//     add_or_update_env_var(envp, new_var, garbage);
+
+//     free(var_name); // Libérer la mémoire allouée pour var_name
+// }
 
 
 int ft_export(char ***envp, char **argv, t_code *code, t_alloc *garbage)
 {
 	int		i;
 	char	*equal;
-	char	*identifier;
+	char	*space;
 
 	equal = NULL;
-	identifier = NULL;
+	space = NULL;
 	if (argv[1] == NULL)
 	{
 		i = 0;
@@ -188,31 +313,31 @@ int ft_export(char ***envp, char **argv, t_code *code, t_alloc *garbage)
 	}
 	else
 	{
-	i = 1;
+		i = 1;
 		while (argv[i] != NULL)
 		{
 			equal = ft_strchr(argv[i], '=');
-			printf("equal: %s\n", equal);
+			space = ft_strchr(argv[i], ' ');
+			if (!space && !equal)
+			{
+				while (argv[i] != NULL)
+				{
+					if (is_valid_identifier(argv[i]))
+						add_or_update_env_var(envp, argv[i], garbage);
+					i++;
+				}
+			}
 			if (equal)
 			{
-				*equal = '\0';
-				identifier = argv[i];
-				printf("identifier: %s\n", identifier);
-				if (is_valid_identifier(identifier))
-				{
-					handle_value_case(envp, identifier, equal + 1, garbage);
-					printf("identifier apres handle: %s\n", identifier);
-				}
-				else
-					printf("export:`%s': not a valid identifier\n", identifier);
-				*equal = '=';
+				//*equal = '\0';
+				if (is_valid_identifier(argv[i]) || ft_strchr(argv[i], '='))
+					handle_value_case(envp, argv[i], garbage);
+				//*equal = '=';
 			}
 			else
 			{
 				if (is_valid_identifier(argv[i]))
 					add_or_update_env_var(envp, argv[i], garbage);
-				else
-					printf("export: '%s': not a valid identifier\n", argv[i]);
 			}
 			i++;
 		}

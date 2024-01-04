@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/02 13:27:27 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/02 14:24:07 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,11 +134,7 @@ void	handle_command(char *input, t_code *code, char ***envp, t_alloc *garbage)
 
 	i = 0;
 	exec = 0;
-<<<<<<< HEAD:srcs/exec/exec.c
-	command = ft_parsing(input, garbage);
-=======
 	command = ft_parsing(input, garbage, envp);
->>>>>>> juliette:exec/exec.c
 	if (command == NULL)
 		return ;
 	cmd_args = NULL;
@@ -159,13 +155,7 @@ void	handle_command(char *input, t_code *code, char ***envp, t_alloc *garbage)
 				execute_non_builtin(envp, code, cmd_args, garbage);
 		}
 		else
-<<<<<<< HEAD:srcs/exec/exec.c
 			i++;
-=======
-		{
-			i++;
-		}
->>>>>>> juliette:exec/exec.c
 	}
 }
 
