@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: julietteandrieux <julietteandrieux@stud    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 17:13:45 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/04 18:47:48 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/07 20:18:12 by julietteand      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ int	init_redirection(t_command *command, int *i, char **cmd_args, char ***envp, 
 		heredoclist = build_heredoclist(command, i);
 		if (heredoclist)
 		{
-			heredoc(heredoclist, &pipes, cmd_args, envp, son_garb);
+			heredoc(heredoclist, &pipes, cmd_args, *envp, code, son_garb);
 			exit(EXIT_SUCCESS);
 		}
 		if (command[*i].type == DB_RIGHT_CHEV || \

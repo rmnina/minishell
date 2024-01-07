@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: julietteandrieux <julietteandrieux@stud    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:03:22 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/04 19:22:33 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/07 20:17:53 by julietteand      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ enum e_type {
 # define SINGLE_QUOTE 39
 # define DOUBLE_QUOTE 34
 # define UNDERSCORE 95
+# define SPACE 32
 
 typedef struct s_quotes {
 	bool	case_single;
@@ -125,7 +126,7 @@ char		*find_command_path(char *command, t_alloc *garbage);
 void		execute_command(char **cmd_args, char ***envp, t_alloc *garbage);
 void		handle_command(char *input, t_code *code, char ***envp, t_alloc *garbage);
 int			execute_non_builtin(char ***envp, t_code *code, char **cmd_args, t_alloc *garbage);
-void		heredoc_child(t_pipe *pipes, char **argv, char ***envp, t_alloc *garbage);
+void		heredoc_child(t_pipe *pipes, char **argv, char ***envp, t_code *code, t_alloc *garbage);
 char		**create_cmd_args(t_command *command, int *i, t_alloc *garbage);
 void		pick_command(char **cmd_args, char **envp, t_code *code, t_alloc *garbage);
 
@@ -157,6 +158,7 @@ int			init_sigactionsa(struct sigaction *sa);
 int			init_sigquit(void);
 
 //heredoc
-int			heredoc(t_heredocNode *heredoclist, t_pipe *pipes, char **argv, char ***envp, t_alloc *garbage);
+int			heredoc(t_heredocNode *heredoclist, t_pipe *pipes, char **argv, char **envp, t_code *code, t_alloc *garbage);
+void		read_add(int fd, const char *delimiter, t_alloc *garbage);
 
 #endif

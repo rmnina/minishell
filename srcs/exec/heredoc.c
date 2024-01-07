@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: julietteandrieux <julietteandrieux@stud    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 16:22:53 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/04 18:47:54 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/07 20:17:40 by julietteand      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ void	read_add(int fd, const char *delimiter, t_alloc *garbage)
 	while (1)
 	{
 		line = readline("> ");
+		printf("Read line: %s\n", line);
 		if (!line || ft_strcmp(line, delimiter) == 0)
 		{
 			free(line);
@@ -81,8 +82,7 @@ void	read_add(int fd, const char *delimiter, t_alloc *garbage)
 	close (fd);
 }
 
-
-int	heredoc(t_heredocNode *heredoclist, t_pipe *pipes, char **argv, char ***envp, t_alloc *garbage)
+int	heredoc(t_heredocNode *heredoclist, t_pipe *pipes, char **argv, char **envp, t_code *code, t_alloc *garbage)
 {
 	pid_t			pid;
 	int				status;
@@ -106,13 +106,14 @@ int	heredoc(t_heredocNode *heredoclist, t_pipe *pipes, char **argv, char ***envp
 	}
 	else if (pid == 0)
 	{
-		heredoc_child(pipes, argv, envp, garbage);
+		heredoc_child(pipes, argv, &envp, code, garbage);
 		exit (EXIT_SUCCESS);
 	}
 	else
 	{
 		close(pipes->fd[0]);
 		close(pipes->fd[1]);
+		//close(pipes->fd[0]);
 		waitpid(pid, &status, 0);
 		if (WIFEXITED(status))
 			code_status = WEXITSTATUS(status);
