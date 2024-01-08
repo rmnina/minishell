@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 17:13:45 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/08 13:55:17 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/08 20:46:41 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ t_heredocNode	*build_heredoclist(t_command *command, int *i, t_alloc *garbage)
 	current = NULL;
 	new_node = garb_malloc(sizeof(t_heredocNode), 1, &garbage);
 	if (!new_node)
-		return (perror("Failed to allocate memory for heredoc node"), new_node);
+		return (new_node);
 	*i += 1;
 	new_node->delimiter = command[*i].word;
 	new_node->next = NULL;
@@ -90,6 +90,7 @@ int	init_redirection(t_command *command, int *i, char **cmd_args, char ***envp, 
 
 	son_garb = NULL;
 	fd = 0;
+	filename = NULL;
 	pid = fork();
 	if (pid == -1)
 	{

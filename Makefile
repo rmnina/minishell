@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+         #
+#    By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/14 14:15:25 by jdufour           #+#    #+#              #
-#    Updated: 2024/01/08 12:21:01 by jdufour          ###   ########.fr        #
+#    Updated: 2024/01/08 18:57:31 by juandrie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -42,7 +42,7 @@ OBJS = $(SRCS:.c=.o)
 
 CC = gcc
 
-FLAGS = -g -ggdb -Wall -Wextra -Werror
+FLAGS = -g3 -ggdb -Wall -Wextra -Werror
 
 RM = rm -rf
 

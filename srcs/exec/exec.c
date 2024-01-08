@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/08 13:58:34 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/08 20:06:11 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,6 @@ int	execute_non_builtin(char ***envp, t_code *code, char **cmd_args, t_alloc *ga
 	else if (pid == 0)
 	{
 		init_sigquit();
-		// printf("Executing non-builtin: %s\n", cmd_args[0]);
 		execute_command(cmd_args, envp, garbage);
 		exit(EXIT_FAILURE);
 	}
@@ -70,19 +69,19 @@ int	execute_non_builtin(char ***envp, t_code *code, char **cmd_args, t_alloc *ga
 	return (-1);
 }
 
-int is_builtin(char *command)
+int	is_builtin(char *command)
 {
-    if (ft_strcmp(command, "cd") == 0 ||
-        ft_strcmp(command, "echo") == 0 ||
-        ft_strcmp(command, "env") == 0 ||
-       	ft_strcmp(command, "exit") == 0 ||
-        ft_strcmp(command, "export") == 0 ||
-        ft_strcmp(command, "pwd") == 0 ||
-        ft_strcmp(command, "unset") == 0)
-    {
-        return (1);
-    }
-    return (0);
+	if (ft_strcmp(command, "cd") == 0 ||
+		ft_strcmp(command, "echo") == 0 ||
+		ft_strcmp(command, "env") == 0 ||
+		ft_strcmp(command, "exit") == 0 ||
+		ft_strcmp(command, "export") == 0 ||
+		ft_strcmp(command, "pwd") == 0 ||
+		ft_strcmp(command, "unset") == 0)
+	{
+		return (1);
+	}
+	return (0);
 }
 
 void	heredoc_child(t_pipe *pipes, char **argv, char ***envp, t_code *code, t_alloc *garbage)
@@ -90,6 +89,7 @@ void	heredoc_child(t_pipe *pipes, char **argv, char ***envp, t_code *code, t_all
 	char	*path;
 	char	*new_argv[2];
 
+	path = NULL;
 	close(pipes->fd[1]);
 	if (dup2(pipes->fd[0], STDIN_FILENO) == -1)
 	{
@@ -97,8 +97,10 @@ void	heredoc_child(t_pipe *pipes, char **argv, char ***envp, t_code *code, t_all
 		exit(EXIT_FAILURE);
 	}
 	close(pipes->fd[0]);
+	if (!argv[0] || !*argv)
+		exit (EXIT_FAILURE);
 	if (is_builtin(argv[0]))
-        execute_builtins(argv, envp, code, garbage);
+		execute_builtins(argv, envp, code, garbage);
 	else
 	{
 		path = find_command_path(argv[0], garbage);
@@ -108,12 +110,12 @@ void	heredoc_child(t_pipe *pipes, char **argv, char ***envp, t_code *code, t_all
 			exit(EXIT_FAILURE);
 		}
 		new_argv[0] = ft_strdup(argv[0], garbage);
+		if (!new_argv[0])
+			exit (EXIT_FAILURE);
 		new_argv[1] = NULL;
-		// printf("Executing heredoc child, command: %s\n", new_argv[0]);
-		// printf("Executing heredoc child, command: %s\n", path);
 		execve(path, new_argv, *envp);
 		perror("execeve failed");
-		//exit(EXIT_FAILURE);
+		exit(EXIT_FAILURE);
 	}
 	exit(EXIT_SUCCESS);
 }
@@ -131,22 +133,28 @@ int	ft_count(t_command *command, int *i)
 char	**create_cmd_args(t_command *command, int *i, t_alloc *garbage)
 {
 	char	**cmd_args;
+	int		num_args;
 	int		j;
 
 	j = 0;
-	cmd_args = garb_malloc(sizeof(char *), ft_count(command, i) + 1, &garbage);
+	cmd_args = NULL;
+	num_args = ft_count(command, i);
+	cmd_args = garb_malloc(sizeof(char *), num_args + 1, &garbage);
 	if (!cmd_args)
 		return (NULL);
 	while (command[*i].type == WORD || command[*i].type == CODE)
 	{
+		cmd_args[j] = NULL;
 		cmd_args[j] = ft_strjoin(cmd_args[j], command[*i].word, garbage);
 		if (!cmd_args[j])
 			return (NULL);
 		*i += 1;
 		j++;
 	}
+	cmd_args[j] = NULL;
 	return (cmd_args);
 }
+
 
 void	handle_command(char *input, t_code *code, char ***envp, t_alloc *garbage)
 {
@@ -157,10 +165,10 @@ void	handle_command(char *input, t_code *code, char ***envp, t_alloc *garbage)
 
 	i = 0;
 	exec = 0;
+	cmd_args = NULL;
 	command = ft_parsing(input, garbage, envp);
 	if (command == NULL)
 		return ;
-	cmd_args = NULL;
 	while (command[i].type != 0)
 	{
 		if (command[i].type == WORD || command[i].type == 0 || command[i].type == CODE)

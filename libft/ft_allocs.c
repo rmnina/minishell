@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_allocs.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julietteandrieux <julietteandrieux@stud    +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 19:16:31 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/22 12:05:22 by julietteand      ###   ########.fr       */
+/*   Updated: 2024/01/08 20:19:34 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,26 +89,3 @@ void	free_garbage(t_alloc **garbage, int i)
 		printf("Error malloc : please try again\n");
 }
 
-// int main(void)
-// {
-// 	t_alloc *garbage = NULL;
-// 	char *str = garb_malloc(sizeof(char), 5, &garbage);
-// 	int *array = garb_malloc(sizeof(int), 5, &garbage);
-// 	str[0] = 's';
-// 	str[1] = 'a';
-// 	str[2] = 'l';
-// 	str[3] = 'u';
-// 	array[0] = 6;
-// 	array[1] = 1;
-// 	array[2] = 2;
-// 	array[3] = 3;
-// 	if (str)
-// 		printf("malloc 1 success\n");
-// 	if (array)
-// 		printf("malloc 2 success\n");
-// 	if (str)
-// 		printf("str 1 = %c\n", str[0]);
-// 	if (array)
-// 		printf("array 1 = %d\n", array[0]);
-// 	free_garbage(&garbage);
-// }

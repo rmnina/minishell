@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:45:11 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/04 19:21:49 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/08 20:03:31 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,8 @@ int	ft_minishell(char *line, t_code *code, char **envp, t_alloc *garbage)
 		{
 			add_history(line);
 			handle_command(line, code, &envp, garbage);
+			if (code->code_status == SPECIAL_EXIT_CODE) 
+				break ;
 		}
 		free(line);
 	}
@@ -59,18 +61,21 @@ int	ft_minishell(char *line, t_code *code, char **envp, t_alloc *garbage)
 
 int	main(int argc, char **argv, char **envp)
 {
-	t_code				*code;
-	char				*line;
-	t_alloc				*garbage;
+	t_code		*code;
+	char		*line;
+	t_alloc		*garbage;
+	int			exit_status;
 
 	(void)argv;
 	code = NULL;
 	line = NULL;
 	garbage = NULL;
+	exit_status = 0;
 	init_main(&code, garbage, argc);
-	ft_minishell(line, code, envp, garbage);
+	exit_status = ft_minishell(line, code, envp, garbage);
 	clear_history();
 	if (garbage)
 		free_garbage(&garbage, 0);
-	return (0);
+	return (exit_status);
+	//return (0);
 }

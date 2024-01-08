@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 09:11:51 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/04 18:21:28 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/08 20:06:34 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ char	**copy_envp(char **envp, int new_size, t_alloc *garbage)
 	char	**new_envp;
 
 	i = 0;
-	new_envp = malloc(sizeof(char *) * (new_size + 1));
+	new_envp = garb_malloc(sizeof(char *), new_size + 1, &garbage);
 	if (new_envp == NULL)
 		return (NULL);
 	while (i < new_size)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:03:22 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/08 13:54:03 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/08 14:22:15 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,8 @@ enum e_type {
 # define SINGLE_QUOTE 39
 # define DOUBLE_QUOTE 34
 # define UNDERSCORE 95
+# define SPECIAL_EXIT_CODE 255
+
 
 typedef struct s_quotes {
 	bool	case_single;

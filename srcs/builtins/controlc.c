@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 15:13:20 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/04 19:23:43 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/08 15:52:43 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	init_sigactionsa(struct sigaction *sa)
 {
-	ft_bzero(sa, sizeof(sa));
+	ft_bzero(sa, sizeof(struct sigaction));
 	sa->sa_handler = sigint_handler;
     sa->sa_flags = 0;
 	sigaction(SIGINT, sa, NULL);
