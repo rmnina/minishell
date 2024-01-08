@@ -1,0 +1,1459 @@
+Test 1 - Command: \n
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/bin/sh: 1: n: not found
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 2 - Command: 
+--- 
+
++++ 
+
+@@ -0,0 +1,2 @@
+
++[?2004hminishell > [?2004l
++exit
+
+Test 3 - Command: 
+--- 
+
++++ 
+
+@@ -0,0 +1,2 @@
+
++[?2004hminishell > [?2004l
++exit
+
+Test 4 - Command: :
+--- 
+
++++ 
+
+@@ -0,0 +1,3 @@
+
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 5 - Command: !
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/bin/sh: 1: Syntax error: end of file unexpected
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 18 - Command: /
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/bin/sh: 1: /: Permission denied
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 19 - Command: //
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/bin/sh: 1: //: Permission denied
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 20 - Command: /.
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/bin/sh: 1: /.: Permission denied
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 21 - Command: /./../../../../..
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/bin/sh: 1: /./../../../../..: Permission denied
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 22 - Command: ///////
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/bin/sh: 1: ///////: Permission denied
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 23 - Command: \\
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/bin/sh: 1: \: not found
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 24 - Command: \\\\
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/bin/sh: 1: \\: not found
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 25 - Command: \\\\\\\\
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/bin/sh: 1: \\\\: not found
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 26 - Command: -
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/bin/sh: 0: -c requires an argument
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 27 - Command: |
+--- 
+
++++ 
+
+@@ -1 +1 @@
+
+-/bin/sh: 1: Syntax error: "|" unexpected
++/bin/sh: 1: Syntax error: end of file unexpected
+
+Test 28 - Command: | hola
+--- 
+
++++ 
+
+@@ -1 +1 @@
+
+-/bin/sh: 1: Syntax error: "|" unexpected
++/bin/sh: 1: hola: not found
+
+Test 30 - Command: ||
+--- 
+
++++ 
+
+@@ -1 +1 @@
+
+-/bin/sh: 1: Syntax error: "||" unexpected
++/bin/sh: 1: Syntax error: end of file unexpected
+
+Test 34 - Command: &&
+--- 
+
++++ 
+
+@@ -1 +1 @@
+
+-/bin/sh: 1: Syntax error: "&&" unexpected
++/bin/sh: 1: Syntax error: end of file unexpected
+
+Test 40 - Command: ()
+--- 
+
++++ 
+
+@@ -1 +1 @@
+
+-/bin/sh: 1: Syntax error: ")" unexpected
++/bin/sh: 1: Syntax error: Bad function name
+
+Test 41 - Command: ( ( ) )
+--- 
+
++++ 
+
+@@ -1 +1 @@
+
+-/bin/sh: 1: Syntax error: ")" unexpected
++/bin/sh: 1: Syntax error: "(" unexpected (expecting ")")
+
+Test 42 - Command: ( ( ( ( ) ) ) )
+--- 
+
++++ 
+
+@@ -1 +1 @@
+
+-/bin/sh: 1: Syntax error: ")" unexpected
++/bin/sh: 1: Syntax error: "(" unexpected (expecting ")")
+
+Test 43 - Command: ""
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/bin/sh: 1: : Permission denied
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 44 - Command: "hola"
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/bin/sh: 1: hola: not found
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 45 - Command: 'hola'
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/bin/sh: 1: hola: not found
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 46 - Command: ''
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/bin/sh: 1: : Permission denied
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 47 - Command: *
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/bin/sh: 1: diff_output.txt: not found
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 48 - Command: */*
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/bin/sh: 1: */*: not found
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 49 - Command: */*
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/bin/sh: 1: */*: not found
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 50 - Command: .
+--- 
+
++++ 
+
+@@ -0,0 +1,3 @@
+
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 51 - Command: ..
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/bin/sh: 1: ..: Permission denied
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 52 - Command: ~
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/bin/sh: 1: /mnt/nfs/homes/jdufour: Permission denied
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 53 - Command: ABC=hola
+--- 
+
++++ 
+
+@@ -0,0 +1,3 @@
+
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 54 - Command: 4ABC=hola
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/bin/sh: 1: 4ABC=hola: not found
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 55 - Command: hola
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/bin/sh: 1: hola: not found
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 56 - Command: hola que tal
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/bin/sh: 1: hola: not found
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 57 - Command: Makefile
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/bin/sh: 1: Makefile: not found
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 58 - Command: echo
+--- 
+
++++ 
+
+@@ -0,0 +1,3 @@
+
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 59 - Command: echo -n
+--- 
+
++++ 
+
+@@ -0,0 +1,3 @@
+
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 60 - Command: echo Hola
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-Hola
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 61 - Command: echoHola
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/bin/sh: 1: echoHola: not found
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 62 - Command: echo-nHola
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/bin/sh: 1: echo-nHola: not found
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 63 - Command: echo -n Hola
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-Hola
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 64 - Command: echo "-n" Hola
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-Hola
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 65 - Command: echo -nHola
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+--nHola
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 66 - Command: echo Hola -n
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-Hola -n
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 67 - Command: echo Hola Que Tal
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-Hola Que Tal
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 68 - Command: echo         Hola
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-Hola
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 69 - Command: echo    Hola     Que    Tal
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-Hola Que Tal
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 70 - Command: echo      \n hola
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-n hola
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 71 - Command: echo "         " | cat -e
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-$
++Error arg : no argument required$
++^[[?2004hminishell > ^[[?2004l^M$
++exit$
+
+Test 72 - Command: echo           | cat -e
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-$
++Error arg : no argument required$
++^[[?2004hminishell > ^[[?2004l^M$
++exit$
+
+Test 73 - Command: ""''echo hola""'''' que""'' tal""''
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-hola que tal
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 74 - Command: echo -n -n
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+--n
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 75 - Command: echo -n -n Hola Que
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+--n Hola Que
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 76 - Command: echo -p
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+--p
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 77 - Command: echo -nnnnn
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+--nnnnn
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 78 - Command: echo -n -nnn -nnnn
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+--nnn -nnnn
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 79 - Command: echo -n-nnn -nnnn
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+--n-nnn -nnnn
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 80 - Command: echo -n -nnn hola -nnnn
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+--nnn hola -nnnn
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 81 - Command: echo -n -nnn-nnnn
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+--nnn-nnnn
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 82 - Command: echo --------n
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+---------n
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 83 - Command: echo -nnn --------n
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+--nnn --------n
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 84 - Command: echo -nnn -----nn---nnnn
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+--nnn -----nn---nnnn
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 85 - Command: echo -nnn --------nnnn
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+--nnn --------nnnn
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 86 - Command: echo $
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-$
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 87 - Command: echo $?
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-0
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 88 - Command: echo $?$
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-0$
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 90 - Command: echo $:$= | cat -e
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-$:$=$
++Error arg : no argument required$
++^[[?2004hminishell > ^[[?2004l^M$
++exit$
+
+Test 91 - Command: echo " $ " | cat -e
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-$ $
++Error arg : no argument required$
++^[[?2004hminishell > ^[[?2004l^M$
++exit$
+
+Test 92 - Command: echo ' $ ' | cat -e
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-$ $
++Error arg : no argument required$
++^[[?2004hminishell > ^[[?2004l^M$
++exit$
+
+Test 93 - Command: echo $HOME
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/mnt/nfs/homes/jdufour
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 94 - Command: echo \$HOME
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-$HOME
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 95 - Command: echo my shit terminal is [$TERM]
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-my shit terminal is [xterm-256color]
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 96 - Command: echo my shit terminal is [$TERM4
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-my shit terminal is [
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 97 - Command: echo my shit terminal is [$TERM4]
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-my shit terminal is []
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 98 - Command: echo $UID
+--- 
+
++++ 
+
+@@ -0,0 +1,3 @@
+
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 99 - Command: echo $HOME9
+--- 
+
++++ 
+
+@@ -0,0 +1,3 @@
+
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 100 - Command: echo $9HOME
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-HOME
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 101 - Command: echo $HOME%
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/mnt/nfs/homes/jdufour%
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 102 - Command: echo $UID$HOME
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/mnt/nfs/homes/jdufour
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 103 - Command: echo Le path de mon HOME est $HOME
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-Le path de mon HOME est /mnt/nfs/homes/jdufour
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 104 - Command: echo $USER$var\$USER$USER\$USERtest$USER
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-jdufour$USERjdufour$USERtestjdufour
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 105 - Command: echo $hola*
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-diff_output.txt minishell minishell_tester.py tests.txt
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 106 - Command: echo -nnnn $hola
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+--nnnn
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 109 - Command: EechoE
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/bin/sh: 1: EechoE: not found
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 110 - Command: .echo.
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/bin/sh: 1: .echo.: not found
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 114 - Command: |echo|
+--- 
+
++++ 
+
+@@ -1 +1 @@
+
+-/bin/sh: 1: Syntax error: "|" unexpected
++/bin/sh: 1: Syntax error: end of file unexpected
+
+Test 115 - Command: |echo -n hola
+--- 
+
++++ 
+
+@@ -1 +1 @@
+
+-/bin/sh: 1: Syntax error: "|" unexpected
++hola
+
+Test 116 - Command: echo '*'
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-*
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 117 - Command: echo $""
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-$
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 118 - Command: echo "$"""
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-$
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 119 - Command: echo '$'''
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-$
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 120 - Command: echo $"HOME"
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-$HOME
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 121 - Command: echo $''HOME
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-$HOME
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 122 - Command: echo $""HOME
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-$HOME
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 123 - Command: echo "$HO"ME
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-ME
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 124 - Command: echo '$HO'ME
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-$HOME
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 125 - Command: echo "$HO""ME"
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-ME
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 126 - Command: echo '$HO''ME'
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-$HOME
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 127 - Command: echo "'$HO''ME'"
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-'''ME'
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 128 - Command: echo ""$HOME
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/mnt/nfs/homes/jdufour
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 129 - Command: echo "" $HOME
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/mnt/nfs/homes/jdufour
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 130 - Command: echo ''$HOME
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/mnt/nfs/homes/jdufour
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 131 - Command: echo '' $HOME
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/mnt/nfs/homes/jdufour
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 132 - Command: echo $"HO""ME"
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-$HOME
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 133 - Command: echo $'HO''ME'
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-$HOME
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 134 - Command: echo $'HOME'
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-$HOME
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 135 - Command: echo "$"HOME
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-$HOME
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 136 - Command: echo $=HOME
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-$=HOME
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 137 - Command: echo $"HOLA"
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-$HOLA
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 138 - Command: echo $'HOLA'
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-$HOLA
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 139 - Command: echo $DONTEXIST Hola
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-Hola
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 140 - Command: echo "hola"
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-hola
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 141 - Command: echo 'hola'
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-hola
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 142 - Command: echo ''hola''
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-hola
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 143 - Command: echo ''h'o'la''
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-hola
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 144 - Command: echo "''h'o'la''"
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-''h'o'la''
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 145 - Command: echo "'"h'o'la"'"
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-'hola'
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 146 - Command: echo"'hola'"
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/bin/sh: 1: echo'hola': not found
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 147 - Command: echo "'hola'"
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-'hola'
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 148 - Command: echo '"hola"'
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-"hola"
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 149 - Command: echo '''ho"''''l"a'''
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-ho"l"a
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 150 - Command: echo hola""""""""""""
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-hola
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 151 - Command: echo hola"''''''''''"
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-hola''''''''''
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
