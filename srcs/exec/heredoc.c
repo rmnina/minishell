@@ -6,11 +6,42 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 16:22:53 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/04 19:52:31 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/08 12:20:28 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+
+int	heredoc_is_expand(char *line)
+{
+	int		i;
+
+	i = 0;
+	while (line[i])
+	{
+		if (line[i] == '$' && line[i + 1] && (ft_isalnum(line[i + 1]) \
+		|| line[i + 1] == UNDERSCORE))
+			return (i);
+		else if (line[i] == '$' && line[i + 1] && !(ft_strcmp(line[i + 1], "?")))
+			return (i * -1);
+		i++;
+	}
+	return (0);
+}
+
+char	*heredoc_get_expand(char *line, char **envp, t_alloc *garbage)
+{
+	int		index;
+	char	*name;
+	char	*var;
+
+	index = heredoc_is_expand(line);
+	name = get_env_var_name(line, &index, garbage);
+	var = ft_getenv(&envp, name);
+	if (!var)
+		return (NULL);
+	return (var);
+}
 
 t_line	*new_line(char *line, t_alloc *garbage)
 {
