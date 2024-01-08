@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:45:11 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/04 19:21:49 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/08 19:58:35 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,6 @@ int	main(int argc, char **argv, char **envp)
 	init_main(&code, garbage, argc);
 	ft_minishell(line, code, envp, garbage);
 	clear_history();
-	if (garbage)
-		free_garbage(&garbage, 0);
+	free_garbage(&garbage, 0);
 	return (0);
 }

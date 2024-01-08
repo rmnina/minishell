@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:03:22 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/08 13:54:03 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/08 17:13:42 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,7 @@ int			is_expand(char *line);
 //Parser
 void		free_parsed_command_line(char **argv);
 int			parse_quotes(char *line, int *i, t_quotes *quotes);
+int			parse_expand_quotes(char *line, int *i, t_quotes *quotes);
 char		*get_env_var_name(char *line, int *i, t_alloc *garbage);
 void		init_get_token(t_command *token);
 void		init_get_expand(t_command *token, char *line, int *i, t_quotes *quotes, t_alloc *garbage, char ***envp);

@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 15:15:34 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/04 17:25:03 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/08 17:24:58 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,12 +61,13 @@ int	get_lex_expand(char *line, int *i, t_quotes *quotes, t_command *token, t_all
 	while (quotes->var[j])
 	{
 		is_in_quote(quotes->var[j], quotes);
-		if (parse_quotes(quotes->var, &j, quotes) == 1)
+		printf("var j = %d\n", parse_expand_quotes(quotes->var, &j, quotes));
+		if (parse_expand_quotes(quotes->var, &j, quotes) == 1)
 		{
 			j++;
 			break ;
 		}
-		else if (!parse_quotes(quotes->var, &j, quotes))
+		else if (!parse_expand_quotes(quotes->var, &j, quotes))
 		{
 			token->word = ft_strjoin_char(token->word, quotes->var[j], garbage);
 			j++;

@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/08 13:58:34 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/08 14:57:26 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,8 +171,8 @@ void	handle_command(char *input, t_code *code, char ***envp, t_alloc *garbage)
 			exec++;
 		}
 		if (command[i].type >= LEFT_CHEV && command[i].type <= DB_LEFT_CHEV)
-			exec = init_redirection(command, &i, cmd_args, envp, code);
-		if (cmd_args != NULL && exec == 0)
+			init_redirection(command, &i, cmd_args, envp, code);
+		else if (cmd_args != NULL && exec == 0)
 		{
 			if (execute_builtins(cmd_args, envp, code, garbage) == -1)
 				execute_non_builtin(envp, code, cmd_args, garbage);

@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 16:22:53 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/08 13:54:55 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/08 14:48:37 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ void	read_add(int fd, const char *delimiter, t_alloc *garbage)
 	while (1)
 	{
 		line = readline("> ");
-		printf("Read line: %s\n", line);
+		// printf("Read line: %s\n", line);
 		if (!line || ft_strcmp(line, delimiter) == 0)
 		{
 			free(line);
