@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 17:13:45 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/04 23:23:42 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/08 13:55:17 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,14 +98,11 @@ int	init_redirection(t_command *command, int *i, char **cmd_args, char ***envp, 
 	}
 	if (pid == 0)
 	{
-		if (command[*i].type == DB_LEFT_CHEV)
+		heredoclist = build_heredoclist(command, i, son_garb);
+		if (heredoclist)
 		{
-			heredoclist = build_heredoclist(command, i, son_garb);
-			if (heredoclist)
-			{
-				heredoc(heredoclist, &pipes, cmd_args, envp, son_garb);
-				exit(EXIT_SUCCESS);
-			}
+			heredoc(heredoclist, &pipes, cmd_args, *envp, code, son_garb);
+			exit(EXIT_SUCCESS);
 		}
 		if (command[*i].type == DB_RIGHT_CHEV || \
 		command[*i].type == RIGHT_CHEV)

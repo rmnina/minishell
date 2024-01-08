@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/04 19:55:35 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/08 13:58:34 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,8 @@ int	execute_non_builtin(char ***envp, t_code *code, char **cmd_args, t_alloc *ga
 	}
 	else if (pid == 0)
 	{
+		init_sigquit();
+		// printf("Executing non-builtin: %s\n", cmd_args[0]);
 		execute_command(cmd_args, envp, garbage);
 		exit(EXIT_FAILURE);
 	}
@@ -68,7 +70,22 @@ int	execute_non_builtin(char ***envp, t_code *code, char **cmd_args, t_alloc *ga
 	return (-1);
 }
 
-void	heredoc_child(t_pipe *pipes, char **argv, char ***envp, t_alloc *garbage)
+int is_builtin(char *command)
+{
+    if (ft_strcmp(command, "cd") == 0 ||
+        ft_strcmp(command, "echo") == 0 ||
+        ft_strcmp(command, "env") == 0 ||
+       	ft_strcmp(command, "exit") == 0 ||
+        ft_strcmp(command, "export") == 0 ||
+        ft_strcmp(command, "pwd") == 0 ||
+        ft_strcmp(command, "unset") == 0)
+    {
+        return (1);
+    }
+    return (0);
+}
+
+void	heredoc_child(t_pipe *pipes, char **argv, char ***envp, t_code *code, t_alloc *garbage)
 {
 	char	*path;
 	char	*new_argv[2];
@@ -80,25 +97,25 @@ void	heredoc_child(t_pipe *pipes, char **argv, char ***envp, t_alloc *garbage)
 		exit(EXIT_FAILURE);
 	}
 	close(pipes->fd[0]);
-	// if (ft_strcmp(argv[0], "<<") == 0)
-    // {
-    //     path = find_command_path(argv[2], garbage);
-    //     new_argv[0] = ft_strdup(argv[2], garbage);
-    // }
-    // else
-    {
-        path = find_command_path(argv[0], garbage);
-        new_argv[0] = ft_strdup(argv[0], garbage);
-    }
-	if (!path)
+	if (is_builtin(argv[0]))
+        execute_builtins(argv, envp, code, garbage);
+	else
 	{
-		perror("path");
-		exit(EXIT_FAILURE);
+		path = find_command_path(argv[0], garbage);
+		if (!path)
+		{
+			perror("path");
+			exit(EXIT_FAILURE);
+		}
+		new_argv[0] = ft_strdup(argv[0], garbage);
+		new_argv[1] = NULL;
+		// printf("Executing heredoc child, command: %s\n", new_argv[0]);
+		// printf("Executing heredoc child, command: %s\n", path);
+		execve(path, new_argv, *envp);
+		perror("execeve failed");
+		//exit(EXIT_FAILURE);
 	}
-	new_argv[1] = NULL;
-	execve(path, new_argv, *envp);
-	perror("execeve failed");
-	exit(EXIT_FAILURE);
+	exit(EXIT_SUCCESS);
 }
 
 int	ft_count(t_command *command, int *i)
@@ -123,7 +140,6 @@ char	**create_cmd_args(t_command *command, int *i, t_alloc *garbage)
 	while (command[*i].type == WORD || command[*i].type == CODE)
 	{
 		cmd_args[j] = ft_strjoin(cmd_args[j], command[*i].word, garbage);
-		// printf("args = %s\n", cmd_args[j]);
 		if (!cmd_args[j])
 			return (NULL);
 		*i += 1;

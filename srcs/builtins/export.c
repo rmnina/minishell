@@ -6,15 +6,15 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 09:11:51 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/04 16:00:45 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/04 18:21:28 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int envp_length(char **envp)
+int	envp_length(char **envp)
 {
-	int length;
+	int	length;
 
 	length = 0;
 	while (envp[length] != NULL)
@@ -32,9 +32,7 @@ char	**copy_envp(char **envp, int new_size, t_alloc *garbage)
 	i = 0;
 	new_envp = malloc(sizeof(char *) * (new_size + 1));
 	if (new_envp == NULL)
-	{
 		return (NULL);
-	}
 	while (i < new_size)
 	{
 		if (envp[i] != NULL)
@@ -42,19 +40,14 @@ char	**copy_envp(char **envp, int new_size, t_alloc *garbage)
 			new_envp[i] = ft_strdup(envp[i], garbage);
 			if (new_envp[i] == NULL)
 			{
-				perror("Failed to duplicate string");
 				while (i > 0)
-				{
 					free(new_envp[--i]);
-				}
 				free(new_envp);
 				return (NULL);
 			}
 		}
 		else
-		{
 			new_envp[i] = NULL;
-		}
 		i++;
 	}
 	new_envp[new_size] = NULL;
@@ -82,7 +75,6 @@ void	add_or_update_env_var(char ***envp, char *var, t_alloc *garbage)
 		return ;
 	while (i < envp_len)
 	{
-		
 		if (ft_strncmp(new_envp[i], var, len) == 0)
 		{
 			if (var[len] == '=')
@@ -92,11 +84,11 @@ void	add_or_update_env_var(char ***envp, char *var, t_alloc *garbage)
 				if (new_envp[i] == NULL)
 				{
 					free(new_envp);
-					return;
+					return ;
 				}
 			}
 			found = true;
-       		break;
+			break ;
 		}
 		i++;
 	}
@@ -142,10 +134,6 @@ bool	is_valid_identifier(const char *str)
 		}
 		else if (!(*ptr == '_' || ft_isalnum(*ptr)))
 		{
-			return (false);
-		}
-		else if (*ptr == '-')
-		{
 			printf("export: `%s': not a valid identifier\n", str);
 			return (false);
 		}
@@ -181,6 +169,7 @@ bool	is_valid_identifier(const char *str)
 // 	escaped_value[j] = '\0';
 // 	return (escaped_value);
 // }
+
 void	handle_value_case(char ***envp, char *arg, t_alloc *garbage)
 {
 	char	*equal;
@@ -199,7 +188,7 @@ void	handle_value_case(char ***envp, char *arg, t_alloc *garbage)
 		}
 		return ;
 	}
-	var_name = strndup(arg, equal - arg);
+	var_name = ft_strndup(arg, equal - arg, garbage);
 	value = equal + 1;
 	if (!value || *value == '\0')
 		new_var = ft_strjoin(var_name, "=\"\"", garbage);
@@ -221,12 +210,6 @@ void	handle_value_case(char ***envp, char *arg, t_alloc *garbage)
 		formatted_value = ft_strjoin(formatted_value, "\"", garbage);
 		new_var = ft_strjoin(var_name, "=", garbage);
 		new_var = ft_strjoin(new_var, formatted_value, garbage);
-	 // Pour toutes les autres valeurs, utiliser escape_value pour échapper les caractères spéciaux
-		// formatted_value = escape_special_chars(value);
-		// new_var = ft_strjoin(var_name, "=", garbage);
-		// new_var = ft_strjoin(new_var, "\"", garbage); // Ajouter un guillemet au début
-		// new_var = ft_strjoin(new_var, formatted_value, garbage);
-		// new_var = ft_strjoin(new_var, "\"", garbage); // Ajouter un guillemet à la fin
 	}
 	add_or_update_env_var(envp, new_var, garbage);
 	free(var_name);
@@ -262,7 +245,7 @@ int ft_export(char ***envp, char **argv, t_code *code, t_alloc *garbage)
 			equal = ft_strchr(argv[i], '=');
 			if (equal)
 			{
-				if (equal && is_valid_identifier(argv[i])) //|| (!equal && is_valid_identifier(argv[i]))) //ft_strchr(argv[i], '=')
+				if (equal && is_valid_identifier(argv[i]))
 					handle_value_case(envp, argv[i], garbage);
 			}
 			else
@@ -277,45 +260,9 @@ int ft_export(char ***envp, char **argv, t_code *code, t_alloc *garbage)
 	return (code->code_status);
 }
 
-// int	ft_export(char ***envp, char **argv, t_code *code, t_alloc *garbage)
-// {
-// 	int		i;
-// 	char	*equal;
-// 	char	*identifier;
-
-// 	equal = NULL;
-// 	identifier = NULL;
-// 	if (argv[1] == NULL)
-// 	{
-
-// 		i = 0;
-// 		while ((*envp)[i] != NULL)
-// 		{
-// 			equal = ft_strchr((*envp)[i], '=');
-// 			if (equal && *(equal + 1) == '\0')
-// 				printf("export %.*s=\"\"\n", (int)(equal - (*envp)[i]), (*envp)[i]);
-// 			else
-// 				printf("export %s\n", (*envp)[i]);
-// 			i++;
-// 		}
-// 		code->code_status = 0;
-// 		return (code->code_status);
-// 	}
-// 	else
-// 	{
-// 		i = 1;
-// 		while (argv[i] != NULL)
-// 		{
-// 			identifier = argv[i];
-// 			if (!is_valid_identifier(identifier))
-// 			{
-// 				printf("export: '%s': not a valid identifier\n", argv[i]);
-// 			}
-// 			if (is_valid_identifier(identifier))
-// 				add_or_update_env_var(envp, argv[i], garbage);
-// 			i++;
-// 		}
-// 	}
-// 	code->code_status = 0;
-// 	return (code->code_status);
-// }
+// Pour toutes les autres valeurs, utiliser escape_value pour échapper les caractères spéciaux
+		// formatted_value = escape_special_chars(value);
+		// new_var = ft_strjoin(var_name, "=", garbage);
+		// new_var = ft_strjoin(new_var, "\"", garbage); // Ajouter un guillemet au début
+		// new_var = ft_strjoin(new_var, formatted_value, garbage);
+		// new_var = ft_strjoin(new_var, "\"", garbage); // Ajouter un guillemet à la fin

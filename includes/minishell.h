@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:03:22 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/04 17:25:12 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/08 13:54:03 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,9 @@ typedef struct s_pipe {
 }	t_pipe;
 
 typedef struct s_code {
-	int	code_status;
+	int		code_status;
+	char	*current;
+	char	*last;
 }	t_code;
 
 typedef struct s_line {
@@ -86,6 +88,7 @@ typedef struct s_heredocNode {
 	char					*delimiter;
 	struct s_heredocNode	*next;
 }	t_heredocNode;
+
 
 //Lexer
 int			is_in_quote(char c, t_quotes *quotes);
@@ -105,6 +108,7 @@ t_command	*get_command(char *line, t_quotes *quotes, t_alloc *garbage, char ***e
 int			get_lex_expand(char *line, int *i, t_quotes *quotes, \
 t_command *token, t_alloc *garbage, char ***envp);
 t_command	*ft_parsing(char *line, t_alloc *garbage, char ***envp);
+char		*ft_getenv(char ***envp, const char *name);
 
 //Utils
 t_command	*ft_struct_join(t_command *tok1, t_command tok2, t_alloc *garbage);
@@ -122,7 +126,7 @@ char		*find_command_path(char *command, t_alloc *garbage);
 void		execute_command(char **cmd_args, char ***envp, t_alloc *garbage);
 void		handle_command(char *input, t_code *code, char ***envp, t_alloc *garbage);
 int			execute_non_builtin(char ***envp, t_code *code, char **cmd_args, t_alloc *garbage);
-void		heredoc_child(t_pipe *pipes, char **argv, char ***envp, t_alloc *garbage);
+void		heredoc_child(t_pipe *pipes, char **argv, char ***envp, t_code *code, t_alloc *garbage);
 char		**create_cmd_args(t_command *command, int *i, t_alloc *garbage);
 void		pick_command(char **cmd_args, char **envp, t_code *code, t_alloc *garbage);
 
@@ -140,6 +144,7 @@ int			ft_echo(char **argv, t_code *code);
 int			ft_env(char **envp, t_code *code);
 int			ft_exit(char **cmd_args, t_code *code, t_alloc *garbage);
 int			ft_export(char ***envp, char **argv, t_code *code, t_alloc *garbage);
+void		add_or_update_env_var(char ***envp, char *var, t_alloc *garbage);
 int			ft_pwd(char **unused_args, char **unused_envp, t_code *code);
 int			ft_unset(char ***envp, char **names, t_code *code);
 int			execute_status_builtin(t_code *code, int *i);
@@ -150,9 +155,10 @@ void		child_handler(int signum);
 int			process_prompt(void);
 void		sigint_handler(int signum);
 int			init_sigactionsa(struct sigaction *sa);
-// int			init_sigquit(void);
+int			init_sigquit(void);
 
 //heredoc
-int			heredoc(t_heredocNode *heredoclist, t_pipe *pipes, char **argv, char ***envp, t_alloc *garbage);
+int			heredoc(t_heredocNode *heredoclist, t_pipe *pipes, char **argv, char **envp, t_code *code, t_alloc *garbage);
+void		read_add(int fd, const char *delimiter, t_alloc *garbage);
 
 #endif

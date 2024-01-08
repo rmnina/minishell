@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:45:11 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/02 14:21:57 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/04 19:21:49 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ volatile int	g_sigint = 0;
 
 int	init_main(t_code **code, t_alloc *garbage, int argc)
 {
+
 	if (argc != 1)
 	{
 		printf("Error arg : no argument required\n");
@@ -25,19 +26,19 @@ int	init_main(t_code **code, t_alloc *garbage, int argc)
 	if (!*code)
 		return (1);
 	(*code)->code_status = 0;
-	//if (init_sigquit() == -1)
-	//	return (-1);
+	// if (init_sigquit(&quit) == -1)
+	// 		return (1);
 	return (0);
 }
 
 int	ft_minishell(char *line, t_code *code, char **envp, t_alloc *garbage)
 {
-	//struct sigaction	sa;
+	struct sigaction	sa;
 
 	while (1)
 	{
-		//if (init_sigactionsa(&sa) == -1)
-		//	return (1);
+		if (init_sigactionsa(&sa) == -1)
+			return (1);
 		line = readline("minishell > ");
 		if (line == NULL)
 		{
