@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: julietteandrieux <julietteandrieux@stud    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:03:22 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/08 14:22:15 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/08 23:49:52 by julietteand      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ enum e_type {
 # define DOUBLE_QUOTE 34
 # define UNDERSCORE 95
 # define SPECIAL_EXIT_CODE 255
-
+# define SPACE 32
 
 typedef struct s_quotes {
 	bool	case_single;
@@ -138,7 +138,10 @@ int			init_redirection(t_command *command, int *i, char **cmd_args, char ***envp
 
 //Pipe
 pid_t		heredoc_pipe(t_pipe *pipes);
-void		ft_multipipes(t_command *command, t_alloc *garbage, char ***envp, char **cmd_args, int *i, t_code *code);
+//void		ft_multipipes(t_command *command, t_alloc *garbage, char ***envp, char **cmd_args, int *i, t_code *code);
+//void	ft_multipipes(t_command *command, t_alloc *garbage, char ***envp, char **cmd_args, int *i, t_code *code);
+void execute_pipeline(t_command *commands, int num_commands, char ***envp, t_code *code, t_alloc *garbage);
+
 
 //Builtins
 int			ft_cd(char **args, t_code *code);
@@ -151,6 +154,7 @@ int			ft_pwd(char **unused_args, char **unused_envp, t_code *code);
 int			ft_unset(char ***envp, char **names, t_code *code);
 int			execute_status_builtin(t_code *code, int *i);
 int			execute_builtins(char **cmd_args, char ***envp, t_code *code, t_alloc *garbage);
+int			is_builtin(char *command);
 
 //Signaux
 void		child_handler(int signum);
