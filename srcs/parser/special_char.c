@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:04:44 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/02 13:29:38 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/08 17:05:25 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ int	special_types(char c1, char c2)
 	{
 		if (c2 && c2 == '?')
 			return (CODE);
-		else if (c2 && ft_isalnum(c2))
+		else if (c2 && (ft_isalnum(c2) || c2 == '_'))
 			return (EXPAND);
 	}
 	return (0);

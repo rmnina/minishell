@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 02:11:36 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/02 13:28:48 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/08 16:34:40 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,10 @@ int	error_nonexistent_type(t_command *command)
 		(command[i].type == 6 && command[j].type == 6)))
 			return \
 			(ft_error("minishell: syntax error near unexpected token '<'"));
+		else if (command[i].type && command[j].type && \
+		((command[i].type == PIPE && command[j].type == PIPE)))
+			return \
+			(ft_error("minishell: syntax error near unexpected token '|'"));
 		i++;
 		j++;
 	}

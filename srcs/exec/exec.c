@@ -6,17 +6,16 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/09 11:20:48 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/09 18:04:15 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int	execute_builtins(char **cmd_args, char ***envp, t_code *code, t_alloc *garbage)
+int	execute_builtins(char **cmd_args, char ***envp, t_code *code, t_alloc **garbage)
 {
 	if (cmd_args[0] == NULL)
 		return (0);
-	//printf("Exécution de la commande intégrée: %s\n", cmd_args[0]);
 	if (ft_strcmp(cmd_args[0], "cd") == 0
 		&& ft_strlen(cmd_args[0]) == ft_strlen("cd"))
 		return (ft_cd(cmd_args, code));
@@ -42,13 +41,12 @@ int	execute_builtins(char **cmd_args, char ***envp, t_code *code, t_alloc *garba
 }
 
 
-int	execute_non_builtin(char ***envp, t_code *code, char **cmd_args, t_alloc *garbage)
+int	execute_non_builtin(char ***envp, t_code *code, char **cmd_args, t_alloc **garbage)
 {
 	pid_t	pid;
 	int		status;
 
 	status = 0;
-	printf("execute_non_builtin: Exécution d'une commande non intégrée\n");
 	pid = fork();
 	if (pid == -1)
 	{
@@ -86,7 +84,7 @@ int	is_builtin(char *command)
 	return (0);
 }
 
-void	heredoc_child(t_pipe *pipes, char **argv, char ***envp, t_code *code, t_alloc *garbage)
+void	heredoc_child(t_pipe *pipes, char **argv, char ***envp, t_code *code, t_alloc **garbage)
 {
 	char	*path;
 	char	*new_argv[2];
@@ -121,11 +119,13 @@ int	ft_count(t_command *command, int *i)
 
 	size = 0;
 	while (command[*i + size].type && command[*i + size].type == WORD)
+	{
 		size++;
+	}
 	return (size);
 }
 
-char	**create_cmd_args(t_command *command, int *i, t_alloc *garbage)
+char	**create_cmd_args(t_command *command, int *i, t_alloc **garbage)
 {
 	char	**cmd_args;
 	int		num_args;
@@ -134,12 +134,12 @@ char	**create_cmd_args(t_command *command, int *i, t_alloc *garbage)
 	j = 0;
 	cmd_args = NULL;
 	num_args = ft_count(command, i);
-	cmd_args = garb_malloc(sizeof(char *), num_args + 1, &garbage);
+	cmd_args = garb_malloc(sizeof(char *), num_args + 1, garbage);
 	if (!cmd_args)
 		return (NULL);
 	while (command[*i].type == WORD || command[*i].type == CODE)
 	{
-		cmd_args[j] = NULL;
+		//cmd_args[j] = NULL;
 		cmd_args[j] = ft_strjoin(cmd_args[j], command[*i].word, garbage);
 		if (!cmd_args[j])
 			return (NULL);
@@ -150,57 +150,66 @@ char	**create_cmd_args(t_command *command, int *i, t_alloc *garbage)
 	return (cmd_args);
 }
 
-int	count_commands(t_command *commands)
+int	count_commands(t_command *command)
 {
 	int	count;
 	int	i;
 
 	count = 0;
 	i = 0;
-	while (commands[i].type != 0)
+	//printf("Début du comptage des commandes\n");
+	while (command[i].type != 0)
 	{
-		if (commands[i].type == WORD || commands[i].type == CODE)
+		//printf("Examen de la commande à l'index %d, Type: %d, Commande: %s\n", i, command[i].type, command[i].word);
+		if (command[i].type == WORD || command[i].type == CODE )
 		{
 			count++;
-			// Sauter tous les mots suivants qui font partie de la même commande
-			while (commands[i].type == WORD || commands[i].type == CODE)
+			//printf("Nouvelle commande trouvée à l'index %d, Compteur actuel: %d, Commande: %s\n", i, count, command[i].word);
+			while (command[i].type == WORD || command[i].type == CODE)
+			{
 				i++;
+				//if (command[i].type != 0)
+					//printf("Passage à l'index %d dans la même commande, Commande: %s\n", i, command[i].word);
+			}
 		}
-		i++;
-
+		if (command[i].type != 0)
+			i++;
 	}
+	//printf("Nombre total de commandes: %d\n", count);
 	return (count);
 }
 
 
-void	handle_command(char *input, t_code *code, char ***envp, t_alloc *garbage)
+void	handle_command(char *input, t_code *code, char ***envp, t_alloc **garbage)
 {
 	t_command	*command;
 	char		**cmd_args;
 	int			i;
 	int			exec;
-	int			num_commands;
+	//int			num_commands;
 
 	i = 0;
 	exec = 0;
 	cmd_args = NULL;
 	command = ft_parsing(input, garbage, envp);
-	num_commands = count_commands(command);
+	//num_commands = count_commands(command);
+	//printf ("num commands: %d\n", num_commands);
 	if (command == NULL)
 		return ;
 	while (command[i].type != 0)
 	{
 		if (command[i].type == WORD || command[i].type == 0 || command[i].type == CODE)
 			cmd_args = create_cmd_args(command, &i, garbage);
-		if (command[i].type == PIPE)
+		if (command[i].type == PIPE )
 		{
-			//ft_multipipes(command, garbage, envp, cmd_args, &i, code);
-			execute_pipeline(command, num_commands, envp, code, garbage);
+			ft_multipipes(command, garbage, envp, cmd_args, &i, code);
+			//printf("pipe reconnu: %s\n", command[i].word);
+			//execute_pipeline(command, num_commands, envp, code, garbage);
 			exec++;
 		}
 		if (command[i].type >= LEFT_CHEV && command[i].type <= DB_LEFT_CHEV)
-			exec = init_redirection(command, &i, cmd_args, envp, code);
-		if (cmd_args != NULL && exec == 0)
+			init_redirection(command, &i, cmd_args, envp, code);
+		else if (cmd_args != NULL && exec == 0)
 		{
 			if (execute_builtins(cmd_args, envp, code, garbage) == -1)
 				execute_non_builtin(envp, code, cmd_args, garbage);

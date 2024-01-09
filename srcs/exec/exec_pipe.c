@@ -6,120 +6,143 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:20:25 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/09 12:38:17 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/09 17:59:24 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
 
-void	update_exit_code(int status, t_code *code)
-{
-	if (WIFEXITED(status))
-		code->code_status = WEXITSTATUS(status);
-}
+// void	update_exit_code(int status, t_code *code)
+// {
+// 	if (WIFEXITED(status))
+// 		code->code_status = WEXITSTATUS(status);
+// }
 
 
-t_pipe	*init_pipes(int num_commands, t_command *command, t_alloc **garbage)
-{
-	t_pipe	*pipes = garb_malloc(sizeof(t_pipe), num_commands, garbage);
-	int		i;
 
-	i = 0;
-	while (i < num_commands)
-	{
-		pipes[i].command = &command[i].word;
-		if (i < num_commands - 1)
-		{
-			if (pipe(pipes[i].fd) == -1)
-			{
-				perror("pipe");
-				exit(EXIT_FAILURE);
-			}
-		}
-		i++;
-	}
+// t_pipe	*init_pipes(int num_commands, t_command *command, t_alloc **garbage)
+// {
+// 	printf("Initialisation des pipes\n");
+// 	t_pipe	*pipes = NULL; 
+// 	int		i;
 
-	return (pipes);
-}
+// 	i = 0;
+// 	pipes = garb_malloc(sizeof(t_pipe), num_commands, garbage);
+// 	while (i <= num_commands)
+// 	{
+// 		printf("Pipe %d initialisé\n", i);
+// 		pipes[i].command = &command[i].word;
+// 		printf("Commande associée au pipe %d: %s\n", i, command[i].word);
+// 		if (i < num_commands)
+// 		{
+// 			if (pipe(pipes[i].fd) == -1)
+// 			{
+// 				perror("pipe");
+// 				exit(EXIT_FAILURE);
+// 			}
+// 		}
+// 		i++;
+// 	}
 
-void execute_child_process(int i, int num_commands, t_pipe *pipes, t_command *command, char ***envp, t_code *code, t_alloc *garbage)
-{
-	char	**cmd_args;
-	int		j;
+// 	return (pipes);
+// }
 
-	cmd_args = NULL;
-	j = 0;
-	signal(SIGINT, SIG_DFL);
-	signal(SIGQUIT, SIG_DFL);
-	if (i > 0)
-	{
-		dup2(pipes[i - 1].fd[0], STDIN_FILENO);
-		close(pipes[i - 1].fd[0]);
-	}
-	if (i < num_commands - 1)
-	{
-		dup2(pipes[i].fd[1], STDOUT_FILENO);
-		close(pipes[i].fd[1]);
-	}
-	while (j < num_commands - 1)
-	{
-		if (j != i - 1)
-			close(pipes[j].fd[0]);
-		if (j != i)
-			close(pipes[j].fd[1]);
-		j++;
-	}
-	cmd_args = create_cmd_args(&command[i], &i, garbage);
-	if (execute_builtins(cmd_args, envp, code, garbage) == -1)
-		execute_non_builtin(envp, code, cmd_args, garbage);
-	exit(EXIT_SUCCESS);
-}
+// void execute_child_process(int i, int num_commands, t_pipe *pipes, t_command *command, char ***envp, t_code *code, t_alloc **garbage)
+// {
+// 	printf("Exécution du processus enfant pour la commande %d\n", i);
+// 	char	**cmd_args;
+// 	int		j;
 
-void	launch_processes(t_pipe *pipes, int num_commands, t_command *command, char ***envp, t_code *code, t_alloc *garbage)
-{
-	int	i;
+// 	cmd_args = NULL;
+// 	j = 0;
+// 	if (i > 0)
+// 	{
+// 		dup2(pipes[i - 1].fd[0], STDIN_FILENO);
+// 		close(pipes[i - 1].fd[0]);
+// 	}
+// 	if (i < num_commands - 1)
+// 	{
+// 		dup2(pipes[i].fd[1], STDOUT_FILENO);
+// 		close(pipes[i].fd[1]);
+// 	}
+// 	while (j < num_commands - 1)
+// 	{
+// 		if (j != i - 1)
+// 			close(pipes[j].fd[0]);
+// 		if (j != i)
+// 			close(pipes[j].fd[1]);
+// 		j++;
+// 	}
+// 	cmd_args = create_cmd_args(command, &i, garbage);
+// 	printf("Commande à exécuter: %s\n", *cmd_args);
+// 	if (execute_builtins(cmd_args, envp, code, garbage) == -1)
+// 		execute_non_builtin(envp, code, cmd_args, garbage);
+// 	exit(EXIT_SUCCESS);
+// }
 
-	i = 0;
-	while (i < num_commands)
-	{
-		pipes[i].pid = fork();
-		if (pipes[i].pid == -1)
-		{
-			perror("fork");
-			exit(EXIT_FAILURE);
-		}
-		if (pipes[i].pid == 0)
-			execute_child_process(i, num_commands, pipes, command, envp, code, garbage);
-		i++;
-	}
-}
+// void	launch_processes(t_pipe *pipes, int num_commands, t_command *command, char ***envp, t_code *code, t_alloc **garbage)
+// {
+// 	printf("Lancement des processus\n");
+// 	int	i;
 
-void	cleanup_pipes(t_pipe *pipes, int num_commands)
-{
-	int	i;
+// 	i = 0;
+// 	while (i < num_commands)
+// 	{
+// 		printf("Fork pour la commande %d\n", i);
+// 		pipes[i].pid = fork();
+// 		if (pipes[i].pid == -1)
+// 		{
+// 			perror("fork");
+// 			exit(EXIT_FAILURE);
+// 		}
+// 		if (pipes[i].pid == 0)
+// 		{
+// 			signal(SIGINT, SIG_DFL);
+// 			signal(SIGQUIT, SIG_DFL);
+// 			execute_child_process(i, num_commands, pipes, command, envp, code, garbage);
+// 		}
+// 		i++;
+// 	}
 
-	i = 0;
-	while (i < num_commands - 1)
-	{
-		close(pipes[i].fd[0]);
-		close(pipes[i].fd[1]);
-		i++;
-	}
-	free(pipes);
-}
+// }
 
-void	execute_pipeline(t_command *command, int num_commands, char ***envp, t_code *code, t_alloc *garbage)
-{
-	t_pipe *pipes = init_pipes(num_commands, command, &garbage);
+// void	cleanup_pipes(t_pipe *pipes, int num_commands, t_code *code)
+// {
+// 	printf("Nettoyage des pipes\n");
+// 	int	i;
+// 	int	status;
 
-	launch_processes(pipes, num_commands, command, envp, code, garbage);
+// 	i = 0;
+// 	status = 0;
+// 	while (i < num_commands - 1)
+// 	{
+// 		printf("Fermeture des pipes %d\n", i);
+// 		close(pipes[i].fd[0]);
+// 		close(pipes[i].fd[1]);
+// 		i++;
+// 	}
+// 	free(pipes);
+// 	i = 0;
+// 	while (i < num_commands)
+// 	{
+// 		waitpid(pipes[i].pid, &status, 0);
+// 		update_exit_code(status, code);
+// 	}
+// }
 
-	cleanup_pipes(pipes, num_commands);
-}
+// void	execute_pipeline(t_command *command, int num_commands, char ***envp, t_code *code, t_alloc **garbage)
+// {
+// 	printf("Exécution du pipeline\n");
+// 	t_pipe *pipes = init_pipes(num_commands, command, garbage);
+
+// 	launch_processes(pipes, num_commands, command, envp, code, garbage);
+
+// 	cleanup_pipes(pipes, num_commands, code);
+// }
 
 
-// void	execute_pipeline(t_command *command, int num_commands, char ***envp, t_code *code, t_alloc *garbage)
+// void	execute_pipeline(t_command *command, int num_commands, char ***envp, t_code *code, t_alloc **garbage)
 // {
 // 	int		pipes[num_commands - 1][2];
 // 	pid_t	pids[num_commands];
@@ -201,8 +224,8 @@ void	execute_pipeline(t_command *command, int num_commands, char ***envp, t_code
 
 
 
-/*
-void	ft_multipipes(t_command *command, t_alloc *garbage, char ***envp, char **cmd_args, int *i, t_code *code)
+
+void	ft_multipipes(t_command *command, t_alloc **garbage, char ***envp, char **cmd_args, int *i, t_code *code)
 {
 	t_pipe	pipes;
 	pid_t	pid;
@@ -263,4 +286,3 @@ void	ft_multipipes(t_command *command, t_alloc *garbage, char ***envp, char **cm
 	if (old_fd != -1)
 		close(old_fd);
 }
-*/

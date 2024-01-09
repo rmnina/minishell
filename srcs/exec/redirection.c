@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 17:13:45 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/09 11:09:38 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/09 18:08:36 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int	redir_input(char *filename)
 }
 
 
-t_heredocNode	*build_heredoclist(t_command *command, int *i, t_alloc *garbage)
+t_heredocNode	*build_heredoclist(t_command *command, int *i, t_alloc **garbage)
 {
 	t_heredocNode	*head;
 	t_heredocNode	*current;
@@ -63,7 +63,7 @@ t_heredocNode	*build_heredoclist(t_command *command, int *i, t_alloc *garbage)
 
 	head = NULL;
 	current = NULL;
-	new_node = garb_malloc(sizeof(t_heredocNode), 1, &garbage);
+	new_node = garb_malloc(sizeof(t_heredocNode), 1, garbage);
 	if (!new_node)
 		return (new_node);
 	*i += 1;
@@ -84,24 +84,26 @@ int	init_redirection(t_command *command, int *i, char **cmd_args, char ***envp, 
 	int				fd;
 	pid_t			pid;
 	int				status;
-	t_alloc			*son_garb;
+	t_alloc			**son_garb;
 	t_pipe			pipes;
 	t_heredocNode	*heredoclist;
 
 	son_garb = NULL;
 	fd = 0;
 	filename = NULL;
-	printf("init_redirection: Initialisation de la redirection\n");
 	pid = fork();
 	if (pid == -1)
 		exit(EXIT_FAILURE);
 	if (pid == 0)
 	{
-		heredoclist = build_heredoclist(command, i, son_garb);
-		if (heredoclist)
+		if (command[*i].type == DB_LEFT_CHEV)
 		{
-			heredoc(heredoclist, &pipes, cmd_args, *envp, code, son_garb);
-			exit(EXIT_SUCCESS);
+			heredoclist = build_heredoclist(command, i, son_garb);
+			if (heredoclist)
+			{
+				heredoc(heredoclist, &pipes, cmd_args, *envp, code, son_garb);
+				exit(EXIT_SUCCESS);
+			}
 		}
 		if (command[*i].type == DB_RIGHT_CHEV || \
 		command[*i].type == RIGHT_CHEV)
@@ -121,7 +123,7 @@ int	init_redirection(t_command *command, int *i, char **cmd_args, char ***envp, 
 		}
 		if (execute_builtins(cmd_args, envp, code, son_garb) == -1)
 			execute_non_builtin(envp, code, cmd_args, son_garb);
-		free_garbage(&son_garb, 0);
+		free_garbage(son_garb, 0);
 		exit(0);
 	}
 	else if (pid > 0)

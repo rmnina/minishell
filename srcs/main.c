@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:45:11 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/08 20:03:31 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/09 13:17:53 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,14 @@
 
 volatile int	g_sigint = 0;
 
-int	init_main(t_code **code, t_alloc *garbage, int argc)
+int	init_main(t_code **code, t_alloc **garbage, int argc)
 {
-
 	if (argc != 1)
 	{
 		printf("Error arg : no argument required\n");
 		return (1);
 	}
-	*code = garb_malloc(sizeof(t_code), 1, &garbage);
+	*code = garb_malloc(sizeof(t_code), 1, garbage);
 	if (!*code)
 		return (1);
 	(*code)->code_status = 0;
@@ -31,7 +30,7 @@ int	init_main(t_code **code, t_alloc *garbage, int argc)
 	return (0);
 }
 
-int	ft_minishell(char *line, t_code *code, char **envp, t_alloc *garbage)
+int	ft_minishell(char *line, t_code *code, char **envp, t_alloc **garbage)
 {
 	struct sigaction	sa;
 
@@ -43,8 +42,8 @@ int	ft_minishell(char *line, t_code *code, char **envp, t_alloc *garbage)
 		if (line == NULL)
 		{
 			printf("exit\n");
-			if (garbage)
-				free_garbage(&garbage, 0);
+			// if (garbage)
+			// 	free_garbage(garbage, 0);
 			break ;
 		}
 		if (line[0] != 0)
@@ -54,7 +53,8 @@ int	ft_minishell(char *line, t_code *code, char **envp, t_alloc *garbage)
 			if (code->code_status == SPECIAL_EXIT_CODE) 
 				break ;
 		}
-		free(line);
+		if (line)
+			free(line);
 	}
 	return (0);
 }
@@ -71,11 +71,11 @@ int	main(int argc, char **argv, char **envp)
 	line = NULL;
 	garbage = NULL;
 	exit_status = 0;
-	init_main(&code, garbage, argc);
-	exit_status = ft_minishell(line, code, envp, garbage);
+	init_main(&code, &garbage, argc);
+	exit_status = ft_minishell(line, code, envp, &garbage);
 	clear_history();
-	if (garbage)
-		free_garbage(&garbage, 0);
+	// if (garbage)
+	// 	free_garbage(&garbage, 0);
 	return (exit_status);
 	//return (0);
 }

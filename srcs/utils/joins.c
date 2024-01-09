@@ -6,13 +6,13 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/26 23:39:05 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/22 14:57:58 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/08 23:58:29 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-t_command	*ft_struct_join(t_command *tok1, t_command tok2, t_alloc *garbage)
+t_command	*ft_struct_join(t_command *tok1, t_command tok2, t_alloc **garbage)
 {
 	int			size;
 	t_command	*res;
@@ -26,7 +26,7 @@ t_command	*ft_struct_join(t_command *tok1, t_command tok2, t_alloc *garbage)
 		while (tok1[size].word != NULL)
 			size++;
 	}
-	res = garb_malloc(sizeof(t_command), (size + 2), &garbage);
+	res = garb_malloc(sizeof(t_command), (size + 2), garbage);
 	if (!(res))
 		return (NULL);
 	while (i < size)
@@ -40,11 +40,11 @@ t_command	*ft_struct_join(t_command *tok1, t_command tok2, t_alloc *garbage)
 }
 
 
-char	*char_to_str(char c, t_alloc *garbage)
+char	*char_to_str(char c, t_alloc **garbage)
 {
 	char	*res;
 
-	res = garb_malloc(sizeof(char), 2, &garbage);
+	res = garb_malloc(sizeof(char), 2, garbage);
 	res[1] = '\0';
 	res[0] = c;
 	return (res);

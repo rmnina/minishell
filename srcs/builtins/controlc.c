@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 15:13:20 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/09 11:27:53 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/09 14:25:53 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ void	sigint_handler(int signum)
 	if (signum == SIGINT)
 	{
 		//printf("sigint_handler: Signal SIGINT reçu (signum=%d)\n", signum);
+		//rl_replace_line("", 0);
 		write(STDOUT_FILENO, "\n", 1);
 		rl_on_new_line();
 		rl_redisplay();
@@ -76,18 +77,4 @@ void	sigint_handler(int signum)
 	}
 }
 
-void parent_sigint_handler(int signum) {
-    if (signum == SIGINT) {
-        write(STDOUT_FILENO, "\n", 1); // Affiche simplement une nouvelle ligne
-    }
-}
 
-int init_parent_signals(void) {
-    struct sigaction sa;
-    ft_bzero(&sa, sizeof(struct sigaction));
-    sa.sa_handler = parent_sigint_handler;
-    sa.sa_flags = 0;
-    sigaction(SIGINT, &sa, NULL);
-    signal(SIGQUIT, SIG_IGN); // Ignore SIGQUIT
-    return 0;
-}

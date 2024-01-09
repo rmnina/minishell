@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 16:22:53 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/09 11:09:16 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/09 15:14:42 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	heredoc_is_expand(char *line)
 	return (0);
 }
 
-char	*heredoc_get_expand(char *line, char **envp, t_alloc *garbage)
+char	*heredoc_get_expand(char *line, char **envp, t_alloc **garbage)
 {
 	int		index;
 	char	*name;
@@ -43,11 +43,11 @@ char	*heredoc_get_expand(char *line, char **envp, t_alloc *garbage)
 	return (var);
 }
 
-t_line	*new_line(char *line, t_alloc *garbage)
+t_line	*new_line(char *line, t_alloc **garbage)
 {
 	t_line	*node;
 
-	node = garb_malloc(sizeof(t_line), 1, &garbage);
+	node = garb_malloc(sizeof(t_line), 1, garbage);
 	if (!node)
 		return (NULL);
 	node->line = ft_strdup(line, garbage);
@@ -82,7 +82,7 @@ void	write_pipe(int fd, t_line *head)
 }
 
 
-void	read_add(int fd, const char *delimiter, t_alloc *garbage)
+void	read_add(int fd, const char *delimiter, t_alloc **garbage)
 {
 	char	*line;
 	t_line	*node;
@@ -112,7 +112,7 @@ void	read_add(int fd, const char *delimiter, t_alloc *garbage)
 	close (fd);
 }
 
-int	heredoc(t_heredocNode *heredoclist, t_pipe *pipes, char **argv, char **envp, t_code *code, t_alloc *garbage)
+int	heredoc(t_heredocNode *heredoclist, t_pipe *pipes, char **argv, char **envp, t_code *code, t_alloc **garbage)
 {
 	pid_t			pid;
 	int				status;

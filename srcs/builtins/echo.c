@@ -6,11 +6,36 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 16:06:16 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/22 14:55:45 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/09 01:32:00 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+
+int	are_flags_n(char **argv, int *i)
+{
+	int	j;
+
+	j = 0;
+	if (ft_strncmp(argv[*i], "-n", 2) == 0)
+	{
+		// printf("argv = %s \n", argv[*i]);
+		while (ft_strncmp(argv[*i], "-n", 2) == 0)
+		{
+			j = 2;
+			while (argv[*i][j] == 'n')
+				j++;
+			if (!argv[*i][j])
+				*i += 1;
+			else if (*i == 1 && argv[*i][j] != 'n')
+				return (0);
+			else
+				break ;
+		}
+		return (1);
+	}
+	return (0);
+}
 
 int	code_status(char *str, t_code *code)
 {
@@ -32,11 +57,8 @@ int	ft_echo(char **argv, t_code *code)
 
 	i = 1;
 	line = 1;
-	if (argv[1] != NULL && ft_strcmp(argv[1], "-n") == 0)
-	{
+	if (argv[i] != NULL && are_flags_n(argv, &i))
 		line = 0;
-		i++;
-	}
 	while (argv[i])
 	{
 		if (!code_status(argv[i], code))

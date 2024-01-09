@@ -1,0 +1,1294 @@
+Test 1 - Command: /bin/ls
+--- 
+
++++ 
+
+@@ -1,4 +1,3 @@
+
+-diff_output.txt
+-minishell
+-minishell_tester.py
+-tests.txt
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 2 - Command: 
+--- 
+
++++ 
+
+@@ -0,0 +1,2 @@
+
++[?2004hminishell > [?2004l
++exit
+
+Test 3 - Command: tab
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/bin/sh: 1: tab: not found
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 4 - Command: /bin/ls -la
+--- 
+
++++ 
+
+@@ -1,7 +1,3 @@
+
+-total 96
+-drwxr-xr-x 2 jdufour 2023_paris  4096 Jan  8 15:30 .
+-drwxr-xr-x 7 jdufour 2023_paris  4096 Jan  8 15:30 ..
+--rw-r--r-- 1 jdufour 2023_paris   419 Jan  8 15:31 diff_output.txt
+--rwxr-xr-x 1 jdufour 2023_paris 76232 Jan  8 14:57 minishell
+--rw-r--r-- 1 jdufour 2023_paris  1350 Jan  8 14:38 minishell_tester.py
+--rw-r--r-- 1 jdufour 2023_paris  2371 Jan  8 15:30 tests.txt
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 5 - Command: echo
+--- 
+
++++ 
+
+@@ -0,0 +1,3 @@
+
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 6 - Command: echo Hello
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-Hello
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 7 - Command: echo -n Hello
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-Hello
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 8 - Command: exit
+--- 
+
++++ 
+
+@@ -0,0 +1,3 @@
+
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 9 - Command: exit 125
+--- 
+
++++ 
+
+@@ -0,0 +1,3 @@
+
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 10 - Command: /bin/ls/filethatdoesntexist
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/bin/sh: 1: /bin/ls/filethatdoesntexist: not found
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 11 - Command: $? + $?
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/bin/sh: 1: 0: not found
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 12 - Command: ctrl-C
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/bin/sh: 1: ctrl-C: not found
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 13 - Command: ctrl-\
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/bin/sh: 1: ctrl-\: not found
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 14 - Command: ctrl-D
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/bin/sh: 1: ctrl-D: not found
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 15 - Command: abc ctrl-C
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/bin/sh: 1: abc: not found
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 16 - Command: abc ctrl-D
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/bin/sh: 1: abc: not found
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 17 - Command: abc ctrl-\
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/bin/sh: 1: abc: not found
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 18 - Command: cat ctl-C
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-cat: ctl-C: No such file or directory
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 19 - Command: cat ctr-D
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-cat: ctr-D: No such file or directory
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 20 - Command: cat ctl-\
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-cat: 'ctl-\': No such file or directory
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 23 - Command: echo ‘$USER’
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-‘jdufour’
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 24 - Command: env
+--- 
+
++++ 
+
+@@ -1,65 +1,3 @@
+
+-USER=jdufour
+-XDG_SESSION_TYPE=x11
+-GIT_ASKPASS=/usr/share/code/resources/app/extensions/git/dist/askpass.sh
+-SHLVL=2
+-HOME=/mnt/nfs/homes/jdufour
+-OLDPWD=/mnt/nfs/homes/jdufour/Desktop/cursus/minishell_github
+-LESS=-R
+-CHROME_DESKTOP=code-url-handler.desktop
+-DESKTOP_SESSION=ubuntu
+-TERM_PROGRAM_VERSION=1.85.1
+-ZSH=/mnt/nfs/homes/jdufour/.oh-my-zsh
+-LSCOLORS=Gxfxcxdxbxegedabagacad
+-GTK_MODULES=gail:atk-bridge
+-XDG_SEAT_PATH=/org/freedesktop/DisplayManager/Seat0
+-PAGER=less
+-VSCODE_GIT_ASKPASS_MAIN=/usr/share/code/resources/app/extensions/git/dist/askpass-main.js
+-VSCODE_GIT_ASKPASS_NODE=/usr/share/code/code
+-SYSTEMD_EXEC_PID=380142
+-DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/104749/bus
+-LIBVIRT_DEFAULT_URI=qemu:///system
+-COLORTERM=truecolor
+-MANDATORY_PATH=/usr/share/gconf/ubuntu.mandatory.path
+-GTK_IM_MODULE=ibus
+-LOGNAME=jdufour
+-_=/usr/bin/python3
+-DEFAULTS_PATH=/usr/share/gconf/ubuntu.default.path
+-XDG_SESSION_CLASS=user
+-USER_ZDOTDIR=/mnt/nfs/homes/jdufour
+-TERM=xterm-256color
+-GNOME_DESKTOP_SESSION_ID=this-is-deprecated
+-PATH=/mnt/nfs/homes/jdufour/bin:/mnt/nfs/homes/jdufour/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+-SESSION_MANAGER=local/bess-f4r3s7.clusters.42paris.fr:@/tmp/.ICE-unix/380117,unix/bess-f4r3s7.clusters.42paris.fr:/tmp/.ICE-unix/380117
+-GNOME_TERMINAL_SCREEN=/org/gnome/Terminal/screen/ac72dc3e_648c_4327_a1dc_afc287cec1d7
+-XDG_MENU_PREFIX=gnome-
+-XDG_SESSION_PATH=/org/freedesktop/DisplayManager/Session1
+-XDG_RUNTIME_DIR=/run/user/104749
+-GDK_BACKEND=x11
+-DISPLAY=:0
+-LANG=en_US.UTF-8
+-XDG_CURRENT_DESKTOP=Unity
+-VSCODE_INJECTION=1
+-XDG_SESSION_DESKTOP=ubuntu
+-GNOME_TERMINAL_SERVICE=:1.90
+-XMODIFIERS=@im=ibus
+-XAUTHORITY=/mnt/nfs/homes/jdufour/.Xauthority
+-LS_COLORS=rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:
+-TERM_PROGRAM=vscode
+-VSCODE_GIT_IPC_HANDLE=/run/user/104749/vscode-git-1d13a0430b.sock
+-SSH_AUTH_SOCK=/run/user/104749/keyring/ssh
+-XDG_GREETER_DATA_DIR=/var/lib/lightdm-data/jdufour
+-SSH_AGENT_LAUNCHER=gnome-keyring
+-ORIGINAL_XDG_CURRENT_DESKTOP=ubuntu:GNOME
+-KRB5CCNAME=FILE:/tmp/krb5cc_104749_ikmuim
+-SHELL=/bin/zsh
+-QT_ACCESSIBILITY=1
+-GDMSESSION=ubuntu
+-DOCKER_HOST=unix:///run/user/104749/docker.sock
+-GPG_AGENT_INFO=/run/user/104749/gnupg/S.gpg-agent:0:1
+-QT_IM_MODULE=ibus
+-VSCODE_GIT_ASKPASS_EXTRA_ARGS=--ms-enable-electron-run-as-node
+-PWD=/mnt/nfs/homes/jdufour/Desktop/cursus/minishell_github/tester
+-XDG_CONFIG_DIRS=/etc/xdg/xdg-ubuntu:/etc/xdg
+-XDG_DATA_DIRS=/usr/share/ubuntu:/usr/share/gnome:/mnt/nfs/homes/jdufour/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:/usr/local/share:/usr/share:/var/lib/snapd/desktop
+-ZDOTDIR=/mnt/nfs/homes/jdufour
+-VTE_VERSION=6800
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 25 - Command: export lol=lol
+--- 
+
++++ 
+
+@@ -0,0 +1,3 @@
+
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 26 - Command: export USER=emma
+--- 
+
++++ 
+
+@@ -0,0 +1,3 @@
+
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 27 - Command: export CMD=echo ARG=lol
+--- 
+
++++ 
+
+@@ -0,0 +1,3 @@
+
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 28 - Command: puis $CMD $ARG
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/bin/sh: 1: puis: not found
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 29 - Command: export USER+=emma
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/bin/sh: 1: export: USER+: bad variable name
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 30 - Command: unset USER
+--- 
+
++++ 
+
+@@ -0,0 +1,3 @@
+
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 31 - Command: cd env
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/bin/sh: 1: cd: can't cd to env
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 32 - Command: cd env puis ls
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/bin/sh: 1: cd: can't cd to env
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 33 - Command: cd ..
+--- 
+
++++ 
+
+@@ -0,0 +1,3 @@
+
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 34 - Command: cd .
+--- 
+
++++ 
+
+@@ -0,0 +1,3 @@
+
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 35 - Command: pwd
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/mnt/nfs/homes/jdufour/Desktop/cursus/minishell_github/tester
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 36 - Command: cat ../builtin/../main.c
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-cat: ../builtin/../main.c: No such file or directory
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 37 - Command: unset PATH
+--- 
+
++++ 
+
+@@ -0,0 +1,3 @@
+
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 41 - Command: cat main.c | grep free
+--- 
+
++++ 
+
+@@ -1 +0,0 @@
+
+-cat: main.c: No such file or directory
+
+Test 42 - Command: cat main.c | grep main | wc -l
+--- 
+
++++ 
+
+@@ -1,2 +1 @@
+
+-cat: main.c: No such file or directory
+ 0
+
+Test 43 - Command: ls filethatdoesntexist | grep bla
+--- 
+
++++ 
+
+@@ -1 +0,0 @@
+
+-ls: cannot access 'filethatdoesntexist': No such file or directory
+
+Test 44 - Command: ls filethatdoesntexist | grep bla | more
+--- 
+
++++ 
+
+@@ -1 +0,0 @@
+
+-ls: cannot access 'filethatdoesntexist': No such file or directory
+
+Test 45 - Command: ls -la <a | grep x > b
+--- 
+
++++ 
+
+@@ -0,0 +1,2 @@
+
++Command not found: No such file or directory
++Segmentation fault (core dumped)
+
+Test 46 - Command: ls ctrl-C enter
+--- 
+
++++ 
+
+@@ -1,2 +1,3 @@
+
+-ls: cannot access 'ctrl-C': No such file or directory
+-ls: cannot access 'enter': No such file or directory
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 47 - Command: dsbksdgbksdghsd
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/bin/sh: 1: dsbksdgbksdghsd: not found
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 49 - Command: echo $PATH
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/mnt/nfs/homes/jdufour/bin:/mnt/nfs/homes/jdufour/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 50 - Command: ls /proc/self/fd
+--- 
+
++++ 
+
+@@ -1,4 +1,3 @@
+
+-0
+-1
+-2
+-3
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 52 - Command: cat < a < b > c > d    si a et b n’existent pas
+--- 
+
++++ 
+
+@@ -1,4 +0,0 @@
+
+-cat: si: No such file or directory
+-cat: et: No such file or directory
+-cat: n’existent: No such file or directory
+-cat: pas: No such file or directory
+
+Test 53 - Command: cat < a < b > c > d  . si a et b existent
+--- 
+
++++ 
+
+@@ -1,4 +0,0 @@
+
+-cat: .: Is a directory
+-cat: si: No such file or directory
+-cat: et: No such file or directory
+-cat: existent: No such file or directory
+
+Test 55 - Command: export A=p B=w \
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/bin/sh: 1: export: \: bad variable name
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 56 - Command: $A"$B"d
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/bin/sh: 1: d: not found
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 57 - Command: export A=p \
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/bin/sh: 1: export: \: bad variable name
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 58 - Command: export B=w \
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/bin/sh: 1: export: \: bad variable name
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 61 - Command: echo “$oui”
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-“”
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 63 - Command: echo ok “” ok
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-ok “” ok
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 64 - Command: echo ok "" "" "" "" "" "" "" "" "" ok
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-ok          ok
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 65 - Command: echo ok “”” ok
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-ok “”” ok
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 67 - Command: echo abc def
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-abc def
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 68 - Command: echo abc “” “” “” def
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-abc “” “” “” def
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 69 - Command: echo -
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+--
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 70 - Command: echo -n
+--- 
+
++++ 
+
+@@ -0,0 +1,3 @@
+
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 71 - Command: echo -pardon?
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+--pardon?
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 72 - Command: echo - b
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-- b
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 73 - Command: echo -n -n -n a
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+--n -n a
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 74 - Command: echo -nnnn -nnnnn -nnnna a
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+--nnnn -nnnnn -nnnna a
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 75 - Command: echo -nnnn -nnnnn a
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+--nnnn -nnnnn a
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 76 - Command: echo -nnnn a -nnnnn
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+--nnnn a -nnnnn
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 77 - Command: echo a -nnnn -nnnnn
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-a -nnnn -nnnnn
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 78 - Command: echo -nnnnnnnnn coucou
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+--nnnnnnnnn coucou
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 79 - Command: echo -n -nnnn coucou
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+--nnnn coucou
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 80 - Command: echo -nnnnn -nnnna coucou
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+--nnnnn -nnnna coucou
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 81 - Command: cd ././././././././.
+--- 
+
++++ 
+
+@@ -0,0 +1,3 @@
+
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 82 - Command: cd /
+--- 
+
++++ 
+
+@@ -0,0 +1,3 @@
+
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 83 - Command: cd /sdfsdgfugdfj
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/bin/sh: 1: cd: can't cd to /sdfsdgfugdfj
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 86 - Command: ls | cat
+--- 
+
++++ 
+
+@@ -1,11 +1,3 @@
+
+-a
+-b
+-c
+-d
+-diff_output.txt
+-lol.c’
+-lol.c”
+-minishell
+-minishell_tester.py
+-test
+-tests.txt
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 88 - Command: exit -12
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/bin/sh: 1: exit: Illegal number: -12
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 89 - Command: exit a
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/bin/sh: 1: exit: Illegal number: a
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 90 - Command: exit 1 2
+--- 
+
++++ 
+
+@@ -0,0 +1,3 @@
+
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 91 - Command: exit 1 a
+--- 
+
++++ 
+
+@@ -0,0 +1,3 @@
+
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 92 - Command: exit a 1
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/bin/sh: 1: exit: Illegal number: a
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 93 - Command: exit 10000
+--- 
+
++++ 
+
+@@ -0,0 +1,3 @@
+
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 94 - Command: exit -10000
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/bin/sh: 1: exit: Illegal number: -10000
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 95 - Command: exit -9223372036854775809
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/bin/sh: 1: exit: Illegal number: -9223372036854775809
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 96 - Command: export lol+=lol
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/bin/sh: 1: export: lol+: bad variable name
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 98 - Command: export loop='bonjour$loop' ; echo $loop
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-bonjour$loop
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 99 - Command: export var="cat Makefile | grep >" ; echo $var
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-cat Makefile | grep >
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 100 - Command: echo $"HOME"
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-$HOME
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 103 - Command: cd k k
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/bin/sh: 1: cd: can't cd to k
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 105 - Command: rm dossier actuel , puis pwd, puis cd .
+--- 
+
++++ 
+
+@@ -1,8 +1,3 @@
+
+-rm: cannot remove 'dossier': No such file or directory
+-rm: cannot remove 'actuel': No such file or directory
+-rm: cannot remove ',': No such file or directory
+-rm: cannot remove 'puis': No such file or directory
+-rm: cannot remove 'pwd,': No such file or directory
+-rm: cannot remove 'puis': No such file or directory
+-rm: cannot remove 'cd': No such file or directory
+-rm: cannot remove '.': Is a directory
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 106 - Command: echo lol | cat
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-lol
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 107 - Command: echo ‘””’
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-‘””’
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 108 - Command: echo “’’”
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-“’’”
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 109 - Command: echo test | cat -e | cat -e | cat -e
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-test$$$
++Error arg : no argument required$$$
++^[[?2004hminishell > ^[[?2004l^M$$$
++exit$$$
+
+Test 115 - Command: echo test > ls >> ls >> ls ; echo test >> ls; cat ls
+--- 
+
++++ 
+
+@@ -1,2 +1,4 @@
+
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+ test
+-test
+
+Test 117 - Command: echo $
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-$
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 118 - Command: Unset doit faire les mêmes cas d erreur que les exports
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/bin/sh: 1: Unset: not found
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 119 - Command: ls -$USER
+--- 
+
++++ 
+
+@@ -1,2 +1,3 @@
+
+-ls: invalid option -- 'j'
+-Try 'ls --help' for more information.
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 120 - Command: gerer le retour la ligne dans HEREDOC
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/bin/sh: 1: gerer: not found
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 121 - Command: << heredoc cat
+--- 
+
++++ 
+
+@@ -0,0 +1,2 @@
+
++Error arg : no argument required
++minishell > exit
+
+Test 122 - Command: echo $USER$
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-jdufour$
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 123 - Command: echo $USER$$$
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-jdufour434267$
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 124 - Command: Error syntaxe doit renvoyer 2
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-/bin/sh: 1: Error: not found
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 127 - Command: export a si a existe deja ne doit pas ecraser
+--- 
+
++++ 
+
+@@ -0,0 +1,3 @@
+
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+
+Test 128 - Command: cat << heredoc
+--- 
+
++++ 
+
+@@ -0,0 +1,2 @@
+
++Error arg : no argument required
++minishell > exit
+
+Test 129 - Command: << EOF cat
+--- 
+
++++ 
+
+@@ -0,0 +1,2 @@
+
++Error arg : no argument required
++minishell > exit
+
+Test 130 - Command: echo “$’’’”
+--- 
+
++++ 
+
+@@ -1 +1,3 @@
+
+-“$’’’”
++Error arg : no argument required
++[?2004hminishell > [?2004l
++exit
+

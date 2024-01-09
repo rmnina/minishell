@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/22 20:14:00 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/28 17:12:42 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/09 00:03:53 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,12 +63,12 @@ int			ft_memcmp(const void *s1, const void *s2, size_t n);
 char		*ft_strnstr(const char *big, const char *little, size_t len);
 long int	ft_atoi(const char *str);
 void		*ft_calloc(size_t nmemb, size_t size);
-char		*ft_strdup(char *src, t_alloc *garbage);
-char		*ft_strndup(char *src, size_t n, t_alloc *garbage);
-char		*ft_substr(const char *s, unsigned int start, size_t len, t_alloc *garbage);
-char		*ft_strjoin(char *s1, const char *s2, t_alloc *garbage);
-char		*ft_strjoin_char(char *s1, const char c, t_alloc *garbage);
-char		*ft_strtrim(const char *s1, const char *set, t_alloc *garbage);
+char		*ft_strdup(char *src, t_alloc **garbage);
+char		*ft_strndup(char *src, size_t n, t_alloc **garbage);
+char		*ft_substr(const char *s, unsigned int start, size_t len, t_alloc **garbage);
+char		*ft_strjoin(char *s1, const char *s2, t_alloc **garbage);
+char		*ft_strjoin_char(char *s1, const char c, t_alloc **garbage);
+char		*ft_strtrim(const char *s1, const char *set, t_alloc **garbage);
 char		**ft_split(const char *s, char c);
 char		*ft_itoa(int n);
 char		*ft_strmapi(const char *s, char (*f)(unsigned int, char));

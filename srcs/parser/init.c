@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 20:18:37 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/04 17:25:33 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/08 23:57:32 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,27 @@ char	*ft_getenv(char ***envp, const char *name)
 	return (NULL);
 }
 
+// char	*ft_replace_env_var(char **var, int pos)
+// {
+// 	int	i;
 
-void	init_get_expand(t_command *token, char *line, int *i, t_quotes *quotes, t_alloc *garbage, char ***envp)
+// 	i = 0;
+// 	while (i < pos && var[pos])
+// 	{
+// 		(*var)[i] == var[pos];
+// 		i++;
+// 		pos++;
+// 	}
+// 	if (i < pos)
+// 	{
+// 		while ((*var)[i])
+// 		{
+			
+// 		}
+// 	}
+// }
+
+void	init_get_expand(t_command *token, char *line, int *i, t_quotes *quotes, t_alloc **garbage, char ***envp)
 {
 	char	*name;
 
@@ -41,8 +60,13 @@ void	init_get_expand(t_command *token, char *line, int *i, t_quotes *quotes, t_a
 		quotes->var = ft_getenv(envp, name);
 		//free(name);
 	}
+	else
+	{
+		
+	}
 	name = NULL;
-	token->word = NULL;
+	if (!token->word)
+		token->word = NULL;
 	token->type = 0;
 }
 
@@ -52,7 +76,7 @@ void	init_get_token(t_command *token)
 	token->type = 0;
 }
 
-t_command	*ft_parsing(char *line, t_alloc *garbage, char ***envp)
+t_command	*ft_parsing(char *line, t_alloc **garbage, char ***envp)
 {
 	t_quotes	quotes;
 	t_command	*command;
