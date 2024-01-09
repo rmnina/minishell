@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 16:22:53 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/08 23:55:52 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/09 13:08:47 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ t_line	*new_line(char *line, t_alloc **garbage)
 {
 	t_line	*node;
 
-	node = malloc(sizeof(t_line));
+	node = garb_malloc(sizeof(t_line), 1, &garbage);
 	if (!node)
 		return (NULL);
 	node->line = ft_strdup(line, garbage);
@@ -94,7 +94,6 @@ void	read_add(int fd, const char *delimiter, t_alloc **garbage)
 	while (1)
 	{
 		line = readline("> ");
-		// printf("Read line: %s\n", line);
 		if (!line || ft_strcmp(line, delimiter) == 0)
 		{
 			free(line);
@@ -129,6 +128,7 @@ int	heredoc(t_heredocNode *heredoclist, t_pipe *pipes, char **argv, char **envp,
 		read_add(pipes->fd[1], current->delimiter, garbage);
 		current = current->next;
 	}
+	printf("heredoc: Démarrage de heredoc pour %s\n", argv[0]);
 	pid = fork();
 	if (pid == -1)
 	{
@@ -137,6 +137,7 @@ int	heredoc(t_heredocNode *heredoclist, t_pipe *pipes, char **argv, char **envp,
 	}
 	else if (pid == 0)
 	{
+		//printf("argv: %s\n", argv[0]);
 		heredoc_child(pipes, argv, &envp, code, garbage);
 		exit (EXIT_SUCCESS);
 	}
@@ -144,10 +145,13 @@ int	heredoc(t_heredocNode *heredoclist, t_pipe *pipes, char **argv, char **envp,
 	{
 		close(pipes->fd[0]);
 		close(pipes->fd[1]);
-		//close(pipes->fd[0]);
 		waitpid(pid, &status, 0);
 		if (WIFEXITED(status))
+		{
 			code_status = WEXITSTATUS(status);
+			if (code_status == SPECIAL_EXIT_CODE)
+				exit(code_status);
+		}
 	}
 	return (code_status);
 }
