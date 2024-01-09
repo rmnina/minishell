@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:45:11 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/08 19:58:35 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/09 00:27:55 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,14 @@
 
 volatile int	g_sigint = 0;
 
-int	init_main(t_code **code, t_alloc *garbage, int argc)
+int	init_main(t_code **code, t_alloc **garbage, int argc)
 {
-
 	if (argc != 1)
 	{
 		printf("Error arg : no argument required\n");
 		return (1);
 	}
-	*code = garb_malloc(sizeof(t_code), 1, &garbage);
+	*code = garb_malloc(sizeof(t_code), 1, garbage);
 	if (!*code)
 		return (1);
 	(*code)->code_status = 0;
@@ -31,7 +30,7 @@ int	init_main(t_code **code, t_alloc *garbage, int argc)
 	return (0);
 }
 
-int	ft_minishell(char *line, t_code *code, char **envp, t_alloc *garbage)
+int	ft_minishell(char *line, t_code *code, char **envp, t_alloc **garbage)
 {
 	struct sigaction	sa;
 
@@ -44,7 +43,7 @@ int	ft_minishell(char *line, t_code *code, char **envp, t_alloc *garbage)
 		{
 			printf("exit\n");
 			if (garbage)
-				free_garbage(&garbage, 0);
+				free_garbage(garbage, 0);
 			break ;
 		}
 		if (line[0] != 0)
@@ -52,7 +51,8 @@ int	ft_minishell(char *line, t_code *code, char **envp, t_alloc *garbage)
 			add_history(line);
 			handle_command(line, code, &envp, garbage);
 		}
-		free(line);
+		if (line)
+			free(line);
 	}
 	return (0);
 }
@@ -67,9 +67,10 @@ int	main(int argc, char **argv, char **envp)
 	code = NULL;
 	line = NULL;
 	garbage = NULL;
-	init_main(&code, garbage, argc);
-	ft_minishell(line, code, envp, garbage);
+	init_main(&code, &garbage, argc);
+	ft_minishell(line, code, envp, &garbage);
 	clear_history();
-	free_garbage(&garbage, 0);
+	if (garbage)
+		free_garbage(&garbage, 0);
 	return (0);
 }

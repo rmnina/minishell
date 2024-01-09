@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 20:18:37 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/08 19:47:09 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/08 23:57:32 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ char	*ft_getenv(char ***envp, const char *name)
 // 	}
 // }
 
-void	init_get_expand(t_command *token, char *line, int *i, t_quotes *quotes, t_alloc *garbage, char ***envp)
+void	init_get_expand(t_command *token, char *line, int *i, t_quotes *quotes, t_alloc **garbage, char ***envp)
 {
 	char	*name;
 
@@ -76,7 +76,7 @@ void	init_get_token(t_command *token)
 	token->type = 0;
 }
 
-t_command	*ft_parsing(char *line, t_alloc *garbage, char ***envp)
+t_command	*ft_parsing(char *line, t_alloc **garbage, char ***envp)
 {
 	t_quotes	quotes;
 	t_command	*command;

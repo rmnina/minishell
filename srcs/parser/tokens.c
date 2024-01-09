@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:04:36 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/08 17:46:12 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/09 00:06:02 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 // literal if they're between quotes, but this verification will 
 // be made by get_token().
 
-t_command	get_special_type_token(char *line, int *i, t_quotes *quotes, t_alloc *garbage)
+t_command	get_special_type_token(char *line, int *i, t_quotes *quotes, t_alloc **garbage)
 {
 	t_command	token;
 
@@ -73,7 +73,7 @@ int	parse_expand_quotes(char *line, int *i, t_quotes *quotes)
 // which are the structures t_command that are gonna be placed in the array
 // treated by the exec. 
 
-t_command	get_token(char *line, t_quotes *quotes, int *i, t_alloc *garbage, char ***envp)
+t_command	get_token(char *line, t_quotes *quotes, int *i, t_alloc **garbage, char ***envp)
 {
 	t_command	token;
 
@@ -109,9 +109,9 @@ t_command	get_token(char *line, t_quotes *quotes, int *i, t_alloc *garbage, char
 // This function creates a null t_command token. It will be added at the
 // end of the array, so we can iterate on it by having an exit condition.
 
-t_command	token_null(t_command *token, t_alloc *garbage)
+t_command	token_null(t_command *token, t_alloc **garbage)
 {
-	token->word = garb_malloc(sizeof(char), 1, &garbage);
+	token->word = garb_malloc(sizeof(char), 1, garbage);
 	token->word[0] = '\0';
 	token->type = 0;
 	return (*token);
@@ -121,7 +121,7 @@ t_command	token_null(t_command *token, t_alloc *garbage)
 // verifies if the env variable have been treated accordingly, and gets 
 // the rest of them if not.
 
-t_command	*get_command(char *line, t_quotes *quotes, t_alloc *garbage, char ***envp)
+t_command	*get_command(char *line, t_quotes *quotes, t_alloc **garbage, char ***envp)
 {
 	t_command	*command;
 	t_command	token;
@@ -131,9 +131,9 @@ t_command	*get_command(char *line, t_quotes *quotes, t_alloc *garbage, char ***e
 	command = NULL;
 	while (line[i])
 	{
-		if (line[i] == SPACE)
+		if (line[i] == 32)
 		{
-			while (line[i] && line[i] == SPACE)
+			while (line[i] && line[i] == 32)
 				i++;
 		}
 		token = get_token(line, quotes, &i, garbage, envp);

@@ -6,13 +6,13 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/08 14:57:26 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/08 23:55:22 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int	execute_builtins(char **cmd_args, char ***envp, t_code *code, t_alloc *garbage)
+int	execute_builtins(char **cmd_args, char ***envp, t_code *code, t_alloc **garbage)
 {
 	if (cmd_args[0] == NULL)
 		return (0);
@@ -41,7 +41,7 @@ int	execute_builtins(char **cmd_args, char ***envp, t_code *code, t_alloc *garba
 }
 
 
-int	execute_non_builtin(char ***envp, t_code *code, char **cmd_args, t_alloc *garbage)
+int	execute_non_builtin(char ***envp, t_code *code, char **cmd_args, t_alloc **garbage)
 {
 	pid_t	pid;
 	int		status;
@@ -85,7 +85,7 @@ int is_builtin(char *command)
     return (0);
 }
 
-void	heredoc_child(t_pipe *pipes, char **argv, char ***envp, t_code *code, t_alloc *garbage)
+void	heredoc_child(t_pipe *pipes, char **argv, char ***envp, t_code *code, t_alloc **garbage)
 {
 	char	*path;
 	char	*new_argv[2];
@@ -128,13 +128,13 @@ int	ft_count(t_command *command, int *i)
 	return (size);
 }
 
-char	**create_cmd_args(t_command *command, int *i, t_alloc *garbage)
+char	**create_cmd_args(t_command *command, int *i, t_alloc **garbage)
 {
 	char	**cmd_args;
 	int		j;
 
 	j = 0;
-	cmd_args = garb_malloc(sizeof(char *), ft_count(command, i) + 1, &garbage);
+	cmd_args = garb_malloc(sizeof(char *), ft_count(command, i) + 1, garbage);
 	if (!cmd_args)
 		return (NULL);
 	while (command[*i].type == WORD || command[*i].type == CODE)
@@ -148,7 +148,7 @@ char	**create_cmd_args(t_command *command, int *i, t_alloc *garbage)
 	return (cmd_args);
 }
 
-void	handle_command(char *input, t_code *code, char ***envp, t_alloc *garbage)
+void	handle_command(char *input, t_code *code, char ***envp, t_alloc **garbage)
 {
 	t_command	*command;
 	char		**cmd_args;

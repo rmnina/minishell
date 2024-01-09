@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 15:15:34 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/08 17:24:58 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/08 23:57:05 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 // This function scans the token following the $ to retrieve the
 // name of the expand, as it is required by the getenv function.
 
-char	*get_env_var_name(char *line, int *i, t_alloc *garbage)
+char	*get_env_var_name(char *line, int *i, t_alloc **garbage)
 {
 	char	*name;
 
@@ -50,7 +50,7 @@ void	get_next_part_env_var(t_quotes *quotes, int j)
 // thanks to the elements modified in the t_quotes structs by the
 // previous function.
 
-int	get_lex_expand(char *line, int *i, t_quotes *quotes, t_command *token, t_alloc *garbage, char ***envp)
+int	get_lex_expand(char *line, int *i, t_quotes *quotes, t_command *token, t_alloc **garbage, char ***envp)
 {
 	int		j;
 

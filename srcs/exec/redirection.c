@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 17:13:45 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/08 19:54:59 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/08 23:56:47 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int	redir_input(char *filename)
 }
 
 
-t_heredocNode	*build_heredoclist(t_command *command, int *i, t_alloc *garbage)
+t_heredocNode	*build_heredoclist(t_command *command, int *i, t_alloc **garbage)
 {
 	t_heredocNode	*head;
 	t_heredocNode	*current;
@@ -63,7 +63,7 @@ t_heredocNode	*build_heredoclist(t_command *command, int *i, t_alloc *garbage)
 
 	head = NULL;
 	current = NULL;
-	new_node = garb_malloc(sizeof(t_heredocNode), 1, &garbage);
+	new_node = garb_malloc(sizeof(t_heredocNode), 1, garbage);
 	if (!new_node)
 		return (perror("Failed to allocate memory for heredoc node"), new_node);
 	*i += 1;
@@ -84,7 +84,7 @@ int	init_redirection(t_command *command, int *i, char **cmd_args, char ***envp, 
 	int				fd;
 	pid_t			pid;
 	int				status;
-	t_alloc			*son_garb;
+	t_alloc			**son_garb;
 	t_pipe			pipes;
 	t_heredocNode	*heredoclist;
 
@@ -125,7 +125,7 @@ int	init_redirection(t_command *command, int *i, char **cmd_args, char ***envp, 
 		}
 		if (execute_builtins(cmd_args, envp, code, son_garb) == -1)
 			execute_non_builtin(envp, code, cmd_args, son_garb);
-		free_garbage(&son_garb, 0);
+		free_garbage(son_garb, 0);
 		exit(0);
 	}
 	else if (pid > 0)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 09:11:51 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/04 18:21:28 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/09 00:00:34 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,13 @@ int	envp_length(char **envp)
 	return (length);
 }
 
-char	**copy_envp(char **envp, int new_size, t_alloc *garbage)
+char	**copy_envp(char **envp, int new_size, t_alloc **garbage)
 {
 	int		i;
 	char	**new_envp;
 
 	i = 0;
-	new_envp = malloc(sizeof(char *) * (new_size + 1));
+	new_envp = garb_malloc(sizeof(char *), (new_size + 1), garbage);
 	if (new_envp == NULL)
 		return (NULL);
 	while (i < new_size)
@@ -54,7 +54,7 @@ char	**copy_envp(char **envp, int new_size, t_alloc *garbage)
 	return (new_envp);
 }
 
-void	add_or_update_env_var(char ***envp, char *var, t_alloc *garbage)
+void	add_or_update_env_var(char ***envp, char *var, t_alloc **garbage)
 {
 	int		len;
 	int		envp_len;
@@ -170,7 +170,7 @@ bool	is_valid_identifier(const char *str)
 // 	return (escaped_value);
 // }
 
-void	handle_value_case(char ***envp, char *arg, t_alloc *garbage)
+void	handle_value_case(char ***envp, char *arg, t_alloc **garbage)
 {
 	char	*equal;
 	char	*var_name;
@@ -216,7 +216,7 @@ void	handle_value_case(char ***envp, char *arg, t_alloc *garbage)
 }
 
 
-int ft_export(char ***envp, char **argv, t_code *code, t_alloc *garbage)
+int ft_export(char ***envp, char **argv, t_code *code, t_alloc **garbage)
 {
 	int		i;
 	char	*equal;

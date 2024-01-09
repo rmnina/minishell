@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 19:16:31 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/08 20:17:18 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/09 00:56:48 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	add_garbage_node(t_alloc **garbage, t_alloc *new)
 	}
 	else
 		*garbage = new;
-	printf("node = %p, garbage = %p\n", new->adr, garbage);
+	// printf("node = %p, garbage = %p\n", new->adr, garbage);
 }
 
 void	*garb_malloc(size_t type, size_t size, t_alloc **garbage)
@@ -73,20 +73,22 @@ void	free_garbage(t_alloc **garbage, int i)
 	void	*pos;
 
 	pos = garbage;
-	printf("pos = %p, garb = %p \n", pos, garbage);
+	// printf("pos = %p, garb = %p \n", pos, garbage);
 	if (!garbage)
 		return ;
-	while (pos)
+	while (pos != NULL)
 	{
 		pos = (*garbage)->next;
-		printf("pos = %p, garb = %p \n", pos, (*garbage)->next);
 		(*garbage)->next = NULL;
-		if ((*garbage)->adr)
+		// printf("pos = %p, garb = %p \n", pos, (*garbage)->next);
+		if ((*garbage)->adr != NULL)
+		{
 			free((*garbage)->adr);
-		(*garbage)->adr = NULL;
-		free(garbage);
+			(*garbage)->adr = NULL;
+		}
+		if (garbage != NULL)
+			free(garbage);
 		garbage = pos;
-		printf("pos = %p, garb = %p \n", pos, garbage);
 	}
 	garbage = NULL;
 	if (i == 1)
