@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 17:13:45 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/09 16:37:20 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/09 18:08:19 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ int	init_redirection(t_command *command, int *i, char **cmd_args, char ***envp, 
 		if (heredoclist)
 		{
 			heredoc(heredoclist, &pipes, cmd_args, *envp, code, garbage);
-			exit(EXIT_SUCCESS);
+				exit(EXIT_SUCCESS);
 		}
 	}
 	pid = fork();

@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 09:11:51 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/09 13:06:58 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/09 16:57:51 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -212,7 +212,6 @@ void	handle_value_case(char ***envp, char *arg, t_alloc **garbage)
 		new_var = ft_strjoin(new_var, formatted_value, garbage);
 	}
 	add_or_update_env_var(envp, new_var, garbage);
-	free(var_name);
 }
 
 

@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/09 15:08:53 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/09 17:10:05 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,13 +179,13 @@ void	handle_command(char *input, t_code *code, char ***envp, t_alloc **garbage)
 	char		**cmd_args;
 	int			i;
 	int			exec;
-	int			num_commands;
+	// int			num_commands;
 
 	i = 0;
 	exec = 0;
 	cmd_args = NULL;
 	command = ft_parsing(input, garbage, envp);
-	num_commands = count_commands(command);
+	// num_commands = count_commands(command);
 	if (command == NULL)
 		return ;
 	while (command[i].type != 0)
@@ -195,7 +195,7 @@ void	handle_command(char *input, t_code *code, char ***envp, t_alloc **garbage)
 		if (command[i].type == PIPE)
 		{
 			//ft_multipipes(command, garbage, envp, cmd_args, &i, code);
-			execute_pipeline(command, num_commands, envp, code, garbage);
+			ft_multipipes(command, garbage, envp, cmd_args, &i, code);
 			exec++;
 		}
 		if (command[i].type >= LEFT_CHEV && command[i].type <= DB_LEFT_CHEV)

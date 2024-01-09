@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:03:22 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/09 15:09:43 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/09 17:09:33 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,6 +141,7 @@ int			init_redirection(t_command *command, int *i, char **cmd_args, char ***envp
 
 //Pipe
 pid_t		heredoc_pipe(t_pipe *pipes);
+void		ft_multipipes(t_command *command, t_alloc **garbage, char ***envp, char **cmd_args, int *i, t_code *code);
 void		execute_pipeline(t_command *command, int num_commands, char ***envp, t_code *code, t_alloc **garbage);
 
 //Builtins

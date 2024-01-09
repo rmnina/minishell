@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:45:11 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/09 16:39:28 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/09 17:01:09 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	init_main(t_code **code, t_alloc **garbage, int argc)
 {
 	if (argc != 1)
 	{
-		printf("Error arg : no argument required\n");
+		write(2, "Error arg : no argument required\n", 34);
 		return (1);
 	}
 	*code = garb_malloc(sizeof(t_code), 1, garbage);
@@ -71,7 +71,8 @@ int	main(int argc, char **argv, char **envp)
 	line = NULL;
 	garbage = NULL;
 	exit_status = 0;
-	init_main(&code, &garbage, argc);
+	if (init_main(&code, &garbage, argc) == 1)
+		return (1);
 	exit_status = ft_minishell(line, code, envp, &garbage);
 	clear_history();
 	if (garbage)

@@ -6,116 +6,73 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:20:25 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/09 13:19:04 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/09 17:16:42 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-
-void	update_exit_code(int status, t_code *code)
+void	ft_multipipes(t_command *command, t_alloc **garbage, char ***envp, char **cmd_args, int *i, t_code *code)
 {
-	if (WIFEXITED(status))
-		code->code_status = WEXITSTATUS(status);
-}
+	t_pipe	pipes;
+	pid_t	pid;
+	int		status;
+	int		old_fd;
 
-
-t_pipe	*init_pipes(int num_commands, t_command *command, t_alloc **garbage)
-{
-	t_pipe	*pipes = garb_malloc(sizeof(t_pipe), num_commands, garbage);
-	int		i;
-
-	i = 0;
-	while (i < num_commands)
+	status = 0;
+	old_fd = -1;
+	while (command[*i].type && command[*i].type != 0)
 	{
-		pipes[i].command = &command[i].word;
-		if (i < num_commands - 1)
+		if (command[*i].type == WORD)
+			cmd_args = create_cmd_args(command, i, garbage);
+		if (command[*i].type == PIPE || *i > 0)
+			pipe(pipes.fd);
+		pid = fork();
+		if (pid == -1)
 		{
-			if (pipe(pipes[i].fd) == -1)
-			{
-				perror("pipe");
-				exit(EXIT_FAILURE);
-			}
-		}
-		i++;
-	}
-
-	return (pipes);
-}
-
-void execute_child_process(int i, int num_commands, t_pipe *pipes, t_command *command, char ***envp, t_code *code, t_alloc **garbage)
-{
-	char	**cmd_args;
-	int		j;
-
-	cmd_args = NULL;
-	j = 0;
-	signal(SIGINT, SIG_DFL);
-	signal(SIGQUIT, SIG_DFL);
-	if (i > 0)
-	{
-		dup2(pipes[i - 1].fd[0], STDIN_FILENO);
-		close(pipes[i - 1].fd[0]);
-	}
-	if (i < num_commands - 1)
-	{
-		dup2(pipes[i].fd[1], STDOUT_FILENO);
-		close(pipes[i].fd[1]);
-	}
-	while (j < num_commands - 1)
-	{
-		if (j != i - 1)
-			close(pipes[j].fd[0]);
-		if (j != i)
-			close(pipes[j].fd[1]);
-		j++;
-	}
-	cmd_args = create_cmd_args(&command[i], &i, garbage);
-	if (execute_builtins(cmd_args, envp, code, garbage) == -1)
-		execute_non_builtin(envp, code, cmd_args, garbage);
-	exit(EXIT_SUCCESS);
-}
-
-void	launch_processes(t_pipe *pipes, int num_commands, t_command *command, char ***envp, t_code *code, t_alloc **garbage)
-{
-	int	i;
-
-	i = 0;
-	while (i < num_commands)
-	{
-		pipes[i].pid = fork();
-		if (pipes[i].pid == -1)
-		{
-			perror("fork");
+			perror("pid");
 			exit(EXIT_FAILURE);
 		}
-		if (pipes[i].pid == 0)
-			execute_child_process(i, num_commands, pipes, command, envp, code, garbage);
-		i++;
+		if (pid == 0)
+		{
+			if (*i > 0 && old_fd != -1)
+			{
+				dup2(old_fd, STDIN_FILENO);
+				close(old_fd);
+			}
+			if (command[*i].type == PIPE)
+			{
+				dup2(pipes.fd[1], STDOUT_FILENO);
+				close(pipes.fd[1]);
+			}
+			close(pipes.fd[0]);
+			if (execute_builtins(cmd_args, envp, code, garbage) == -1)
+				execute_non_builtin(envp, code, cmd_args, garbage);
+			exit(EXIT_SUCCESS);
+		}
+		else
+		{
+			if (*i > 0 && old_fd != -1)
+			{
+				close(old_fd);
+				close(pipes.fd[1]);
+			}
+			if (command[*i].type == PIPE)
+			{
+				old_fd = pipes.fd[0];
+				close(pipes.fd[1]);
+			}
+			else
+				close(pipes.fd[1]);
+		}
+		waitpid(pid, &status, 0);
+		if (WIFEXITED(status))
+			code->code_status = WEXITSTATUS(status);
+		(*i)++;
 	}
+	if (old_fd != -1)
+		close(old_fd);
 }
-
-void	cleanup_pipes(t_pipe *pipes, int num_commands)
-{
-	int	i;
-
-	i = 0;
-	while (i < num_commands - 1)
-	{
-		close(pipes[i].fd[0]);
-		close(pipes[i].fd[1]);
-		i++;
-	}
-	free(pipes);
-}
-
-void	execute_pipeline(t_command *command, int num_commands, char ***envp, t_code *code, t_alloc **garbage)
-{
-	t_pipe *pipes = init_pipes(num_commands, command, garbage);
-	launch_processes(pipes, num_commands, command, envp, code, garbage);
-	cleanup_pipes(pipes, num_commands);
-}
-
 
 // void	execute_pipeline(t_command *command, int num_commands, char ***envp, t_code *code, t_alloc *garbage)
 // {
