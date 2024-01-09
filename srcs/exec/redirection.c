@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 17:13:45 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/08 20:46:41 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/09 11:09:38 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,12 +91,10 @@ int	init_redirection(t_command *command, int *i, char **cmd_args, char ***envp, 
 	son_garb = NULL;
 	fd = 0;
 	filename = NULL;
+	printf("init_redirection: Initialisation de la redirection\n");
 	pid = fork();
 	if (pid == -1)
-	{
-		perror("fork failed");
 		exit(EXIT_FAILURE);
-	}
 	if (pid == 0)
 	{
 		heredoclist = build_heredoclist(command, i, son_garb);

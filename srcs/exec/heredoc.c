@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 16:22:53 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/08 20:45:58 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/09 11:09:16 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,6 @@ void	read_add(int fd, const char *delimiter, t_alloc *garbage)
 
 	head = NULL;
 	tail = NULL;
-	dprintf(2, "fd = %d\n", fd);
 	while (1)
 	{
 		line = readline("> ");
@@ -129,6 +128,7 @@ int	heredoc(t_heredocNode *heredoclist, t_pipe *pipes, char **argv, char **envp,
 		read_add(pipes->fd[1], current->delimiter, garbage);
 		current = current->next;
 	}
+	printf("heredoc: Démarrage de heredoc pour %s\n", argv[0]);
 	pid = fork();
 	if (pid == -1)
 	{
@@ -137,7 +137,7 @@ int	heredoc(t_heredocNode *heredoclist, t_pipe *pipes, char **argv, char **envp,
 	}
 	else if (pid == 0)
 	{
-		printf("argv: %s\n", argv[0]);
+		//printf("argv: %s\n", argv[0]);
 		heredoc_child(pipes, argv, &envp, code, garbage);
 		exit (EXIT_SUCCESS);
 	}

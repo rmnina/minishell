@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julietteandrieux <julietteandrieux@stud    +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:03:22 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/08 23:49:52 by julietteand      ###   ########.fr       */
+/*   Updated: 2024/01/09 12:28:39 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ enum e_type {
 # define DOUBLE_QUOTE 34
 # define UNDERSCORE 95
 # define SPECIAL_EXIT_CODE 255
-# define SPACE 32
+
 
 typedef struct s_quotes {
 	bool	case_single;
@@ -70,9 +70,11 @@ typedef struct s_command {
 }	t_command;
 
 typedef struct s_pipe {
-	char	**command1;
-	char	**command2;
+	// char	**command1;
+	// char	**command2;
+	char	**command;
 	int		fd[2];
+	pid_t	pid;
 }	t_pipe;
 
 typedef struct s_code {
@@ -140,7 +142,7 @@ int			init_redirection(t_command *command, int *i, char **cmd_args, char ***envp
 pid_t		heredoc_pipe(t_pipe *pipes);
 //void		ft_multipipes(t_command *command, t_alloc *garbage, char ***envp, char **cmd_args, int *i, t_code *code);
 //void	ft_multipipes(t_command *command, t_alloc *garbage, char ***envp, char **cmd_args, int *i, t_code *code);
-void execute_pipeline(t_command *commands, int num_commands, char ***envp, t_code *code, t_alloc *garbage);
+void execute_pipeline(t_command *command, int num_commands, char ***envp, t_code *code, t_alloc *garbage);
 
 
 //Builtins
@@ -162,7 +164,7 @@ int			process_prompt(void);
 void		sigint_handler(int signum);
 int			init_sigactionsa(struct sigaction *sa);
 int			init_sigquit(void);
-
+int			init_parent_signals(void);
 //heredoc
 int			heredoc(t_heredocNode *heredoclist, t_pipe *pipes, char **argv, char **envp, t_code *code, t_alloc *garbage);
 void		read_add(int fd, const char *delimiter, t_alloc *garbage);
