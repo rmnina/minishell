@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 19:16:31 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/09 13:09:19 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/09 16:35:58 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,13 +56,13 @@ void	*garb_malloc(size_t type, size_t size, t_alloc **garbage)
 
 	ptr = NULL;
 	if (size && type)
-		ptr = malloc(type * size + 1);
+		ptr = malloc(type * size);
 	if (!ptr)
 		return (NULL);
-	ft_memset(ptr, 0, type * size + 1);
+	ft_memset(ptr, 0, (type * size));
 	new = create_garbage_node(ptr);
 	if (*garbage == NULL)
-		*garbage = new;
+		(*garbage) = new;
 	else
 		add_garbage_node(garbage, new);
 	return (ptr);
@@ -70,25 +70,22 @@ void	*garb_malloc(size_t type, size_t size, t_alloc **garbage)
 
 void	free_garbage(t_alloc **garbage, int i)
 {
-	void	*pos;
+	t_alloc	*temp;
 
-	pos = garbage;
-	// printf("pos = %p, garb = %p \n", pos, garbage);
-	if (!garbage)
+	temp = *garbage;
+	if (!temp)
 		return ;
-	while (pos != NULL)
+	while (temp != NULL)
 	{
-		pos = (*garbage)->next;
-		(*garbage)->next = NULL;
-		// printf("pos = %p, garb = %p \n", pos, (*garbage)->next);
-		if ((*garbage)->adr != NULL)
+		*garbage = temp->next;
+		temp->next = NULL;
+		if (temp->adr != NULL)
 		{
-			free((*garbage)->adr);
-			(*garbage)->adr = NULL;
+			free(temp->adr);
+			temp->adr = NULL;
 		}
-		if (garbage != NULL)
-			free(garbage);
-		garbage = pos;
+		free(temp);
+		temp = *garbage;
 	}
 	garbage = NULL;
 	if (i == 1)

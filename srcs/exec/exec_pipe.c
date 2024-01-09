@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:20:25 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/09 13:07:57 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/09 13:19:04 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,10 +111,8 @@ void	cleanup_pipes(t_pipe *pipes, int num_commands)
 
 void	execute_pipeline(t_command *command, int num_commands, char ***envp, t_code *code, t_alloc **garbage)
 {
-	t_pipe *pipes = init_pipes(num_commands, command, &garbage);
-
+	t_pipe *pipes = init_pipes(num_commands, command, garbage);
 	launch_processes(pipes, num_commands, command, envp, code, garbage);
-
 	cleanup_pipes(pipes, num_commands);
 }
 

@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 16:22:53 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/09 13:08:47 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/09 15:13:51 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ t_line	*new_line(char *line, t_alloc **garbage)
 {
 	t_line	*node;
 
-	node = garb_malloc(sizeof(t_line), 1, &garbage);
+	node = malloc(sizeof(t_line));
 	if (!node)
 		return (NULL);
 	node->line = ft_strdup(line, garbage);
@@ -128,7 +128,7 @@ int	heredoc(t_heredocNode *heredoclist, t_pipe *pipes, char **argv, char **envp,
 		read_add(pipes->fd[1], current->delimiter, garbage);
 		current = current->next;
 	}
-	printf("heredoc: Démarrage de heredoc pour %s\n", argv[0]);
+	// printf("heredoc: Démarrage de heredoc pour %s\n", argv[0]);
 	pid = fork();
 	if (pid == -1)
 	{

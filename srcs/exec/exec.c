@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/09 13:08:36 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/09 15:08:53 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int	execute_non_builtin(char ***envp, t_code *code, char **cmd_args, t_alloc **g
 	int		status;
 
 	status = 0;
-	printf("execute_non_builtin: Exécution d'une commande non intégrée\n");
+	// printf("execute_non_builtin: Exécution d'une commande non intégrée\n");
 	pid = fork();
 	if (pid == -1)
 	{
@@ -199,7 +199,7 @@ void	handle_command(char *input, t_code *code, char ***envp, t_alloc **garbage)
 			exec++;
 		}
 		if (command[i].type >= LEFT_CHEV && command[i].type <= DB_LEFT_CHEV)
-			init_redirection(command, &i, cmd_args, envp, code);
+			init_redirection(command, &i, cmd_args, envp, code, garbage);
 		else if (cmd_args != NULL && exec == 0)
 		{
 			if (execute_builtins(cmd_args, envp, code, garbage) == -1)
