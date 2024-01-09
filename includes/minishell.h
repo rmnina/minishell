@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:03:22 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/09 18:01:05 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/09 19:56:01 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,7 +136,7 @@ char		**create_cmd_args(t_command *command, int *i, t_alloc **garbage);
 void		pick_command(char **cmd_args, char **envp, t_code *code, t_alloc **garbage);
 
 //Redirection 
-int			init_redirection(t_command *command, int *i, char **cmd_args, char ***envp, t_code *code);
+int			init_redirection(t_command *command, int *i, char **cmd_args, char ***envp, t_code *code, t_alloc **garbage);
 
 
 //Pipe

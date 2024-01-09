@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 16:22:53 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/09 15:14:42 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/09 19:58:32 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ t_line	*new_line(char *line, t_alloc **garbage)
 {
 	t_line	*node;
 
-	node = garb_malloc(sizeof(t_line), 1, garbage);
+	node = malloc(sizeof(t_line));
 	if (!node)
 		return (NULL);
 	node->line = ft_strdup(line, garbage);
@@ -118,17 +118,21 @@ int	heredoc(t_heredocNode *heredoclist, t_pipe *pipes, char **argv, char **envp,
 	int				status;
 	int				code_status;
 	t_heredocNode	*current;
+	int				heredoc_pipe[2];
 
 	status = 0;
 	code_status = 0;
 	current = heredoclist;
 	pipe(pipes->fd);
+	pipe(heredoc_pipe);
 	while (current != NULL)
 	{
 		read_add(pipes->fd[1], current->delimiter, garbage);
 		current = current->next;
 	}
-	printf("heredoc: Démarrage de heredoc pour %s\n", argv[0]);
+	// write_pipe(heredoc_pipe[1], head); // Écrivez dans le pipe heredoc
+    // close(heredoc_pipe[1]); 
+	// printf("heredoc: Démarrage de heredoc pour %s\n", argv[0]);
 	pid = fork();
 	if (pid == -1)
 	{
@@ -137,20 +141,20 @@ int	heredoc(t_heredocNode *heredoclist, t_pipe *pipes, char **argv, char **envp,
 	}
 	else if (pid == 0)
 	{
-		//printf("argv: %s\n", argv[0]);
 		heredoc_child(pipes, argv, &envp, code, garbage);
-		exit (EXIT_SUCCESS);
+		exit(EXIT_SUCCESS);
 	}
 	else
 	{
-		close(pipes->fd[0]);
 		close(pipes->fd[1]);
+		close(pipes->fd[0]);
 		waitpid(pid, &status, 0);
 		if (WIFEXITED(status))
 		{
 			code_status = WEXITSTATUS(status);
 			if (code_status == SPECIAL_EXIT_CODE)
 				exit(code_status);
+			// exit(EXIT_SUCCESS);
 		}
 	}
 	return (code_status);

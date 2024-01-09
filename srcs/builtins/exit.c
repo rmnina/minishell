@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:04:36 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/09 12:54:01 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/09 18:45:25 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,21 +45,25 @@ int	ft_exit(char **cmd_args, t_code *code, t_alloc **garbage)
 			else
 			{
 				code->code_status = ft_atoi(cmd_args[1]);
-				// if (garbage)
-				// 	free_garbage(garbage, 0);
+				if (garbage)
+					free_garbage(garbage, 0);
+				printf("exit\n");
 				exit(code->code_status);
 			}
 		}
 		else
 		{
-			write(2, "minishell: exit: numeric argument required\n", 44);
-			code->code_status = 2;
-			printf("code status = %d\n", code->code_status);
-			// if (garbage)
-			// 	free_garbage(garbage, 0);
+			write(2, "exit\nminishell: exit: numeric argument required\n", 49);
+			code->code_status = 2; //testé sur macOS donc a verifier
+			// printf("code status = %d\n", code->code_status);
+			if (garbage)
+				free_garbage(garbage, 0);
 			exit(code->code_status);
 		}
 	}
 	else
+	{
+		printf("exit prout\n");
 		exit(code->code_status);
+	}
 }

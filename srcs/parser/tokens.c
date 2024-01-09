@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:04:36 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/09 00:06:02 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/09 17:15:21 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,7 +155,7 @@ t_command	*get_command(char *line, t_quotes *quotes, t_alloc **garbage, char ***
 		}
 	}
 	command = ft_struct_join(command, token_null(&token, garbage), garbage);
-	// for (int j = 0; command[j].type != 0; j++)
+	// // for (int j = 0; command[j].type != 0; j++)
 	// 	printf("token = %s\n", command[j].word);
 	return (command);
 }

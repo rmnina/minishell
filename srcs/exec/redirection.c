@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 17:13:45 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/09 18:08:36 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/09 19:55:14 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,8 @@ int	redir_append(char *filename)
 	int	fd;
 	int	dup;
 
-	fd = open(filename, O_WRONLY | O_APPEND);
+	fd = open(filename, O_WRONLY | O_TRUNC | O_CREAT, S_IRUSR \
+	| S_IRGRP | S_IWGRP | S_IWUSR);
 	if (fd == -1)
 		return (-1);
 	dup = dup2(fd, STDOUT_FILENO);
@@ -78,37 +79,35 @@ t_heredocNode	*build_heredoclist(t_command *command, int *i, t_alloc **garbage)
 	return (head);
 }
 
-int	init_redirection(t_command *command, int *i, char **cmd_args, char ***envp, t_code *code)
+int	init_redirection(t_command *command, int *i, char **cmd_args, char ***envp, t_code *code, t_alloc **garbage)
 {
 	char			*filename;
 	int				fd;
 	pid_t			pid;
 	int				status;
-	t_alloc			**son_garb;
 	t_pipe			pipes;
 	t_heredocNode	*heredoclist;
 
-	son_garb = NULL;
 	fd = 0;
 	filename = NULL;
+	if (command[*i].type == DB_LEFT_CHEV)
+	{
+		heredoclist = build_heredoclist(command, i, garbage);
+		if (heredoclist)
+		{
+			heredoc(heredoclist, &pipes, cmd_args, *envp, code, garbage);
+			return (0);
+		}
+	}
 	pid = fork();
 	if (pid == -1)
 		exit(EXIT_FAILURE);
 	if (pid == 0)
 	{
-		if (command[*i].type == DB_LEFT_CHEV)
-		{
-			heredoclist = build_heredoclist(command, i, son_garb);
-			if (heredoclist)
-			{
-				heredoc(heredoclist, &pipes, cmd_args, *envp, code, son_garb);
-				exit(EXIT_SUCCESS);
-			}
-		}
 		if (command[*i].type == DB_RIGHT_CHEV || \
 		command[*i].type == RIGHT_CHEV)
 		{
-			filename = ft_strdup(command[*i + 1].word, son_garb);
+			filename = ft_strdup(command[*i + 1].word, garbage);
 			if (!filename)
 				return (-1);
 			if (command[*i].type == RIGHT_CHEV)
@@ -121,9 +120,8 @@ int	init_redirection(t_command *command, int *i, char **cmd_args, char ***envp, 
 			filename = command[*i - 1].word;
 			fd = redir_input(filename);
 		}
-		if (execute_builtins(cmd_args, envp, code, son_garb) == -1)
-			execute_non_builtin(envp, code, cmd_args, son_garb);
-		free_garbage(son_garb, 0);
+		if (execute_builtins(cmd_args, envp, code, garbage) == -1)
+			execute_non_builtin(envp, code, cmd_args, garbage);
 		exit(0);
 	}
 	else if (pid > 0)
