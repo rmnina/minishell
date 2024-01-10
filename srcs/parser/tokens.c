@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:04:36 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/09 17:15:21 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/10 18:03:09 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,8 @@ int	parse_expand_quotes(char *line, int *i, t_quotes *quotes)
 {
 	if ((line[*i] == 32 && quotes->case_single == FALSE) || line[*i] == '\0')
 		return (1);
-	else if (line[*i] == SINGLE_QUOTE && quotes->case_double == FALSE)
-		return (*i += 1, 2);
+	// else if (line[*i] == SINGLE_QUOTE && quotes->case_double == FALSE)
+	// 	return (*i += 1, 2);
 	else if (line[*i] == DOUBLE_QUOTE && quotes->case_single == FALSE)
 		return (*i += 1, 3);
 	return (0);
@@ -83,8 +83,8 @@ t_command	get_token(char *line, t_quotes *quotes, int *i, t_alloc **garbage, cha
 		is_in_quote(line[*i], quotes);
 		if (parse_quotes(line, i, quotes) == 1 || !line[*i])
 			break ;
-		if ((special_types(line[*i], line[*i + 1]) == EXPAND \
-		&& quotes->case_single == FALSE) || quotes->var != NULL)
+		if (special_types(line[*i], line[*i + 1]) == EXPAND \
+		&& quotes->case_single == FALSE)
 		{
 			if (get_lex_expand(line, i, quotes, &token, garbage, envp) == 1)
 				break ;
@@ -145,11 +145,9 @@ t_command	*get_command(char *line, t_quotes *quotes, t_alloc **garbage, char ***
 				token.type = WORD;
 			command = ft_struct_join(command, token, garbage);
 		}
-	}
-	if (!line[i] && quotes->var != NULL)
-	{
-		while (quotes->var != NULL)
+		if (quotes->var != NULL)
 		{
+			init_get_token(&token);
 			get_lex_expand(line, &i, quotes, &token, garbage, envp);
 			command = ft_struct_join(command, token, garbage);
 		}
