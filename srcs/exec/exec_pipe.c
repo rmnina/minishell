@@ -6,26 +6,29 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:20:25 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/10 17:06:36 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/10 20:26:03 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
 
-void handle_command_args(t_command *command, char ***cmd_args, int *i, t_alloc **garbage)
+int handle_command_args(t_command *command, char ***cmd_args, int *i, t_alloc **garbage)
 {
 	if (command[*i].type == WORD)
+	{
 		*cmd_args = create_cmd_args(command, i, garbage);
+	}
+	if (command[*i].type >= LEFT_CHEV && command[*i].type <= DB_RIGHT_CHEV)
+		return (0);
+	return (1);
 }
 
-void initialize_process(pid_t *pid, t_pipe *pipes, t_command *command, int *i)
+void initialize_process(t_pipe *pipes, pid_t *pid, t_command *command, int *i)
 {
 	if (command[*i].type == PIPE || *i > 0)
 		pipe(pipes->fd);
-
 	*pid = fork();
-
 	if (*pid == -1)
 	{
 		perror("pid");
@@ -47,15 +50,12 @@ void execute_child_process(int *i, t_pipe *pipes, char **cmd_args, char ***envp,
 	}
 	close(pipes->fd[0]);
 	if (execute_builtins(cmd_args, envp, code, garbage) == -1)
-	{
 		execute_non_builtin(envp, code, cmd_args, garbage);
-	}
 	exit(EXIT_SUCCESS);
 }
 
-void handle_parent_process(int *i, t_pipe *pipes, int *old_fd, pid_t pid, t_code *code, int *status, t_command *command)
+void handle_parent_process(int *i, t_pipe *pipes, pid_t pid, int *old_fd, t_code *code, int *status, t_command *command)
 {
-
 	if (*i > 0 && *old_fd != -1)
 	{
 		close(*old_fd);
@@ -85,19 +85,13 @@ void ft_multipipes(t_command *command, t_pipe *pipes, t_alloc **garbage, char **
 	old_fd = -1;
 	while (command[*i].type != 0)
 	{
-		handle_command_args(command, &cmd_args, i, garbage);
-		//printf("ft_multipipes - heredoc_fd[0]: %d\n", pipes->heredoc_fd[0]);
-		if (*i == 0 && pipes->heredoc_fd[0])
-		{
-            //printf("ft_multipipes - old_fd recupere heredoc_fd[0]: %ls\n", pipes->heredoc_fd);
-			old_fd = pipes->heredoc_fd[0];  // Utilisez l'extrémité de lecture du heredoc
-			//printf("ft_multipipes - old_fd apres heredoc_fd[0]: %d\n", old_fd);
-		}
-		initialize_process(&pid, pipes, command, i);
+		if (!handle_command_args(command, &cmd_args, i, garbage))
+			break ;
+		initialize_process(pipes, &pid, command, i);
 		if (pid == 0)
 			execute_child_process(i, pipes, cmd_args, envp, code, garbage, &old_fd, command);
 		else
-			handle_parent_process(i, pipes, &old_fd, pid, code, &status, command);
+			handle_parent_process(i, pipes, pid, &old_fd, code, &status, command);
 		(*i)++;
 	}
 	if (old_fd != -1)

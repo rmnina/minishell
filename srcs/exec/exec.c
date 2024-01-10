@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/10 16:41:50 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/10 20:04:26 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,23 +84,51 @@ int	is_builtin(char *command)
 	return (0);
 }
 
-// void	heredoc_child(t_pipe *pipes, char **argv, char ***envp, t_code *code, t_alloc **garbage)
+void	heredoc_child(t_pipe *pipes, char **argv, char ***envp, t_code *code, t_alloc **garbage)
+{
+	char	*path;
+	char	*new_argv[2];
+
+	path = NULL;
+	//close(pipes->fd[1]);
+	if (dup2(pipes->fd[0], STDIN_FILENO) == -1)
+		exit(EXIT_FAILURE);
+	close(pipes->fd[0]);
+	if (!argv[0] || !*argv)
+		exit (EXIT_FAILURE);
+	if (is_builtin(argv[0]))
+	{
+		execute_builtins(argv, envp, code, garbage);
+	}
+	else
+	{
+		path = find_command_path(argv[0], garbage);
+		if (!path)
+			exit(EXIT_FAILURE);
+		new_argv[0] = ft_strdup(argv[0], garbage);
+		if (!new_argv[0])
+			exit (EXIT_FAILURE);
+		new_argv[1] = NULL;
+		execve(path, new_argv, *envp);
+		exit(EXIT_FAILURE);
+	}
+	exit(EXIT_SUCCESS);
+}
+
+// void heredoc_child(t_pipe *pipes, char **argv, char ***envp, t_code *code, t_alloc **garbage)
 // {
 // 	char	*path;
 // 	char	*new_argv[2];
 
 // 	path = NULL;
-
-// 	close(pipes->fd[1]);
-// 	if (dup2(pipes->fd[0], STDIN_FILENO) == -1)
+// 	if (dup2(pipes->heredoc_fd[0], STDIN_FILENO) == -1)
 // 		exit(EXIT_FAILURE);
-// 	close(pipes->fd[0]);
+// 	close(pipes->heredoc_fd[0]);
+
 // 	if (!argv[0] || !*argv)
-// 		exit (EXIT_FAILURE);
+// 		exit(EXIT_FAILURE);
 // 	if (is_builtin(argv[0]))
-// 	{
 // 		execute_builtins(argv, envp, code, garbage);
-// 	}
 // 	else
 // 	{
 // 		path = find_command_path(argv[0], garbage);
@@ -108,40 +136,13 @@ int	is_builtin(char *command)
 // 			exit(EXIT_FAILURE);
 // 		new_argv[0] = ft_strdup(argv[0], garbage);
 // 		if (!new_argv[0])
-// 			exit (EXIT_FAILURE);
+// 			exit(EXIT_FAILURE);
 // 		new_argv[1] = NULL;
 // 		execve(path, new_argv, *envp);
 // 		exit(EXIT_FAILURE);
 // 	}
 // 	exit(EXIT_SUCCESS);
 // }
-
-void heredoc_child(t_pipe *pipes, char **argv, char ***envp, t_code *code, t_alloc **garbage) {
-    char *path;
-    char *new_argv[2];
-
-    path = NULL;
-    if (dup2(pipes->heredoc_fd[0], STDIN_FILENO) == -1)
-        exit(EXIT_FAILURE);
-    close(pipes->heredoc_fd[0]);
-
-    if (!argv[0] || !*argv)
-        exit(EXIT_FAILURE);
-    if (is_builtin(argv[0])) {
-        execute_builtins(argv, envp, code, garbage);
-    } else {
-        path = find_command_path(argv[0], garbage);
-        if (!path)
-            exit(EXIT_FAILURE);
-        new_argv[0] = ft_strdup(argv[0], garbage);
-        if (!new_argv[0])
-            exit(EXIT_FAILURE);
-        new_argv[1] = NULL;
-        execve(path, new_argv, *envp);
-        exit(EXIT_FAILURE);
-    }
-    exit(EXIT_SUCCESS);
-}
 
 
 
@@ -234,7 +235,7 @@ void	handle_command(char *input, t_code *code, char ***envp, t_alloc **garbage, 
 	{
 		if (command[i].type == WORD || command[i].type == 0 || command[i].type == CODE)
 			cmd_args = create_cmd_args(command, &i, garbage);
-		if (command[i].type == PIPE )
+		if (command[i].type == PIPE)
 		{
 			ft_multipipes(command, pipes, garbage, envp, cmd_args, &i, code);
 			//printf("pipe reconnu: %s\n", command[i].word);
@@ -242,7 +243,7 @@ void	handle_command(char *input, t_code *code, char ***envp, t_alloc **garbage, 
 			exec++;
 		}
 		if (command[i].type >= LEFT_CHEV && command[i].type <= DB_LEFT_CHEV)
-			init_redirection(command, &i, cmd_args, envp, code, garbage);
+			exec += init_redirection(command, &i, cmd_args, envp, code, garbage);
 		else if (cmd_args != NULL && exec == 0)
 		{
 			if (execute_builtins(cmd_args, envp, code, garbage) == -1)
