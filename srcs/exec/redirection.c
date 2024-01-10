@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 17:13:45 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/10 17:05:29 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/10 18:16:43 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,18 +64,21 @@ t_heredocNode	*build_heredoclist(t_command *command, int *i, t_alloc **garbage)
 
 	head = NULL;
 	current = NULL;
-	new_node = garb_malloc(sizeof(t_heredocNode), 1, garbage);
-	if (!new_node)
-		return (new_node);
-	*i += 1;
-	new_node->delimiter = command[*i].word;
-	new_node->next = NULL;
-	if (!head)
-		head = new_node;
-	else
-		current->next = new_node;
-	current = new_node;
-	*i += 1;
+	while (command[*i].type == DB_LEFT_CHEV)
+	{
+		new_node = garb_malloc(sizeof(t_heredocNode), 1, garbage);
+		if (!new_node)
+			return (NULL);
+		*i += 1;
+		new_node->delimiter = command[*i].word;
+		new_node->next = NULL;
+		if (!head)
+			head = new_node;
+		else
+			current->next = new_node;
+		current = new_node;
+		*i += 1;
+	}
 	return (head);
 }
 
