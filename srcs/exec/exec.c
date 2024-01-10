@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: julietteandrieux <julietteandrieux@stud    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/09 19:55:41 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/10 00:06:14 by julietteand      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ int	is_builtin(char *command)
 	return (0);
 }
 
-void	heredoc_child(t_pipe *pipes, char **argv, char ***envp, t_code *code, t_alloc **garbage)
+void	heredoc_child(int heredoc_fd, t_pipe *pipes, char **argv, char ***envp, t_code *code, t_alloc **garbage)
 {
 	char	*path;
 	char	*new_argv[2];
@@ -94,6 +94,20 @@ void	heredoc_child(t_pipe *pipes, char **argv, char ***envp, t_code *code, t_all
 	if (dup2(pipes->fd[0], STDIN_FILENO) == -1)
 		exit(EXIT_FAILURE);
 	close(pipes->fd[0]);
+	if (heredoc_fd > 0) 
+	{
+		if (dup2(heredoc_fd, STDIN_FILENO) == -1)
+		{
+			perror("dup2 heredoc_fd");
+			exit(EXIT_FAILURE);
+		}
+    	close(heredoc_fd);
+	}
+	else 
+	{
+   		 perror("Invalid heredoc_fd");
+    	exit(EXIT_FAILURE);
+	}
 	if (!argv[0] || !*argv)
 		exit (EXIT_FAILURE);
 	if (is_builtin(argv[0]))

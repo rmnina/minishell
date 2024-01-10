@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: julietteandrieux <julietteandrieux@stud    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 16:22:53 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/09 19:58:32 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/10 00:05:23 by julietteand      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,15 +82,21 @@ void	write_pipe(int fd, t_line *head)
 }
 
 
-void	read_add(int fd, const char *delimiter, t_alloc **garbage)
+int	read_add(int fd, const char *delimiter, t_alloc **garbage)
 {
 	char	*line;
 	t_line	*node;
 	t_line	*head;
 	t_line	*tail;
-
+	int heredoc_pipe[2];
+	
 	head = NULL;
 	tail = NULL;
+	if (pipe(heredoc_pipe) != 0)
+	{
+        perror("pipe");
+        return -1;
+    }
 	while (1)
 	{
 		line = readline("> ");
@@ -110,52 +116,73 @@ void	read_add(int fd, const char *delimiter, t_alloc **garbage)
 	write_pipe(fd, head);
 	free_line_nodes(head);
 	close (fd);
+	close(heredoc_pipe[1]); // Fermez l'extrémité d'écriture après avoir terminé l'écriture
+    return (heredoc_pipe[0]);
 }
 
-int	heredoc(t_heredocNode *heredoclist, t_pipe *pipes, char **argv, char **envp, t_code *code, t_alloc **garbage)
+int	heredoc(t_heredocNode *heredoclist, int fd, t_pipe *pipes, char **argv, char **envp, t_code *code, t_alloc **garbage)
 {
 	pid_t			pid;
 	int				status;
 	int				code_status;
-	t_heredocNode	*current;
-	int				heredoc_pipe[2];
+	//t_heredocNode	*current;
+	int				heredoc_fd;
 
 	status = 0;
 	code_status = 0;
-	current = heredoclist;
+	//current = heredoclist;
 	pipe(pipes->fd);
-	pipe(heredoc_pipe);
-	while (current != NULL)
+	//while (current != NULL)
+	//{
+	//	read_add(pipes->fd[1], current->delimiter, garbage);
+	//	current = current->next;
+	//}
+	while (heredoclist != NULL)
 	{
-		read_add(pipes->fd[1], current->delimiter, garbage);
-		current = current->next;
-	}
-	// write_pipe(heredoc_pipe[1], head); // Écrivez dans le pipe heredoc
-    // close(heredoc_pipe[1]); 
-	// printf("heredoc: Démarrage de heredoc pour %s\n", argv[0]);
-	pid = fork();
-	if (pid == -1)
-	{
-		perror("fork failed");
-		exit(EXIT_FAILURE);
-	}
-	else if (pid == 0)
-	{
-		heredoc_child(pipes, argv, &envp, code, garbage);
-		exit(EXIT_SUCCESS);
-	}
-	else
-	{
-		close(pipes->fd[1]);
-		close(pipes->fd[0]);
-		waitpid(pid, &status, 0);
-		if (WIFEXITED(status))
+        heredoc_fd = read_add(fd, heredoclist->delimiter, garbage);
+
+        if ((pid = fork()) == -1)
 		{
-			code_status = WEXITSTATUS(status);
-			if (code_status == SPECIAL_EXIT_CODE)
-				exit(code_status);
-			// exit(EXIT_SUCCESS);
+            perror("fork failed");
+            exit(EXIT_FAILURE);
+        } 
+		else if (pid == 0)
+		{
+			if (dup2(heredoc_fd, STDIN_FILENO) == -1)
+			{
+    			perror("dup2");
+    			exit(EXIT_FAILURE);
+			}
+			close(heredoc_fd);
+            heredoc_child(heredoc_fd, pipes, argv, &envp, code, garbage);
+            exit(EXIT_SUCCESS);
+        } 
+		else 
+		//pid = fork();
+		//if (pid == -1)
+		//{
+		//	perror("fork failed");
+		//	exit(EXIT_FAILURE);
+		//}
+		//else if (pid == 0)
+		//{
+		//	heredoc_child(pipes, argv, &envp, code, garbage);
+		//	exit(EXIT_SUCCESS);
+		//}
+		//else
+		{
+			close(pipes->fd[1]);
+			close(pipes->fd[0]);
+			waitpid(pid, &status, 0);
+			if (WIFEXITED(status))
+			{
+				code_status = WEXITSTATUS(status);
+				if (code_status == SPECIAL_EXIT_CODE)
+					exit(code_status);
+				// exit(EXIT_SUCCESS);
+			}
 		}
+		heredoclist = heredoclist->next;
 	}
 	return (code_status);
 }

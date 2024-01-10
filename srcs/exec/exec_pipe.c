@@ -3,228 +3,98 @@
 /*                                                        :::      ::::::::   */
 /*   exec_pipe.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: julietteandrieux <julietteandrieux@stud    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:20:25 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/09 18:11:15 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/09 22:16:20 by julietteand      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
 
-// void	update_exit_code(int status, t_code *code)
-// {
-// 	if (WIFEXITED(status))
-// 		code->code_status = WEXITSTATUS(status);
-// }
+void handle_command_args(t_command *command, char ***cmd_args, int *i, t_alloc **garbage)
+{
+    if (command[*i].type == WORD)
+        *cmd_args = create_cmd_args(command, i, garbage);
+}
+
+void initialize_process(pid_t *pid, t_pipe *pipes, t_command *command, int *i)
+{
+    if (command[*i].type == PIPE || *i > 0)
+        pipe(pipes->fd);
+
+    *pid = fork();
+
+    if (*pid == -1)
+	{
+        perror("pid");
+        exit(EXIT_FAILURE);
+    }
+}
+
+void execute_child_process(int *i, t_pipe *pipes, char **cmd_args, char ***envp, t_code *code, t_alloc **garbage, int *old_fd, t_command *command)
+{
+    if (*i > 0 && *old_fd != -1)
+	{
+        dup2(*old_fd, STDIN_FILENO);
+        close(*old_fd);
+    }
+    if (command[*i].type == PIPE)
+	{
+        dup2(pipes->fd[1], STDOUT_FILENO);
+        close(pipes->fd[1]);
+    }
+    close(pipes->fd[0]);
+    if (execute_builtins(cmd_args, envp, code, garbage) == -1)
+        execute_non_builtin(envp, code, cmd_args, garbage);
+    exit(EXIT_SUCCESS);
+}
+
+void handle_parent_process(int *i, t_pipe *pipes, int *old_fd, pid_t pid, t_code *code, int *status, t_command *command)
+{
+    if (*i > 0 && *old_fd != -1)
+        close(*old_fd);
+    if (command[*i].type == PIPE)
+	{
+        *old_fd = pipes->fd[0];
+        close(pipes->fd[1]);
+    }
+	else
+	{
+        close(pipes->fd[0]);
+        close(pipes->fd[1]);
+    }
+    waitpid(pid, status, 0);
+    if (WIFEXITED(*status))
+        code->code_status = WEXITSTATUS(*status);
+}
+void ft_multipipes(t_command *command, t_alloc **garbage, char ***envp, char **cmd_args, int *i, t_code *code)
+{
+    t_pipe	pipes;
+    pid_t	pid;
+    int		status;
+    int		old_fd;
+
+	status = 0;
+	old_fd = -1;
+    while (command[*i].type != 0)
+	{
+        handle_command_args(command, &cmd_args, i, garbage);
+        initialize_process(&pid, &pipes, command, i);
+        if (pid == 0)
+            execute_child_process(i, &pipes, cmd_args, envp, code, garbage, &old_fd, command);
+		else
+            handle_parent_process(i, &pipes, &old_fd, pid, code, &status, command);
+        (*i)++;
+    }
+    if (old_fd != -1)
+        close(old_fd);
+}
 
 
 
-// t_pipe	*init_pipes(int num_commands, t_command *command, t_alloc **garbage)
-// {
-// 	printf("Initialisation des pipes\n");
-// 	t_pipe	*pipes = NULL; 
-// 	int		i;
-
-// 	i = 0;
-// 	pipes = garb_malloc(sizeof(t_pipe), num_commands, garbage);
-// 	while (i <= num_commands)
-// 	{
-// 		printf("Pipe %d initialisé\n", i);
-// 		pipes[i].command = &command[i].word;
-// 		printf("Commande associée au pipe %d: %s\n", i, command[i].word);
-// 		if (i < num_commands)
-// 		{
-// 			if (pipe(pipes[i].fd) == -1)
-// 			{
-// 				perror("pipe");
-// 				exit(EXIT_FAILURE);
-// 			}
-// 		}
-// 		i++;
-// 	}
-
-// 	return (pipes);
-// }
-
-// void execute_child_process(int i, int num_commands, t_pipe *pipes, t_command *command, char ***envp, t_code *code, t_alloc **garbage)
-// {
-// 	printf("Exécution du processus enfant pour la commande %d\n", i);
-// 	char	**cmd_args;
-// 	int		j;
-
-// 	cmd_args = NULL;
-// 	j = 0;
-// 	if (i > 0)
-// 	{
-// 		dup2(pipes[i - 1].fd[0], STDIN_FILENO);
-// 		close(pipes[i - 1].fd[0]);
-// 	}
-// 	if (i < num_commands - 1)
-// 	{
-// 		dup2(pipes[i].fd[1], STDOUT_FILENO);
-// 		close(pipes[i].fd[1]);
-// 	}
-// 	while (j < num_commands - 1)
-// 	{
-// 		if (j != i - 1)
-// 			close(pipes[j].fd[0]);
-// 		if (j != i)
-// 			close(pipes[j].fd[1]);
-// 		j++;
-// 	}
-// 	cmd_args = create_cmd_args(command, &i, garbage);
-// 	printf("Commande à exécuter: %s\n", *cmd_args);
-// 	if (execute_builtins(cmd_args, envp, code, garbage) == -1)
-// 		execute_non_builtin(envp, code, cmd_args, garbage);
-// 	exit(EXIT_SUCCESS);
-// }
-
-// void	launch_processes(t_pipe *pipes, int num_commands, t_command *command, char ***envp, t_code *code, t_alloc **garbage)
-// {
-// 	printf("Lancement des processus\n");
-// 	int	i;
-
-// 	i = 0;
-// 	while (i < num_commands)
-// 	{
-// 		printf("Fork pour la commande %d\n", i);
-// 		pipes[i].pid = fork();
-// 		if (pipes[i].pid == -1)
-// 		{
-// 			perror("fork");
-// 			exit(EXIT_FAILURE);
-// 		}
-// 		if (pipes[i].pid == 0)
-// 		{
-// 			signal(SIGINT, SIG_DFL);
-// 			signal(SIGQUIT, SIG_DFL);
-// 			execute_child_process(i, num_commands, pipes, command, envp, code, garbage);
-// 		}
-// 		i++;
-// 	}
-
-// }
-
-// void	cleanup_pipes(t_pipe *pipes, int num_commands, t_code *code)
-// {
-// 	printf("Nettoyage des pipes\n");
-// 	int	i;
-// 	int	status;
-
-// 	i = 0;
-// 	status = 0;
-// 	while (i < num_commands - 1)
-// 	{
-// 		printf("Fermeture des pipes %d\n", i);
-// 		close(pipes[i].fd[0]);
-// 		close(pipes[i].fd[1]);
-// 		i++;
-// 	}
-// 	free(pipes);
-// 	i = 0;
-// 	while (i < num_commands)
-// 	{
-// 		waitpid(pipes[i].pid, &status, 0);
-// 		update_exit_code(status, code);
-// 	}
-// }
-
-// void	execute_pipeline(t_command *command, int num_commands, char ***envp, t_code *code, t_alloc **garbage)
-// {
-// 	printf("Exécution du pipeline\n");
-// 	t_pipe *pipes = init_pipes(num_commands, command, garbage);
-
-// 	launch_processes(pipes, num_commands, command, envp, code, garbage);
-
-// 	cleanup_pipes(pipes, num_commands, code);
-// }
-
-
-// void	execute_pipeline(t_command *command, int num_commands, char ***envp, t_code *code, t_alloc **garbage)
-// {
-// 	int		pipes[num_commands - 1][2];
-// 	pid_t	pids[num_commands];
-
-// 	//printf("Début de execute_pipeline avec %d commandes.\n", num_commands);
-// 	// Création des pipes
-// 	for (int i = 0; i < num_commands - 1; i++) {
-// 		if (pipe(pipes[i]) == -1) {
-// 			perror("pipe");
-// 			exit(EXIT_FAILURE);
-// 		}
-// 		//printf("Pipe créé entre les commandes %d et %d (fds: %d, %d)\n", i, i+1, pipes[i][0], pipes[i][1]);
-// 	}
-
-// 	// Lancement des processus pour chaque commande
-// 	for (int i = 0; i < num_commands; i++)
-// 	{
-// 		printf("execute_pipeline: Création du processus pour la commande %s\n", command[i].word);
-// 		pids[i] = fork();
-// 		if (pids[i] == -1) {
-// 			perror("fork");
-// 			exit(EXIT_FAILURE);
-// 		}
-
-// 		if (pids[i] == 0) 
-// 		{ // Processus enfant
-// 			//printf("Processus enfant %d démarré pour la commande %d.\n", getpid(), i);
-// 			signal(SIGINT, SIG_DFL);
-// 			signal(SIGQUIT, SIG_DFL);
-   
-// 			// Redirection de stdin et stdout
-// 			if (i > 0) {
-// 				dup2(pipes[i - 1][0], STDIN_FILENO);
-// 				close(pipes[i - 1][0]);
-// 				//printf("stdin redirigé pour la commande %d (fd: %d).\n", i, pipes[i - 1][0]);
-// 			}
-// 			if (i < num_commands - 1) {
-// 				dup2(pipes[i][1], STDOUT_FILENO);
-// 				close(pipes[i][1]);
-// 				//printf("stdout redirigé pour la commande %d (fd: %d).\n", i, pipes[i][1]);
-// 			}
-// 			// Fermer tous les autres fds de pipe
-// 			for (int j = 0; j < num_commands - 1; j++) {
-// 				if (j != i - 1) close(pipes[j][0]);
-// 				if (j != i) close(pipes[j][1]);
-// 			}
-
-// 			// Exécution de la commande
-// 			//printf("command : %s\n", command[i].word);
-// 			char **cmd_args = create_cmd_args(&command[i], &i, garbage);
-// 			//printf("Exécution de la commande %d : %s\n", i, cmd_args[0]);
-// 			if (execute_builtins(cmd_args, envp, code, garbage) == -1) {
-// 				execute_non_builtin(envp, code, cmd_args, garbage);
-// 			}
-// 			exit(EXIT_SUCCESS);
-// 		}
-// 		//else
-// 			//printf("Processus parent %d a créé enfant %d pour commande %d.\n", getpid(), pids[i], i);
-// 	}
-
-// 	// Fermeture des fds de pipe dans le processus parent
-// 	for (int i = 0; i < num_commands - 1; i++) {
-// 		close(pipes[i][0]);
-// 		close(pipes[i][1]);
-// 		//printf("Parent a fermé les fds de pipe %d et %d.\n", pipes[i][0], pipes[i][1]);
-// 	}
-
-// 	// Attendre la fin de tous les processus enfants
-// 	for (int i = 0; i < num_commands; i++) 
-// 	{
-// 		int status;
-// 		waitpid(pids[i], &status, 0);
-// 		update_exit_code(status, code);
-// 	}
-// 	//printf("Fin de execute_pipeline.\n");
-// }
-
-
-
-
-
-
+/*
 void	ft_multipipes(t_command *command, t_alloc **garbage, char ***envp, char **cmd_args, int *i, t_code *code)
 {
 	t_pipe	pipes;
@@ -286,3 +156,4 @@ void	ft_multipipes(t_command *command, t_alloc **garbage, char ***envp, char **c
 	if (old_fd != -1)
 		close(old_fd);
 }
+*/
