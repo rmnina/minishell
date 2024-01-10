@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 16:22:53 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/09 15:13:51 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/10 16:51:54 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ int	heredoc_is_expand(char *line)
 	i = 0;
 	while (line[i])
 	{
+		//printf("heredoc_is_expand - Checking line[%d]: %c\n", i, line[i]); 
 		if (line[i] == '$' && line[i + 1] && (ft_isalnum(line[i + 1]) \
 		|| line[i + 1] == UNDERSCORE))
 			return (i);
@@ -89,11 +90,13 @@ void	read_add(int fd, const char *delimiter, t_alloc **garbage)
 	t_line	*head;
 	t_line	*tail;
 
+	//printf("read_add - Starting with delimiter: %s\n", delimiter); //
 	head = NULL;
 	tail = NULL;
 	while (1)
 	{
 		line = readline("> ");
+		//printf("read_add - Read line: %s\n", line);
 		if (!line || ft_strcmp(line, delimiter) == 0)
 		{
 			free(line);
@@ -112,46 +115,98 @@ void	read_add(int fd, const char *delimiter, t_alloc **garbage)
 	close (fd);
 }
 
-int	heredoc(t_heredocNode *heredoclist, t_pipe *pipes, char **argv, char **envp, t_code *code, t_alloc **garbage)
-{
+// int	heredoc(t_heredocNode *heredoclist, t_pipe *pipes, char **argv, char **envp, t_code *code, t_alloc **garbage)
+// {
+// 	pid_t			pid;
+// 	int				status;
+// 	int				code_status;
+// 	t_heredocNode	*current;
+
+// 	//printf("heredoc - Starting\n");
+// 	status = 0;
+// 	code_status = 0;
+// 	current = heredoclist;
+// 	pipe(pipes->fd);
+// 	while (current != NULL)
+// 	{
+// 		//printf("heredoc - Processing delimiter: %s\n", current->delimiter);
+// 		read_add(pipes->fd[1], current->delimiter, garbage);
+// 		current = current->next;
+// 	}
+// 	pid = fork();
+// 	if (pid == -1)
+// 	{
+// 		perror("pipe");
+// 		exit(EXIT_FAILURE);
+// 	}
+// 	else if (pid == 0)
+// 	{
+// 		close(pipes->fd[1]); 
+// 		heredoc_child(pipes, argv, &envp, code, garbage);
+// 		exit(EXIT_SUCCESS);
+// 	}
+// 	else
+// 	{
+// 		close(pipes->fd[0]);
+// 		waitpid(pid, &status, 0);
+// 		if (WIFEXITED(status))
+// 		{
+// 			code_status = WEXITSTATUS(status);
+// 			if (code_status == SPECIAL_EXIT_CODE)
+// 				exit(code_status);
+// 			// exit(EXIT_SUCCESS);
+// 		}
+// 	}
+// 	pipes->heredoc_pipe = pipes->fd[0];
+// 	return (code_status);
+// }
+int heredoc(t_heredocNode *heredoclist, t_pipe *pipes, char **argv, char **envp, t_code *code, t_alloc **garbage) {
+
 	pid_t			pid;
 	int				status;
 	int				code_status;
 	t_heredocNode	*current;
 
-	status = 0;
-	code_status = 0;
+	//printf("heredoc - heredoc_fd[0]: %d, heredoc_fd[1]: %d\n", pipes->heredoc_fd[0], pipes->heredoc_fd[1]);
+	if (pipe(pipes->heredoc_fd) == -1)
+	{
+		perror("pipe");
+		exit(EXIT_FAILURE);
+	}
+
 	current = heredoclist;
-	pipe(pipes->fd);
 	while (current != NULL)
 	{
-		read_add(pipes->fd[1], current->delimiter, garbage);
+		read_add(pipes->heredoc_fd[1], current->delimiter, garbage);
 		current = current->next;
 	}
-	// printf("heredoc: Démarrage de heredoc pour %s\n", argv[0]);
+	close(pipes->heredoc_fd[1]);
+
 	pid = fork();
 	if (pid == -1)
 	{
-		perror("fork failed");
+		perror("fork");
 		exit(EXIT_FAILURE);
 	}
 	else if (pid == 0)
 	{
-		//printf("argv: %s\n", argv[0]);
 		heredoc_child(pipes, argv, &envp, code, garbage);
-		exit (EXIT_SUCCESS);
+		exit(EXIT_SUCCESS);
 	}
 	else
 	{
-		close(pipes->fd[0]);
-		close(pipes->fd[1]);
+		close(pipes->heredoc_fd[0]);
 		waitpid(pid, &status, 0);
 		if (WIFEXITED(status))
 		{
 			code_status = WEXITSTATUS(status);
-			if (code_status == SPECIAL_EXIT_CODE)
-				exit(code_status);
 		}
 	}
-	return (code_status);
+
+	return code_status;
 }
+
+
+
+
+

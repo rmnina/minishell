@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:45:11 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/09 17:01:09 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/10 16:41:30 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	init_main(t_code **code, t_alloc **garbage, int argc)
 	return (0);
 }
 
-int	ft_minishell(char *line, t_code *code, char **envp, t_alloc **garbage)
+int	ft_minishell(char *line, t_code *code, char **envp, t_alloc **garbage, t_pipe *pipes)
 {
 	struct sigaction	sa;
 
@@ -42,16 +42,16 @@ int	ft_minishell(char *line, t_code *code, char **envp, t_alloc **garbage)
 		if (line == NULL)
 		{
 			printf("exit\n");
-			if (garbage)
-				free_garbage(garbage, 0);
+			// if (garbage)
+			// 	free_garbage(garbage, 0);
 			break ;
 		}
 		if (line[0] != 0)
 		{
 			add_history(line);
-			handle_command(line, code, &envp, garbage);
-			if (code->code_status == SPECIAL_EXIT_CODE)
-				break ;
+			handle_command(line, code, &envp, garbage, pipes);
+			// if (code->code_status == SPECIAL_EXIT_CODE)
+			// 	break ;
 		}
 		if (line)
 			free(line);
@@ -65,17 +65,20 @@ int	main(int argc, char **argv, char **envp)
 	char		*line;
 	t_alloc		*garbage;
 	int			exit_status;
+	t_pipe		pipes;
 
 	(void)argv;
 	code = NULL;
 	line = NULL;
 	garbage = NULL;
 	exit_status = 0;
+	pipes.heredoc_fd[0] = -1;
+    pipes.heredoc_fd[1] = -1;
 	if (init_main(&code, &garbage, argc) == 1)
 		return (1);
-	exit_status = ft_minishell(line, code, envp, &garbage);
+	exit_status = ft_minishell(line, code, envp, &garbage, &pipes);
 	clear_history();
-	if (garbage)
-		free_garbage(&garbage, 0);
+	// if (garbage)
+	// 	free_garbage(&garbage, 0);
 	return (exit_status);
 }
