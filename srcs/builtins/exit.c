@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:04:36 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/09 16:37:52 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/10 17:03:31 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,8 @@ int	ft_exit(char **cmd_args, t_code *code, t_alloc **garbage)
 	else
 	{
 		printf("exit\n");
+		if (garbage)
+			free_garbage(garbage, 0);
 		exit(code->code_status);
 	}
 }
