@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:04:36 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/09 18:45:25 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/10 17:05:14 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,9 @@ int	ft_exit(char **cmd_args, t_code *code, t_alloc **garbage)
 	}
 	else
 	{
-		printf("exit prout\n");
+		printf("exit\n");
+		if (garbage)
+			free_garbage(garbage, 0);
 		exit(code->code_status);
 	}
 }
