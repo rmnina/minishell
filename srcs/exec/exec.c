@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julietteandrieux <julietteandrieux@stud    +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/10 00:06:14 by julietteand      ###   ########.fr       */
+/*   Updated: 2024/01/10 16:41:50 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,48 +84,66 @@ int	is_builtin(char *command)
 	return (0);
 }
 
-void	heredoc_child(int heredoc_fd, t_pipe *pipes, char **argv, char ***envp, t_code *code, t_alloc **garbage)
-{
-	char	*path;
-	char	*new_argv[2];
+// void	heredoc_child(t_pipe *pipes, char **argv, char ***envp, t_code *code, t_alloc **garbage)
+// {
+// 	char	*path;
+// 	char	*new_argv[2];
 
-	path = NULL;
-	close(pipes->fd[1]);
-	if (dup2(pipes->fd[0], STDIN_FILENO) == -1)
-		exit(EXIT_FAILURE);
-	close(pipes->fd[0]);
-	if (heredoc_fd > 0) 
-	{
-		if (dup2(heredoc_fd, STDIN_FILENO) == -1)
-		{
-			perror("dup2 heredoc_fd");
-			exit(EXIT_FAILURE);
-		}
-    	close(heredoc_fd);
-	}
-	else 
-	{
-   		 perror("Invalid heredoc_fd");
-    	exit(EXIT_FAILURE);
-	}
-	if (!argv[0] || !*argv)
-		exit (EXIT_FAILURE);
-	if (is_builtin(argv[0]))
-		execute_builtins(argv, envp, code, garbage);
-	else
-	{
-		path = find_command_path(argv[0], garbage);
-		if (!path)
-			exit(EXIT_FAILURE);
-		new_argv[0] = ft_strdup(argv[0], garbage);
-		if (!new_argv[0])
-			exit (EXIT_FAILURE);
-		new_argv[1] = NULL;
-		execve(path, new_argv, *envp);
-		exit(EXIT_FAILURE);
-	}
-	exit(EXIT_SUCCESS);
+// 	path = NULL;
+
+// 	close(pipes->fd[1]);
+// 	if (dup2(pipes->fd[0], STDIN_FILENO) == -1)
+// 		exit(EXIT_FAILURE);
+// 	close(pipes->fd[0]);
+// 	if (!argv[0] || !*argv)
+// 		exit (EXIT_FAILURE);
+// 	if (is_builtin(argv[0]))
+// 	{
+// 		execute_builtins(argv, envp, code, garbage);
+// 	}
+// 	else
+// 	{
+// 		path = find_command_path(argv[0], garbage);
+// 		if (!path)
+// 			exit(EXIT_FAILURE);
+// 		new_argv[0] = ft_strdup(argv[0], garbage);
+// 		if (!new_argv[0])
+// 			exit (EXIT_FAILURE);
+// 		new_argv[1] = NULL;
+// 		execve(path, new_argv, *envp);
+// 		exit(EXIT_FAILURE);
+// 	}
+// 	exit(EXIT_SUCCESS);
+// }
+
+void heredoc_child(t_pipe *pipes, char **argv, char ***envp, t_code *code, t_alloc **garbage) {
+    char *path;
+    char *new_argv[2];
+
+    path = NULL;
+    if (dup2(pipes->heredoc_fd[0], STDIN_FILENO) == -1)
+        exit(EXIT_FAILURE);
+    close(pipes->heredoc_fd[0]);
+
+    if (!argv[0] || !*argv)
+        exit(EXIT_FAILURE);
+    if (is_builtin(argv[0])) {
+        execute_builtins(argv, envp, code, garbage);
+    } else {
+        path = find_command_path(argv[0], garbage);
+        if (!path)
+            exit(EXIT_FAILURE);
+        new_argv[0] = ft_strdup(argv[0], garbage);
+        if (!new_argv[0])
+            exit(EXIT_FAILURE);
+        new_argv[1] = NULL;
+        execve(path, new_argv, *envp);
+        exit(EXIT_FAILURE);
+    }
+    exit(EXIT_SUCCESS);
 }
+
+
 
 int	ft_count(t_command *command, int *i)
 {
@@ -164,6 +182,7 @@ char	**create_cmd_args(t_command *command, int *i, t_alloc **garbage)
 	return (cmd_args);
 }
 
+/*
 int	count_commands(t_command *command)
 {
 	int	count;
@@ -192,9 +211,10 @@ int	count_commands(t_command *command)
 	//printf("Nombre total de commandes: %d\n", count);
 	return (count);
 }
+*/
 
 
-void	handle_command(char *input, t_code *code, char ***envp, t_alloc **garbage)
+void	handle_command(char *input, t_code *code, char ***envp, t_alloc **garbage, t_pipe *pipes)
 {
 	t_command	*command;
 	char		**cmd_args;
@@ -216,7 +236,7 @@ void	handle_command(char *input, t_code *code, char ***envp, t_alloc **garbage)
 			cmd_args = create_cmd_args(command, &i, garbage);
 		if (command[i].type == PIPE )
 		{
-			ft_multipipes(command, garbage, envp, cmd_args, &i, code);
+			ft_multipipes(command, pipes, garbage, envp, cmd_args, &i, code);
 			//printf("pipe reconnu: %s\n", command[i].word);
 			//execute_pipeline(command, num_commands, envp, code, garbage);
 			exec++;

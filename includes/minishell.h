@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julietteandrieux <julietteandrieux@stud    +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:03:22 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/09 23:29:58 by julietteand      ###   ########.fr       */
+/*   Updated: 2024/01/10 16:41:02 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,11 +70,10 @@ typedef struct s_command {
 }	t_command;
 
 typedef struct s_pipe {
-	// char	**command1;
-	// char	**command2;
 	char	**command;
 	int		fd[2];
 	pid_t	pid;
+	int		heredoc_fd[2];
 }	t_pipe;
 
 typedef struct s_code {
@@ -129,9 +128,9 @@ char		*find_command_path(char *command, t_alloc **garbage);
 // int			execute_non_builtin(char **envp, t_code *code, char **cmd_args, t_alloc **garbage);
 // void		heredoc_child(t_pipe *pipes, char **argv, char **envp, t_alloc **garbage);
 void		execute_command(char **cmd_args, char ***envp, t_alloc **garbage);
-void		handle_command(char *input, t_code *code, char ***envp, t_alloc **garbage);
+void		handle_command(char *input, t_code *code, char ***envp, t_alloc **garbage, t_pipe *pipes);
 int			execute_non_builtin(char ***envp, t_code *code, char **cmd_args, t_alloc **garbage);
-void		heredoc_child(int heredoc_fd, t_pipe *pipes, char **argv, char ***envp, t_code *code, t_alloc **garbage);
+void		heredoc_child(t_pipe *pipes, char **argv, char ***envp, t_code *code, t_alloc **garbage);
 char		**create_cmd_args(t_command *command, int *i, t_alloc **garbage);
 void		pick_command(char **cmd_args, char **envp, t_code *code, t_alloc **garbage);
 
@@ -141,7 +140,7 @@ int			init_redirection(t_command *command, int *i, char **cmd_args, char ***envp
 
 //Pipe
 pid_t		heredoc_pipe(t_pipe *pipes);
-void		ft_multipipes(t_command *command, t_alloc **garbage, char ***envp, char **cmd_args, int *i, t_code *code);
+void		ft_multipipes(t_command *command, t_pipe *pipes, t_alloc **garbage, char ***envp, char **cmd_args, int *i, t_code *code);
 //void	ft_multipipes(t_command *command, t_alloc *garbage, char ***envp, char **cmd_args, int *i, t_code *code);
 //void execute_pipeline(t_command *command, int num_commands, char ***envp, t_code *code, t_alloc **garbage);
 
@@ -166,7 +165,7 @@ int			init_sigactionsa(struct sigaction *sa);
 int			init_sigquit(void);
 int			init_parent_signals(void);
 //heredoc
-int			heredoc(t_heredocNode *heredoclist, int fd, t_pipe *pipes, char **argv, char **envp, t_code *code, t_alloc **garbage);
-int		read_add(int fd, const char *delimiter, t_alloc **garbage);
+int			heredoc(t_heredocNode *heredoclist, t_pipe *pipes, char **argv, char **envp, t_code *code, t_alloc **garbage);
+void		read_add(int fd, const char *delimiter, t_alloc **garbage);
 
 #endif

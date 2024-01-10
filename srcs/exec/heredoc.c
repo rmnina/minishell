@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julietteandrieux <julietteandrieux@stud    +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 16:22:53 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/10 00:05:23 by julietteand      ###   ########.fr       */
+/*   Updated: 2024/01/10 16:51:54 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ int	heredoc_is_expand(char *line)
 	i = 0;
 	while (line[i])
 	{
+		//printf("heredoc_is_expand - Checking line[%d]: %c\n", i, line[i]); 
 		if (line[i] == '$' && line[i + 1] && (ft_isalnum(line[i + 1]) \
 		|| line[i + 1] == UNDERSCORE))
 			return (i);
@@ -82,24 +83,20 @@ void	write_pipe(int fd, t_line *head)
 }
 
 
-int	read_add(int fd, const char *delimiter, t_alloc **garbage)
+void	read_add(int fd, const char *delimiter, t_alloc **garbage)
 {
 	char	*line;
 	t_line	*node;
 	t_line	*head;
 	t_line	*tail;
-	int heredoc_pipe[2];
-	
+
+	//printf("read_add - Starting with delimiter: %s\n", delimiter); //
 	head = NULL;
 	tail = NULL;
-	if (pipe(heredoc_pipe) != 0)
-	{
-        perror("pipe");
-        return -1;
-    }
 	while (1)
 	{
 		line = readline("> ");
+		//printf("read_add - Read line: %s\n", line);
 		if (!line || ft_strcmp(line, delimiter) == 0)
 		{
 			free(line);
@@ -116,73 +113,100 @@ int	read_add(int fd, const char *delimiter, t_alloc **garbage)
 	write_pipe(fd, head);
 	free_line_nodes(head);
 	close (fd);
-	close(heredoc_pipe[1]); // Fermez l'extrémité d'écriture après avoir terminé l'écriture
-    return (heredoc_pipe[0]);
 }
 
-int	heredoc(t_heredocNode *heredoclist, int fd, t_pipe *pipes, char **argv, char **envp, t_code *code, t_alloc **garbage)
-{
+// int	heredoc(t_heredocNode *heredoclist, t_pipe *pipes, char **argv, char **envp, t_code *code, t_alloc **garbage)
+// {
+// 	pid_t			pid;
+// 	int				status;
+// 	int				code_status;
+// 	t_heredocNode	*current;
+
+// 	//printf("heredoc - Starting\n");
+// 	status = 0;
+// 	code_status = 0;
+// 	current = heredoclist;
+// 	pipe(pipes->fd);
+// 	while (current != NULL)
+// 	{
+// 		//printf("heredoc - Processing delimiter: %s\n", current->delimiter);
+// 		read_add(pipes->fd[1], current->delimiter, garbage);
+// 		current = current->next;
+// 	}
+// 	pid = fork();
+// 	if (pid == -1)
+// 	{
+// 		perror("pipe");
+// 		exit(EXIT_FAILURE);
+// 	}
+// 	else if (pid == 0)
+// 	{
+// 		close(pipes->fd[1]); 
+// 		heredoc_child(pipes, argv, &envp, code, garbage);
+// 		exit(EXIT_SUCCESS);
+// 	}
+// 	else
+// 	{
+// 		close(pipes->fd[0]);
+// 		waitpid(pid, &status, 0);
+// 		if (WIFEXITED(status))
+// 		{
+// 			code_status = WEXITSTATUS(status);
+// 			if (code_status == SPECIAL_EXIT_CODE)
+// 				exit(code_status);
+// 			// exit(EXIT_SUCCESS);
+// 		}
+// 	}
+// 	pipes->heredoc_pipe = pipes->fd[0];
+// 	return (code_status);
+// }
+int heredoc(t_heredocNode *heredoclist, t_pipe *pipes, char **argv, char **envp, t_code *code, t_alloc **garbage) {
+
 	pid_t			pid;
 	int				status;
 	int				code_status;
-	//t_heredocNode	*current;
-	int				heredoc_fd;
+	t_heredocNode	*current;
 
-	status = 0;
-	code_status = 0;
-	//current = heredoclist;
-	pipe(pipes->fd);
-	//while (current != NULL)
-	//{
-	//	read_add(pipes->fd[1], current->delimiter, garbage);
-	//	current = current->next;
-	//}
-	while (heredoclist != NULL)
+	//printf("heredoc - heredoc_fd[0]: %d, heredoc_fd[1]: %d\n", pipes->heredoc_fd[0], pipes->heredoc_fd[1]);
+	if (pipe(pipes->heredoc_fd) == -1)
 	{
-        heredoc_fd = read_add(fd, heredoclist->delimiter, garbage);
-
-        if ((pid = fork()) == -1)
-		{
-            perror("fork failed");
-            exit(EXIT_FAILURE);
-        } 
-		else if (pid == 0)
-		{
-			if (dup2(heredoc_fd, STDIN_FILENO) == -1)
-			{
-    			perror("dup2");
-    			exit(EXIT_FAILURE);
-			}
-			close(heredoc_fd);
-            heredoc_child(heredoc_fd, pipes, argv, &envp, code, garbage);
-            exit(EXIT_SUCCESS);
-        } 
-		else 
-		//pid = fork();
-		//if (pid == -1)
-		//{
-		//	perror("fork failed");
-		//	exit(EXIT_FAILURE);
-		//}
-		//else if (pid == 0)
-		//{
-		//	heredoc_child(pipes, argv, &envp, code, garbage);
-		//	exit(EXIT_SUCCESS);
-		//}
-		//else
-		{
-			close(pipes->fd[1]);
-			close(pipes->fd[0]);
-			waitpid(pid, &status, 0);
-			if (WIFEXITED(status))
-			{
-				code_status = WEXITSTATUS(status);
-				if (code_status == SPECIAL_EXIT_CODE)
-					exit(code_status);
-				// exit(EXIT_SUCCESS);
-			}
-		}
-		heredoclist = heredoclist->next;
+		perror("pipe");
+		exit(EXIT_FAILURE);
 	}
-	return (code_status);
+
+	current = heredoclist;
+	while (current != NULL)
+	{
+		read_add(pipes->heredoc_fd[1], current->delimiter, garbage);
+		current = current->next;
+	}
+	close(pipes->heredoc_fd[1]);
+
+	pid = fork();
+	if (pid == -1)
+	{
+		perror("fork");
+		exit(EXIT_FAILURE);
+	}
+	else if (pid == 0)
+	{
+		heredoc_child(pipes, argv, &envp, code, garbage);
+		exit(EXIT_SUCCESS);
+	}
+	else
+	{
+		close(pipes->heredoc_fd[0]);
+		waitpid(pid, &status, 0);
+		if (WIFEXITED(status))
+		{
+			code_status = WEXITSTATUS(status);
+		}
+	}
+
+	return code_status;
 }
+
+
+
+
+
