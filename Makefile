@@ -6,7 +6,7 @@
 #    By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/14 14:15:25 by jdufour           #+#    #+#              #
-#    Updated: 2024/01/11 10:42:57 by jdufour          ###   ########.fr        #
+#    Updated: 2024/01/11 10:55:21 by jdufour          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,6 +37,7 @@ SRCS = srcs/main.c \
 	srcs/parser/init_parser.c \
 	srcs/parser/types.c \
 	srcs/parser/tokens.c \
+	srcs/utils/init_structs.c \
 	srcs/utils/heredoc_utils.c \
 	srcs/utils/joins.c \
 	srcs/utils/toolbox_utils.c \
