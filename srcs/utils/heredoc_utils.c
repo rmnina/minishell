@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
+/*   By: julietteandrieux <julietteandrieux@stud    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 06:32:53 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/11 11:20:07 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/11 12:36:48 by julietteand      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ char	**get_delimiter(t_minishell **main, int *i, t_alloc **garbage)
 	int		size;
 
 	j = 0;
+	size = 0;
     while ((*main)->command[*i + j].type == DB_LEFT_CHEV)
 	{
 		j += 2;

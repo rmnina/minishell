@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   joins.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
+/*   By: julietteandrieux <julietteandrieux@stud    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/26 23:39:05 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/11 09:52:44 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/11 12:39:06 by julietteand      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ char	**ft_envjoin(char **envp, char *str, t_alloc **garbage)
 		index++;
 	}
 	new_envp[size] = garb_malloc(sizeof(char), (ft_strlen(str) + 1), garbage);
-	new_envp[size + 1] = '\0';
+	new_envp[size + 1] = NULL;
 	ft_strcpy(new_envp[size], str);
 	return (new_envp);
 }
