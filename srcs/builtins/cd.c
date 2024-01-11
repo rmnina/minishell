@@ -6,19 +6,19 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 17:31:57 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/11 07:40:11 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/11 12:11:22 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-bool	change_directory(t_minishell **main)
+bool	change_directory(t_minishell **main, char *path)
 {
 	char	*new_path;
 	
-	if ((*main)->cd_path == NULL)
+	if (path == NULL)
 		return (false);
-	new_path = realpath((*main)->cd_path, NULL);
+	new_path = realpath(path, NULL);
 	if (new_path == NULL)
 		return (false);
 	if (chdir(new_path) != 0)
@@ -41,7 +41,7 @@ int	cd_hyphen(t_minishell **main)
 		return ((*main)->code_status);
 	}
 	printf("%s\n", (*main)->last_cd_path);
-	if (!change_directory(main))
+	if (!change_directory(main, (*main)->last_cd_path))
 	{
 		perror("cd");
 		(*main)->code_status = 1;
@@ -52,8 +52,10 @@ int	cd_hyphen(t_minishell **main)
 
 int	cd_tilde(t_minishell **main)
 {
-	(*main)->cd_path = ft_getenv(main, "HOME");
-	if (!change_directory(main))
+	char	*home_path;
+	
+	home_path = ft_getenv(main, "HOME");
+	if (!change_directory(main, home_path))
 	{
 		perror("cd");
 		(*main)->code_status = 1;
@@ -64,12 +66,12 @@ int	cd_tilde(t_minishell **main)
 int	ft_cd(t_minishell **main)
 {
 	if ((*main)->cmd_args[1] == NULL || ft_strcmp((*main)->cmd_args[1], "~") == 0)
-		return ((*main)->code_status = cd_tilde(main));
+		return (cd_tilde(main));
 	else if (ft_strcmp((*main)->cmd_args[1], "-") == 0)
-		return ((*main)->code_status = cd_hyphen(main));
+		return (cd_hyphen(main));
 	else
 	{
-		if (!change_directory(main))
+		if (!change_directory(main, (*main)->cmd_args[1]))
 		{
 			perror("cd");
 			(*main)->code_status = 1;
