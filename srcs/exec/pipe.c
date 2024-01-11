@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:20:25 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/11 16:21:59 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/11 21:13:39 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,25 @@ void	initialize_process(t_minishell **main, int *i)
 
 void	execute_child_process(t_minishell **main, int *i, int *old_fd, t_alloc **garbage)
 {
+	int	heredoc_status;
+
+	heredoc_status = 0;
 	if (*i > 0 && *old_fd != -1)
 	{
 		dup2(*old_fd, STDIN_FILENO);
 		close(*old_fd);
+	}
+	if ((*main)->command[*i - 2].type == DB_LEFT_CHEV)
+	{
+		heredoc_status = heredoc_child(main, i, garbage);
+		if (heredoc_status == -1)
+		{
+			if (execute_builtins(main, garbage) == -1)
+			{
+				if (execute_non_builtin(main, garbage) == -1)
+					exit (EXIT_FAILURE);
+			}
+		}
 	}
 	if ((*main)->command[*i].type == PIPE)
 	{
@@ -49,7 +64,8 @@ void	execute_child_process(t_minishell **main, int *i, int *old_fd, t_alloc **ga
 	close((*main)->pipe_fd[0]);
 	if (execute_builtins(main, garbage) == -1)
 	{
-		execute_non_builtin(main, garbage);
+		if (execute_non_builtin(main, garbage) == -1)
+			exit (EXIT_FAILURE);
 	}
 	exit(EXIT_SUCCESS);
 }

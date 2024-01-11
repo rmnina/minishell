@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 16:22:53 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/11 16:43:50 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/11 21:09:37 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,18 +50,27 @@ void	heredoc_parent(t_minishell **main)
 	}
 }
 
-void	heredoc_child(t_minishell **main, t_alloc **garbage)
+int	heredoc_child(t_minishell **main, int *i , t_alloc **garbage)
 {
 	(*main)->path = NULL;
 	if (dup2((*main)->pipe_fd[0], STDIN_FILENO) == -1)
 		exit(EXIT_FAILURE);
 	close((*main)->pipe_fd[0]);
 	close((*main)->pipe_fd[1]);
+	if ((*main)->command[*i].type == PIPE)
+	{
+		if (dup2((*main)->pipe_fd[0], STDIN_FILENO) == -1)
+		{
+			return (-1);
+		}
+		return (0);
+	}
 	if (ft_strcmp((*main)->cmd_args[0], "<<"))
 		ft_heredoc_args(main, 0, garbage);
 	else
 		ft_heredoc_args(main, 2, garbage);
-	exit(EXIT_SUCCESS);
+	//exit(EXIT_SUCCESS);
+	return (0);
 }
 
 
@@ -93,9 +102,10 @@ void	ft_heredoc(t_minishell **main, int *i, t_alloc **garbage)
 	{
 		if ((*main)->cmd_args == NULL)
 			(*main)->cmd_args = create_cmd_args(main, i, garbage);
-		heredoc_child(main, garbage);
+		heredoc_child(main, i, garbage);
 		exit(EXIT_SUCCESS);
 	}
 	else
 		heredoc_parent(main);
 }
+
