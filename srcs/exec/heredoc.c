@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 16:22:53 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/11 07:38:55 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/11 16:43:50 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,11 @@
 void	ft_heredoc_args(t_minishell **main, int i, t_alloc **garbage)
 {
 	char	*new_argv[2];
-	
+
 	if (is_builtin((*main)->cmd_args[i]))
+	{
 		execute_builtins(main, garbage);
+	}
 	else
 	{
 		(*main)->path = find_command_path((*main)->cmd_args[i], garbage);
@@ -35,7 +37,7 @@ void	ft_heredoc_args(t_minishell **main, int i, t_alloc **garbage)
 void	heredoc_parent(t_minishell **main)
 {
 	int	status;
-	
+
 	status = 0;
 	close((*main)->pipe_fd[0]);
 	close((*main)->pipe_fd[1]);
@@ -54,6 +56,7 @@ void	heredoc_child(t_minishell **main, t_alloc **garbage)
 	if (dup2((*main)->pipe_fd[0], STDIN_FILENO) == -1)
 		exit(EXIT_FAILURE);
 	close((*main)->pipe_fd[0]);
+	close((*main)->pipe_fd[1]);
 	if (ft_strcmp((*main)->cmd_args[0], "<<"))
 		ft_heredoc_args(main, 0, garbage);
 	else

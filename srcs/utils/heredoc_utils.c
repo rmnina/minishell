@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julietteandrieux <julietteandrieux@stud    +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 06:32:53 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/11 12:36:48 by julietteand      ###   ########.fr       */
+/*   Updated: 2024/01/11 16:36:29 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,9 +106,13 @@ void	read_add(t_minishell **main, int *j, t_alloc **garbage)
 	{
 		(*main)->h_line = readline("> ");
 		if (!(*main)->h_line || ft_strcmp((*main)->h_line, (*main)->h_delimiter[*j]) == 0)
+		{
 			break ;
+		}
 		if (heredoc_is_expand((*main)->h_line))
+		{
 			(*main)->h_line = heredoc_get_expand(main, garbage);
+		}
 		write((*main)->pipe_fd[1], (*main)->h_line, ft_strlen((*main)->h_line));
 		write((*main)->pipe_fd[1], "\n", 1);
 		free((*main)->h_line);

@@ -3,19 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   pipe.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julietteandrieux <julietteandrieux@stud    +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:20:25 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/11 13:41:51 by julietteand      ###   ########.fr       */
+/*   Updated: 2024/01/11 16:21:59 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
 
-int handle_command_args(t_minishell **main, int *i, t_alloc **garbage)
+int	handle_command_args(t_minishell **main, int *i, t_alloc **garbage)
 {
-	printf("handle_command_args: type = %d\n", (*main)->command[*i].type);
 	if ((*main)->command[*i].type == WORD)
 		(*main)->cmd_args = create_cmd_args(main, i, garbage);
 	if ((*main)->command[*i].type >= LEFT_CHEV && (*main)->command[*i].type <= DB_RIGHT_CHEV)
@@ -23,7 +22,7 @@ int handle_command_args(t_minishell **main, int *i, t_alloc **garbage)
 	return (1);
 }
 
-void initialize_process(t_minishell **main, int *i)
+void	initialize_process(t_minishell **main, int *i)
 {
 	if ((*main)->command[*i].type == PIPE || *i > 0)
 		pipe((*main)->pipe_fd);
@@ -35,9 +34,8 @@ void initialize_process(t_minishell **main, int *i)
 	}
 }
 
-void execute_child_process(t_minishell **main, int *i, int *old_fd, t_alloc **garbage)
+void	execute_child_process(t_minishell **main, int *i, int *old_fd, t_alloc **garbage)
 {
-	printf("execute_child_process: type = %d\n", (*main)->command[*i].type);
 	if (*i > 0 && *old_fd != -1)
 	{
 		dup2(*old_fd, STDIN_FILENO);
@@ -56,9 +54,8 @@ void execute_child_process(t_minishell **main, int *i, int *old_fd, t_alloc **ga
 	exit(EXIT_SUCCESS);
 }
 
-void handle_parent_process(t_minishell **main, int *i, int *old_fd, int *status)
+void	handle_parent_process(t_minishell **main, int *i, int *old_fd, int *status)
 {
-	printf("handle_parent_process: type = %d\n", (*main)->command[*i].type);
 	if (*i > 0 && *old_fd != -1)
 	{
 		close(*old_fd);
@@ -78,14 +75,13 @@ void handle_parent_process(t_minishell **main, int *i, int *old_fd, int *status)
 		(*main)->code_status = WEXITSTATUS(*status);
 }
 
-int ft_pipex(t_minishell **main, int *i, t_alloc **garbage)
+int 	ft_pipex(t_minishell **main, int *i, t_alloc **garbage)
 {
 	int		status;
 	int		old_fd;
 
 	status = 0;
 	old_fd = -1;
-	printf("ft_pipex: Start\n");
 	while ((*main)->command[*i].type != 0)
 	{
 		if (!handle_command_args(main, i, garbage))
@@ -99,6 +95,5 @@ int ft_pipex(t_minishell **main, int *i, t_alloc **garbage)
 	}
 	if (old_fd != -1)
 		close(old_fd);
-	printf("ft_pipex: End\n");
 	return (1);
 }
