@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/11 09:06:31 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/11 16:34:04 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ int	execute_non_builtin(t_minishell **main, t_alloc **garbage)
 	int		status;
 
 	status = 0;
+	init_process_signal();
 	pid = fork();
 	if (pid == -1)
 	{
@@ -73,13 +74,11 @@ int	execute_non_builtin(t_minishell **main, t_alloc **garbage)
 	}
 	else if (pid == 0)
 	{
-		init_sigquit();
 		execute_command(main, garbage);
 		exit(EXIT_FAILURE);
 	}
 	else
 	{
-		process_prompt();
 		waitpid(pid, &status, 0);
 		if (WIFEXITED(status))
 			(*main)->code_status = WEXITSTATUS(status);

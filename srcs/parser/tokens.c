@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:04:36 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/11 10:45:28 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/11 15:30:10 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,9 +104,9 @@ t_command	*get_command(t_minishell **main, t_alloc **garbage)
 
 	i = 0;
 	command = NULL;
-	check_spaces(main, &i);
 	while ((*main)->line[i])
 	{
+		check_spaces(main, &i);
 		token = get_token(main, &i, garbage);
 		if (token.word == NULL)
 			i++;

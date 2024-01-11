@@ -6,22 +6,19 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:45:11 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/11 10:44:02 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/11 13:32:57 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-volatile int	g_sigint = 0;
+int	g_sigstatus = 0;
 
 int	ft_minishell(t_minishell *main, t_alloc **garbage)
 {
-	struct sigaction	sa;
-
 	while (1)
 	{
-		if (init_sigactionsa(&sa) == -1)
-			return (1);
+		init_signal();
 		main->line = readline("minishell > ");
 		if (main->line == NULL)
 		{
@@ -36,7 +33,7 @@ int	ft_minishell(t_minishell *main, t_alloc **garbage)
 			handle_command(&main, garbage);
 			// if (code->code_status == SPECIAL_EXIT_CODE)
 			// 	break ;
-		}
+		} 
 		if (main->line)
 			free(main->line);
 		restore_minishell();

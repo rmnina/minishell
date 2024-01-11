@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:20:25 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/11 07:44:28 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/11 17:03:26 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ void initialize_process(t_minishell **main, int *i)
 
 void execute_child_process(t_minishell **main, int *i, int *old_fd, t_alloc **garbage)
 {
+	close((*main)->pipe_fd[0]);
 	if (*i > 0 && *old_fd != -1)
 	{
 		dup2(*old_fd, STDIN_FILENO);
@@ -46,7 +47,6 @@ void execute_child_process(t_minishell **main, int *i, int *old_fd, t_alloc **ga
 		dup2((*main)->pipe_fd[1], STDOUT_FILENO);
 		close((*main)->pipe_fd[1]);
 	}
-	close((*main)->pipe_fd[0]);
 	if (execute_builtins(main, garbage) == -1)
 		execute_non_builtin(main, garbage);
 	exit(EXIT_SUCCESS);
@@ -55,9 +55,7 @@ void execute_child_process(t_minishell **main, int *i, int *old_fd, t_alloc **ga
 void handle_parent_process(t_minishell **main, int *i, int *old_fd, int *status)
 {
 	if (*i > 0 && *old_fd != -1)
-	{
 		close(*old_fd);
-	}
 	if ((*main)->command[*i].type == PIPE)
 	{
 		*old_fd = (*main)->pipe_fd[0];

@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:03:22 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/11 10:46:14 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/11 15:35:47 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ typedef	struct s_export {
 
 typedef struct s_minishell {
 	int					pipe_fd[2];
+	int					fd;
 	int					code_status;
 	int					pos;
 	pid_t				pid;
@@ -97,6 +98,8 @@ typedef struct s_minishell {
 	struct s_command	*command;
 	struct s_parser		*parser;
 }	t_minishell;
+
+extern int	g_sigstatus;
 
 /* ******************************* LEXER ******************************* */
 
@@ -178,9 +181,14 @@ int 		ft_export(t_minishell **main, t_alloc **garbage);
 void		child_handler(int signum);
 int			process_prompt(void);
 void		sigint_handler(int signum);
+void		sigint_process_handler(int signum);
 int			init_sigactionsa(struct sigaction *sa);
 int			init_sigquit(void);
 int			init_parent_signals(void);
+void		sigquit_handler(int signum);
+void		sig_process_handler(int signum);
+void		init_signal(void);
+void		init_process_signal(void);
 
 /* ******************************* UTILS ******************************* */
 

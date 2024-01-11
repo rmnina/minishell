@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 05:26:30 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/11 09:28:00 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/11 15:13:29 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,6 @@ void	check_spaces(t_minishell **main, int *i)
 	if ((*main)->line[*i] == 32)
 	{
 		while ((*main)->line[*i] && (*main)->line[*i] == 32)
-			i++;
+			(*i)++;
 	}
 }

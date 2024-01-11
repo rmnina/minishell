@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 16:22:53 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/11 07:38:55 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/11 15:15:14 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ void	heredoc_parent(t_minishell **main)
 	status = 0;
 	close((*main)->pipe_fd[0]);
 	close((*main)->pipe_fd[1]);
+	if (g_sigstatus == 130)
+		exit(130);
 	waitpid((*main)->pid, &status, 0);
 	if (WIFEXITED(status))
 	{
@@ -80,6 +82,7 @@ void	init_heredoc(t_minishell **main, int *i, t_alloc **garbage)
 void	ft_heredoc(t_minishell **main, int *i, t_alloc **garbage)
 {
 	init_heredoc(main, i, garbage);
+	init_process_signal();
 	(*main)->pid = fork();
 	if ((*main)->pid == -1)
 	{
