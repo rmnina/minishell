@@ -3,22 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   exec_pipe.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:20:25 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/10 20:26:03 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/10 22:26:26 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
 
-int handle_command_args(t_command *command, char ***cmd_args, int *i, t_alloc **garbage)
+int handle_command_args(t_command *command, char **cmd_args, int *i, t_alloc **garbage)
 {
+	(void)cmd_args;
 	if (command[*i].type == WORD)
-	{
-		*cmd_args = create_cmd_args(command, i, garbage);
-	}
+		cmd_args = create_cmd_args(command, i, garbage);
 	if (command[*i].type >= LEFT_CHEV && command[*i].type <= DB_RIGHT_CHEV)
 		return (0);
 	return (1);
@@ -85,7 +84,7 @@ void ft_multipipes(t_command *command, t_pipe *pipes, t_alloc **garbage, char **
 	old_fd = -1;
 	while (command[*i].type != 0)
 	{
-		if (!handle_command_args(command, &cmd_args, i, garbage))
+		if (!handle_command_args(command, cmd_args, i, garbage))
 			break ;
 		initialize_process(pipes, &pid, command, i);
 		if (pid == 0)

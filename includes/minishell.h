@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:03:22 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/10 16:41:02 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/11 00:18:59 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ typedef struct s_pipe {
 	int		fd[2];
 	pid_t	pid;
 	int		heredoc_fd[2];
+	char	**delimiter;
 }	t_pipe;
 
 typedef struct s_code {
@@ -165,7 +166,7 @@ int			init_sigactionsa(struct sigaction *sa);
 int			init_sigquit(void);
 int			init_parent_signals(void);
 //heredoc
-int			heredoc(t_heredocNode *heredoclist, t_pipe *pipes, char **argv, char **envp, t_code *code, t_alloc **garbage);
-void		read_add(int fd, const char *delimiter, t_alloc **garbage);
+int			heredoc(t_pipe *pipes, t_command *command, int *i, char **cmd_args, char **envp, t_code *code, t_alloc **garbage);
+void		read_add(int fd, char *delimiter, t_code *code, char **envp, t_alloc **garbage);
 
 #endif

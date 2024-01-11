@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 20:18:37 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/10 18:02:11 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/11 01:01:40 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,50 +29,6 @@ char	*ft_getenv(char ***envp, const char *name)
 	}
 	return (NULL);
 }
-
-// char	*ft_replace_env_var(char **var, int pos)
-// {
-// 	int	i;
-
-// 	i = 0;
-// 	while (i < pos && var[pos])
-// 	{
-// 		(*var)[i] == var[pos];
-// 		i++;
-// 		pos++;
-// 	}
-// 	if (i < pos)
-// 	{
-// 		while ((*var)[i])
-// 		{
-			
-// 		}
-// 	}
-// }
-
-// char	*ft_replace_var(char *var, int *pos, t_alloc **garbage)
-// {
-// 	char	*new_var;
-// 	int		i;
-// 	int		size;
-
-// 	new_var = NULL;
-// 	i = 0;
-// 	size = 0;
-// 	while (var[*pos + size])
-// 		size++;
-// 	new_var = garb_malloc(sizeof(char), size + 1, garbage);
-// 	if (!new_var)
-// 		return (NULL);
-// 	while (var[*pos])
-// 	{
-// 		new_var[i] = var[*pos];
-// 		i++;
-// 		*pos += 1;
-// 	}
-// 	printf("new var = %s\n", new_var);
-// 	return (new_var);
-// }
 
 void	init_get_expand(t_command *token, char *line, int *i, t_quotes *quotes, t_alloc **garbage, char ***envp)
 {

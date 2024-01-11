@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/10 20:04:26 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/10 22:36:49 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,34 +84,53 @@ int	is_builtin(char *command)
 	return (0);
 }
 
-void	heredoc_child(t_pipe *pipes, char **argv, char ***envp, t_code *code, t_alloc **garbage)
+void	ft_heredoc_args(int i, char **argv, char *path, char ***envp, t_code *code, t_alloc **garbage)
 {
-	char	*path;
 	char	*new_argv[2];
-
-	path = NULL;
-	//close(pipes->fd[1]);
-	if (dup2(pipes->fd[0], STDIN_FILENO) == -1)
-		exit(EXIT_FAILURE);
-	close(pipes->fd[0]);
-	if (!argv[0] || !*argv)
-		exit (EXIT_FAILURE);
-	if (is_builtin(argv[0]))
-	{
+	
+	if (is_builtin(argv[i]))
 		execute_builtins(argv, envp, code, garbage);
-	}
 	else
 	{
-		path = find_command_path(argv[0], garbage);
+		path = find_command_path(argv[i], garbage);
 		if (!path)
 			exit(EXIT_FAILURE);
-		new_argv[0] = ft_strdup(argv[0], garbage);
+		new_argv[0] = ft_strdup(argv[i], garbage);
 		if (!new_argv[0])
 			exit (EXIT_FAILURE);
 		new_argv[1] = NULL;
 		execve(path, new_argv, *envp);
 		exit(EXIT_FAILURE);
 	}
+}
+
+void	heredoc_child(t_pipe *pipes, char **argv, char ***envp, t_code *code, t_alloc **garbage)
+{
+	char	*path;
+
+	path = NULL;
+	//close(pipes->fd[1]);
+	if (dup2(pipes->fd[0], STDIN_FILENO) == -1)
+		exit(EXIT_FAILURE);
+	close(pipes->fd[0]);
+	if (ft_strcmp(argv[0], "<<"))
+		ft_heredoc_args(0, argv, path, envp, code, garbage);
+	else
+		ft_heredoc_args(2, argv, path, envp, code, garbage);
+	// if (is_builtin(argv[0]))
+	// 	execute_builtins(argv, envp, code, garbage);
+	// else
+	// {
+	// 	path = find_command_path(argv[0], garbage);
+	// 	if (!path)
+	// 		exit(EXIT_FAILURE);
+	// 	new_argv[0] = ft_strdup(argv[0], garbage);
+	// 	if (!new_argv[0])
+	// 		exit (EXIT_FAILURE);
+	// 	new_argv[1] = NULL;
+	// 	execve(path, new_argv, *envp);
+	// 	exit(EXIT_FAILURE);
+	// }
 	exit(EXIT_SUCCESS);
 }
 

@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:04:36 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/10 18:03:09 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/11 01:49:50 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,14 +81,9 @@ t_command	get_token(char *line, t_quotes *quotes, int *i, t_alloc **garbage, cha
 	while (line[*i])
 	{
 		is_in_quote(line[*i], quotes);
-		if (parse_quotes(line, i, quotes) == 1 || !line[*i])
-			break ;
 		if (special_types(line[*i], line[*i + 1]) == EXPAND \
 		&& quotes->case_single == FALSE)
-		{
-			if (get_lex_expand(line, i, quotes, &token, garbage, envp) == 1)
-				break ;
-		}
+			get_lex_expand(line, i, quotes, &token, garbage, envp);
 		if (quotes->case_quotes == FALSE && special_types(line[*i], line[*i + 1]) != 0 \
 		&& special_types(line[*i], line[*i + 1]) != EXPAND)
 		{
@@ -97,8 +92,11 @@ t_command	get_token(char *line, t_quotes *quotes, int *i, t_alloc **garbage, cha
 			else
 				return (token = get_special_type_token(line, i, quotes, garbage));
 		}
-		else if (!parse_quotes(line, i, quotes))
+		if (parse_quotes(line, i, quotes) == 1 || !line[*i])
+			break ;
+		else if (!parse_quotes(line, i, quotes) && line[*i] != '$')
 		{
+			// parse_quotes(line, i, quotes);
 			token.word = ft_strjoin_char(token.word, line[*i], garbage);
 			*i += 1;
 		}

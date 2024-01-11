@@ -1,7 +1,4 @@
-file1.txt
-includes
-libft
-Makefile
-minishell
-srcs
-tester
+name = USER
+var = jovicu
+name = USER
+var = jovicu

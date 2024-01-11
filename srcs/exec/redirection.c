@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 17:13:45 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/10 18:16:43 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/10 23:32:47 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,31 +56,31 @@ int	redir_input(char *filename)
 }
 
 
-t_heredocNode	*build_heredoclist(t_command *command, int *i, t_alloc **garbage)
-{
-	t_heredocNode	*head;
-	t_heredocNode	*current;
-	t_heredocNode	*new_node;
+// t_heredocNode	*build_heredoclist(t_command *command, int *i, t_alloc **garbage)
+// {
+// 	t_heredocNode	*head;
+// 	t_heredocNode	*current;
+// 	t_heredocNode	*new_node;
 
-	head = NULL;
-	current = NULL;
-	while (command[*i].type == DB_LEFT_CHEV)
-	{
-		new_node = garb_malloc(sizeof(t_heredocNode), 1, garbage);
-		if (!new_node)
-			return (NULL);
-		*i += 1;
-		new_node->delimiter = command[*i].word;
-		new_node->next = NULL;
-		if (!head)
-			head = new_node;
-		else
-			current->next = new_node;
-		current = new_node;
-		*i += 1;
-	}
-	return (head);
-}
+// 	head = NULL;
+// 	current = NULL;
+// 	while (command[*i].type == DB_LEFT_CHEV)
+// 	{
+// 		new_node = garb_malloc(sizeof(t_heredocNode), 1, garbage);
+// 		if (!new_node)
+// 			return (NULL);
+// 		*i += 1;
+// 		new_node->delimiter = command[*i].word;
+// 		new_node->next = NULL;
+// 		if (!head)
+// 			head = new_node;
+// 		else
+// 			current->next = new_node;
+// 		current = new_node;
+// 		*i += 1;
+// 	}
+// 	return (head);
+// }
 
 int	init_redirection(t_command *command, int *i, char **cmd_args, char ***envp, t_code *code, t_alloc **garbage)
 {
@@ -89,18 +89,13 @@ int	init_redirection(t_command *command, int *i, char **cmd_args, char ***envp, 
 	pid_t			pid;
 	int				status;
 	t_pipe			pipes;
-	t_heredocNode	*heredoclist;
 
 	fd = 0;
 	filename = NULL;
 	if (command[*i].type == DB_LEFT_CHEV)
 	{
-		heredoclist = build_heredoclist(command, i, garbage);
-		if (heredoclist)
-		{
-			heredoc(heredoclist, &pipes, cmd_args, *envp, code, garbage);
-			return (0);
-		}
+		heredoc(&pipes, command, i, cmd_args, *envp, code, garbage);
+		return (0);
 	}
 	pid = fork();
 	if (pid == -1)
