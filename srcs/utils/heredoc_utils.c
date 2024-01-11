@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 06:32:53 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/11 10:27:48 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/11 11:20:07 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	replace_var(t_minishell **main, char **new_line, int *i, t_alloc **garbage)
 {
 	char	*name;
 	char	*var;
-	
+
 	name = NULL;
 	var = NULL;
 	if ((*main)->h_line[*i] == '$')
@@ -51,7 +51,7 @@ int	replace_var(t_minishell **main, char **new_line, int *i, t_alloc **garbage)
 			var = ft_getenv(main, name);
 			if (var)
 				*new_line = ft_strjoin(*new_line, var, garbage);
-			*new_line = ft_strjoin_char(*new_line, 32, garbage);
+			(*i)--;
 		}
 		return (1);
 	}
@@ -67,7 +67,7 @@ char	*heredoc_get_expand(t_minishell **main, t_alloc **garbage)
 	new_line = NULL;
 	while ((*main)->h_line[i])
 	{
-		if (!replace_var(main, &new_line, &i, garbage))
+		if (!replace_var(main, &new_line, &i, garbage) && (*main)->h_line[i] != '$')
 			new_line = ft_strjoin_char(new_line, (*main)->h_line[i], garbage);
 		i++;
 	}
@@ -104,12 +104,8 @@ void	read_add(t_minishell **main, int *j, t_alloc **garbage)
 	while (1)
 	{
 		(*main)->h_line = readline("> ");
-		// dprintf(fd1, "line h = %s\n", (*main)->h_line);
 		if (!(*main)->h_line || ft_strcmp((*main)->h_line, (*main)->h_delimiter[*j]) == 0)
-		{
-			free((*main)->h_line);
 			break ;
-		}
 		if (heredoc_is_expand((*main)->h_line))
 			(*main)->h_line = heredoc_get_expand(main, garbage);
 		write((*main)->pipe_fd[1], (*main)->h_line, ft_strlen((*main)->h_line));
