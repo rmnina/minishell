@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 15:15:34 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/11 01:48:37 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/11 10:40:44 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,71 +33,79 @@ char	*get_env_var_name(char *line, int *i, t_alloc **garbage)
 // whether or not the name of the environnment variable retrieved 
 // by getenv is a multi-part one.
 
-void	get_next_part_env_var(t_quotes *quotes, int *j)
+void	get_next_part_env_var(t_parser *parser, int *j)
 {
-	if (!quotes->var[*j])
+	if (!parser->var[*j])
 	{
-		quotes->var = NULL;
-		quotes->vpos = 0;
+		parser->var = NULL;
+		parser->vpos = 0;
 	}
 	else
-		quotes->vpos = *j;
+		parser->vpos = *j;
 }
 
-int	expand_is_in_quote(char c, t_quotes *quotes)
+int	expand_is_in_quote(char c, t_parser *parser)
 {
-	quotes->case_double = TRUE;
-	if (c == SINGLE_QUOTE && quotes->case_single == FALSE \
-	&& quotes->case_double == FALSE)
-		quotes->case_single = TRUE;
-	else if (c == DOUBLE_QUOTE && quotes->case_double == FALSE \
-	&& quotes->case_single == FALSE)
-		quotes->case_double = TRUE;
-	else if (c == SINGLE_QUOTE && quotes->case_single == TRUE)
-		quotes->case_single = FALSE;
-	else if (c == DOUBLE_QUOTE && quotes->case_double == TRUE)
-		quotes->case_double = FALSE;
-	if (quotes->case_single == TRUE || quotes->case_double == TRUE)
+	parser->case_double = TRUE;
+	if (c == SINGLE_QUOTE && parser->case_single == FALSE \
+	&& parser->case_double == FALSE)
+		parser->case_single = TRUE;
+	else if (c == DOUBLE_QUOTE && parser->case_double == FALSE \
+	&& parser->case_single == FALSE)
+		parser->case_double = TRUE;
+	else if (c == SINGLE_QUOTE && parser->case_single == TRUE)
+		parser->case_single = FALSE;
+	else if (c == DOUBLE_QUOTE && parser->case_double == TRUE)
+		parser->case_double = FALSE;
+	if (parser->case_single == TRUE || parser->case_double == TRUE)
 	{
-		quotes->case_quotes = TRUE;
+		parser->case_quotes = TRUE;
 		return (1);
 	}
 	else
 	{
-		quotes->case_quotes = FALSE;
+		parser->case_quotes = FALSE;
 		return (0);
 	}
 }
 
+int	parse_expand_quotes(t_minishell **main, int *i)
+{
+	if (((*main)->line[*i] == 32 && (*main)->parser->case_single == FALSE) || (*main)->line[*i] == '\0')
+		return (1);
+	else if ((*main)->line[*i] == DOUBLE_QUOTE && (*main)->parser->case_single == FALSE)
+		return (*i += 1, 3);
+	return (0);
+}
 
 // This function creates the token corresponding to the environnement 
 // variable retrieved by getenv. If the variable is composed of more
 // than one word, this function will be called again by get_command()
-// thanks to the elements modified in the t_quotes structs by the
+// thanks to the elements modified in the t_parser structs by the
 // previous function.
 
-int	get_lex_expand(char *line, int *i, t_quotes *quotes, t_command *token, t_alloc **garbage, char ***envp)
+int	get_lex_expand(t_minishell **main, int *i, t_command *token, t_alloc **garbage)
 {
 	int		j;
 
-	j = quotes->vpos;
-	init_get_expand(token, line, i, quotes, garbage, envp);
-	if (quotes->var == NULL)
+	j = (*main)->parser->vpos;
+	init_get_expand(main, token, i, garbage);
+	if ((*main)->parser->var == NULL)
 		return (-1);
-	while (quotes->var[j])
+	while ((*main)->parser->var[j])
 	{
-		if (parse_expand_quotes(quotes->var, &j, quotes) == 1)
+		if (parse_expand_quotes(main, &j) == 1)
 		{
 			j++;
 			break ;
 		}
-		else if (!parse_expand_quotes(quotes->var, &j, quotes))
+		else if (!parse_expand_quotes(main, &j))
 		{
-			token->word = ft_strjoin_char(token->word, quotes->var[j], garbage);
+			token->word = ft_strjoin_char(token->word, (*main)->parser->var[j], garbage);
 			j++;
 		}
 	}
 	token->type = WORD;
-	get_next_part_env_var(quotes, &j);
+	get_next_part_env_var((*main)->parser, &j);
 	return (1);
 }

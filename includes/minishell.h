@@ -6,14 +6,14 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:03:22 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/11 00:18:59 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/11 10:46:14 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-// System Libraries
+/* ******************************* LIBRARIES ******************************* */
 
 # include <stdlib.h>
 # include <stdio.h>
@@ -38,6 +38,8 @@
 # include <signal.h>
 # include <errno.h>
 
+/* ******************************* MACROS ******************************* */
+
 enum e_type {
 	WORD = 1,
 	PIPE,
@@ -54,119 +56,145 @@ enum e_type {
 # define UNDERSCORE 95
 # define SPECIAL_EXIT_CODE 255
 
+/* ******************************* STRUCTURES ******************************* */
 
-typedef struct s_quotes {
+typedef struct s_parser {
 	bool	case_single;
 	bool	case_double;
 	bool	case_quotes;
 	int		vpos;
-	int		npos;
 	char	*var;
-}	t_quotes;
+}	t_parser;
 
 typedef struct s_command {
 	char			*word;
 	int				type;
 }	t_command;
 
-typedef struct s_pipe {
-	char	**command;
-	int		fd[2];
-	pid_t	pid;
-	int		heredoc_fd[2];
-	char	**delimiter;
-}	t_pipe;
+typedef	struct s_export {
+	int		envp_len;
+	int		len;
+	char	**new_envp;
+	char	*equal;
+	char	*var_name;
+	char	*new_var;
+	char	*formatted_value;
+}	t_export;
 
-typedef struct s_code {
-	int		code_status;
-	char	*current;
-	char	*last;
-}	t_code;
+typedef struct s_minishell {
+	int					pipe_fd[2];
+	int					code_status;
+	int					pos;
+	pid_t				pid;
+	char				*line;
+	char				*h_line;
+	char				*path;
+	char				*last_cd_path;
+	char				*cd_path;
+	char				**cmd_args;
+	char				**h_delimiter;
+	char				**envp;
+	struct s_command	*command;
+	struct s_parser		*parser;
+}	t_minishell;
 
-typedef struct s_line {
-	char			*line;
-	struct s_line	*next;
-}	t_line;
+/* ******************************* LEXER ******************************* */
 
-typedef struct s_heredocNode {
-	char					*delimiter;
-	struct s_heredocNode	*next;
-}	t_heredocNode;
-
-
-//Lexer
-int			is_in_quote(char c, t_quotes *quotes);
-int			error_quotes(char *line, t_quotes *quotes);
-int			ft_error_lexer(t_command *command);
 int			special_types(char c1, char c2);
-void		get_type(t_command *token, t_quotes *quotes);
-int			is_expand(char *line);
+int			is_in_quote(char c, t_parser *quotes);
+int			error_quotes(t_minishell **main);
+int			ft_error_lexer(t_command *command);
 
-//Parser
-void		free_parsed_command_line(char **argv);
-int			parse_quotes(char *line, int *i, t_quotes *quotes);
-int			parse_expand_quotes(char *line, int *i, t_quotes *quotes);
-char		*get_env_var_name(char *line, int *i, t_alloc **garbage);
+/* ******************************* PARSER ******************************* */
+
+/* ------------------------------ INIT ------------------------------ */
+
+t_minishell	*get_minishell(void);
+t_minishell	*init_minishell(char **envp);
+t_parser	*get_parser(t_alloc **garbage);
+t_parser	*init_parser(t_alloc **garbage);
+void		restore_minishell();
+char		**set_env(char **envp, t_alloc **garbage);
 void		init_get_token(t_command *token);
-void		init_get_expand(t_command *token, char *line, int *i, t_quotes *quotes, t_alloc **garbage, char ***envp);
-t_command	*get_command(char *line, t_quotes *quotes, t_alloc **garbage, char ***envp);
-int			get_lex_expand(char *line, int *i, t_quotes *quotes, \
-t_command *token, t_alloc **garbage, char ***envp);
-t_command	*ft_parsing(char *line, t_alloc **garbage, char ***envp);
-char		*ft_getenv(char ***envp, const char *name);
+void		init_get_expand(t_minishell **main, t_command *token, int *i, t_alloc **garbage);
 
-//Utils
-t_command	*ft_struct_join(t_command *tok1, t_command tok2, t_alloc **garbage);
-void		ft_free_command(t_command *command);
-char		*char_to_str(char c, t_alloc **garbage);
-int			special_type_expand(char c1, char c2);
+/* ------------------------------ EXPAND ------------------------------ */
 
-//Execve
+int			is_expand(char *line);
+char		*get_env_var_name(char *line, int *i, t_alloc **garbage);
+char		*ft_getenv(t_minishell **main, const char *name);
+int			parse_expand_quotes(t_minishell **main, int *i);
+int			get_lex_expand(t_minishell **main, int *i, t_command *token, t_alloc **garbage);
+
+/* ------------------------------ MAIN ------------------------------ */
+
+void		get_token_type(t_minishell **main, t_command *token);
+t_command	get_token(t_minishell **main, int *i, t_alloc **garbage);
+t_command	*get_command(t_minishell **main, t_alloc **garbage);
+t_command	*ft_parsing(t_minishell **main, t_alloc **garbage);
+
+/* ******************************* EXECUTION ******************************* */
+
+/* ------------------------------ PATH ------------------------------*/
+
 char		*find_command_in_segment(char *segment, char *command, t_alloc **garbage);
 char		*find_command_path(char *command, t_alloc **garbage);
-// void		execute_command(char **cmd_args, char **envp, t_alloc **garbage);
-// void			handle_command(char *input, t_code *code, char **envp, t_alloc **garbage);
-// int			execute_non_builtin(char **envp, t_code *code, char **cmd_args, t_alloc **garbage);
-// void		heredoc_child(t_pipe *pipes, char **argv, char **envp, t_alloc **garbage);
-void		execute_command(char **cmd_args, char ***envp, t_alloc **garbage);
-void		handle_command(char *input, t_code *code, char ***envp, t_alloc **garbage, t_pipe *pipes);
-int			execute_non_builtin(char ***envp, t_code *code, char **cmd_args, t_alloc **garbage);
-void		heredoc_child(t_pipe *pipes, char **argv, char ***envp, t_code *code, t_alloc **garbage);
-char		**create_cmd_args(t_command *command, int *i, t_alloc **garbage);
-void		pick_command(char **cmd_args, char **envp, t_code *code, t_alloc **garbage);
 
-//Redirection 
-int			init_redirection(t_command *command, int *i, char **cmd_args, char ***envp, t_code *code, t_alloc **garbage);
+/* ------------------------------ COMMANDS ------------------------------*/
 
+int			execute_builtins(t_minishell **main, t_alloc **garbage);
+int			execute_non_builtin(t_minishell **main, t_alloc **garbage);
+void		execute_command(t_minishell **main, t_alloc **garbage);
 
-//Pipe
-pid_t		heredoc_pipe(t_pipe *pipes);
-void		ft_multipipes(t_command *command, t_pipe *pipes, t_alloc **garbage, char ***envp, char **cmd_args, int *i, t_code *code);
-//void	ft_multipipes(t_command *command, t_alloc *garbage, char ***envp, char **cmd_args, int *i, t_code *code);
-//void execute_pipeline(t_command *command, int num_commands, char ***envp, t_code *code, t_alloc **garbage);
+/* ------------------------------ MAIN ------------------------------ */
+
+void		ft_heredoc(t_minishell **main, int *i, t_alloc **garbage);
+int			ft_redirect(t_minishell **main, int *i, t_alloc **garbage);
+int 		ft_pipex(t_minishell **main, int *i, t_alloc **garbage);
+char		**create_cmd_args(t_minishell **main, int *i, t_alloc **garbage);
+void		handle_command(t_minishell **main, t_alloc **garbage);
 
 
-//Builtins
-int			ft_cd(char **args, t_code *code);
-int			ft_echo(char **argv, t_code *code);
-int			ft_env(char **envp, t_code *code);
-int			ft_exit(char **cmd_args, t_code *code, t_alloc **garbage);
-int			ft_export(char ***envp, char **argv, t_code *code, t_alloc **garbage);
+/* ******************************* BUILTINS ******************************* */
+
+int			ft_cd(t_minishell **main);
+int			ft_echo(t_minishell **main);
+int			ft_env(t_minishell **main);
+int			ft_exit(t_minishell **main, t_alloc **garbage);
+int			ft_pwd(t_minishell **main);
+int			ft_unset(t_minishell **main, char **names);
+
+/* ------------------------------ FT_EXPORT ------------------------------ */
+
+int			envp_length(char **envp);
+char		**copy_envp(char **envp, int new_size, t_alloc **garbage);
+int			search_var(t_export *export, t_alloc **garbage);
 void		add_or_update_env_var(char ***envp, char *var, t_alloc **garbage);
-int			ft_pwd(char **unused_args, char **unused_envp, t_code *code);
-int			ft_unset(char ***envp, char **names, t_code *code);
-int			execute_status_builtin(t_code *code, int *i);
-int			execute_builtins(char **cmd_args, char ***envp, t_code *code, t_alloc **garbage);
+bool		search_identifiers(const char *str, char *ptr, bool *equals, bool *no_space);
+int 		ft_export(t_minishell **main, t_alloc **garbage);
 
-//Signaux
+/* ******************************* SIGNALS ******************************* */
+
 void		child_handler(int signum);
 int			process_prompt(void);
 void		sigint_handler(int signum);
 int			init_sigactionsa(struct sigaction *sa);
 int			init_sigquit(void);
 int			init_parent_signals(void);
-//heredoc
-int			heredoc(t_pipe *pipes, t_command *command, int *i, char **cmd_args, char **envp, t_code *code, t_alloc **garbage);
-void		read_add(int fd, char *delimiter, t_code *code, char **envp, t_alloc **garbage);
+
+/* ******************************* UTILS ******************************* */
+
+t_command	token_null(t_command *token, t_alloc **garbage);
+t_command	*ft_struct_join(t_command *tok1, t_command tok2, t_alloc **garbage);
+char		*char_to_str(char c, t_alloc **garbage);
+char		**ft_envjoin(char **envp, char *str, t_alloc **garbage);
+int			ft_count(t_command *command, int *i);
+int			is_builtin(char *command);
+int			heredoc_is_expand(char *line);
+int			replace_var(t_minishell **main, char **new_line, int *i, t_alloc **garbage);
+char		*heredoc_get_expand(t_minishell **main, t_alloc **garbage);
+char		**get_delimiter(t_minishell **main, int *i, t_alloc **garbage);
+void		read_add(t_minishell **main, int *j, t_alloc **garbage);
+void		check_spaces(t_minishell **main, int *i);
 
 #endif

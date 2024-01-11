@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   special_char.c                                     :+:      :+:    :+:   */
+/*   types.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:04:44 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/08 17:05:25 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/11 07:36:50 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 // indicates whether the character being processed is
 // or isn't between quotes.
 
-int	is_in_quote(char c, t_quotes *quotes)
+int	is_in_quote(char c, t_parser *quotes)
 {
 	if (c == SINGLE_QUOTE && quotes->case_single == FALSE \
 	&& quotes->case_double == FALSE)
@@ -80,26 +80,26 @@ int	special_types(char c1, char c2)
 // function, which only performs a verification, this one writes 
 // the type it has assign to the token into its structure t_command. 
 
-void	get_type(t_command *token, t_quotes *quotes)
+void	get_token_type(t_minishell **main, t_command *token)
 {
 	if (!token->word)
 		return ;
-	else if (token->word[0] == '|' && quotes->case_quotes == FALSE)
+	else if (token->word[0] == '|' && (*main)->parser->case_quotes == FALSE)
 		token->type = PIPE;
 	else if (token->word[0] == '<' && token->word[1] && token->word[1] == '<' \
-	&& quotes->case_quotes == FALSE)
+	&& (*main)->parser->case_quotes == FALSE)
 		token->type = DB_LEFT_CHEV;
-	else if (token->word[0] == '<' && quotes->case_quotes == FALSE)
+	else if (token->word[0] == '<' && (*main)->parser->case_quotes == FALSE)
 		token->type = LEFT_CHEV;
 	else if (token->word[0] == '>' && token->word[1] && token->word[1] == '>' \
-	&& quotes->case_quotes == FALSE)
+	&& (*main)->parser->case_quotes == FALSE)
 		token->type = DB_RIGHT_CHEV;
-	else if (token->word[0] == '>' && quotes->case_quotes == FALSE)
+	else if (token->word[0] == '>' && (*main)->parser->case_quotes == FALSE)
 		token->type = RIGHT_CHEV;
 	else if (token->word[0] == '$' && token->word[1] && token->word[1] == '?' \
-	&& quotes->case_quotes == FALSE)
+	&& (*main)->parser->case_quotes == FALSE)
 		token->type = CODE;
-	else if (is_expand(token->word) && quotes->case_single == FALSE)
+	else if (is_expand(token->word) && (*main)->parser->case_single == FALSE)
 		token->type = EXPAND;
 	else
 		token->type = WORD;

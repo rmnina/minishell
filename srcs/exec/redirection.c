@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 17:13:45 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/10 23:32:47 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/11 10:07:22 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,12 @@ int	redir_append(char *filename)
 	int	fd;
 	int	dup;
 
-	fd = open(filename, O_WRONLY | O_TRUNC | O_CREAT, S_IRUSR \
+	fd = open(filename, O_WRONLY | O_APPEND | O_CREAT, S_IRUSR \
 	| S_IRGRP | S_IWGRP | S_IWUSR);
 	if (fd == -1)
 		return (-1);
 	dup = dup2(fd, STDOUT_FILENO);
+	close(fd);
 	if (dup == -1)
 		return (-1);
 	return (fd);
@@ -55,46 +56,56 @@ int	redir_input(char *filename)
 	return (fd *= -1);
 }
 
-
-// t_heredocNode	*build_heredoclist(t_command *command, int *i, t_alloc **garbage)
-// {
-// 	t_heredocNode	*head;
-// 	t_heredocNode	*current;
-// 	t_heredocNode	*new_node;
-
-// 	head = NULL;
-// 	current = NULL;
-// 	while (command[*i].type == DB_LEFT_CHEV)
-// 	{
-// 		new_node = garb_malloc(sizeof(t_heredocNode), 1, garbage);
-// 		if (!new_node)
-// 			return (NULL);
-// 		*i += 1;
-// 		new_node->delimiter = command[*i].word;
-// 		new_node->next = NULL;
-// 		if (!head)
-// 			head = new_node;
-// 		else
-// 			current->next = new_node;
-// 		current = new_node;
-// 		*i += 1;
-// 	}
-// 	return (head);
-// }
-
-int	init_redirection(t_command *command, int *i, char **cmd_args, char ***envp, t_code *code, t_alloc **garbage)
+int	child_redirect(t_minishell **main, int *i, t_alloc **garbage)
 {
-	char			*filename;
-	int				fd;
-	pid_t			pid;
-	int				status;
-	t_pipe			pipes;
+	char	*filename;
+	int		fd;
 
 	fd = 0;
 	filename = NULL;
-	if (command[*i].type == DB_LEFT_CHEV)
+	if ((*main)->command[*i].type == DB_RIGHT_CHEV || \
+		(*main)->command[*i].type == RIGHT_CHEV)
+		{
+			filename = ft_strdup((*main)->command[*i + 1].word, garbage);
+			if (!filename)
+				return (-1);
+			if ((*main)->command[*i].type == RIGHT_CHEV)
+				fd = redir_output(filename);
+			else if ((*main)->command[*i].type == DB_RIGHT_CHEV)
+				fd = redir_append(filename);
+		}
+		else if ((*main)->command[*i].type == LEFT_CHEV)
+		{
+			filename = (*main)->command[*i - 1].word;
+			fd = redir_input(filename);
+		}
+		if (execute_builtins(main, garbage) == -1)
+			execute_non_builtin(main, garbage);
+		return (fd);
+}
+
+void	parent_redirect(int fd, pid_t pid, int *status)
+{
+	waitpid(pid, status, 0);
+	if (WIFEXITED(*status))
 	{
-		heredoc(&pipes, command, i, cmd_args, *envp, code, garbage);
+		if (fd < -1)
+			dup2(STDIN_FILENO, fd * -1);
+		else if (fd > 0)
+			dup2(STDOUT_FILENO, fd);
+	}
+}
+
+int	ft_redirect(t_minishell **main, int *i, t_alloc **garbage)
+{
+	int		fd;
+	pid_t	pid;
+	int		status;
+
+	fd = 0;
+	if ((*main)->command[*i].type == DB_LEFT_CHEV)
+	{
+		ft_heredoc(main, i, garbage);
 		return (0);
 	}
 	pid = fork();
@@ -102,37 +113,11 @@ int	init_redirection(t_command *command, int *i, char **cmd_args, char ***envp, 
 		exit(EXIT_FAILURE);
 	if (pid == 0)
 	{
-		if (command[*i].type == DB_RIGHT_CHEV || \
-		command[*i].type == RIGHT_CHEV)
-		{
-			filename = ft_strdup(command[*i + 1].word, garbage);
-			if (!filename)
-				return (-1);
-			if (command[*i].type == RIGHT_CHEV)
-				fd = redir_output(filename);
-			else if (command[*i].type == DB_RIGHT_CHEV)
-				fd = redir_append(filename);
-		}
-		else if (command[*i].type == LEFT_CHEV)
-		{
-			filename = command[*i - 1].word;
-			fd = redir_input(filename);
-		}
-		if (execute_builtins(cmd_args, envp, code, garbage) == -1)
-			execute_non_builtin(envp, code, cmd_args, garbage);
+		fd = child_redirect(main, i, garbage);
 		exit(0);
 	}
 	else if (pid > 0)
-	{
-		waitpid(pid, &status, 0);
-		if (WIFEXITED(status))
-		{
-			if (fd < -1)
-				dup2(STDIN_FILENO, fd * -1);
-			else if (fd > 0)
-				dup2(STDOUT_FILENO, fd);
-		}
-	}
+		parent_redirect(fd, pid, &status);
 	*i += 2;
 	return (1);
 }

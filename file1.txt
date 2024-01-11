@@ -1,4 +1,0 @@
-name = USER
-var = jovicu
-name = USER
-var = jovicu

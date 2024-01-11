@@ -3,74 +3,79 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 17:31:57 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/04 18:07:34 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/11 07:40:11 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-bool	change_directory(const char *path, t_code *code)
+bool	change_directory(t_minishell **main)
 {
-	char	*new_current;
-
-	if (path == NULL)
+	char	*new_path;
+	
+	if ((*main)->cd_path == NULL)
 		return (false);
-	new_current = realpath(path, NULL);
-	if (new_current == NULL)
+	new_path = realpath((*main)->cd_path, NULL);
+	if (new_path == NULL)
 		return (false);
-	if (chdir(new_current) != 0)
+	if (chdir(new_path) != 0)
 	{
-		free(new_current);
+		free(new_path);
 		return (false);
 	}
-	free(code->last);
-	code->last = code->current;
-	code->current = new_current;
+	free((*main)->last_cd_path);
+	(*main)->last_cd_path = (*main)->cd_path;
+	(*main)->cd_path = new_path;
 	return (true);
 }
 
-int	ft_cd(char **args, t_code *code)
+int	cd_hyphen(t_minishell **main)
 {
-	char	*home_path;
+	if ((*main)->last_cd_path == NULL)
+	{
+		printf("cd: OLDPWD not set\n");
+		(*main)->code_status = 1;
+		return ((*main)->code_status);
+	}
+	printf("%s\n", (*main)->last_cd_path);
+	if (!change_directory(main))
+	{
+		perror("cd");
+		(*main)->code_status = 1;
+		return ((*main)->code_status);
+	}
+	return ((*main)->code_status);
+}
 
-	if (args[1] == NULL || ft_strcmp(args[1], "~") == 0)
+int	cd_tilde(t_minishell **main)
+{
+	(*main)->cd_path = ft_getenv(main, "HOME");
+	if (!change_directory(main))
 	{
-		home_path = getenv("HOME");
-		if (!change_directory(home_path, code))
-		{
-			perror("cd");
-			code->code_status = 1;
-			return (code->code_status);
-		}
+		perror("cd");
+		(*main)->code_status = 1;
 	}
-	else if (ft_strcmp(args[1], "-") == 0)
-	{
-		if (code->last == NULL)
-		{
-			printf("cd: OLDPWD not set\n");
-			code->code_status = 1;
-			return (code->code_status);
-		}
-		printf("%s\n", code->last);
-		if (!change_directory(code->last, code))
-		{
-			perror("cd");
-			code->code_status = 1;
-			return (code->code_status);
-		}
-	}
+	return ((*main)->code_status);
+}
+
+int	ft_cd(t_minishell **main)
+{
+	if ((*main)->cmd_args[1] == NULL || ft_strcmp((*main)->cmd_args[1], "~") == 0)
+		return ((*main)->code_status = cd_tilde(main));
+	else if (ft_strcmp((*main)->cmd_args[1], "-") == 0)
+		return ((*main)->code_status = cd_hyphen(main));
 	else
 	{
-		if (!change_directory(args[1], code))
+		if (!change_directory(main))
 		{
 			perror("cd");
-			code->code_status = 1;
-			return (code->code_status);
+			(*main)->code_status = 1;
+			return ((*main)->code_status);
 		}
 	}
-	return (code->code_status);
+	return ((*main)->code_status);
 }
 

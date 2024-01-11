@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 02:11:36 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/08 16:34:40 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/11 07:44:52 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,19 +23,19 @@ int	ft_error(char *str)
 // latter indicates the presence of an unmatch opening quote
 // without a closing quote.
 
-int	error_quotes(char *line, t_quotes *quotes)
+int	error_quotes(t_minishell **main)
 {
 	int	i;
 
 	i = 0;
-	while (line[i])
+	while ((*main)->line[i])
 	{
-		is_in_quote(line[i], quotes);
+		is_in_quote((*main)->line[i], (*main)->parser);
 		i++;
 	}
-	if (quotes->case_double == TRUE)
+	if ((*main)->parser->case_double == TRUE)
 		return (ft_error("minishell: syntax error near unexpected token \""));
-	else if (quotes->case_single == TRUE)
+	else if ((*main)->parser->case_single == TRUE)
 		return (ft_error("minishell: syntax error near unexpected token \'"));
 	return (0);
 }
@@ -75,13 +75,13 @@ int	error_nonexistent_type(t_command *command)
 	while (command[i].type && command[j].type)
 	{
 		if (command[i].type && command[j].type && \
-		((command[i].type == 5 && command[j].type == 4) || \
-		(command[i].type == 5 && command[j].type == 5)))
+		((command[i].type == DB_RIGHT_CHEV && command[j].type == RIGHT_CHEV) || \
+		(command[i].type == DB_RIGHT_CHEV && command[j].type == DB_RIGHT_CHEV)))
 			return \
 			(ft_error("minishell: syntax error near unexpected token '>'"));
 		else if (command[i].type && command[j].type && \
-		((command[i].type == 6 && command[j].type == 3) || \
-		(command[i].type == 6 && command[j].type == 6)))
+		((command[i].type == DB_LEFT_CHEV && command[j].type == LEFT_CHEV) || \
+		(command[i].type == DB_LEFT_CHEV && command[j].type == DB_LEFT_CHEV)))
 			return \
 			(ft_error("minishell: syntax error near unexpected token '<'"));
 		else if (command[i].type && command[j].type && \

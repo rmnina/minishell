@@ -6,24 +6,23 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 11:20:46 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/22 14:49:03 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/11 07:40:47 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int	ft_env(char **envp, t_code *code)
+int	ft_env(t_minishell **main)
 {
 	int	i;
 
 	i = 0;
-	while (envp[i] != NULL)
+	while ((*main)->envp[i] != NULL)
 	{
-		printf("%s\n", envp[i]);
+		printf("%s\n", (*main)->envp[i]);
 		i++;
 	}
-	code->code_status = 0;
+	(*main)->code_status = 0;
 	return (0);
 }
-
 
