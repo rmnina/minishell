@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 02:11:36 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/11 15:30:10 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/12 19:40:00 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,9 @@ int	error_quotes(t_minishell **main)
 		return (ft_error("minishell: syntax error near unexpected token \""));
 	else if ((*main)->parser->case_single == TRUE)
 		return (ft_error("minishell: syntax error near unexpected token \'"));
+	(*main)->parser->case_double = FALSE;
+	(*main)->parser->case_single = FALSE;
+	(*main)->parser->case_quotes = FALSE;
 	return (0);
 }
 

@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:04:36 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/12 16:02:47 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/12 19:50:38 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,13 +48,21 @@ t_command	get_special_type_token(t_minishell **main, int *i, t_alloc **garbage)
 
 int	parse_quotes(t_minishell **main, int *i)
 {
-	if (((*main)->line[*i] == 32 && (*main)->parser->case_double == FALSE \
-	&& (*main)->parser->case_single == FALSE) || (*main)->line[*i] == '\0')
+	if (((*main)->parser->case_double == FALSE && (*main)->parser->case_single == FALSE \
+	&& (*main)->line[*i] == 32) || (*main)->line[*i] == '\0')
 		return (1);
-	else if ((*main)->line[*i] == SINGLE_QUOTE && (*main)->parser->case_double == FALSE)
-		return (*i += 1, 2);
+	if ((*main)->line[*i] == SINGLE_QUOTE && (*main)->parser->case_double == FALSE)
+	{
+		*i += 1;
+		is_in_quote((*main)->line[*i], (*main)->parser);
+		return (2);
+	}
 	else if ((*main)->line[*i] == DOUBLE_QUOTE && (*main)->parser->case_single == FALSE)
-		return (*i += 1, 3);
+	{
+		*i += 1;
+		is_in_quote((*main)->line[*i], (*main)->parser);
+		return (3);
+	}
 	return (0);
 }
 

@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 20:18:37 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/12 16:23:12 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/12 19:38:13 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,6 @@ void	init_get_expand(t_minishell **main, t_command *token, int *i, t_alloc **gar
 	{
 		name = get_env_var_name((*main)->line, i, garbage);
 		(*main)->parser->var = ft_getenv(main, name);
-		printf("name = %s\n", (*main)->parser->var);
 	}
 	if (!token->word)
 		token->word = NULL;
