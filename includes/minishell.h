@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:03:22 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/12 16:46:46 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/12 17:01:06 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,6 +152,7 @@ void		execute_command(t_minishell **main, t_alloc **garbage);
 /* ------------------------------ MAIN ------------------------------ */
 
 void		ft_heredoc(t_minishell **main, int *i, t_alloc **garbage);
+int			heredoc_child(t_minishell **main, int *i, t_alloc **garbage);
 int			ft_redirect(t_minishell **main, int *i, t_alloc **garbage);
 int 		ft_pipex(t_minishell **main, int *i, t_alloc **garbage);
 char		**create_cmd_args(t_minishell **main, int *i, t_alloc **garbage);

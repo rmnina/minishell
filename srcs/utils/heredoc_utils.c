@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 06:32:53 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/11 15:30:10 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/12 17:04:15 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ char	**get_delimiter(t_minishell **main, int *i, t_alloc **garbage)
 	int		size;
 
 	j = 0;
+	size = 0;
     while ((*main)->command[*i + j].type == DB_LEFT_CHEV)
 	{
 		j += 2;
@@ -105,9 +106,13 @@ void	read_add(t_minishell **main, int *j, t_alloc **garbage)
 	{
 		(*main)->h_line = readline("> ");
 		if (!(*main)->h_line || ft_strcmp((*main)->h_line, (*main)->h_delimiter[*j]) == 0)
+		{
 			break ;
+		}
 		if (heredoc_is_expand((*main)->h_line))
+		{
 			(*main)->h_line = heredoc_get_expand(main, garbage);
+		}
 		write((*main)->pipe_fd[1], (*main)->h_line, ft_strlen((*main)->h_line));
 		write((*main)->pipe_fd[1], "\n", 1);
 		free((*main)->h_line);

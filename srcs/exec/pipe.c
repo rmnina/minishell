@@ -6,14 +6,14 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:20:25 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/11 17:03:26 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/12 17:03:00 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
 
-int handle_command_args(t_minishell **main, int *i, t_alloc **garbage)
+int	handle_command_args(t_minishell **main, int *i, t_alloc **garbage)
 {
 	if ((*main)->command[*i].type == WORD)
 		(*main)->cmd_args = create_cmd_args(main, i, garbage);
@@ -22,7 +22,7 @@ int handle_command_args(t_minishell **main, int *i, t_alloc **garbage)
 	return (1);
 }
 
-void initialize_process(t_minishell **main, int *i)
+void	initialize_process(t_minishell **main, int *i)
 {
 	if ((*main)->command[*i].type == PIPE || *i > 0)
 		pipe((*main)->pipe_fd);
@@ -34,13 +34,27 @@ void initialize_process(t_minishell **main, int *i)
 	}
 }
 
-void execute_child_process(t_minishell **main, int *i, int *old_fd, t_alloc **garbage)
+void	execute_child_process(t_minishell **main, int *i, int *old_fd, t_alloc **garbage)
 {
-	close((*main)->pipe_fd[0]);
+	int	heredoc_status;
+
+	heredoc_status = 0;
 	if (*i > 0 && *old_fd != -1)
 	{
 		dup2(*old_fd, STDIN_FILENO);
 		close(*old_fd);
+	}
+	if ((*main)->command[*i - 2].type == DB_LEFT_CHEV)
+	{
+		heredoc_status = heredoc_child(main, i, garbage);
+		if (heredoc_status == -1)
+		{
+			if (execute_builtins(main, garbage) == -1)
+			{
+				if (execute_non_builtin(main, garbage) == -1)
+					exit (EXIT_FAILURE);
+			}
+		}
 	}
 	if ((*main)->command[*i].type == PIPE)
 	{
@@ -48,11 +62,14 @@ void execute_child_process(t_minishell **main, int *i, int *old_fd, t_alloc **ga
 		close((*main)->pipe_fd[1]);
 	}
 	if (execute_builtins(main, garbage) == -1)
-		execute_non_builtin(main, garbage);
+	{
+		if (execute_non_builtin(main, garbage) == -1)
+			exit (EXIT_FAILURE);
+	}
 	exit(EXIT_SUCCESS);
 }
 
-void handle_parent_process(t_minishell **main, int *i, int *old_fd, int *status)
+void	handle_parent_process(t_minishell **main, int *i, int *old_fd, int *status)
 {
 	if (*i > 0 && *old_fd != -1)
 		close(*old_fd);
@@ -71,7 +88,7 @@ void handle_parent_process(t_minishell **main, int *i, int *old_fd, int *status)
 		(*main)->code_status = WEXITSTATUS(*status);
 }
 
-int ft_pipex(t_minishell **main, int *i, t_alloc **garbage)
+int 	ft_pipex(t_minishell **main, int *i, t_alloc **garbage)
 {
 	int		status;
 	int		old_fd;

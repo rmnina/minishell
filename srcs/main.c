@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:45:11 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/11 13:32:57 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/12 17:05:07 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ int	main(int argc, char **argv, char **envp)
 		return (2);
 	exit_status = ft_minishell(main, &garbage);
 	clear_history();
-	// if (garbage)
-	// 	free_garbage(&garbage, 0);
+	if (garbage)
+		free_garbage(&garbage, 0);
 	return (exit_status);
 }
