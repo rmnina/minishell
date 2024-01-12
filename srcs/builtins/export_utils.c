@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 09:11:51 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/11 07:17:24 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/12 16:47:28 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ char	**copy_envp(char **envp, int new_size, t_alloc **garbage)
 	return (new_envp);
 }
 
-int	search_var(t_export *export, t_alloc **garbage)
+int	search_var(t_export *export, char *var, t_alloc **garbage)
 {
 	int	i;
 	int	found;
@@ -63,12 +63,12 @@ int	search_var(t_export *export, t_alloc **garbage)
 	found = 0;
 	while (i < export->envp_len)
 	{
-		if (ft_strncmp(export->new_envp[i], export->new_var, export->len) == 0)
+		if (ft_strncmp(export->new_envp[i], var, export->len) == 0)
 		{
-			if (export->new_var[export->len] == '=')
+			if (var[export->len] == '=')
 			{
 				free(export->new_envp[i]);
-				export->new_envp[i] = ft_strdup(export->new_var, garbage);
+				export->new_envp[i] = ft_strdup(var, garbage);
 				if (export->new_envp[i] == NULL)
 				{
 					free(export->new_envp);
@@ -97,7 +97,7 @@ void	add_or_update_env_var(char ***envp, char *var, t_alloc **garbage)
 	export.new_envp = copy_envp(*envp, export.envp_len + 1, garbage);
 	if (export.new_envp == NULL)
 		return ;
-	found = search_var(&export, garbage);
+	found = search_var(&export, var, garbage);
 	if (found == -1)
 		return ;
 	if (found == 0)

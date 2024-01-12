@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 15:15:34 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/11 10:40:44 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/12 16:34:27 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,11 +69,11 @@ int	expand_is_in_quote(char c, t_parser *parser)
 	}
 }
 
-int	parse_expand_quotes(t_minishell **main, int *i)
+int	parse_expand_quotes(t_minishell **main, char *line, int *i)
 {
-	if (((*main)->line[*i] == 32 && (*main)->parser->case_single == FALSE) || (*main)->line[*i] == '\0')
+	if ((line[*i] == 32 && (*main)->parser->case_single == FALSE) || line[*i] == '\0')
 		return (1);
-	else if ((*main)->line[*i] == DOUBLE_QUOTE && (*main)->parser->case_single == FALSE)
+	else if (line[*i] == DOUBLE_QUOTE && (*main)->parser->case_single == FALSE)
 		return (*i += 1, 3);
 	return (0);
 }
@@ -94,12 +94,12 @@ int	get_lex_expand(t_minishell **main, int *i, t_command *token, t_alloc **garba
 		return (-1);
 	while ((*main)->parser->var[j])
 	{
-		if (parse_expand_quotes(main, &j) == 1)
+		if (parse_expand_quotes(main, (*main)->parser->var, &j) == 1)
 		{
 			j++;
 			break ;
 		}
-		else if (!parse_expand_quotes(main, &j))
+		else if (!parse_expand_quotes(main, (*main)->parser->var, &j))
 		{
 			token->word = ft_strjoin_char(token->word, (*main)->parser->var[j], garbage);
 			j++;

@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:04:36 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/11 15:30:10 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/12 16:02:47 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,9 +118,12 @@ t_command	*get_command(t_minishell **main, t_alloc **garbage)
 		}
 		if ((*main)->parser->var != NULL)
 		{
-			init_get_token(&token);
-			get_lex_expand(main, &i, &token, garbage);
-			command = ft_struct_join(command, token, garbage);
+			while ((*main)->parser->var != NULL)
+			{
+				init_get_token(&token);
+				get_lex_expand(main, &i, &token, garbage);
+				command = ft_struct_join(command, token, garbage);
+			}
 		}
 	}
 	return (command = ft_struct_join(command, token_null(&token, garbage), garbage));

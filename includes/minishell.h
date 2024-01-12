@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:03:22 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/11 15:35:47 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/12 16:46:46 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,7 +126,7 @@ void		init_get_expand(t_minishell **main, t_command *token, int *i, t_alloc **ga
 int			is_expand(char *line);
 char		*get_env_var_name(char *line, int *i, t_alloc **garbage);
 char		*ft_getenv(t_minishell **main, const char *name);
-int			parse_expand_quotes(t_minishell **main, int *i);
+int			parse_expand_quotes(t_minishell **main, char *line, int *i);
 int			get_lex_expand(t_minishell **main, int *i, t_command *token, t_alloc **garbage);
 
 /* ------------------------------ MAIN ------------------------------ */
@@ -171,7 +171,6 @@ int			ft_unset(t_minishell **main, char **names);
 
 int			envp_length(char **envp);
 char		**copy_envp(char **envp, int new_size, t_alloc **garbage);
-int			search_var(t_export *export, t_alloc **garbage);
 void		add_or_update_env_var(char ***envp, char *var, t_alloc **garbage);
 bool		search_identifiers(const char *str, char *ptr, bool *equals, bool *no_space);
 int 		ft_export(t_minishell **main, t_alloc **garbage);
