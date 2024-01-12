@@ -3,50 +3,69 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julietteandrieux <julietteandrieux@stud    +#+  +:+       +#+        */
+/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/07 18:49:21 by julietteand      ###   ########.fr       */
+/*   Updated: 2024/01/12 19:52:10 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int	execute_builtins(char **cmd_args, char **envp, t_code *code, t_alloc *garbage)
+int	execute_builtins(t_minishell **main, t_alloc **garbage)
 {
-	if (cmd_args[0] == NULL)
+	if ((*main)->cmd_args[0] == NULL)
 		return (0);
-	if (ft_strcmp(cmd_args[0], "cd") == 0
-		&& ft_strlen(cmd_args[0]) == ft_strlen("cd"))
-		return (ft_cd(cmd_args, code));
-	if (ft_strcmp(cmd_args[0], "echo") == 0
-		&& ft_strlen(cmd_args[0]) == ft_strlen("echo"))
-		return (ft_echo(cmd_args, code));
-	if (ft_strcmp(cmd_args[0], "env") == 0
-		&& ft_strlen(cmd_args[0]) == ft_strlen("env"))
-		return (ft_env(envp, code));
-	if (ft_strcmp(cmd_args[0], "exit") == 0
-		&& ft_strlen(cmd_args[0]) == ft_strlen("exit"))
-		return (ft_exit(cmd_args, code, garbage));
-	if (ft_strcmp(cmd_args[0], "export") == 0
-		&& ft_strlen(cmd_args[0]) == ft_strlen("export"))
-		return (ft_export(envp, code));
-	if (ft_strcmp(cmd_args[0], "pwd") == 0
-		&& ft_strlen(cmd_args[0]) == ft_strlen("pwd"))
-		return (ft_pwd(NULL, NULL, code));
-	if (ft_strcmp(cmd_args[0], "unset") == 0
-		&& ft_strlen(cmd_args[0]) == ft_strlen("unset"))
-		return (ft_unset(&envp, cmd_args + 1, code));
+	if (ft_strcmp((*main)->cmd_args[0], "cd") == 0
+		&& ft_strlen((*main)->cmd_args[0]) == ft_strlen("cd"))
+		return (ft_cd(main));
+	if (ft_strcmp((*main)->cmd_args[0], "echo") == 0
+		&& ft_strlen((*main)->cmd_args[0]) == ft_strlen("echo"))
+		return (ft_echo(main));
+	if (ft_strcmp((*main)->cmd_args[0], "env") == 0
+		&& ft_strlen((*main)->cmd_args[0]) == ft_strlen("env"))
+		return (ft_env(main));
+	if (ft_strcmp((*main)->cmd_args[0], "exit") == 0
+		&& ft_strlen((*main)->cmd_args[0]) == ft_strlen("exit"))
+		return (ft_exit(main, garbage));
+	if (ft_strcmp((*main)->cmd_args[0], "export") == 0
+		&& ft_strlen((*main)->cmd_args[0]) == ft_strlen("export"))
+		return (ft_export(main, garbage));
+	if (ft_strcmp((*main)->cmd_args[0], "pwd") == 0
+		&& ft_strlen((*main)->cmd_args[0]) == ft_strlen("pwd"))
+		return (ft_pwd(main));
+	if (ft_strcmp((*main)->cmd_args[0], "unset") == 0
+		&& ft_strlen((*main)->cmd_args[0]) == ft_strlen("unset"))
+		return (ft_unset(main, (*main)->cmd_args + 1));
 	return (-1);
 }
 
+void	execute_command(t_minishell **main, t_alloc **garbage)
+{
+	(*main)->path = NULL;
+	if (!(*main)->cmd_args)
+	{
+		perror("Error creating command args");
+		exit(EXIT_FAILURE);
+	}
+	(*main)->path = find_command_path((*main)->cmd_args[0], garbage);
+	if (!(*main)->path)
+	{
+		perror("Command not found");
+		exit(127);
+	}
+	execve((*main)->path, (*main)->cmd_args, (*main)->envp);
+	perror("execve");
+	exit(EXIT_FAILURE);
+}
 
-int	execute_non_builtin(char **envp, t_code *code, char **cmd_args, t_alloc *garbage)
+int	execute_non_builtin(t_minishell **main, t_alloc **garbage)
 {
 	pid_t	pid;
 	int		status;
 
 	status = 0;
+	init_process_signal();
 	pid = fork();
 	if (pid == -1)
 	{
@@ -55,115 +74,67 @@ int	execute_non_builtin(char **envp, t_code *code, char **cmd_args, t_alloc *gar
 	}
 	else if (pid == 0)
 	{
-	
-		execute_command(cmd_args, envp, garbage);
-        exit(EXIT_FAILURE);
+		execute_command(main, garbage);
+		exit(EXIT_FAILURE);
 	}
 	else
 	{
-		process_prompt();
 		waitpid(pid, &status, 0);
 		if (WIFEXITED(status))
-		{
-			code->code_status = WEXITSTATUS(status);
-		}
-		
+			(*main)->code_status = WEXITSTATUS(status);
 	}
 	return (-1);
 }
 
-void	heredoc_child(t_pipe *pipes, char **argv, char **envp, t_alloc *garbage)
-{
-	char	*path;
-	char	*new_argv[2];
-
-	close(pipes->fd[1]);
-	if (dup2(pipes->fd[0], STDIN_FILENO) == -1)
-	{
-		perror("dup2");
-		exit(EXIT_FAILURE);
-	}
-	close(pipes->fd[0]);
-	path = find_command_path(argv[0], garbage);
-	if (!path)
-	{
-		perror("path");
-		exit(EXIT_FAILURE);
-	}
-	new_argv[0] = ft_strdup(argv[0], garbage);
-	new_argv[1] = NULL;
-	execve(path, new_argv, envp);
-	perror("execeve failed");
-	exit(EXIT_FAILURE);
-}
-
-int	ft_count(t_command *command, int *i)
-{
-	int	size;
-
-	size = 0;
-	while (command[*i + size].type && command[*i + size].type == WORD)
-		size++;
-	return (size);
-}
-
-char	**create_cmd_args(t_command *command, int *i, t_alloc *garbage)
+char	**create_cmd_args(t_minishell **main, int *i, t_alloc **garbage)
 {
 	char	**cmd_args;
+	int		num_args;
 	int		j;
 
 	j = 0;
-	cmd_args = garb_malloc(sizeof(char *), ft_count(command, i) + 1, &garbage);
+	cmd_args = NULL;
+	num_args = ft_count((*main)->command, i);
+	cmd_args = garb_malloc(sizeof(char *), num_args + 1, garbage);
 	if (!cmd_args)
 		return (NULL);
-	while (command[*i].type == WORD || command[*i].type == CODE)
+	while ((*main)->command[*i].type == WORD || (*main)->command[*i].type == CODE)
 	{
-		cmd_args[j] = ft_strjoin(cmd_args[j], command[*i].word, garbage);
-		printf("args = %s\n", cmd_args[j]);
+		cmd_args[j] = ft_strjoin(cmd_args[j], (*main)->command[*i].word, garbage);
 		if (!cmd_args[j])
 			return (NULL);
 		*i += 1;
 		j++;
 	}
+	cmd_args[j] = NULL;
 	return (cmd_args);
 }
 
-void	handle_command(char *input, t_code *code, char **envp, t_alloc *garbage)
+void	handle_command(t_minishell **main, t_alloc **garbage)
 {
-	t_command	*command;
-	char		**cmd_args;
 	int			i;
 	int			exec;
 
 	i = 0;
 	exec = 0;
-	command = ft_parsing(input, garbage);
-	if (command == NULL)
+	(*main)->cmd_args = NULL;
+	(*main)->command = ft_parsing(main, garbage);
+	if ((*main)->command == NULL)
 		return ;
-	cmd_args = NULL;
-	while (command[i].type != 0)
+	while ((*main)->command[i].type != 0)
 	{
-		if (command[i].type == WORD || command[i].type == 0 || command[i].type == CODE)
-			cmd_args = create_cmd_args(command, &i, garbage);
-		if (command[i].type == PIPE)
+		if ((*main)->command[i].type == WORD || (*main)->command[i].type == 0 || (*main)->command[i].type == CODE)
+			(*main)->cmd_args = create_cmd_args(main, &i, garbage);
+		if ((*main)->command[i].type == PIPE)
+			exec += ft_pipex(main, &i, garbage);
+		if ((*main)->command[i].type >= LEFT_CHEV && (*main)->command[i].type <= DB_LEFT_CHEV)
+			exec += ft_redirect(main, &i, garbage);
+		else if ((*main)->cmd_args != NULL && exec == 0)
 		{
-			ft_multipipes(command, garbage, envp, cmd_args, &i, code);
-			exec++;
-		}
-		if (command[i].type >= LEFT_CHEV && command[i].type <= DB_LEFT_CHEV)
-			exec = init_redirection(command, &i, cmd_args, envp, code);
-		if (cmd_args != NULL && exec == 0)
-		{
-			if (execute_builtins(cmd_args, envp, code, garbage) == -1)
-				execute_non_builtin(envp, code, cmd_args, garbage);
+			if (execute_builtins(main, garbage) == -1)
+				execute_non_builtin(main, garbage);
 		}
 		else
 			i++;
 	}
 }
-
-
-
-
-
-

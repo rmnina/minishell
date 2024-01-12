@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:04:36 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/22 14:49:43 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/12 19:50:38 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,25 +18,25 @@
 // literal if they're between quotes, but this verification will 
 // be made by get_token().
 
-t_command	get_special_type_token(char *line, int *i, t_quotes *quotes, t_alloc *garbage)
+t_command	get_special_type_token(t_minishell **main, int *i, t_alloc **garbage)
 {
 	t_command	token;
 
 	token.word = NULL;
-	if (special_types(line[*i], line[*i + 1]) == DB_LEFT_CHEV \
-	|| special_types(line[*i], line[*i + 1]) == DB_RIGHT_CHEV \
-	|| special_types(line[*i], line[*i + 1]) == CODE)
+	if (special_types((*main)->line[*i], (*main)->line[*i + 1]) == DB_LEFT_CHEV \
+	|| special_types((*main)->line[*i], (*main)->line[*i + 1]) == DB_RIGHT_CHEV \
+	|| special_types((*main)->line[*i], (*main)->line[*i + 1]) == CODE)
 	{
-		token.word = char_to_str(line[*i], garbage);
-		token.word = ft_strjoin_char(token.word, line[*i + 1], garbage);
+		token.word = char_to_str((*main)->line[*i], garbage);
+		token.word = ft_strjoin_char(token.word, (*main)->line[*i + 1], garbage);
 		*i += 2;
 	}
 	else
 	{
-		token.word = char_to_str(line[*i], garbage);
+		token.word = char_to_str((*main)->line[*i], garbage);
 		*i += 1;
 	}
-	get_type(&token, quotes);
+	get_token_type(main, &token);
 	return (token);
 }
 
@@ -46,21 +46,23 @@ t_command	get_special_type_token(char *line, int *i, t_quotes *quotes, t_alloc *
 // one if it runs into a space that is not between quotes : this 
 // indicates the end of the token.
 
-int	parse_quotes(char *line, int *i, t_quotes *quotes)
+int	parse_quotes(t_minishell **main, int *i)
 {
-	if (line[*i] == SINGLE_QUOTE && quotes->case_double == FALSE)
+	if (((*main)->parser->case_double == FALSE && (*main)->parser->case_single == FALSE \
+	&& (*main)->line[*i] == 32) || (*main)->line[*i] == '\0')
+		return (1);
+	if ((*main)->line[*i] == SINGLE_QUOTE && (*main)->parser->case_double == FALSE)
 	{
 		*i += 1;
+		is_in_quote((*main)->line[*i], (*main)->parser);
 		return (2);
 	}
-	else if (line[*i] == DOUBLE_QUOTE && quotes->case_single == FALSE)
+	else if ((*main)->line[*i] == DOUBLE_QUOTE && (*main)->parser->case_single == FALSE)
 	{
 		*i += 1;
+		is_in_quote((*main)->line[*i], (*main)->parser);
 		return (3);
 	}
-	else if ((line[*i] == SPACE && quotes->case_double == FALSE \
-	&& quotes->case_single == FALSE) || line[*i] == '\0')
-		return (1);
 	return (0);
 }
 
@@ -68,57 +70,41 @@ int	parse_quotes(char *line, int *i, t_quotes *quotes)
 // which are the structures t_command that are gonna be placed in the array
 // treated by the exec. 
 
-t_command	get_token(char *line, t_quotes *quotes, int *i, t_alloc *garbage)
+t_command	get_token(t_minishell **main, int *i, t_alloc **garbage)
 {
 	t_command	token;
 
 	init_get_token(&token);
-	while (line[*i])
+	while ((*main)->line[*i])
 	{
-		is_in_quote(line[*i], quotes);
-		if (parse_quotes(line, i, quotes) == 1 || !line[*i])
-			break ;
-		else if ((special_types(line[*i], line[*i + 1]) == EXPAND \
-		&& quotes->case_single == FALSE) || quotes->var != NULL)
-		{
-			if (get_lex_expand(line, i, quotes, &token, garbage) == 1)
-				break ;
-			else if (get_lex_expand(line, i, quotes, &token, garbage) == -1)
-				*i += 1;
-		}
-		else if (quotes->case_quotes == FALSE && special_types(line[*i], line[*i + 1]) != 0 \
-		&& special_types(line[*i], line[*i + 1]) != EXPAND)
+		is_in_quote((*main)->line[*i], (*main)->parser);
+		if (special_types((*main)->line[*i], (*main)->line[*i + 1]) == EXPAND \
+		&& (*main)->parser->case_single == FALSE)
+			get_lex_expand(main, i, &token, garbage);
+		if ((*main)->parser->case_quotes == FALSE && special_types((*main)->line[*i], (*main)->line[*i + 1]) != 0 \
+		&& special_types((*main)->line[*i], (*main)->line[*i + 1]) != EXPAND)
 		{
 			if (token.word != NULL)
 				break ;
 			else
-				return (token = get_special_type_token(line, i, quotes, garbage));
+				return (token = get_special_type_token(main, i, garbage));
 		}
-		else if (!parse_quotes(line, i, quotes))
+		if (parse_quotes(main, i) == 1 || !(*main)->line[*i])
+			break ;
+		else if (!parse_quotes(main, i) && (*main)->line[*i] != '$')
 		{
-			token.word = ft_strjoin_char(token.word, line[*i], garbage);
+			token.word = ft_strjoin_char(token.word, (*main)->line[*i], garbage);
 			*i += 1;
 		}
 	}
 	return (token);
 }
 
-// This function creates a null t_command token. It will be added at the
-// end of the array, so we can iterate on it by having an exit condition.
-
-t_command	token_null(t_command *token, t_alloc *garbage)
-{
-	token->word = garb_malloc(sizeof(char), 1, &garbage);
-	token->word[0] = '\0';
-	token->type = 0;
-	return (*token);
-}
-
 // This functions creates the array with all of the structures. It also
 // verifies if the env variable have been treated accordingly, and gets 
 // the rest of them if not.
 
-t_command	*get_command(char *line, t_quotes *quotes, t_alloc *garbage)
+t_command	*get_command(t_minishell **main, t_alloc **garbage)
 {
 	t_command	*command;
 	t_command	token;
@@ -126,14 +112,10 @@ t_command	*get_command(char *line, t_quotes *quotes, t_alloc *garbage)
 
 	i = 0;
 	command = NULL;
-	while (line[i])
+	while ((*main)->line[i])
 	{
-		if (line[i] == SPACE)
-		{
-			while (line[i] && line[i] == SPACE)
-				i++;
-		}
-		token = get_token(line, quotes, &i, garbage);
+		check_spaces(main, &i);
+		token = get_token(main, &i, garbage);
 		if (token.word == NULL)
 			i++;
 		else
@@ -142,55 +124,30 @@ t_command	*get_command(char *line, t_quotes *quotes, t_alloc *garbage)
 				token.type = WORD;
 			command = ft_struct_join(command, token, garbage);
 		}
-	}
-	if (!line[i] && quotes->var != NULL)
-	{
-		while (quotes->var != NULL)
+		if ((*main)->parser->var != NULL)
 		{
-			get_lex_expand(line, &i, quotes, &token, garbage);
-			command = ft_struct_join(command, token, garbage);
+			while ((*main)->parser->var != NULL)
+			{
+				init_get_token(&token);
+				get_lex_expand(main, &i, &token, garbage);
+				command = ft_struct_join(command, token, garbage);
+			}
 		}
 	}
-	command = ft_struct_join(command, token_null(&token, garbage), garbage);
-	for (int j = 0; command[j].type != 0; j++)
-		printf("token = %s\n", command[j].word);
-	return (command);
+	return (command = ft_struct_join(command, token_null(&token, garbage), garbage));
 }
 
-// int	main(void)
-// {
-// 	t_quotes	quotes;
-// 	t_command	*command;
-// 	t_expand	expand;
-// 	char		*line;
+t_command	*ft_parsing(t_minishell **main, t_alloc **garbage)
+{
+	t_command	*command;
+	t_parser	*parser;
 
-// 	expand.left_expand = FALSE;
-// 	quotes.case_double = FALSE;
-// 	quotes.case_single = FALSE;
-// 	quotes.var = NULL;
-// 	quotes.vpos = 0;
-// 	command = NULL;
-// 	while (1)
-// 	{
-// 		line = readline("> ");
-// 		if (!line)
-// 		{
-// 			printf("exit ctrl+D\n");
-// 			break ;
-// 		}
-// 		if (line[0] != 0)
-// 		{
-// 			add_history(line);
-// 			error_quotes(line, &quotes);
-// 			command = get_command(line, &quotes, &expand);
-// 			ft_error_lexer(command);
-// 			for (int i = 0; command[i + 1].word != NULL; i++)
-// 			{
-// 				printf("word[%d] = %s\n", i, command[i].word);
-// 				printf("type[%d] = %d\n", i, command[i].type);
-// 			}
-// 		}
-// 		clear_history();
-// 		ft_free_command(command);
-// 	}
-// }
+	parser = init_parser(garbage);
+	(*main)->parser = parser;
+	if (error_quotes(main) == -1)
+		return (command = NULL);
+	command = get_command(main, garbage);
+	if (ft_error_lexer(command) == -1)
+		return (command = NULL);
+	return (command);
+}

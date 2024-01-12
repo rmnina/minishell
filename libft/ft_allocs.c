@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_allocs.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 19:16:31 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/13 18:16:22 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/09 18:11:47 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ void	add_garbage_node(t_alloc **garbage, t_alloc *new)
 	}
 	else
 		*garbage = new;
+	// printf("node = %p, garbage = %p\n", new->adr, garbage);
 }
 
 void	*garb_malloc(size_t type, size_t size, t_alloc **garbage)
@@ -53,14 +54,15 @@ void	*garb_malloc(size_t type, size_t size, t_alloc **garbage)
 	void	*ptr;
 	t_alloc	*new;
 
+	ptr = NULL;
 	if (size && type)
-		ptr = malloc(type * size + 1);
+		ptr = malloc(type * size);
 	if (!ptr)
 		return (NULL);
-	ft_memset(ptr, 0, type * size + 1);
+	ft_memset(ptr, 0, (type * size));
 	new = create_garbage_node(ptr);
 	if (*garbage == NULL)
-		*garbage = new;
+		(*garbage) = new;
 	else
 		add_garbage_node(garbage, new);
 	return (ptr);
@@ -68,46 +70,25 @@ void	*garb_malloc(size_t type, size_t size, t_alloc **garbage)
 
 void	free_garbage(t_alloc **garbage, int i)
 {
-	t_alloc	*pos;
+	t_alloc	*temp;
 
-	pos = *garbage;
-	if (!garbage)
+	temp = *garbage;
+	if (!temp)
 		return ;
-	while (pos)
+	while (temp != NULL)
 	{
-		pos = (*garbage)->next;
-		(*garbage)->next = NULL;
-		if ((*garbage)->adr)
-			free((*garbage)->adr);
-		(*garbage)->adr = NULL;
-		free(*garbage);
-		*garbage = pos;
+		*garbage = temp->next;
+		temp->next = NULL;
+		if (temp->adr != NULL)
+		{
+			free(temp->adr);
+			temp->adr = NULL;
+		}
+		free(temp);
+		temp = *garbage;
 	}
-	*garbage = NULL;
+	garbage = NULL;
 	if (i == 1)
 		printf("Error malloc : please try again\n");
 }
 
-// int main(void)
-// {
-// 	t_alloc *garbage = NULL;
-// 	char *str = garb_malloc(sizeof(char), 5, &garbage);
-// 	int *array = garb_malloc(sizeof(int), 5, &garbage);
-// 	str[0] = 's';
-// 	str[1] = 'a';
-// 	str[2] = 'l';
-// 	str[3] = 'u';
-// 	array[0] = 6;
-// 	array[1] = 1;
-// 	array[2] = 2;
-// 	array[3] = 3;
-// 	if (str)
-// 		printf("malloc 1 success\n");
-// 	if (array)
-// 		printf("malloc 2 success\n");
-// 	if (str)
-// 		printf("str 1 = %c\n", str[0]);
-// 	if (array)
-// 		printf("array 1 = %d\n", array[0]);
-// 	free_garbage(&garbage);
-// }

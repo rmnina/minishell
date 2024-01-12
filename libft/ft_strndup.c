@@ -1,29 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   frees.c                                            :+:      :+:    :+:   */
+/*   ft_strndup.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/27 02:53:43 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/22 14:49:48 by jdufour          ###   ########.fr       */
+/*   Created: 2023/12/28 17:07:39 by juandrie          #+#    #+#             */
+/*   Updated: 2024/01/09 00:02:02 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "libft.h"
 
-void	ft_free_command(t_command *command)
+char	*ft_strndup(char *src, size_t n, t_alloc **garbage)
 {
-	int	i;
-	
-	if (!command)
-		return;
-	i = 0;
-	while (command[i].word != NULL)
+	char	*dest;
+	size_t	len;
+
+	len = 0;
+	while (src[len] && len < n)
+		len++;
+	dest = garb_malloc(sizeof(char), (len + 1), garbage);
+	if (!(dest))
+		return (NULL);
+	dest[len] = '\0';
+	while (len--)
 	{
-		if (command[i].word)
-			free(command[i].word);
-		i++;
+		dest[len] = src[len];
 	}
-	free(command);
+	return (dest);
 }

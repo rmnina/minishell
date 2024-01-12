@@ -6,7 +6,7 @@
 #    By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/14 14:15:25 by jdufour           #+#    #+#              #
-#    Updated: 2023/12/22 14:47:49 by jdufour          ###   ########.fr        #
+#    Updated: 2024/01/11 10:55:21 by jdufour          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,28 +22,31 @@ SRCS = srcs/main.c \
 	srcs/builtins/echo.c \
 	srcs/builtins/env.c \
 	srcs/builtins/exit.c \
-	srcs/builtins/export.c \
+	srcs/builtins/ft_export.c \
+	srcs/builtins/export_utils.c \
 	srcs/builtins/pwd.c \
 	srcs/builtins/unset.c \
-	srcs/builtins/controlc.c \
-	srcs/exec/exec_pipe.c \
+	srcs/builtins/signals.c \
+	srcs/exec/pipe.c \
 	srcs/exec/exec.c \
 	srcs/exec/heredoc.c \
 	srcs/exec/path.c \
 	srcs/exec/redirection.c \
 	srcs/lexer/lexer.c \
 	srcs/parser/expand.c \
-	srcs/parser/init.c \
-	srcs/parser/special_char.c \
+	srcs/parser/init_parser.c \
+	srcs/parser/types.c \
 	srcs/parser/tokens.c \
-	srcs/utils/frees.c \
+	srcs/utils/init_structs.c \
+	srcs/utils/heredoc_utils.c \
 	srcs/utils/joins.c \
+	srcs/utils/toolbox_utils.c \
 
 OBJS = $(SRCS:.c=.o)
 
 CC = gcc
 
-FLAGS = -g -ggdb -Wall -Wextra -Werror
+FLAGS = -g3 -ggdb -Wall -Wextra -Werror
 
 RM = rm -rf
 

@@ -6,13 +6,13 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 10:21:29 by juandrie          #+#    #+#             */
-/*   Updated: 2023/12/22 14:49:25 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/11 06:42:34 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-char	*find_command_in_segment(char *segment, char *command, t_alloc *garbage)
+char	*find_command_in_segment(char *segment, char *command, t_alloc **garbage)
 {
 	char	full_path[PATH_MAX];
 
@@ -27,7 +27,7 @@ char	*find_command_in_segment(char *segment, char *command, t_alloc *garbage)
 	return (NULL);
 }
 
-char	*find_command_path(char *command, t_alloc *garbage)
+char	*find_command_path(char *command, t_alloc **garbage)
 {
 	char	*path_env;
 	char	*start;
@@ -53,25 +53,4 @@ char	*find_command_path(char *command, t_alloc *garbage)
 		end = ft_strchr(start, ':');
 	}
 	return (find_command_in_segment(start, command, garbage));
-}
-
-void	execute_command(char **cmd_args, char **envp, t_alloc *garbage)
-{
-	char	*path;
-
-	path = NULL;
-	if (!cmd_args)
-	{
-		perror("Error creating command args");
-		exit(EXIT_FAILURE);
-	}
-	path = find_command_path(cmd_args[0], garbage);
-	if (!path)
-	{
-		perror("Command not found");
-		exit(127);
-	}
-	execve(path, cmd_args, envp);
-	perror("execve");
-	exit(EXIT_FAILURE);
 }

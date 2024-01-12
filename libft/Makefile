@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+         #
+#    By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/31 12:01:53 by jdufour           #+#    #+#              #
-#    Updated: 2023/12/08 21:17:19 by jdufour          ###   ########.fr        #
+#    Updated: 2023/12/28 17:13:09 by juandrie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,6 +17,7 @@ ft_isprint.c\
 ft_memmove.c\
 ft_putnbr_fd.c\
 ft_strdup.c\
+ft_strndup.c\
 ft_strlcpy.c\
 ft_strnstr.c\
 ft_toupper.c\

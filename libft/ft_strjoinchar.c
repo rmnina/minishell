@@ -6,13 +6,13 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/19 01:57:10 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/10 00:38:43 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/09 00:02:31 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_strjoin_char(char *s1, const char c, t_alloc *garbage)
+char	*ft_strjoin_char(char *s1, const char c, t_alloc **garbage)
 {
 	int		size;
 	char	*res;
@@ -25,7 +25,7 @@ char	*ft_strjoin_char(char *s1, const char c, t_alloc *garbage)
 		while (s1 && s1[size])
 			size++;
 	}
-	res = garb_malloc(sizeof(char), size + 2, &garbage);
+	res = garb_malloc(sizeof(char), size + 2, garbage);
 	if (!(res))
 		return (NULL);
 	if (size == 0)
