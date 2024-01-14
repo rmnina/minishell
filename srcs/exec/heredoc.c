@@ -6,7 +6,7 @@
 /*   By: julietteandrieux <julietteandrieux@stud    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 16:22:53 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/14 15:58:55 by julietteand      ###   ########.fr       */
+/*   Updated: 2024/01/14 17:46:31 by julietteand      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,7 @@ void	read_add(t_minishell **main, int *j, t_alloc **garbage)
 		write((*main)->heredoc_fd[1], "\n", 1);
 		free((*main)->h_line);
 	}
+
 }
 
 int	ft_heredoc(t_minishell **main, int *i, t_alloc **garbage)
@@ -104,7 +105,7 @@ int	ft_heredoc(t_minishell **main, int *i, t_alloc **garbage)
 	(*main)->h_delimiter = get_delimiter(main, i, garbage);
 	while ((*main)->h_delimiter[j])
 	{	
-		//printf("Creating a pipe in ft_heredoc\n");
+		printf("Creating a pipe in ft_heredoc\n");
 		if (pipe((*main)->heredoc_fd) == -1)
 			return (-1);
 		read_add(main, &j, garbage);
@@ -116,6 +117,15 @@ int	ft_heredoc(t_minishell **main, int *i, t_alloc **garbage)
 		return (-1);
 	}
 	close((*main)->heredoc_fd[0]);
+	if ((*main)->command[*i].type == PIPE)
+    {
+        printf("Redirection pour PIPE dans heredoc_child, fd[0] = %d, fd[1] = %d\n", (*main)->pipe_fd[0], (*main)->pipe_fd[1]);
+        if (dup2((*main)->pipe_fd[1], STDOUT_FILENO) == -1)
+        {
+            return (-1);
+        }
+        close((*main)->pipe_fd[1]);
+    }
 	return (0);
 }
 

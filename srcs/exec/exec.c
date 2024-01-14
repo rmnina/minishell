@@ -6,7 +6,7 @@
 /*   By: julietteandrieux <julietteandrieux@stud    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/14 16:19:22 by julietteand      ###   ########.fr       */
+/*   Updated: 2024/01/14 17:26:08 by julietteand      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ void	execute_command(t_minishell **main, t_alloc **garbage)
 		perror("Command not found");
 		exit(127);
 	}
+	printf("Executing command: %s\n", (*main)->cmd_args[0]);
 	execve((*main)->path, (*main)->cmd_args, (*main)->envp);
 	perror("execve");
 	exit(EXIT_FAILURE);
@@ -65,7 +66,7 @@ int	execute_non_builtin(t_minishell **main, t_alloc **garbage)
 	int		status;
 
 	status = 0;
-	init_process_signal();
+	//init_process_signal();
 	pid = fork();
 	if (pid == -1)
 	{
