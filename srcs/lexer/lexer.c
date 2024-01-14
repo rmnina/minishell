@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 02:11:36 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/14 04:47:07 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/14 17:36:35 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,8 +78,16 @@ int	error_nonexistent_type(t_command *command, t_minishell **main)
 
 	i = 0;
 	j = 1;
+	if (command[i].type && !command[j].type && \
+	(command[i].type >= LEFT_CHEV && command[i].type <= DB_LEFT_CHEV))
+		return \
+		(ft_error(main, "minishell: syntax error near unexpected token 'newline'", 2));
 	while (command[i].type && command[j].type)
 	{
+		if (command[i].type && !command[j].type \
+		&& (command[i].type >= LEFT_CHEV && command[i].type <= DB_LEFT_CHEV))
+			return \
+			(ft_error(main, "minishell: syntax error near unexpected token 'newline'", 2));
 		if (command[i].type && command[j].type && \
 		((command[i].type == DB_RIGHT_CHEV && command[j].type == RIGHT_CHEV) || \
 		(command[i].type == DB_RIGHT_CHEV && command[j].type == DB_RIGHT_CHEV)))

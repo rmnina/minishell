@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:20:25 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/14 06:24:35 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/14 17:23:08 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,10 +87,10 @@ void	handle_parent_process(t_minishell **main, int *i, int *old_fd, int *status)
 		read((*main)->com[0], i, sizeof(*i));
 		close((*main)->com[0]);
 	}
-	// if ((*main)->fd < -1)
-	// 	dup2((*main)->pipe_fd[0], (*main)->fd * -1);
-	// else if ((*main)->fd > 0)
-	// 	dup2((*main)->pipe_fd[1], (*main)->fd);
+	if ((*main)->fd < -1)
+		dup2((*main)->pipe_fd[0], (*main)->fd * -1);
+	else if ((*main)->fd > 0)
+		dup2((*main)->pipe_fd[1], (*main)->fd);
 	if (WIFEXITED(*status))
 		(*main)->code_status = WEXITSTATUS(*status);
 }
