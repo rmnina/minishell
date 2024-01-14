@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 20:18:37 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/12 19:38:13 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/14 03:13:36 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,35 @@ void	init_get_expand(t_minishell **main, t_command *token, int *i, t_alloc **gar
 	if (!token->word)
 		token->word = NULL;
 	token->type = 0;
+}
+
+int	is_only_quotes(char *line, int *i)
+{
+	int	j;
+	
+	j = *i;
+	if (line[j] == SINGLE_QUOTE)
+	{
+		while (line[j] == SINGLE_QUOTE)
+			j++;
+		if (line[j] == SPACE)
+		{
+			*i = j;
+			return (1);
+		}
+	}
+	j = *i;
+	if (line[j] == DOUBLE_QUOTE)
+	{
+		while (line[j] == DOUBLE_QUOTE)
+			j++;
+		if (line[j] == SPACE)
+		{
+			*i = j;
+			return (1);
+		}
+	}
+	return (0);
 }
 
 void	init_get_token(t_command *token)

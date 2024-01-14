@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:04:44 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/12 19:36:50 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/14 02:46:37 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,9 +82,7 @@ int	special_types(char c1, char c2)
 
 void	get_token_type(t_minishell **main, t_command *token)
 {
-	if (!token->word)
-		return ;
-	else if (token->word[0] == '|' && (*main)->parser->case_quotes == FALSE)
+	if (token->word[0] == '|' && (*main)->parser->case_quotes == FALSE)
 		token->type = PIPE;
 	else if (token->word[0] == '<' && token->word[1] && token->word[1] == '<' \
 	&& (*main)->parser->case_quotes == FALSE)
@@ -99,8 +97,8 @@ void	get_token_type(t_minishell **main, t_command *token)
 	else if (token->word[0] == '$' && token->word[1] && token->word[1] == '?' \
 	&& (*main)->parser->case_quotes == FALSE)
 		token->type = CODE;
-	else if (is_expand(token->word) && (*main)->parser->case_single == FALSE)
-		token->type = EXPAND;
+	// else if (is_expand(token->word) && (*main)->parser->case_single == FALSE)
+	// 	token->type = EXPAND;
 	else
 		token->type = WORD;
 }

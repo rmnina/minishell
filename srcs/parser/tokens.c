@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:04:36 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/12 19:50:38 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/14 03:14:36 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,8 @@ t_command	get_token(t_minishell **main, int *i, t_alloc **garbage)
 	t_command	token;
 
 	init_get_token(&token);
+	// if (is_only_quotes((*main)->line, i))
+	// 	return (token);
 	while ((*main)->line[*i])
 	{
 		is_in_quote((*main)->line[*i], (*main)->parser);
@@ -116,14 +118,11 @@ t_command	*get_command(t_minishell **main, t_alloc **garbage)
 	{
 		check_spaces(main, &i);
 		token = get_token(main, &i, garbage);
-		if (token.word == NULL)
-			i++;
-		else
-		{
-			if (!token.type || token.type < 1 || token.type > 8)
-				token.type = WORD;
-			command = ft_struct_join(command, token, garbage);
-		}
+		if (!token.word)
+			token.word = garb_malloc(sizeof(char), 1, garbage);
+		if (!token.type || token.type < 1 || token.type > 8)
+			token.type = WORD;
+		command = ft_struct_join(command, token, garbage);
 		if ((*main)->parser->var != NULL)
 		{
 			while ((*main)->parser->var != NULL)
@@ -143,6 +142,8 @@ t_command	*ft_parsing(t_minishell **main, t_alloc **garbage)
 	t_parser	*parser;
 
 	parser = init_parser(garbage);
+	if (parser == NULL)
+		return (NULL);
 	(*main)->parser = parser;
 	if (error_quotes(main) == -1)
 		return (command = NULL);
