@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:04:36 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/14 03:14:36 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/14 05:02:20 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,15 +54,25 @@ int	parse_quotes(t_minishell **main, int *i)
 	if ((*main)->line[*i] == SINGLE_QUOTE && (*main)->parser->case_double == FALSE)
 	{
 		*i += 1;
-		is_in_quote((*main)->line[*i], (*main)->parser);
 		return (2);
 	}
 	else if ((*main)->line[*i] == DOUBLE_QUOTE && (*main)->parser->case_single == FALSE)
 	{
 		*i += 1;
-		is_in_quote((*main)->line[*i], (*main)->parser);
 		return (3);
 	}
+	return (0);
+}
+
+int	is_quotes(t_minishell **main, int *i)
+{
+	if (((*main)->parser->case_double == FALSE && (*main)->parser->case_single == FALSE \
+	&& (*main)->line[*i] == 32) || (*main)->line[*i] == '\0')
+		return (1);
+	if ((*main)->line[*i] == SINGLE_QUOTE && (*main)->parser->case_double == FALSE)
+		return (2);
+	else if ((*main)->line[*i] == DOUBLE_QUOTE && (*main)->parser->case_single == FALSE)
+		return (3);
 	return (0);
 }
 
@@ -75,8 +85,6 @@ t_command	get_token(t_minishell **main, int *i, t_alloc **garbage)
 	t_command	token;
 
 	init_get_token(&token);
-	// if (is_only_quotes((*main)->line, i))
-	// 	return (token);
 	while ((*main)->line[*i])
 	{
 		is_in_quote((*main)->line[*i], (*main)->parser);
@@ -93,7 +101,7 @@ t_command	get_token(t_minishell **main, int *i, t_alloc **garbage)
 		}
 		if (parse_quotes(main, i) == 1 || !(*main)->line[*i])
 			break ;
-		else if (!parse_quotes(main, i) && (*main)->line[*i] != '$')
+		else if (!is_quotes(main, i) && (*main)->line[*i] != '$')
 		{
 			token.word = ft_strjoin_char(token.word, (*main)->line[*i], garbage);
 			*i += 1;
@@ -148,7 +156,7 @@ t_command	*ft_parsing(t_minishell **main, t_alloc **garbage)
 	if (error_quotes(main) == -1)
 		return (command = NULL);
 	command = get_command(main, garbage);
-	if (ft_error_lexer(command) == -1)
+	if (ft_error_lexer(command, main) == -1)
 		return (command = NULL);
 	return (command);
 }

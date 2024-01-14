@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:04:44 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/14 02:46:37 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/14 04:07:51 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,11 +94,11 @@ void	get_token_type(t_minishell **main, t_command *token)
 		token->type = DB_RIGHT_CHEV;
 	else if (token->word[0] == '>' && (*main)->parser->case_quotes == FALSE)
 		token->type = RIGHT_CHEV;
-	else if (token->word[0] == '$' && token->word[1] && token->word[1] == '?' \
-	&& (*main)->parser->case_quotes == FALSE)
-		token->type = CODE;
-	// else if (is_expand(token->word) && (*main)->parser->case_single == FALSE)
-	// 	token->type = EXPAND;
+	else if (is_expand(token->word) && (*main)->parser->case_single == FALSE)
+		token->type = EXPAND;
+	// else if (token->word[0] == '$' && token->word[1] && token->word[1] == '?' 
+	// && (*main)->parser->case_quotes == FALSE)
+	// 	token->type = CODE;
 	else
 		token->type = WORD;
 }
@@ -114,7 +114,7 @@ int	is_expand(char *line)
 	i = 0;
 	while (line[i])
 	{
-		if (line[i] == EXPAND && line[i + 1] && ft_isalnum(line[i + 1]))
+		if (line[i] == '$' && line[i + 1] && ft_isalnum(line[i + 1]))
 			return (1);
 		i++;
 	}

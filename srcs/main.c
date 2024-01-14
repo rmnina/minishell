@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:45:11 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/12 17:05:07 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/14 06:09:45 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,11 @@ int	ft_minishell(t_minishell *main, t_alloc **garbage)
 		} 
 		if (main->line)
 			free(main->line);
+		if (g_sigstatus != 0)
+			main->code_status = g_sigstatus;
+		g_sigstatus = 0;
+		// if (garbage)
+		// 	free_garbage(garbage, 0);
 		restore_minishell();
 	}
 	return (0);
@@ -59,6 +64,10 @@ int	main(int argc, char **argv, char **envp)
 		return (2);
 	exit_status = ft_minishell(main, &garbage);
 	clear_history();
+	// if (main->cd_path)
+	// 	free(main->cd_path);
+	// if (main->last_cd_path)
+	// 	free(main->last_cd_path);
 	if (garbage)
 		free_garbage(&garbage, 0);
 	return (exit_status);

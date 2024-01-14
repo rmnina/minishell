@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_allocs.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 19:16:31 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/09 18:11:47 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/14 01:09:46 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,7 @@ void	free_garbage(t_alloc **garbage, int i)
 		free(temp);
 		temp = *garbage;
 	}
+	*garbage = NULL;
 	garbage = NULL;
 	if (i == 1)
 		printf("Error malloc : please try again\n");

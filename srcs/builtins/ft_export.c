@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 05:00:11 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/11 07:48:33 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/14 01:49:49 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,24 +73,26 @@ void	handle_value_case(t_minishell **main, char *arg, t_alloc **garbage)
 		if (is_valid_identifier(arg))
 		{
 			export.new_var = ft_strjoin(arg, "=\"\"", garbage);
-			add_or_update_env_var(&(*main)->envp, export.new_var, garbage);
+			add_or_update_env_var((*main)->envp, export.new_var, garbage);
 		}
 		return ;
 	}
 	export.var_name = ft_strndup(arg, export.equal - arg, garbage);
 	value = export.equal + 1;
 	compare_values(&export, &value, garbage);
-	add_or_update_env_var(&(*main)->envp, export.new_var, garbage);
+	add_or_update_env_var((*main)->envp, export.new_var, garbage);
 }
 
-void    export_variable(t_minishell **main, char *equal, t_alloc **garbage)
+void    export_variable(t_minishell **main, t_alloc **garbage)
 {
-    int i;
+    char	*equal;
+	int 	i;
 
-    i = 1;
+    equal = NULL;
+	i = 1;
     while ((*main)->cmd_args[i] != NULL)
 	{
-	    equal = ft_strchr((*main)->cmd_args[i], '=');
+		equal = ft_strchr((*main)->cmd_args[i], '=');
 		if (equal)
 		{
 			if (equal && is_valid_identifier((*main)->cmd_args[i]))
@@ -99,7 +101,7 @@ void    export_variable(t_minishell **main, char *equal, t_alloc **garbage)
 		else
 		{
 			if (is_valid_identifier((*main)->cmd_args[i]))
-				add_or_update_env_var(&(*main)->envp, (*main)->cmd_args[i], garbage);
+				add_or_update_env_var((*main)->envp, (*main)->cmd_args[i], garbage);
 		}
 		i++;
 	}
@@ -107,27 +109,10 @@ void    export_variable(t_minishell **main, char *equal, t_alloc **garbage)
 
 int ft_export(t_minishell **main, t_alloc **garbage)
 {
-	int		i;
-	char	*equal;
-
-	equal = NULL;
 	if ((*main)->cmd_args[1] == NULL)
-	{
-		i = 0;
-		while ((*main)->envp[i] != NULL)
-		{
-			equal = ft_strchr((*main)->envp[i], '=');
-			if (equal && *(equal + 1) == '\0')
-				printf("export %.*s=\"\"\n", (int)(equal - (*main)->envp[i]), (*main)->envp[i]);
-			else
-				printf("export %s\n", (*main)->envp[i]);
-			i++;
-		}
-		(*main)->code_status = 0;
-		return ((*main)->code_status);
-	}
+		return (ft_env(main));
 	else
-        export_variable(main, equal, garbage);
+        export_variable(main, garbage);
 	(*main)->code_status = 0;
 	return ((*main)->code_status);
 }

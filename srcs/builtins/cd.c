@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 17:31:57 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/11 12:11:22 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/14 06:11:15 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,9 @@ bool	change_directory(t_minishell **main, char *path)
 		free(new_path);
 		return (false);
 	}
-	free((*main)->last_cd_path);
 	(*main)->last_cd_path = (*main)->cd_path;
 	(*main)->cd_path = new_path;
+	free(new_path);
 	return (true);
 }
 

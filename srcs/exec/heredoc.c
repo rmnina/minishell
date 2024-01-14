@@ -6,77 +6,97 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 16:22:53 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/12 17:02:22 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/14 00:17:41 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	ft_heredoc_args(t_minishell **main, int i, t_alloc **garbage)
+int	replace_var(t_minishell **main, char **new_line, int *i, t_alloc **garbage)
 {
-	char	*new_argv[2];
+	char	*name;
+	char	*var;
 
-	if (is_builtin((*main)->cmd_args[i]))
+	name = NULL;
+	var = NULL;
+	if ((*main)->h_line[*i] == '$')
 	{
-		execute_builtins(main, garbage);
-	}
-	else
-	{
-		(*main)->path = find_command_path((*main)->cmd_args[i], garbage);
-		if (!(*main)->path)
-			exit(EXIT_FAILURE);
-		new_argv[0] = ft_strdup((*main)->cmd_args[i], garbage);
-		if (!new_argv[0])
-			exit (EXIT_FAILURE);
-		new_argv[1] = NULL;
-		execve((*main)->path, new_argv, (*main)->envp);
-		exit(EXIT_FAILURE);
-	}
-}
-
-void	heredoc_parent(t_minishell **main)
-{
-	int	status;
-
-	status = 0;
-	close((*main)->pipe_fd[0]);
-	close((*main)->pipe_fd[1]);
-	if (g_sigstatus == 130)
-		exit(130);
-	waitpid((*main)->pid, &status, 0);
-	if (WIFEXITED(status))
-	{
-		(*main)->code_status = WEXITSTATUS(status);
-		if ((*main)->code_status == SPECIAL_EXIT_CODE)
-			exit((*main)->code_status);
-	}
-}
-
-int	heredoc_child(t_minishell **main, int *i , t_alloc **garbage)
-{
-	(*main)->path = NULL;
-	if (dup2((*main)->pipe_fd[0], STDIN_FILENO) == -1)
-		exit(EXIT_FAILURE);
-	close((*main)->pipe_fd[0]);
-	close((*main)->pipe_fd[1]);
-	if ((*main)->command[*i].type == PIPE)
-	{
-		if (dup2((*main)->pipe_fd[0], STDIN_FILENO) == -1)
+		if ((*main)->h_line[*i + 1] && (*main)->h_line[*i + 1] == '?')
 		{
-			return (-1);
+			*i += 2;
+			*new_line = ft_strjoin(*new_line, ft_itoa((*main)->code_status), garbage);
 		}
-		return (0);
+		else if ((*main)->h_line[*i + 1] && (ft_isalnum((*main)->h_line[*i + 1]) || (*main)->h_line[*i + 1] == UNDERSCORE))
+		{
+			name = get_env_var_name((*main)->h_line, i, garbage);
+			var = ft_getenv(main, name);
+			if (var)
+				*new_line = ft_strjoin(*new_line, var, garbage);
+			(*i)--;
+		}
+		return (1);
 	}
-	if (ft_strcmp((*main)->cmd_args[0], "<<"))
-		ft_heredoc_args(main, 0, garbage);
-	else
-		ft_heredoc_args(main, 2, garbage);
-	//exit(EXIT_SUCCESS);
 	return (0);
 }
 
+char	*heredoc_get_expand(t_minishell **main, t_alloc **garbage)
+{
+	int		i;
+	char	*new_line;
 
-void	init_heredoc(t_minishell **main, int *i, t_alloc **garbage)
+	i = 0;
+	new_line = NULL;
+	while ((*main)->h_line[i])
+	{
+		if (!replace_var(main, &new_line, &i, garbage) && (*main)->h_line[i] != '$')
+			new_line = ft_strjoin_char(new_line, (*main)->h_line[i], garbage);
+		i++;
+	}
+	return (new_line);
+}
+
+char	**get_delimiter(t_minishell **main, int *i, t_alloc **garbage)
+{
+	int		j;
+	int		size;
+
+	j = 0;
+	size = 0;
+    while ((*main)->command[*i + j].type == DB_LEFT_CHEV)
+	{
+		j += 2;
+		size++;
+	}
+    j = 0;
+	(*main)->h_delimiter = garb_malloc(sizeof(char *), size + 1, garbage);
+	while ((*main)->command[*i].type == DB_LEFT_CHEV)
+	{
+		(*i)++;
+		(*main)->h_delimiter[j] = ft_strdup((*main)->command[*i].word, garbage);
+		if (!(*main)->h_delimiter[j])
+			return (NULL);
+		j++;
+		(*i)++;
+	}
+	return ((*main)->h_delimiter);
+}
+
+void	read_add(t_minishell **main, int *j, t_alloc **garbage)
+{
+	while (42)
+	{
+		(*main)->h_line = readline("> ");
+		if (!(*main)->h_line || ft_strcmp((*main)->h_line, (*main)->h_delimiter[*j]) == 0)
+			break ;
+		if (heredoc_is_expand((*main)->h_line))
+			(*main)->h_line = heredoc_get_expand(main, garbage);
+		write((*main)->heredoc_fd[1], (*main)->h_line, ft_strlen((*main)->h_line));
+		write((*main)->heredoc_fd[1], "\n", 1);
+		free((*main)->h_line);
+	}
+}
+
+int	ft_heredoc(t_minishell **main, int *i, t_alloc **garbage)
 {
 	int	j;
 
@@ -84,31 +104,15 @@ void	init_heredoc(t_minishell **main, int *i, t_alloc **garbage)
 	(*main)->h_delimiter = get_delimiter(main, i, garbage);
 	while ((*main)->h_delimiter[j])
 	{	
-		pipe((*main)->pipe_fd);
+		if (pipe((*main)->heredoc_fd) == -1)
+			return (-1);
 		read_add(main, &j, garbage);
 		j++;
 	}
-	close((*main)->pipe_fd[1]);
-}
-
-void	ft_heredoc(t_minishell **main, int *i, t_alloc **garbage)
-{
-	init_heredoc(main, i, garbage);
-	init_process_signal();
-	(*main)->pid = fork();
-	if ((*main)->pid == -1)
-	{
-		perror("pipe");
-		exit(EXIT_FAILURE);
-	}
-	else if ((*main)->pid == 0)
-	{
-		if ((*main)->cmd_args == NULL)
-			(*main)->cmd_args = create_cmd_args(main, i, garbage);
-		heredoc_child(main, i, garbage);
-		exit(EXIT_SUCCESS);
-	}
-	else
-		heredoc_parent(main);
+	close((*main)->heredoc_fd[1]);
+	if (dup2((*main)->heredoc_fd[0], STDIN_FILENO) == -1)
+		return (-1);
+	close((*main)->heredoc_fd[0]);
+	return (0);
 }
 

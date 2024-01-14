@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 10:43:20 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/11 10:45:42 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/14 06:18:20 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,12 @@ t_minishell	*init_minishell(char **envp)
 	main = get_minishell();
 	main->pipe_fd[0] = -1;
 	main->pipe_fd[1] = -1;
-	main->pos = 0;
+	main->com[0] = -1;
+	main->com[1] = -1;
+	main->redir = 0;
+	main->fd = 0;
+	main->heredoc_fd[0] = -1;
+	main->heredoc_fd[1] = -1;
 	main->pid = 0;
 	main->line = NULL;
 	main->h_line = NULL;
@@ -44,11 +49,16 @@ t_minishell	*init_minishell(char **envp)
 void	restore_minishell()
 {
 	t_minishell	*main;
-	
+
 	main = get_minishell();
 	main->pipe_fd[0] = -1;
 	main->pipe_fd[1] = -1;
-	main->pos = 0;
+	main->com[0] = -1;
+	main->com[1] = -1;
+	main->redir = 0;
+	main->fd = 0;
+	main->heredoc_fd[0] = -1;
+	main->heredoc_fd[1] = -1;
 	main->pid = 0;
 	main->line = NULL;
 	main->h_line = NULL;
@@ -63,7 +73,9 @@ t_parser	*get_parser(t_alloc **garbage)
 {
 	t_parser	*parser;
 
-	parser = garb_malloc(sizeof(t_parser *), 1, garbage);
+	parser = garb_malloc(sizeof(t_parser), 1, garbage);
+	if (parser == NULL)
+		return (NULL);
 	return (parser);
 }
 
@@ -72,6 +84,8 @@ t_parser	*init_parser(t_alloc **garbage)
 	t_parser	*parser;
 
 	parser = get_parser(garbage);
+	if (parser == NULL)
+		return (NULL);
 	parser->case_double = FALSE;
 	parser->case_single = FALSE;
 	parser->case_quotes = FALSE;

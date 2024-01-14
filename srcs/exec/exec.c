@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/12 17:26:16 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/14 04:03:51 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,11 +98,11 @@ char	**create_cmd_args(t_minishell **main, int *i, t_alloc **garbage)
 	cmd_args = garb_malloc(sizeof(char *), num_args + 1, garbage);
 	if (!cmd_args)
 		return (NULL);
-	while ((*main)->command[*i].type == WORD || (*main)->command[*i].type == CODE)
+	while ((*main)->command[*i].type == WORD)
 	{
 		cmd_args[j] = ft_strjoin(cmd_args[j], (*main)->command[*i].word, garbage);
-		if (!cmd_args[j])
-			return (NULL);
+		// if (!cmd_args[j])
+		// 	return (NULL);
 		*i += 1;
 		j++;
 	}
@@ -123,12 +123,10 @@ void	handle_command(t_minishell **main, t_alloc **garbage)
 		return ;
 	while ((*main)->command[i].type != 0)
 	{
-		if ((*main)->command[i].type == WORD || (*main)->command[i].type == 0 || (*main)->command[i].type == CODE)
+		if ((*main)->command[i].type == WORD)
 			(*main)->cmd_args = create_cmd_args(main, &i, garbage);
-		if ((*main)->command[i].type == PIPE)
+		if ((*main)->command[i].type >= PIPE)
 			exec += ft_pipex(main, &i, garbage);
-		if ((*main)->command[i].type >= LEFT_CHEV && (*main)->command[i].type <= DB_LEFT_CHEV)
-			exec += ft_redirect(main, &i, garbage);
 		else if ((*main)->cmd_args != NULL && exec == 0)
 		{
 			if (execute_builtins(main, garbage) == -1)
