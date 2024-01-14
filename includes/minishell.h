@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
+/*   By: julietteandrieux <julietteandrieux@stud    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:03:22 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/14 06:18:20 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/14 13:12:48 by julietteand      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ enum e_type {
 # define DOUBLE_QUOTE 34
 # define UNDERSCORE 95
 # define SPECIAL_EXIT_CODE 255
+# define SPACE 32
 
 /* ******************************* STRUCTURES ******************************* */
 
@@ -186,13 +187,14 @@ int 		ft_export(t_minishell **main, t_alloc **garbage);
 void		child_handler(int signum);
 int			process_prompt(void);
 void		sigint_handler(int signum);
-void		sigint_process_handler(int signum);
+//void		sigint_process_handler(int signum);
 int			init_sigquit(void);
-int			init_parent_signals(void);
+//int			init_parent_signals(void);
 void		sigquit_handler(int signum);
-void		sig_process_handler(int signum);
-void		init_signal(void);
-void		init_process_signal(void);
+//void		sig_process_handler(int signum);
+//void		init_signal(void);
+//void		init_process_signal(void);
+int    init_sigactionsa(struct sigaction *sa);
 
 /* ******************************* UTILS ******************************* */
 

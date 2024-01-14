@@ -3,49 +3,63 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
+/*   By: julietteandrieux <julietteandrieux@stud    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 15:13:20 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/14 04:14:29 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/14 13:02:33 by julietteand      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	sigint_handler(int signum)
-{	
-	if (signum == SIGINT)
-	{
-		g_sigstatus = 130;
-		printf("\n");
-		rl_on_new_line();
-		rl_replace_line("", 0);
-		rl_redisplay();
-	}
+int    init_sigactionsa(struct sigaction *sa)
+{
+    ft_bzero(sa, sizeof(struct sigaction));
+    sa->sa_handler = sigint_handler;
+    sa->sa_flags = 0;
+    sigaction(SIGINT, sa, NULL);
+    signal(SIGQUIT, SIG_IGN);
+    return (0);
 }
 
-void	sigint_process_handler(int signum)
+int    init_sigquit(void)
 {
-	(void)signum;
-	g_sigstatus = 130;
-	printf("\n");
+    struct sigaction    quit;
+
+    sigemptyset(&quit.sa_mask);
+    quit.sa_handler = sigint_handler;
+    quit.sa_flags = 0;
+    sigaction(SIGQUIT, &quit, NULL);
+    return (0);
 }
 
-void	sigquit_process_handler(int signum)
+void    child_handler(int signum)
 {
-	(void)signum;
-	g_sigstatus = 131;
-	printf("Quit (core dumped)\n");
+    if (signum == SIGINT)
+        printf("\n");
+    if (signum == SIGQUIT)
+        printf("Quit (core dumped)\n");
 }
 
-void	init_signal(void)
+int    process_prompt(void)
 {
-	signal(SIGINT, sigint_handler);
-	signal(SIGQUIT, SIG_IGN);
+    struct sigaction    prompt;
+
+    ft_bzero(&prompt, sizeof(prompt));
+    prompt.sa_handler = child_handler;
+    prompt.sa_flags = 0;
+    sigaction(SIGINT, &prompt, NULL);
+    sigaction(SIGQUIT, &prompt, NULL);
+
+    return (0);
 }
 
-void	init_process_signal(void)
+void    sigint_handler(int signum)
 {
-	signal(SIGINT, sigint_process_handler);
-	signal(SIGQUIT, sigquit_process_handler);
+    if (signum == SIGINT)
+    {
+        write(STDOUT_FILENO, "\n", 1);
+        rl_on_new_line();
+        rl_redisplay();
+    }
 }

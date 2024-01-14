@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
+/*   By: julietteandrieux <julietteandrieux@stud    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 16:22:53 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/14 00:17:41 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/14 15:58:55 by julietteand      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,7 @@ int	ft_heredoc(t_minishell **main, int *i, t_alloc **garbage)
 	(*main)->h_delimiter = get_delimiter(main, i, garbage);
 	while ((*main)->h_delimiter[j])
 	{	
+		//printf("Creating a pipe in ft_heredoc\n");
 		if (pipe((*main)->heredoc_fd) == -1)
 			return (-1);
 		read_add(main, &j, garbage);
@@ -111,7 +112,9 @@ int	ft_heredoc(t_minishell **main, int *i, t_alloc **garbage)
 	}
 	close((*main)->heredoc_fd[1]);
 	if (dup2((*main)->heredoc_fd[0], STDIN_FILENO) == -1)
+	{
 		return (-1);
+	}
 	close((*main)->heredoc_fd[0]);
 	return (0);
 }

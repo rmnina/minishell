@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
+/*   By: julietteandrieux <julietteandrieux@stud    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:45:11 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/14 06:09:45 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/14 13:12:16 by julietteand      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,13 @@ int	g_sigstatus = 0;
 
 int	ft_minishell(t_minishell *main, t_alloc **garbage)
 {
+	struct sigaction	sa;
+	
 	while (1)
 	{
-		init_signal();
+		//init_signal();
+		if (init_sigactionsa(&sa) == -1)
+			return (1);
 		main->line = readline("minishell > ");
 		if (main->line == NULL)
 		{
