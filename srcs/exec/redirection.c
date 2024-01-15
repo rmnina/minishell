@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julietteandrieux <julietteandrieux@stud    +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 17:13:45 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/14 18:02:40 by julietteand      ###   ########.fr       */
+/*   Updated: 2024/01/15 14:57:16 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,6 @@ int	ft_redirect(t_minishell **main, int *i, t_alloc **garbage)
 	(*main)->fd = 0;
 	if ((*main)->command[*i].type == DB_LEFT_CHEV)
 	{
-		//printf("Executing ft_heredoc: %s\n", (*main)->command[*i].word);
 		ft_heredoc(main, i, garbage);
 		return (0);
 	}

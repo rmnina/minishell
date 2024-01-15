@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julietteandrieux <julietteandrieux@stud    +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/14 19:31:48 by julietteand      ###   ########.fr       */
+/*   Updated: 2024/01/15 15:55:33 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,13 +50,13 @@ int	execute_command(t_minishell **main, t_alloc **garbage)
 	}
 	//printf("cmd_args : %s\n", (*main)->cmd_args[0]);
 	(*main)->path = find_command_path((*main)->cmd_args[0], garbage);
-	printf("path : %s\n", (*main)->path);
+	//printf("path : %s\n", (*main)->path);
 	if (!(*main)->path)
 	{
 		perror("Command not found");
 		exit(127);
 	}
-	//printf("Executing command: %s\n path : %s\n", (*main)->path, (*main)->cmd_args[0]);
+	//printf("Executing command: %s, path : %s\n", (*main)->path, (*main)->cmd_args[0]);
 	execve((*main)->path, (*main)->cmd_args, (*main)->envp);
 	perror("execve");
 	//exit(EXIT_FAILURE);
@@ -78,11 +78,13 @@ int	execute_non_builtin(t_minishell **main, t_alloc **garbage)
 	}
 	else if (pid == 0)
 	{
+		init_sigquit();
 		execute_command(main, garbage);
 		exit(EXIT_FAILURE);
 	}
 	else
 	{
+		process_prompt();
 		waitpid(pid, &status, 0);
 		if (WIFEXITED(status))
 			(*main)->code_status = WEXITSTATUS(status);
@@ -105,8 +107,8 @@ char	**create_cmd_args(t_minishell **main, int *i, t_alloc **garbage)
 	while ((*main)->command[*i].type == WORD)
 	{
 		cmd_args[j] = ft_strjoin(cmd_args[j], (*main)->command[*i].word, garbage);
-		// if (!cmd_args[j])
-		// 	return (NULL);
+		if (!cmd_args[j])
+			return (NULL);
 		*i += 1;
 		j++;
 	}

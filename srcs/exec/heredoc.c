@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julietteandrieux <julietteandrieux@stud    +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 16:22:53 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/14 19:11:38 by julietteand      ###   ########.fr       */
+/*   Updated: 2024/01/15 14:54:28 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,7 @@ void	read_add(t_minishell **main, int *j, t_alloc **garbage)
 			(*main)->h_line = heredoc_get_expand(main, garbage);
 		write((*main)->heredoc_fd[1], (*main)->h_line, ft_strlen((*main)->h_line));
 		write((*main)->heredoc_fd[1], "\n", 1);
+		close((*main)->heredoc_fd[1]);
 		free((*main)->h_line);
 	}
 
@@ -105,27 +106,20 @@ int	ft_heredoc(t_minishell **main, int *i, t_alloc **garbage)
 	(*main)->h_delimiter = get_delimiter(main, i, garbage);
 	while ((*main)->h_delimiter[j])
 	{	
-		//printf("Creating a pipe in ft_heredoc\n");
 		if (pipe((*main)->heredoc_fd) == -1)
 			return (-1);
 		read_add(main, &j, garbage);
 		j++;
 	}
 	close((*main)->heredoc_fd[1]);
-	if (dup2((*main)->heredoc_fd[0], STDIN_FILENO) == -1)
-	{
-		return (-1);
-	}
+	dup2((*main)->heredoc_fd[0], STDIN_FILENO);
 	close((*main)->heredoc_fd[0]);
 	if ((*main)->command[*i].type == PIPE)
-    {
-       // printf("Redirection pour PIPE dans heredoc_child, fd[0] = %d, fd[1] = %d\n", (*main)->pipe_fd[0], (*main)->pipe_fd[1]);
-        if (dup2((*main)->pipe_fd[1], STDOUT_FILENO) == -1)
-        {
-            return (-1);
-        }
-        close((*main)->pipe_fd[1]);
-    }
+	{
+		dup2((*main)->pipe_fd[1], STDOUT_FILENO);
+		close((*main)->pipe_fd[1]);
+	}
+	close((*main)->heredoc_fd[1]);
 	return (0);
 }
 
