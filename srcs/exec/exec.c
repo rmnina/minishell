@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/14 04:03:51 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/15 00:56:47 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,26 +113,24 @@ char	**create_cmd_args(t_minishell **main, int *i, t_alloc **garbage)
 void	handle_command(t_minishell **main, t_alloc **garbage)
 {
 	int			i;
-	int			exec;
+	// int			exec;
 
 	i = 0;
-	exec = 0;
+	// exec = 0;
 	(*main)->cmd_args = NULL;
 	(*main)->command = ft_parsing(main, garbage);
 	if ((*main)->command == NULL)
 		return ;
-	while ((*main)->command[i].type != 0)
-	{
-		if ((*main)->command[i].type == WORD)
-			(*main)->cmd_args = create_cmd_args(main, &i, garbage);
-		if ((*main)->command[i].type >= PIPE)
-			exec += ft_pipex(main, &i, garbage);
-		else if ((*main)->cmd_args != NULL && exec == 0)
-		{
-			if (execute_builtins(main, garbage) == -1)
-				execute_non_builtin(main, garbage);
-		}
-		else
-			i++;
-	}
+	// while ((*main)->command[i].type != 0)
+	// {
+		// if ((*main)->command[i].type == WORD)
+		// 	(*main)->cmd_args = create_cmd_args(main, &i, garbage);
+		// if ((*main)->command[i].type >= PIPE)
+		// if (is_builtin((*main)->command[0].word))
+		// {
+		// 	(*main)->cmd_args = create_cmd_args(main, &i, garbage);
+		// 	(execute_builtins(main, garbage));
+		// }
+		if ((*main)->command[i].type != 0)
+			ft_pipex(main, &i, garbage);
 }

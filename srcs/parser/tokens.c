@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:04:36 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/14 18:02:44 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/14 22:28:05 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ t_command	get_token(t_minishell **main, int *i, t_alloc **garbage)
 		is_in_quote((*main)->line[*i], (*main)->parser);
 		if (special_types(main, i) == EXPAND && (*main)->parser->case_single == FALSE)
 			get_lex_expand(main, i, &token, garbage);
-		if ((*main)->parser->case_quotes == FALSE && special_types(main, i) \
+		if ((*main)->parser->case_quotes == FALSE && special_types(main, i) != 0 \
 		&& special_types(main, i) != EXPAND)
 		{
 			if (token.word != NULL)
@@ -98,13 +98,11 @@ t_command	get_token(t_minishell **main, int *i, t_alloc **garbage)
 		}
 		if (parse_quotes(main, i) == 1 || !(*main)->line[*i])
 			break ;
-		else if (!is_quotes(main, i))
+		else if (!is_quotes(main, i) && special_types(main, i) != EXPAND)
 		{
-			if (!((*main)->line[*i + 1] && (*main)->line[*i] == '$' && (*main)->line[*i + 1] != '?'))
-			{
-				token.word = ft_strjoin_char(token.word, (*main)->line[*i], garbage);
-				*i += 1;
-			}
+			// printf("line = %c\n", (*main)->line[*i]);
+			token.word = ft_strjoin_char(token.word, (*main)->line[*i], garbage);
+			*i += 1;
 		}
 	}
 	return (token);

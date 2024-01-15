@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:04:44 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/14 17:59:59 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/14 22:26:55 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,42 +48,37 @@ int	is_in_quote(char c, t_parser *quotes)
 
 int	special_types(t_minishell **main, int *i)
 {
-	int	j;
-	
-	j = *i + 1;
 	if (!(*main)->line[*i])
 		return (-1);
-	else if ((*main)->line[*i] == '|')
+	if ((*main)->line[*i] == '|')
 		return (PIPE);
 	else if ((*main)->line[*i] == '<')
 	{
-		if ((*main)->line[j])
+		if ((*main)->line[*i + 1])
 		{
-			if ((*main)->line[j] == '<')
+			if ((*main)->line[*i + 1] == '<')
 				return (DB_LEFT_CHEV);
-		}	
-		else
-			return (LEFT_CHEV);
+		}
+		return (LEFT_CHEV);
 	}
 	else if ((*main)->line[*i] == '>')
 	{
-		if ((*main)->line[j])
+		if ((*main)->line[*i + 1])
 		{
-			if ((*main)->line[j] == '>')
+			if ((*main)->line[*i + 1] == '>')
 				return (DB_RIGHT_CHEV);
 		}
-		else
-			return (RIGHT_CHEV);
+		return (RIGHT_CHEV);
 	}
 	else if ((*main)->line[*i] == '$')
 	{
-		if (!(*main)->line[j])
+		if (!(*main)->line[*i + 1])
 			return (0);
-		else if ((*main)->line[j])
+		else if ((*main)->line[*i + 1])
 		{
-			if ((*main)->line[j] == '?')
+			if ((*main)->line[*i + 1] == '?')
 				return (CODE);
-			else if (ft_isalnum((*main)->line[j]) || (*main)->line[j] == '_')
+			else if (ft_isalnum((*main)->line[*i + 1]) || (*main)->line[*i + 1] == '_')
 				return (EXPAND);
 		}
 	}

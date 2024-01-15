@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:03:22 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/14 17:54:06 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/15 01:27:29 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,11 +82,12 @@ typedef	struct s_export {
 }	t_export;
 
 typedef struct s_minishell {
-	int					pipe_fd[2];
-	int					heredoc_fd[2];
 	int					com[2];
-	int					fd;
+	int					fd[2];
+	int					filefd;
+	int					old_fd;
 	int					code_status;
+	int					status;
 	int					redir;
 	pid_t				pid;
 	char				*line;
@@ -156,9 +157,9 @@ void		execute_command(t_minishell **main, t_alloc **garbage);
 int			ft_heredoc(t_minishell **main, int *i, t_alloc **garbage);
 // void		ft_heredoc_args(t_minishell **main, int i, t_alloc **garbage);
 // int			heredoc_child(t_minishell **main, int *i, t_alloc **garbage);
-char		*get_right_input(t_minishell **main, int *i, t_alloc **garbage);
+int			get_right_input(t_minishell **main, int *i, t_alloc **garbage);
 int			ft_redirect(t_minishell **main, int *i, t_alloc **garbage);
-int 		ft_pipex(t_minishell **main, int *i, t_alloc **garbage);
+void		ft_pipe(t_minishell **main, int *i, t_alloc **garbage);
 char		**create_cmd_args(t_minishell **main, int *i, t_alloc **garbage);
 void		handle_command(t_minishell **main, t_alloc **garbage);
 
@@ -210,8 +211,8 @@ void		check_spaces(t_minishell **main, int *i);
 int			ft_strcmp_var(const char *s1, const char *s2);
 int			is_input(t_minishell **main, int *i);
 int			is_output(t_minishell **main, int *i);
-int			redir_input(char *filename);
-int			redir_append(char *filename);
-int			redir_output(char *filename);
+int			redir_input(t_minishell **main, char *filename);
+int			redir_append(t_minishell **main, char *filename);
+int			redir_output(t_minishell **main, char *filename);
 
 #endif
