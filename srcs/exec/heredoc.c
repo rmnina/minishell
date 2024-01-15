@@ -6,11 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 16:22:53 by juandrie          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2024/01/15 14:54:28 by juandrie         ###   ########.fr       */
-=======
-/*   Updated: 2024/01/14 22:07:18 by jdufour          ###   ########.fr       */
->>>>>>> jovica
+/*   Updated: 2024/01/15 18:02:22 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,14 +90,9 @@ void	read_add(t_minishell **main, int *j, t_alloc **garbage)
 			break ;
 		if (heredoc_is_expand((*main)->h_line))
 			(*main)->h_line = heredoc_get_expand(main, garbage);
-<<<<<<< HEAD
-		write((*main)->heredoc_fd[1], (*main)->h_line, ft_strlen((*main)->h_line));
-		write((*main)->heredoc_fd[1], "\n", 1);
-		close((*main)->heredoc_fd[1]);
-=======
 		write((*main)->fd[1], (*main)->h_line, ft_strlen((*main)->h_line));
 		write((*main)->fd[1], "\n", 1);
->>>>>>> jovica
+		close((*main)->fd[1]);
 		free((*main)->h_line);
 	}
 
@@ -117,24 +108,17 @@ int	ft_heredoc(t_minishell **main, int *i, t_alloc **garbage)
 	{	
 		if (pipe((*main)->fd) == -1)
 			return (-1);
+		printf(" Dans ft_heredoc dans while : fd[1]: %d, fd[0]: %d\n", (*main)->fd[1], (*main)->fd[0]);
 		read_add(main, &j, garbage);
 		j++;
 	}
-<<<<<<< HEAD
-	close((*main)->heredoc_fd[1]);
-	dup2((*main)->heredoc_fd[0], STDIN_FILENO);
-	close((*main)->heredoc_fd[0]);
+	dup2((*main)->fd[0], STDIN_FILENO);
 	if ((*main)->command[*i].type == PIPE)
 	{
-		dup2((*main)->pipe_fd[1], STDOUT_FILENO);
-		close((*main)->pipe_fd[1]);
+		dup2((*main)->fd[1], STDOUT_FILENO);
+		printf(" Dans ft_heredoc dans IF PIPE : fd[1]: %d, fd[0]: %d\n", (*main)->fd[1], (*main)->fd[0]);
+		close((*main)->fd[0]);
 	}
-	close((*main)->heredoc_fd[1]);
-=======
-	close((*main)->fd[1]);
-	if (dup2((*main)->fd[0], STDIN_FILENO) == -1)
-		return (-1);
->>>>>>> jovica
 	return (0);
 }
 

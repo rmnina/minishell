@@ -6,11 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2024/01/15 15:55:33 by juandrie         ###   ########.fr       */
-=======
-/*   Updated: 2024/01/15 00:56:47 by jdufour          ###   ########.fr       */
->>>>>>> jovica
+/*   Updated: 2024/01/15 16:13:55 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,23 +127,6 @@ void	handle_command(t_minishell **main, t_alloc **garbage)
 	(*main)->command = ft_parsing(main, garbage);
 	if ((*main)->command == NULL)
 		return ;
-<<<<<<< HEAD
-	while ((*main)->command[i].type != 0)
-	{
-		if ((*main)->command[i].type == WORD)
-			(*main)->cmd_args = create_cmd_args(main, &i, garbage);
-		if ((*main)->command[i].type >= PIPE)
-			exec += ft_pipex(main, &i, garbage);
-		else if ((*main)->cmd_args != NULL && exec == 0)
-		{
-			if (execute_builtins(main, garbage) == -1)
-				execute_non_builtin(main, garbage);
-		}
-		else
-			i++;
-	}
-}
-=======
 	// while ((*main)->command[i].type != 0)
 	// {
 		// if ((*main)->command[i].type == WORD)
@@ -161,4 +140,4 @@ void	handle_command(t_minishell **main, t_alloc **garbage)
 		if ((*main)->command[i].type != 0)
 			ft_pipex(main, &i, garbage);
 }
->>>>>>> jovica
+
