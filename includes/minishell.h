@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:03:22 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/15 15:36:56 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/15 17:16:20 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,8 @@ typedef	struct s_export {
 typedef struct s_minishell {
 	int					com[2];
 	int					fd[2];
-	int					filefd;
+	int					infilefd;
+	int					outfilefd;
 	int					old_fd;
 	int					code_status;
 	int					status;
