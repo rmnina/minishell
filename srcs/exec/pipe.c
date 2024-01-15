@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:20:25 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/15 01:12:57 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/15 16:01:50 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void	execute_child_process(t_minishell **main, int *i, t_alloc **garbage)
 		close((*main)->fd[1]);
 	}
 	if ((*main)->redir)
-		ft_redirect(main, i, garbage);
+		(*main)->redir = ft_redirect(main, i, garbage);
 	if ((*main)->com[1] != -1)
 	{
 		write((*main)->com[1], i, sizeof(*i));
@@ -101,6 +101,11 @@ int 	ft_pipex(t_minishell **main, int *i, t_alloc **garbage)
 
 	status = 0;
 	handle_command_args(main, i, garbage);
+	if (is_builtin((*main)->command[0].word) && (*main)->command[*i].type == 0)
+	{
+		execute_builtins(main, garbage);
+		return (0);
+	}
 	initialize_process(main, i);
 	if ((*main)->pid == 0)
 		execute_child_process(main, i, garbage);

@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:03:22 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/15 01:27:29 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/15 15:36:56 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,7 +159,7 @@ int			ft_heredoc(t_minishell **main, int *i, t_alloc **garbage);
 // int			heredoc_child(t_minishell **main, int *i, t_alloc **garbage);
 int			get_right_input(t_minishell **main, int *i, t_alloc **garbage);
 int			ft_redirect(t_minishell **main, int *i, t_alloc **garbage);
-void		ft_pipe(t_minishell **main, int *i, t_alloc **garbage);
+int			ft_pipex(t_minishell **main, int *i, t_alloc **garbage);
 char		**create_cmd_args(t_minishell **main, int *i, t_alloc **garbage);
 void		handle_command(t_minishell **main, t_alloc **garbage);
 
