@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:20:25 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/15 16:01:50 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/15 16:09:12 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,9 +118,5 @@ int 	ft_pipex(t_minishell **main, int *i, t_alloc **garbage)
 		close((*main)->old_fd);
 	if ((*main)->filefd != -1)
 		close((*main)->filefd);
-	// if ((*main)->fd[0])
-	// 	close((*main)->fd[0]);
-	// if ((*main)->fd[1])
-	// 	close((*main)->fd[1]);
 	return (1);
 }
