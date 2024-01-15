@@ -6,7 +6,7 @@
 /*   By: julietteandrieux <julietteandrieux@stud    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/14 17:26:08 by julietteand      ###   ########.fr       */
+/*   Updated: 2024/01/14 19:31:48 by julietteand      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int	execute_builtins(t_minishell **main, t_alloc **garbage)
 	return (-1);
 }
 
-void	execute_command(t_minishell **main, t_alloc **garbage)
+int	execute_command(t_minishell **main, t_alloc **garbage)
 {
 	(*main)->path = NULL;
 	if (!(*main)->cmd_args)
@@ -48,16 +48,19 @@ void	execute_command(t_minishell **main, t_alloc **garbage)
 		perror("Error creating command args");
 		exit(EXIT_FAILURE);
 	}
+	//printf("cmd_args : %s\n", (*main)->cmd_args[0]);
 	(*main)->path = find_command_path((*main)->cmd_args[0], garbage);
+	printf("path : %s\n", (*main)->path);
 	if (!(*main)->path)
 	{
 		perror("Command not found");
 		exit(127);
 	}
-	printf("Executing command: %s\n", (*main)->cmd_args[0]);
+	//printf("Executing command: %s\n path : %s\n", (*main)->path, (*main)->cmd_args[0]);
 	execve((*main)->path, (*main)->cmd_args, (*main)->envp);
 	perror("execve");
-	exit(EXIT_FAILURE);
+	//exit(EXIT_FAILURE);
+	return (-1);
 }
 
 int	execute_non_builtin(t_minishell **main, t_alloc **garbage)

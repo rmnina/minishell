@@ -6,7 +6,7 @@
 /*   By: julietteandrieux <julietteandrieux@stud    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:20:25 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/14 17:30:11 by julietteand      ###   ########.fr       */
+/*   Updated: 2024/01/14 19:31:38 by julietteand      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,10 @@ void	initialize_process(t_minishell **main, int *i)
 	//init_process_signal();
 	if ((*main)->command[*i].type == PIPE || *i > 0)
 	{
-		printf("Creating a pipe_fd in initialize process\n");
+		//printf("Creating a pipe_fd in initialize process\n");
 		pipe((*main)->pipe_fd);
 	}
-	printf("Creating a pipe (*main)->com in initialize process\n");
+	//printf("Creating a pipe (*main)->com in initialize process\n");
 	pipe((*main)->com);
 	(*main)->pid = fork();
 	if ((*main)->pid == -1)
@@ -44,18 +44,27 @@ void	initialize_process(t_minishell **main, int *i)
 
 void	execute_child_process(t_minishell **main, int *i, int *old_fd, t_alloc **garbage)
 {
-	printf("Executing child process, command: %s\n", (*main)->command[*i].word);
+	//printf("Executing child process, command: %s\n", (*main)->command[*i].word);
 	if ((*main)->com[0] != -1)
 		close((*main)->com[0]);
 	if (*i > 0 && *old_fd != -1)
 	{
-		dup2(*old_fd, STDIN_FILENO);
+		(dup2(*old_fd, STDIN_FILENO));
 		close(*old_fd);
 	}
 	if ((*main)->command[*i].type == DB_LEFT_CHEV)
 	{
-		dup2((*main)->heredoc_fd[0], STDIN_FILENO);
+		//printf("YES\n");
+		(dup2((*main)->heredoc_fd[0], STDIN_FILENO));
 		close((*main)->heredoc_fd[0]);
+		close((*main)->heredoc_fd[1]);
+	}
+	if ((*main)->command[*i].type == PIPE)
+	{
+		//printf("YO\n");
+		//close((*main)->pipe_fd[0]);
+		(dup2((*main)->pipe_fd[1], STDOUT_FILENO));
+		close((*main)->pipe_fd[1]);
 	}
 	if (!(*main)->redir)
 		(*main)->redir = ft_redirect(main, i, garbage);
@@ -66,36 +75,41 @@ void	execute_child_process(t_minishell **main, int *i, int *old_fd, t_alloc **ga
 	}
 	if ((*main)->redir == -1)
 		exit(EXIT_FAILURE);
-	//printf("Executing command: %s\n", (*main)->cmd_args[0]);
+
 	if (execute_builtins(main, garbage) == -1)
 	{
-		printf("Executing command: %s\n", (*main)->cmd_args[0]);
-		execute_command(main, garbage);
+		//printf("Executing command: %s\n", (*main)->cmd_args[0]);
+		if (execute_command(main, garbage) == -1)
+			exit (EXIT_FAILURE);
 	}
+
 	exit(EXIT_SUCCESS);
 }
 
 
 void	handle_parent_process(t_minishell **main, int *i, int *old_fd, int *status)
 {
-	printf("Handling parent process for command: %s\n", (*main)->command[*i].word);
-	if ((*main)->com[1] != -1)
-		close((*main)->com[1]);
+	//printf("Handling parent process for command: %s\n", (*main)->command[*i].word);
+	//if ((*main)->com[1] != -1)
+	//	close((*main)->com[1]);
 	if (*i > 0 && *old_fd != -1)
 		close(*old_fd);
 	if ((*main)->command[*i].type == PIPE)
 	{
+		//printf("ICI\n");
 		*old_fd = (*main)->pipe_fd[0];
 		close((*main)->pipe_fd[1]);
 	}
 	else
 	{
+		//printf("LA\n");
 		close((*main)->pipe_fd[0]);
 		close((*main)->pipe_fd[1]);
 	}
 	waitpid((*main)->pid, status, 0);
 	if ((*main)->com[0] != -1)
 	{
+		//printf("NON ICI\n");
 		read((*main)->com[0], i, sizeof(*i));
 		close((*main)->com[0]);
 	}

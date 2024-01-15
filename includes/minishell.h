@@ -6,7 +6,7 @@
 /*   By: julietteandrieux <julietteandrieux@stud    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:03:22 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/14 13:12:48 by julietteand      ###   ########.fr       */
+/*   Updated: 2024/01/14 19:03:52 by julietteand      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,7 +151,7 @@ char		*find_command_path(char *command, t_alloc **garbage);
 
 int			execute_builtins(t_minishell **main, t_alloc **garbage);
 int			execute_non_builtin(t_minishell **main, t_alloc **garbage);
-void		execute_command(t_minishell **main, t_alloc **garbage);
+int			execute_command(t_minishell **main, t_alloc **garbage);
 
 /* ------------------------------ MAIN ------------------------------ */
 
