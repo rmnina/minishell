@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:04:44 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/14 04:07:51 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/14 22:26:55 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,32 +46,41 @@ int	is_in_quote(char c, t_parser *quotes)
 // in the loop that verifies the input char by char, in order 
 // to find out in which condition to enter.
 
-int	special_types(char c1, char c2)
+int	special_types(t_minishell **main, int *i)
 {
-	if (!c1)
+	if (!(*main)->line[*i])
 		return (-1);
-	else if (c1 == '|')
+	if ((*main)->line[*i] == '|')
 		return (PIPE);
-	else if (c1 == '<')
+	else if ((*main)->line[*i] == '<')
 	{
-		if (c2 && c2 == '<')
-			return (DB_LEFT_CHEV);
-		else
-			return (LEFT_CHEV);
+		if ((*main)->line[*i + 1])
+		{
+			if ((*main)->line[*i + 1] == '<')
+				return (DB_LEFT_CHEV);
+		}
+		return (LEFT_CHEV);
 	}
-	else if (c1 == '>')
+	else if ((*main)->line[*i] == '>')
 	{
-		if (c2 && c2 == '>')
-			return (DB_RIGHT_CHEV);
-		else
-			return (RIGHT_CHEV);
+		if ((*main)->line[*i + 1])
+		{
+			if ((*main)->line[*i + 1] == '>')
+				return (DB_RIGHT_CHEV);
+		}
+		return (RIGHT_CHEV);
 	}
-	else if (c1 == '$')
+	else if ((*main)->line[*i] == '$')
 	{
-		if (c2 && c2 == '?')
-			return (CODE);
-		else if (c2 && (ft_isalnum(c2) || c2 == '_'))
-			return (EXPAND);
+		if (!(*main)->line[*i + 1])
+			return (0);
+		else if ((*main)->line[*i + 1])
+		{
+			if ((*main)->line[*i + 1] == '?')
+				return (CODE);
+			else if (ft_isalnum((*main)->line[*i + 1]) || (*main)->line[*i + 1] == '_')
+				return (EXPAND);
+		}
 	}
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:04:36 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/14 05:02:20 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/14 22:28:05 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,8 @@ t_command	get_special_type_token(t_minishell **main, int *i, t_alloc **garbage)
 	t_command	token;
 
 	token.word = NULL;
-	if (special_types((*main)->line[*i], (*main)->line[*i + 1]) == DB_LEFT_CHEV \
-	|| special_types((*main)->line[*i], (*main)->line[*i + 1]) == DB_RIGHT_CHEV \
-	|| special_types((*main)->line[*i], (*main)->line[*i + 1]) == CODE)
+	if (special_types(main, i) == DB_LEFT_CHEV || special_types(main, i) == DB_RIGHT_CHEV \
+	|| special_types(main, i) == CODE)
 	{
 		token.word = char_to_str((*main)->line[*i], garbage);
 		token.word = ft_strjoin_char(token.word, (*main)->line[*i + 1], garbage);
@@ -79,7 +78,6 @@ int	is_quotes(t_minishell **main, int *i)
 // this function is one of the most importants as it creates the tokens,
 // which are the structures t_command that are gonna be placed in the array
 // treated by the exec. 
-
 t_command	get_token(t_minishell **main, int *i, t_alloc **garbage)
 {
 	t_command	token;
@@ -88,11 +86,10 @@ t_command	get_token(t_minishell **main, int *i, t_alloc **garbage)
 	while ((*main)->line[*i])
 	{
 		is_in_quote((*main)->line[*i], (*main)->parser);
-		if (special_types((*main)->line[*i], (*main)->line[*i + 1]) == EXPAND \
-		&& (*main)->parser->case_single == FALSE)
+		if (special_types(main, i) == EXPAND && (*main)->parser->case_single == FALSE)
 			get_lex_expand(main, i, &token, garbage);
-		if ((*main)->parser->case_quotes == FALSE && special_types((*main)->line[*i], (*main)->line[*i + 1]) != 0 \
-		&& special_types((*main)->line[*i], (*main)->line[*i + 1]) != EXPAND)
+		if ((*main)->parser->case_quotes == FALSE && special_types(main, i) != 0 \
+		&& special_types(main, i) != EXPAND)
 		{
 			if (token.word != NULL)
 				break ;
@@ -101,8 +98,9 @@ t_command	get_token(t_minishell **main, int *i, t_alloc **garbage)
 		}
 		if (parse_quotes(main, i) == 1 || !(*main)->line[*i])
 			break ;
-		else if (!is_quotes(main, i) && (*main)->line[*i] != '$')
+		else if (!is_quotes(main, i) && special_types(main, i) != EXPAND)
 		{
+			// printf("line = %c\n", (*main)->line[*i]);
 			token.word = ft_strjoin_char(token.word, (*main)->line[*i], garbage);
 			*i += 1;
 		}

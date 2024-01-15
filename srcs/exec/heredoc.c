@@ -6,7 +6,11 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 16:22:53 by juandrie          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2024/01/15 14:54:28 by juandrie         ###   ########.fr       */
+=======
+/*   Updated: 2024/01/14 22:07:18 by jdufour          ###   ########.fr       */
+>>>>>>> jovica
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,9 +94,14 @@ void	read_add(t_minishell **main, int *j, t_alloc **garbage)
 			break ;
 		if (heredoc_is_expand((*main)->h_line))
 			(*main)->h_line = heredoc_get_expand(main, garbage);
+<<<<<<< HEAD
 		write((*main)->heredoc_fd[1], (*main)->h_line, ft_strlen((*main)->h_line));
 		write((*main)->heredoc_fd[1], "\n", 1);
 		close((*main)->heredoc_fd[1]);
+=======
+		write((*main)->fd[1], (*main)->h_line, ft_strlen((*main)->h_line));
+		write((*main)->fd[1], "\n", 1);
+>>>>>>> jovica
 		free((*main)->h_line);
 	}
 
@@ -106,11 +115,12 @@ int	ft_heredoc(t_minishell **main, int *i, t_alloc **garbage)
 	(*main)->h_delimiter = get_delimiter(main, i, garbage);
 	while ((*main)->h_delimiter[j])
 	{	
-		if (pipe((*main)->heredoc_fd) == -1)
+		if (pipe((*main)->fd) == -1)
 			return (-1);
 		read_add(main, &j, garbage);
 		j++;
 	}
+<<<<<<< HEAD
 	close((*main)->heredoc_fd[1]);
 	dup2((*main)->heredoc_fd[0], STDIN_FILENO);
 	close((*main)->heredoc_fd[0]);
@@ -120,6 +130,11 @@ int	ft_heredoc(t_minishell **main, int *i, t_alloc **garbage)
 		close((*main)->pipe_fd[1]);
 	}
 	close((*main)->heredoc_fd[1]);
+=======
+	close((*main)->fd[1]);
+	if (dup2((*main)->fd[0], STDIN_FILENO) == -1)
+		return (-1);
+>>>>>>> jovica
 	return (0);
 }
 

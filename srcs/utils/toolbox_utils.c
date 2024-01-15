@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 05:26:30 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/14 05:01:45 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/15 00:38:25 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,4 +62,19 @@ int	ft_strcmp_var(const char *s1, const char *s2)
 	else if (i == ft_strlen(s1) && str2[i] && str2[i] == '=' && str1[i] == '\0')
 		return (0);
 	return (str1[i] - str2[i]);
+}
+
+int	is_builtin(char *command)
+{
+	if (ft_strcmp(command, "cd") == 0 \
+		|| ft_strcmp(command, "echo") == 0 \
+		|| ft_strcmp(command, "env") == 0 \
+		|| ft_strcmp(command, "exit") == 0 \
+		|| ft_strcmp(command, "export") == 0 \
+		|| ft_strcmp(command, "pwd") == 0 \
+		|| ft_strcmp(command, "unset") == 0)
+	{
+		return (1);
+	}
+	return (0);
 }

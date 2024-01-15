@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 10:43:20 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/14 06:18:20 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/15 01:09:11 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,14 +24,14 @@ t_minishell	*init_minishell(char **envp)
 	t_minishell	*main;
 	
 	main = get_minishell();
-	main->pipe_fd[0] = -1;
-	main->pipe_fd[1] = -1;
+	main->fd[0] = -1;
+	main->fd[1] = -1;
+	main->old_fd = -1;
+	main->filefd = -1;
 	main->com[0] = -1;
 	main->com[1] = -1;
 	main->redir = 0;
-	main->fd = 0;
-	main->heredoc_fd[0] = -1;
-	main->heredoc_fd[1] = -1;
+	main->status = -1;
 	main->pid = 0;
 	main->line = NULL;
 	main->h_line = NULL;
@@ -51,14 +51,15 @@ void	restore_minishell()
 	t_minishell	*main;
 
 	main = get_minishell();
-	main->pipe_fd[0] = -1;
-	main->pipe_fd[1] = -1;
+
 	main->com[0] = -1;
 	main->com[1] = -1;
 	main->redir = 0;
-	main->fd = 0;
-	main->heredoc_fd[0] = -1;
-	main->heredoc_fd[1] = -1;
+	main->fd[0] = -1;
+	main->fd[1] = -1;
+	main->filefd = -1;
+	main->old_fd = -1;
+	main->status = -1;
 	main->pid = 0;
 	main->line = NULL;
 	main->h_line = NULL;

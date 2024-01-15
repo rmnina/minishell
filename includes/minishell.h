@@ -6,7 +6,11 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:03:22 by jdufour           #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2024/01/15 15:20:12 by juandrie         ###   ########.fr       */
+=======
+/*   Updated: 2024/01/15 15:36:56 by jdufour          ###   ########.fr       */
+>>>>>>> jovica
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,11 +87,12 @@ typedef	struct s_export {
 }	t_export;
 
 typedef struct s_minishell {
-	int					pipe_fd[2];
-	int					heredoc_fd[2];
 	int					com[2];
-	int					fd;
+	int					fd[2];
+	int					filefd;
+	int					old_fd;
 	int					code_status;
+	int					status;
 	int					redir;
 	pid_t				pid;
 	char				*line;
@@ -106,7 +111,7 @@ extern int	g_sigstatus;
 
 /* ******************************* LEXER ******************************* */
 
-int			special_types(char c1, char c2);
+int			special_types(t_minishell **main, int *i);
 int			is_in_quote(char c, t_parser *quotes);
 int			error_quotes(t_minishell **main);
 int			ft_error_lexer(t_command *command, t_minishell **main);
@@ -130,7 +135,6 @@ void		init_get_expand(t_minishell **main, t_command *token, int *i, t_alloc **ga
 int			is_expand(char *line);
 char		*get_env_var_name(char *line, int *i, t_alloc **garbage);
 char		*ft_getenv(t_minishell **main, const char *name);
-int			parse_expand_quotes(t_minishell **main, char *line, int *i);
 int			get_lex_expand(t_minishell **main, int *i, t_command *token, t_alloc **garbage);
 
 /* ------------------------------ MAIN ------------------------------ */
@@ -158,9 +162,9 @@ int			execute_command(t_minishell **main, t_alloc **garbage);
 int			ft_heredoc(t_minishell **main, int *i, t_alloc **garbage);
 // void		ft_heredoc_args(t_minishell **main, int i, t_alloc **garbage);
 // int			heredoc_child(t_minishell **main, int *i, t_alloc **garbage);
-char		*get_right_input(t_minishell **main, int *i, t_alloc **garbage);
+int			get_right_input(t_minishell **main, int *i, t_alloc **garbage);
 int			ft_redirect(t_minishell **main, int *i, t_alloc **garbage);
-int 		ft_pipex(t_minishell **main, int *i, t_alloc **garbage);
+int			ft_pipex(t_minishell **main, int *i, t_alloc **garbage);
 char		**create_cmd_args(t_minishell **main, int *i, t_alloc **garbage);
 void		handle_command(t_minishell **main, t_alloc **garbage);
 
@@ -213,8 +217,8 @@ void		check_spaces(t_minishell **main, int *i);
 int			ft_strcmp_var(const char *s1, const char *s2);
 int			is_input(t_minishell **main, int *i);
 int			is_output(t_minishell **main, int *i);
-int			redir_input(char *filename);
-int			redir_append(char *filename);
-int			redir_output(char *filename);
+int			redir_input(t_minishell **main, char *filename);
+int			redir_append(t_minishell **main, char *filename);
+int			redir_output(t_minishell **main, char *filename);
 
 #endif
