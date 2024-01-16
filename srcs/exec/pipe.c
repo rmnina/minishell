@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: julietteandrieux <julietteandrieux@stud    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:20:25 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/15 17:42:09 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/16 01:04:56 by julietteand      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,49 +30,66 @@ void	handle_command_args(t_minishell **main, int *i, t_alloc **garbage)
 {
 	(*main)->redir = 0;
 	(*main)->cmd_args = create_cmd_args(main, i, garbage);
-	if ((*main)->command[*i].type >= LEFT_CHEV && (*main)->command[*i].type <= DB_LEFT_CHEV)
-		(*main)->redir = 1;
+	if ((*main)->command[*i].type == DB_LEFT_CHEV)
+        ft_heredoc(main, i, garbage);
+    else if ((*main)->command[*i].type >= LEFT_CHEV && (*main)->command[*i].type <= RIGHT_CHEV)
+    {
+        (*main)->redir = 1;
+    }
 }
 
 void	initialize_process(t_minishell **main, int *i)
 {
 	(void)i;
 	//init_process_signal();
+	
 	pipe((*main)->fd);
-printf(" Dans initialize pour pipe main fd : fd[1]: %d, fd[0]: %d\n", (*main)->fd[1], (*main)->fd[0]);	
 	pipe((*main)->com);
-	printf(" Dans initialize pour pipe main com : fd[1]: %d, fd[0]: %d\n", (*main)->fd[1], (*main)->fd[0]);
 	(*main)->pid = fork();
 	if ((*main)->pid == -1)
 	{
 		perror("pid");
 		exit(EXIT_FAILURE);
 	}
+	//printf("Initialisation du processus, PID : %d\n", (*main)->pid);
 }
 
 void	execute_child_process(t_minishell **main, int *i, t_alloc **garbage)
 {
+
 	close((*main)->fd[0]);
 	if ((*main)->com[0] != -1)
 		close((*main)->com[0]);
 	if ((*main)->old_fd != -1)
 	{
 		dup2((*main)->old_fd, STDIN_FILENO);
-		printf(" Dans execute child dans if ((*main)->old_fd != -1) : fd[1]: %d, fd[0]: %d\n", (*main)->fd[1], (*main)->fd[0]);
 		close((*main)->old_fd);
 	}
 	if ((*main)->command[*i].type == PIPE)
 	{
-		close((*main)->fd[0]);
 		dup2((*main)->fd[1], STDOUT_FILENO);
-		printf(" Dans execute child dans IF PIPE : fd[1]: %d, fd[0]: %d\n", (*main)->fd[1], (*main)->fd[0]);
 		close((*main)->fd[1]);
 	}
+	else
+		close((*main)->fd[1]);
 	if ((*main)->command[*i].type == DB_LEFT_CHEV)
 	{
-		close((*main)->fd[1]);
+		printf("Gestion du heredoc dans le processus enfant\n");
+		printf("Ouverture du fichier heredoc : %s\n", (*main)->tmp_filename);
+		int heredoc_fd = open((*main)->tmp_filename, O_RDONLY);
+		printf("Après ouverture du fichier heredoc : %d\n", heredoc_fd);
+        if (heredoc_fd == -1)
+		{
+            perror("Erreur lors de l'ouverture du fichier heredoc");
+            exit(EXIT_FAILURE);
+        }
+        //Rediriger STDIN vers le fichier heredoc
+       dup2(heredoc_fd, STDIN_FILENO);
+       close(heredoc_fd);
+	}
+	if (next_is_pipe(main, i))
+	{
 		dup2((*main)->fd[0], STDIN_FILENO);
-		printf(" Dans execute child dans IF DB LEFT CHEV : fd[1]: %d, fd[0]: %d\n", (*main)->fd[1], (*main)->fd[0]);
 		close((*main)->fd[0]);
 	}
 	if ((*main)->redir)
@@ -86,6 +103,7 @@ void	execute_child_process(t_minishell **main, int *i, t_alloc **garbage)
 		exit(EXIT_FAILURE);
 	if (execute_builtins(main, garbage) == -1)
 	{
+		//printf("exécution de %s\n", (*main)->command[*i].word);
 		if (execute_command(main, garbage) == -1)
 			exit (EXIT_FAILURE);
 	}

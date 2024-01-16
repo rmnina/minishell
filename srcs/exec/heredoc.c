@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: julietteandrieux <julietteandrieux@stud    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 16:22:53 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/15 18:02:22 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/16 01:26:08 by julietteand      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,39 @@ char	**get_delimiter(t_minishell **main, int *i, t_alloc **garbage)
 	return ((*main)->h_delimiter);
 }
 
+void generate_temp_filename(t_minishell **main, t_alloc **garbage)
+{
+	int fd = open("/dev/urandom", O_RDONLY);
+    char random_string[11]; // 10 caractères + '\0'
+    char buffer = 0;
+	int i = 0;
+    while (i < 10)
+	{
+        read(fd, &buffer, 1);
+        random_string[i] = (buffer % 26) + 'a';
+		++i;
+    }
+    random_string[10] = '\0';
+    close(fd);
+    (*main)->tmp_filename = ft_strjoin("/tmp/heredoc_", random_string, garbage);
+    if (!(*main)->tmp_filename)
+	{
+        perror("Erreur lors de la création du nom de fichier temporaire");
+        exit(EXIT_FAILURE);
+    }
+}
+
+void init_temp_file(t_minishell **main, t_alloc **garbage)
+{
+	generate_temp_filename(main, garbage);
+	(*main)->tmp_fd = open((*main)->tmp_filename, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+    if ((*main)->tmp_fd < 0)
+	{
+       	perror("Erreur lors de l'ouverture du fichier temporaire");
+	    exit(EXIT_FAILURE);
+   	}
+}
+
 void	read_add(t_minishell **main, int *j, t_alloc **garbage)
 {
 	while (42)
@@ -90,12 +123,11 @@ void	read_add(t_minishell **main, int *j, t_alloc **garbage)
 			break ;
 		if (heredoc_is_expand((*main)->h_line))
 			(*main)->h_line = heredoc_get_expand(main, garbage);
-		write((*main)->fd[1], (*main)->h_line, ft_strlen((*main)->h_line));
-		write((*main)->fd[1], "\n", 1);
-		close((*main)->fd[1]);
+		
+		write((*main)->tmp_fd, (*main)->h_line, ft_strlen((*main)->h_line));
+		write((*main)->tmp_fd, "\n", 1);
 		free((*main)->h_line);
 	}
-
 }
 
 int	ft_heredoc(t_minishell **main, int *i, t_alloc **garbage)
@@ -103,22 +135,21 @@ int	ft_heredoc(t_minishell **main, int *i, t_alloc **garbage)
 	int	j;
 
 	j = 0;
+	init_temp_file(main, garbage);
 	(*main)->h_delimiter = get_delimiter(main, i, garbage);
 	while ((*main)->h_delimiter[j])
 	{	
-		if (pipe((*main)->fd) == -1)
-			return (-1);
-		printf(" Dans ft_heredoc dans while : fd[1]: %d, fd[0]: %d\n", (*main)->fd[1], (*main)->fd[0]);
 		read_add(main, &j, garbage);
 		j++;
 	}
-	dup2((*main)->fd[0], STDIN_FILENO);
-	if ((*main)->command[*i].type == PIPE)
-	{
-		dup2((*main)->fd[1], STDOUT_FILENO);
-		printf(" Dans ft_heredoc dans IF PIPE : fd[1]: %d, fd[0]: %d\n", (*main)->fd[1], (*main)->fd[0]);
-		close((*main)->fd[0]);
-	}
+	(*main)->tmp_fd = open((*main)->tmp_filename, O_RDONLY);
+	if ((*main)->tmp_fd < 0)
+    {
+        perror("Erreur lors de la réouverture du fichier temporaire");
+        exit(EXIT_FAILURE);
+    }
+	dup2((*main)->tmp_fd, STDIN_FILENO);
+    close((*main)->tmp_fd);
 	return (0);
 }
 

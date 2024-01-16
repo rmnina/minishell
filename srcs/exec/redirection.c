@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: julietteandrieux <julietteandrieux@stud    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 17:13:45 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/15 16:10:39 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/16 00:27:23 by julietteand      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,11 +99,6 @@ void	handle_redirect(t_minishell **main, int *i, t_alloc **garbage)
 
 int	ft_redirect(t_minishell **main, int *i, t_alloc **garbage)
 {
-	if ((*main)->command[*i].type == DB_LEFT_CHEV)
-	{
-		ft_heredoc(main, i, garbage);
-		return (0);
-	}
 	handle_redirect(main, i, garbage);
 	*i += 2;
 	if ((*main)->filefd == -1)
@@ -111,5 +106,6 @@ int	ft_redirect(t_minishell **main, int *i, t_alloc **garbage)
 		write(2, "error : file could not be opened\n", 34);
 		return(-1);
 	}
+	printf("Sortie de ft_redirect, *i = %d\n", *i);
 	return (1);
 }
