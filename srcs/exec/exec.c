@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: julietteandrieux <julietteandrieux@stud    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/16 18:50:21 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/16 23:07:56 by julietteand      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,13 +95,16 @@ char	**create_cmd_args(t_minishell **main, int *i, t_alloc **garbage)
 	int		j;
 
 	j = 0;
+	//printf("Entrée dans create_cmd_args\n");
 	cmd_args = NULL;
 	num_args = ft_count((*main)->command, i);
+	//printf("Nombre d'arguments pour la commande: %d\n", num_args);
 	cmd_args = garb_malloc(sizeof(char *), num_args + 1, garbage);
 	if (!cmd_args)
 		return (NULL);
 	while ((*main)->command[*i].type == WORD)
 	{
+		//printf("Ajout de l'argument: %s\n", (*main)->command[*i].word);
 		cmd_args[j] = ft_strjoin(cmd_args[j], (*main)->command[*i].word, garbage);
 		if (!cmd_args[j])
 			return (NULL);
@@ -109,6 +112,7 @@ char	**create_cmd_args(t_minishell **main, int *i, t_alloc **garbage)
 		j++;
 	}
 	cmd_args[j] = NULL;
+	//printf("Sortie de create_cmd_args avec les arguments de commande construits\n");
 	return (cmd_args);
 }
 

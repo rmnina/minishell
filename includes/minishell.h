@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: julietteandrieux <julietteandrieux@stud    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:03:22 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/16 18:50:12 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/16 21:31:35 by julietteand      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ enum e_type {
 # define DOUBLE_QUOTE 34
 # define UNDERSCORE 95
 # define SPECIAL_EXIT_CODE 255
-
+# define SPACE 32
 
 /* ******************************* STRUCTURES ******************************* */
 
@@ -91,6 +91,7 @@ typedef struct s_minishell {
 	int					code_status;
 	int					status;
 	int					redir;
+	int					nb_cmds; 
 	pid_t				pid;
 	char				*line;
 	char				*h_line;
