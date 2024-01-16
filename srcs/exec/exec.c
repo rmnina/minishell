@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/15 16:22:47 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/16 02:37:09 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	execute_builtins(t_minishell **main, t_alloc **garbage)
 		return (0);
 	if (ft_strcmp((*main)->cmd_args[0], "cd") == 0
 		&& ft_strlen((*main)->cmd_args[0]) == ft_strlen("cd"))
-		return (ft_cd(main));
+		return (ft_cd(main, garbage));
 	if (ft_strcmp((*main)->cmd_args[0], "echo") == 0
 		&& ft_strlen((*main)->cmd_args[0]) == ft_strlen("echo"))
 		return (ft_echo(main));
@@ -101,8 +101,6 @@ char	**create_cmd_args(t_minishell **main, int *i, t_alloc **garbage)
 	while ((*main)->command[*i].type == WORD)
 	{
 		cmd_args[j] = ft_strjoin(cmd_args[j], (*main)->command[*i].word, garbage);
-		// if (!cmd_args[j])
-		// 	return (NULL);
 		*i += 1;
 		j++;
 	}
@@ -119,6 +117,6 @@ void	handle_command(t_minishell **main, t_alloc **garbage)
 	(*main)->command = ft_parsing(main, garbage);
 	if ((*main)->command == NULL)
 		return ;
-	if ((*main)->command[i].type != 0)
-		ft_pipex(main, &i, garbage);
+	while ((*main)->command[i].type != 0)
+		execution(main, &i, garbage);
 }

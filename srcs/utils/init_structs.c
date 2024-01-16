@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 10:43:20 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/15 17:16:43 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/16 01:09:02 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,9 @@ t_minishell	*init_minishell(char **envp)
 	main->com[1] = -1;
 	main->redir = 0;
 	main->status = -1;
-	main->pid = 0;
+	main->nb_cmd = 0;
+	main->total_cmd = 0;
+	main->pid = NULL;
 	main->line = NULL;
 	main->h_line = NULL;
 	main->path = NULL;
@@ -60,9 +62,11 @@ void	restore_minishell()
 	main->fd[1] = -1;
 	main->infilefd = -1;
 	main->outfilefd = -1;
+	main->nb_cmd = 0;
+	main->total_cmd = 0;
 	main->old_fd = -1;
 	main->status = -1;
-	main->pid = 0;
+	main->pid = NULL;
 	main->line = NULL;
 	main->h_line = NULL;
 	main->path = NULL;
@@ -96,3 +100,4 @@ t_parser	*init_parser(t_alloc **garbage)
 	parser->vpos = 0;
 	return (parser);
 }
+

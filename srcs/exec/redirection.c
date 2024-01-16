@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 17:13:45 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/15 17:57:22 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/16 02:01:24 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,7 @@ int	ft_redirect(t_minishell **main, int *i, t_alloc **garbage)
 {
 	(*main)->infilefd = -2;
 	(*main)->outfilefd = -2;
+	
 	if ((*main)->command[*i].type == DB_LEFT_CHEV)
 	{
 		ft_heredoc(main, i, garbage);

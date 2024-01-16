@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:03:22 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/15 17:16:20 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/16 02:02:42 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,9 @@ typedef struct s_minishell {
 	int					code_status;
 	int					status;
 	int					redir;
-	pid_t				pid;
+	int					total_cmd;
+	int					nb_cmd;
+	pid_t				*pid;
 	char				*line;
 	char				*h_line;
 	char				*path;
@@ -163,11 +165,12 @@ int			ft_redirect(t_minishell **main, int *i, t_alloc **garbage);
 int			ft_pipex(t_minishell **main, int *i, t_alloc **garbage);
 char		**create_cmd_args(t_minishell **main, int *i, t_alloc **garbage);
 void		handle_command(t_minishell **main, t_alloc **garbage);
+int			execution(t_minishell **main, int *i, t_alloc **garbage);
 
 
 /* ******************************* BUILTINS ******************************* */
 
-int			ft_cd(t_minishell **main);
+int			ft_cd(t_minishell **main, t_alloc **garbage);
 int			ft_echo(t_minishell **main);
 int			ft_env(t_minishell **main);
 int			ft_exit(t_minishell **main, t_alloc **garbage);
