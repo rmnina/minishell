@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julietteandrieux <julietteandrieux@stud    +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:03:22 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/15 22:31:47 by julietteand      ###   ########.fr       */
+/*   Updated: 2024/01/16 13:43:52 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ enum e_type {
 # define DOUBLE_QUOTE 34
 # define UNDERSCORE 95
 # define SPECIAL_EXIT_CODE 255
-# define SPACE 32
+
 
 /* ******************************* STRUCTURES ******************************* */
 
@@ -101,6 +101,7 @@ typedef struct s_minishell {
 	char				**h_delimiter;
 	char				**envp;
 	char				*tmp_filename;
+	bool				is_heredoc_used;
 	struct s_command	*command;
 	struct s_parser		*parser;
 }	t_minishell;
@@ -153,11 +154,11 @@ char		*find_command_path(char *command, t_alloc **garbage);
 
 int			execute_builtins(t_minishell **main, t_alloc **garbage);
 int			execute_non_builtin(t_minishell **main, t_alloc **garbage);
-int			execute_command(t_minishell **main, t_alloc **garbage);
+void		execute_command(t_minishell **main, t_alloc **garbage);
 
 /* ------------------------------ MAIN ------------------------------ */
 
-int			ft_heredoc(t_minishell **main, int *i, t_alloc **garbage);
+void		ft_heredoc(t_minishell **main, int *i, t_alloc **garbage);
 // void		ft_heredoc_args(t_minishell **main, int i, t_alloc **garbage);
 // int			heredoc_child(t_minishell **main, int *i, t_alloc **garbage);
 int			get_right_input(t_minishell **main, int *i, t_alloc **garbage);

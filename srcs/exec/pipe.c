@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julietteandrieux <julietteandrieux@stud    +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:20:25 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/16 01:04:56 by julietteand      ###   ########.fr       */
+/*   Updated: 2024/01/16 13:59:40 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,18 +31,18 @@ void	handle_command_args(t_minishell **main, int *i, t_alloc **garbage)
 	(*main)->redir = 0;
 	(*main)->cmd_args = create_cmd_args(main, i, garbage);
 	if ((*main)->command[*i].type == DB_LEFT_CHEV)
-        ft_heredoc(main, i, garbage);
-    else if ((*main)->command[*i].type >= LEFT_CHEV && (*main)->command[*i].type <= RIGHT_CHEV)
-    {
-        (*main)->redir = 1;
-    }
+	{
+		ft_heredoc(main, i, garbage);
+	}
+	else if ((*main)->command[*i].type >= LEFT_CHEV && \
+	(*main)->command[*i].type <= RIGHT_CHEV)
+		(*main)->redir = 1;
 }
 
 void	initialize_process(t_minishell **main, int *i)
 {
 	(void)i;
 	//init_process_signal();
-	
 	pipe((*main)->fd);
 	pipe((*main)->com);
 	(*main)->pid = fork();
@@ -51,12 +51,10 @@ void	initialize_process(t_minishell **main, int *i)
 		perror("pid");
 		exit(EXIT_FAILURE);
 	}
-	//printf("Initialisation du processus, PID : %d\n", (*main)->pid);
 }
 
 void	execute_child_process(t_minishell **main, int *i, t_alloc **garbage)
 {
-
 	close((*main)->fd[0]);
 	if ((*main)->com[0] != -1)
 		close((*main)->com[0]);
@@ -72,21 +70,6 @@ void	execute_child_process(t_minishell **main, int *i, t_alloc **garbage)
 	}
 	else
 		close((*main)->fd[1]);
-	if ((*main)->command[*i].type == DB_LEFT_CHEV)
-	{
-		printf("Gestion du heredoc dans le processus enfant\n");
-		printf("Ouverture du fichier heredoc : %s\n", (*main)->tmp_filename);
-		int heredoc_fd = open((*main)->tmp_filename, O_RDONLY);
-		printf("Après ouverture du fichier heredoc : %d\n", heredoc_fd);
-        if (heredoc_fd == -1)
-		{
-            perror("Erreur lors de l'ouverture du fichier heredoc");
-            exit(EXIT_FAILURE);
-        }
-        //Rediriger STDIN vers le fichier heredoc
-       dup2(heredoc_fd, STDIN_FILENO);
-       close(heredoc_fd);
-	}
 	if (next_is_pipe(main, i))
 	{
 		dup2((*main)->fd[0], STDIN_FILENO);
@@ -102,16 +85,15 @@ void	execute_child_process(t_minishell **main, int *i, t_alloc **garbage)
 	if ((*main)->redir == -1)
 		exit(EXIT_FAILURE);
 	if (execute_builtins(main, garbage) == -1)
-	{
-		//printf("exécution de %s\n", (*main)->command[*i].word);
-		if (execute_command(main, garbage) == -1)
-			exit (EXIT_FAILURE);
-	}
+		execute_command(main, garbage);
 	exit(EXIT_SUCCESS);
 }
 
 void	handle_parent_process(t_minishell **main, int *i, int *status)
 {
+	int	original_stdin;
+
+	(*main)->is_heredoc_used = true;
 	if ((*main)->com[1] != -1)
 		close((*main)->com[1]);
 	if ((*main)->fd[1] != -1)
@@ -120,6 +102,15 @@ void	handle_parent_process(t_minishell **main, int *i, int *status)
 		close((*main)->old_fd);
 	(*main)->old_fd = (*main)->fd[0];
 	waitpid((*main)->pid, status, 0);
+	if ((*main)->is_heredoc_used)
+	{
+		original_stdin = open("/dev/tty", O_RDONLY);
+		if (original_stdin < 0)
+		{
+			perror("Erreur lors de l'ouverture de /dev/tty");
+			exit(EXIT_FAILURE);
+		}
+	}
 	if ((*main)->com[0] != -1)
 	{
 		read((*main)->com[0], i, sizeof(*i));

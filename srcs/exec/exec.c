@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/15 16:13:55 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/16 13:56:27 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int	execute_builtins(t_minishell **main, t_alloc **garbage)
 	return (-1);
 }
 
-int	execute_command(t_minishell **main, t_alloc **garbage)
+void	execute_command(t_minishell **main, t_alloc **garbage)
 {
 	(*main)->path = NULL;
 	if (!(*main)->cmd_args)
@@ -48,19 +48,15 @@ int	execute_command(t_minishell **main, t_alloc **garbage)
 		perror("Error creating command args");
 		exit(EXIT_FAILURE);
 	}
-	//printf("cmd_args : %s\n", (*main)->cmd_args[0]);
 	(*main)->path = find_command_path((*main)->cmd_args[0], garbage);
-	//printf("path : %s\n", (*main)->path);
 	if (!(*main)->path)
 	{
 		perror("Command not found");
 		exit(127);
 	}
-	//printf("Executing command: %s, path : %s\n", (*main)->path, (*main)->cmd_args[0]);
 	execve((*main)->path, (*main)->cmd_args, (*main)->envp);
 	perror("execve");
-	//exit(EXIT_FAILURE);
-	return (-1);
+	exit(EXIT_FAILURE);
 }
 
 int	execute_non_builtin(t_minishell **main, t_alloc **garbage)
@@ -106,7 +102,8 @@ char	**create_cmd_args(t_minishell **main, int *i, t_alloc **garbage)
 		return (NULL);
 	while ((*main)->command[*i].type == WORD)
 	{
-		cmd_args[j] = ft_strjoin(cmd_args[j], (*main)->command[*i].word, garbage);
+		cmd_args[j] = ft_strjoin(cmd_args[j], \
+		(*main)->command[*i].word, garbage);
 		if (!cmd_args[j])
 			return (NULL);
 		*i += 1;
@@ -118,26 +115,15 @@ char	**create_cmd_args(t_minishell **main, int *i, t_alloc **garbage)
 
 void	handle_command(t_minishell **main, t_alloc **garbage)
 {
-	int			i;
-	// int			exec;
+	int	i;
 
 	i = 0;
-	// exec = 0;
 	(*main)->cmd_args = NULL;
 	(*main)->command = ft_parsing(main, garbage);
 	if ((*main)->command == NULL)
 		return ;
-	// while ((*main)->command[i].type != 0)
-	// {
-		// if ((*main)->command[i].type == WORD)
-		// 	(*main)->cmd_args = create_cmd_args(main, &i, garbage);
-		// if ((*main)->command[i].type >= PIPE)
-		// if (is_builtin((*main)->command[0].word))
-		// {
-		// 	(*main)->cmd_args = create_cmd_args(main, &i, garbage);
-		// 	(execute_builtins(main, garbage));
-		// }
-		if ((*main)->command[i].type != 0)
-			ft_pipex(main, &i, garbage);
+	if ((*main)->command[i].type != 0)
+		ft_pipex(main, &i, garbage);
 }
+
 
