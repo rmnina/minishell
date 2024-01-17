@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:03:22 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/17 03:07:57 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/17 21:11:41 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,10 +89,12 @@ typedef struct s_minishell {
 	int					old_fd;
 	int					code_status;
 	int					status;
+	int					tmp_fd;
 	int					redir;
 	int					total_cmd;
 	int					nb_cmd;
 	pid_t				*pid;
+	char				*tmp_filename;
 	char				*line;
 	char				*h_line;
 	char				*path;
@@ -167,6 +169,7 @@ int			ft_pipex(t_minishell **main, int *i, t_alloc **garbage);
 char		**create_cmd_args(t_minishell **main, int *i, t_alloc **garbage);
 void		handle_command(t_minishell **main, t_alloc **garbage);
 int			execution(t_minishell **main, int *i, t_alloc **garbage);
+int			get_all_inputs(t_minishell **main, int *i, t_alloc **garbage);
 
 
 /* ******************************* BUILTINS ******************************* */
@@ -222,5 +225,9 @@ int			redir_output(t_minishell **main, char *filename);
 int			will_be_piped(t_minishell **main, int *i);
 int			init_heredoc(t_minishell **main, int *i, t_alloc **garbage);
 int			check_redir(t_minishell **main, int *i);
+int 		check_next_redir(t_minishell **main, int *i);
+char		**ft_strjoin_args(t_minishell **main, int *i, t_alloc **garbage);
+int			browse_outputs(t_minishell **main, int *i, char **filename, t_alloc **garbage);
+int			browse_inputs(t_minishell **main, int *i, char **filename, t_alloc **garbage);
 
 #endif

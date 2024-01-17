@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 16:22:53 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/17 04:53:43 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/17 18:33:23 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,8 +90,8 @@ void	read_add(t_minishell **main, int *j, t_alloc **garbage)
 			break ;
 		if (heredoc_is_expand((*main)->h_line))
 			(*main)->h_line = heredoc_get_expand(main, garbage);
-		write((*main)->fd[1], (*main)->h_line, ft_strlen((*main)->h_line));
-		write((*main)->fd[1], "\n", 1);
+		write((*main)->tmp_fd, (*main)->h_line, ft_strlen((*main)->h_line));
+		write((*main)->tmp_fd, "\n", 1);
 		free((*main)->h_line);
 	}
 }
@@ -105,14 +105,19 @@ int	ft_heredoc(t_minishell **main, int *i, t_alloc **garbage)
 		(*main)->h_delimiter = get_delimiter(main, i, garbage);
 	while ((*main)->h_delimiter[j])
 	{	
-		if (pipe((*main)->fd) == -1)
-			return (-1);
+		(*main)->tmp_fd = open((*main)->tmp_filename, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+		if ((*main)->tmp_fd < 0)
+			exit(EXIT_FAILURE);
 		read_add(main, &j, garbage);
 		j++;
 	}
+	close((*main)->tmp_fd);
 	close((*main)->fd[1]);
-	if (dup2((*main)->fd[0], STDIN_FILENO) == -1)
-		return (-1);
+	open((*main)->tmp_filename, O_RDONLY);
+	if ((*main)->tmp_fd < 0)
+		exit(EXIT_FAILURE);
+	dup2((*main)->tmp_fd, STDIN_FILENO);
+	close((*main)->tmp_fd);
 	return (0);
 }
 

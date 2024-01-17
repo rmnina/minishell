@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/26 23:39:05 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/14 03:15:39 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/17 19:19:12 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,40 +72,25 @@ char	**ft_envjoin(char **envp, char *str, t_alloc **garbage)
 	return (new_envp);
 }
 
-// char	*ft_strdel(char *str, char c, int n, t_alloc **garbage)
-// {
-// 	char	*new_str;
-// 	int		i;
-// 	int		j;
+char	**ft_strjoin_args(t_minishell **main, int *i, t_alloc **garbage)
+{
+	char	**new_args;
+	int		j;
+	int		count;
 
-// 	i = 0;
-// 	j = 0;
-// 	new_str = garb_malloc(sizeof(char), ft_strlen(str), garbage);
-// 	while (str[i])
-// 	{
-// 		if (str[i] == c && i < n)
-// 			i++;
-// 		new_str[j] = str[i];
-// 		j++;
-// 		i++;
-// 	}
-// 	new_str[j] = '\0';
-// 	return (new_str);
-// }
-
-
-// char	**ft_append_var(char **env, char *str, int index_equal, t_alloc **garbage)
-// {
-// 	char	*parsed_str;
-// 	int		index_var;
-// 	char	*append_str;
-
-// 	parsed_str = ft_strdel(str, '+', index_equal, garbage);
-// 	append_str = ft_substr(str, index_equal + 1, ft_strlen(str), garbage);
-// 	index_var = is_new_var(env, parsed_str);
-// 	if (index_var == -1)
-// 		env = ft_envjoin(env, parsed_str, garbage);
-// 	else
-// 		env[index_var] = ft_strjoin(env[index_var], append_str, garbage);
-// 	return (env);
-// }
+	j = 0;
+	count = 0;
+	while ((*main)->cmd_args[count])
+		count++;
+	count++;
+	new_args = garb_malloc(sizeof(char *), count + 1, garbage);
+	while ((*main)->cmd_args[j])
+	{
+		new_args[j] = ft_strjoin(new_args[j], (*main)->cmd_args[j], garbage);
+		j++;
+	}
+	new_args[j] = ft_strjoin(new_args[j], (*main)->command[*i].word, garbage);
+	j++;
+	new_args[j] = NULL;
+	return (new_args);
+}

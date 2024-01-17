@@ -6,7 +6,7 @@
 #    By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/14 14:15:25 by jdufour           #+#    #+#              #
-#    Updated: 2024/01/15 00:52:37 by jdufour          ###   ########.fr        #
+#    Updated: 2024/01/17 20:40:14 by jdufour          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,7 +41,8 @@ SRCS = srcs/main.c \
 	srcs/utils/heredoc_utils.c \
 	srcs/utils/joins.c \
 	srcs/utils/toolbox_utils.c \
-	srcs/utils/redirect_utils.c
+	srcs/utils/redirect_utils.c \
+	srcs/utils/redirect_multi.c \
 
 OBJS = $(SRCS:.c=.o)
 

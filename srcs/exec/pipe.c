@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:20:25 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/17 18:10:02 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/17 21:12:15 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ int	will_be_piped(t_minishell **main, int *i)
 	j = 0;
 	while ((*main)->command[*i + j].type && (*main)->command[*i + j].type != PIPE)
 		j++;
-	if ((*main)->command[*i].type == PIPE)
+	if ((*main)->command[*i + j].type == PIPE)
 		return (1);
 	return (0);
 }
@@ -108,13 +108,13 @@ int	check_redir(t_minishell **main, int *i)
 	{
 		if ((*main)->command[*i + j].type >= LEFT_CHEV \
 		&& (*main)->command[*i + j].type <= DB_LEFT_CHEV)
-			return (1);
+			return (j);
 		j++;
 	}
-	return (0);
+	return (-1);
 }
 
-void	wait_pids(t_minishell **main, int *i)
+void	wait_pids(t_minishell **main)
 {
 	int	j;
 	int	status;
@@ -133,8 +133,6 @@ void	wait_pids(t_minishell **main, int *i)
 			(*main)->code_status = WEXITSTATUS(status);
 		j++;
 	}
-	read((*main)->com[0], i, sizeof(*i));
-	close((*main)->com[0]);
 }
 
 void	child_process(t_minishell **main, int *i, t_alloc **garbage)
@@ -143,7 +141,10 @@ void	child_process(t_minishell **main, int *i, t_alloc **garbage)
 	if (check_redir(main, i))
 	{
 		if (((*main)->redir = ft_redirect(main, i, garbage)) == -1)
+		{
+			(*main)->code_status = 1;
 			exit(EXIT_FAILURE);
+		}
 	}
 	write((*main)->com[1], i, sizeof(*i));
 	close((*main)->com[1]);
@@ -177,7 +178,9 @@ int first_pipe(t_minishell **main, int *i, t_alloc **garbage)
 		if ((*main)->infilefd > 0)
 			close ((*main)->infilefd);
 		if ((*main)->outfilefd > 0)
-			close ((*main)->outfilefd);	
+			close ((*main)->outfilefd);
+		read((*main)->com[0], i, sizeof(*i));
+		close((*main)->com[0]);
     }
     return (0);
 }
@@ -208,6 +211,8 @@ int middle_pipe(t_minishell **main, int *i, t_alloc **garbage)
 			close ((*main)->infilefd);
 		if ((*main)->outfilefd > 0)
 			close ((*main)->outfilefd);
+		read((*main)->com[0], i, sizeof(*i));
+		close((*main)->com[0]);
     }
     return 0;
 }
@@ -243,6 +248,8 @@ int last_pipe(t_minishell **main, int *i, t_alloc **garbage)
 			close ((*main)->infilefd);
 		if ((*main)->outfilefd > 0)
 			close ((*main)->outfilefd);
+		read((*main)->com[0], i, sizeof(*i));
+		close((*main)->com[0]);
     }
     return 0;
 }
@@ -252,16 +259,18 @@ int	ft_pipex(t_minishell **main, int *i, t_alloc **garbage)
 	init_process_signal();
 	if (pipe((*main)->com) == -1)
 		return (-1);
-	while ((*main)->command[*i].type)
+	while ((*main)->command[*i].type && (*main)->code_status != 1)
 	{
 		if (is_first_pipe(main, i))
 			first_pipe(main, i, garbage);
 		else
 			middle_pipe(main, i, garbage);
 		(*i)++;
+		// dprintf(2, "cmd args avant update = %s\n", (*main)->cmd_args[0]);
 		(*main)->cmd_args = create_cmd_args(main, i, garbage);
+		// dprintf(2, "cmd args APRES update = %s\n", (*main)->cmd_args[0]);
 	}
 	last_pipe(main, i, garbage);
-	wait_pids(main, i);
+	wait_pids(main);
 	return (0);
 }

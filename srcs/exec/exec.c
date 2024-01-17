@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/17 15:11:56 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/17 20:43:46 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,9 +119,11 @@ void	init_redirect(t_minishell **main, int *i, t_alloc **garbage)
 	if (!pid)
 	{
 		close((*main)->com[0]);
-		ft_redirect(main, i, garbage);
-		if (execute_builtins(main, garbage) == -1)
-			execute_command(main, garbage);
+		if (ft_redirect(main, i, garbage) != -1)
+		{
+			if (execute_builtins(main, garbage) == -1)
+				execute_command(main, garbage);
+		}
 		write((*main)->com[1], i, sizeof(*i));
 		close((*main)->com[1]);
 		exit(EXIT_SUCCESS);
@@ -151,11 +153,12 @@ void	handle_command(t_minishell **main, t_alloc **garbage)
 		(*main)->total_cmd = init_pids(main, garbage);
 		ft_pipex(main, &i, garbage);
 	}
-	else if (check_redir(main, &i))
+	else if (check_redir(main, &i) != -1)
 		init_redirect(main, &i, garbage);
 	else
 	{
 		if (execute_builtins(main, garbage) == -1)
 			execute_non_builtin(main, garbage);
 	}
+	unlink((*main)->tmp_filename);
 }
