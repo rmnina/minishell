@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/17 20:43:46 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/17 21:55:29 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,8 @@ void	execute_command(t_minishell **main, t_alloc **garbage)
 	(*main)->path = find_command_path((*main)->cmd_args[0], garbage);
 	if (!(*main)->path)
 	{
-		perror("Command not found");
+		write(2, (*main)->cmd_args[0], sizeof((*main)->cmd_args[0]));
+		perror("command not found");
 		exit(127);
 	}
 	execve((*main)->path, (*main)->cmd_args, (*main)->envp);
@@ -123,6 +124,11 @@ void	init_redirect(t_minishell **main, int *i, t_alloc **garbage)
 		{
 			if (execute_builtins(main, garbage) == -1)
 				execute_command(main, garbage);
+		}
+		else
+		{
+			(*main)->code_status = 1;
+			exit(EXIT_FAILURE);
 		}
 		write((*main)->com[1], i, sizeof(*i));
 		close((*main)->com[1]);

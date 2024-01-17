@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:03:22 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/17 21:11:41 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/18 00:46:06 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,15 +161,12 @@ void		execute_command(t_minishell **main, t_alloc **garbage);
 
 int			init_pids(t_minishell **main, t_alloc **garbage);
 int			ft_heredoc(t_minishell **main, int *i, t_alloc **garbage);
-// void		ft_heredoc_args(t_minishell **main, int i, t_alloc **garbage);
-// int			heredoc_child(t_minishell **main, int *i, t_alloc **garbage);
-int			get_right_input(t_minishell **main, int *i, t_alloc **garbage);
 int			ft_redirect(t_minishell **main, int *i, t_alloc **garbage);
 int			ft_pipex(t_minishell **main, int *i, t_alloc **garbage);
 char		**create_cmd_args(t_minishell **main, int *i, t_alloc **garbage);
 void		handle_command(t_minishell **main, t_alloc **garbage);
-int			execution(t_minishell **main, int *i, t_alloc **garbage);
 int			get_all_inputs(t_minishell **main, int *i, t_alloc **garbage);
+int			get_all_outputs(t_minishell **main, int *i, t_alloc **garbage);
 
 
 /* ******************************* BUILTINS ******************************* */
@@ -226,6 +223,9 @@ int			will_be_piped(t_minishell **main, int *i);
 int			init_heredoc(t_minishell **main, int *i, t_alloc **garbage);
 int			check_redir(t_minishell **main, int *i);
 int 		check_next_redir(t_minishell **main, int *i);
+void		check_next_args(t_minishell **main, int *i, t_alloc **garbage);
+char		*get_last_out_filename(t_minishell **main, int *i, t_alloc **garbage);
+char		*get_last_in_filename(t_minishell **main, int *i, t_alloc **garbage);
 char		**ft_strjoin_args(t_minishell **main, int *i, t_alloc **garbage);
 int			browse_outputs(t_minishell **main, int *i, char **filename, t_alloc **garbage);
 int			browse_inputs(t_minishell **main, int *i, char **filename, t_alloc **garbage);

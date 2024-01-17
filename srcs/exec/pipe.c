@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:20:25 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/17 21:12:15 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/17 21:51:41 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,6 +121,7 @@ void	wait_pids(t_minishell **main)
 	
 	j = 0;
 	status = 0;
+	dprintf(2, "pid %d = %d\n", j, (*main)->pid[j]);
 	while ((*main)->pid[j] != -2)
 	{
 		if (waitpid((*main)->pid[j], &status, 0) == -1)
@@ -129,6 +130,7 @@ void	wait_pids(t_minishell **main)
 			perror("waitpid");
 			exit(255);
 		}
+		dprintf(2, "AFTER WAIT : pid %d = %d\n", j, (*main)->pid[j]);
 		if (WIFEXITED(status))
 			(*main)->code_status = WEXITSTATUS(status);
 		j++;
@@ -138,11 +140,13 @@ void	wait_pids(t_minishell **main)
 void	child_process(t_minishell **main, int *i, t_alloc **garbage)
 {
 	close((*main)->com[0]);
-	if (check_redir(main, i))
+	if (check_redir(main, i) != -1)
 	{
 		if (((*main)->redir = ft_redirect(main, i, garbage)) == -1)
 		{
 			(*main)->code_status = 1;
+			write((*main)->com[1], i, sizeof(*i));
+			close((*main)->com[1]);
 			exit(EXIT_FAILURE);
 		}
 	}

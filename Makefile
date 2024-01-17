@@ -6,7 +6,7 @@
 #    By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/14 14:15:25 by jdufour           #+#    #+#              #
-#    Updated: 2024/01/17 20:40:14 by jdufour          ###   ########.fr        #
+#    Updated: 2024/01/17 22:52:30 by jdufour          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,6 +32,8 @@ SRCS = srcs/main.c \
 	srcs/exec/heredoc.c \
 	srcs/exec/path.c \
 	srcs/exec/redirection.c \
+	srcs/exec/redir_infile.c \
+	srcs/exec/redir_outfile.c \
 	srcs/lexer/lexer.c \
 	srcs/parser/expand.c \
 	srcs/parser/init_parser.c \
@@ -42,7 +44,6 @@ SRCS = srcs/main.c \
 	srcs/utils/joins.c \
 	srcs/utils/toolbox_utils.c \
 	srcs/utils/redirect_utils.c \
-	srcs/utils/redirect_multi.c \
 
 OBJS = $(SRCS:.c=.o)
 
