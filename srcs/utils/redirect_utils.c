@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirect_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 17:16:38 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/15 01:05:00 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/17 16:39:21 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,8 @@ int	redir_input(t_minishell **main, char *filename)
 
 int	is_output(t_minishell **main, int *i)
 {
-	if ((*main)->command[*i + 2].type && ((*main)->command[*i + 2].type == DB_RIGHT_CHEV \
+	if ((*main)->command[*i + 2].type && \
+	((*main)->command[*i + 2].type == DB_RIGHT_CHEV \
 	|| (*main)->command[*i + 2].type == RIGHT_CHEV))
 		return (1);
 	return (0);

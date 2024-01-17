@@ -3,50 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   pipe.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julietteandrieux <julietteandrieux@stud    +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:20:25 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/17 00:32:50 by julietteand      ###   ########.fr       */
+/*   Updated: 2024/01/17 19:52:41 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int	next_is_pipe(t_minishell **main, int *i)
-{
-	int	j;
+// int	next_is_pipe(t_minishell **main, int *i)
+// {
+// 	int	j;
 
-	if ((*main)->command[*i].type == PIPE)
-		return (1);
-	j = *i;
-	while ((*main)->command[*i + j].type == WORD)
-		j++;
-	if ((*main)->command[*i + j].type == PIPE)
-		return (1);
-	return (0);
-}
+// 	if ((*main)->command[*i].type == PIPE)
+// 		return (1);
+// 	j = *i;
+// 	while ((*main)->command[*i + j].type == WORD)
+// 		j++;
+// 	if ((*main)->command[*i + j].type == PIPE)
+// 		return (1);
+// 	return (0);
+// }
 
-void	handle_command_args(t_minishell **main, int *i, t_alloc **garbage)
-{
-	(*main)->redir = 0;
-	//(*main)->cmd_args = create_cmd_args(main, i, garbage);
-	if ((*main)->command[*i].type != PIPE)
-    {
-        (*main)->cmd_args = create_cmd_args(main, i, garbage);
-    }
-    else
-    {
-        (*main)->cmd_args = NULL;
-    }
-	if ((*main)->command[*i].type == DB_LEFT_CHEV)
-	{
-		ft_heredoc(main, i, garbage);
-	}
-	else if ((*main)->command[*i].type >= LEFT_CHEV && (*main)->command[*i].type <= RIGHT_CHEV)
-	{	
-		(*main)->redir = 1;
-	}
-}
 
 // void	initialize_process(t_minishell **main, int *i)
 // {
@@ -175,136 +154,173 @@ void	handle_command_args(t_minishell **main, int *i, t_alloc **garbage)
 // 	return (1);
 // }
 
-void initialize_process(t_minishell **main, int next_pipe)
+
+void	handle_command_args(t_minishell **main, int *i, t_alloc **garbage)
 {
-	if (next_pipe) 
+	(*main)->redir = 0;
+	printf("commandes avant handle: %s\n", (*main)->command[0].word);
+	(*main)->cmd_args = create_cmd_args(main, i, garbage);
+	if ((*main)->command[*i].type == DB_LEFT_CHEV)
 	{
-		pipe((*main)->fd);
-    }
-    (*main)->pid = fork();
-    if ((*main)->pid == -1)
-	{
-        perror("pid");
-        exit(EXIT_FAILURE);
-    }
+		ft_heredoc(main, i, garbage);
+	}
+	if ((*main)->command[*i].type >= LEFT_CHEV && \
+	(*main)->command[*i].type <= RIGHT_CHEV)
+	{	
+		(*main)->redir = 1;
+	}
 }
 
-
-void execute_child_process(t_minishell **main, int *i, t_alloc **garbage, int next_pipe)
+void	initialize_process(t_minishell **main, int next_pipe)
 {
+	if (next_pipe)
+		pipe((*main)->fd);
+	(*main)->pid = fork();
+	if ((*main)->pid == -1)
+	{
+		perror("pid");
+		exit(EXIT_FAILURE);
+	}
+}
+
+void	execute_child_process(t_minishell **main, int *i, t_alloc **garbage, int next_pipe)
+{
+	//printf("Debut de execute_child_process. infilefd: %d, outfilefd: %d\n", (*main)->infilefd, (*main)->outfilefd);
+	if ((*main)->redir == 1 || (*main)->command[*i].type == DB_RIGHT_CHEV)
+		(*main)->redir = ft_redirect(main, i, garbage);
+	if ((*main)->redir == -1)
+		exit(EXIT_FAILURE);
 	if (*i > 0)
 	{
 		dup2((*main)->old_fd, STDIN_FILENO);
 		close((*main)->old_fd);
 	}
-	if (next_pipe) 
+	if (next_pipe)
 	{
 		dup2((*main)->fd[1], STDOUT_FILENO);
-        close((*main)->fd[1]);
-    }
+		close((*main)->fd[1]);
+	}
 	close((*main)->fd[0]);
 	if (execute_builtins(main, garbage) == -1)
-	{
 		execute_command(main, garbage);
-	}
 	exit(EXIT_SUCCESS);
 }
 
-void handle_parent_process(t_minishell **main, int *i, int *status, int next_pipe)
+void	handle_parent_process(t_minishell **main, int *i, int *status, int next_pipe)
 {
 	int	original_stdin;
 
 	original_stdin = 0;
 	(*main)->is_heredoc_used = true;
 	if (*i > 0)
-	{
 		close((*main)->old_fd);
-	}
 	if (next_pipe)
 	{
 		(*main)->old_fd = (*main)->fd[0];
-        close((*main)->fd[1]);
-    }
-	else 
+		close((*main)->fd[1]);
+	}
+	else
 	{
 		close((*main)->fd[0]);
-        close((*main)->fd[1]);
-    }
-    waitpid((*main)->pid, status, 0);
+		close((*main)->fd[1]);
+	}
+	waitpid((*main)->pid, status, 0);
 	if ((*main)->is_heredoc_used)
- 	{
- 		original_stdin = open("/dev/tty", O_RDONLY);
- 		if (original_stdin < 0)
+	{
+		original_stdin = open("/dev/tty", O_RDONLY);
+		if (original_stdin < 0)
 			exit(EXIT_FAILURE);
- 		dup2(original_stdin, STDIN_FILENO);
+		dup2(original_stdin, STDIN_FILENO);
 		close(original_stdin);
 
 	}
+	if (WIFEXITED(*status))
+		(*main)->code_status = WEXITSTATUS(*status);
 }
-int count_total_commands(t_command *command)
-{
-    int count = 0;
-    int i = 0;
 
-    if (command[0].word == NULL) 
-		return 0;
-    while (command[i].word != NULL)
-    {
-        if (command[i].type == PIPE)
-        {
-            count++;
-        }
-        i++;
-    }
-    return (count + 1);
+int	count_total_commands(t_command *command)
+{
+	int	count;
+	int	i;
+
+	count = 0;
+	i = 0;
+	if (command[0].word == NULL)
+		return (0);
+	while (command[i].word != NULL)
+	{
+		if (command[i].type == PIPE)
+			count++;
+		i++;
+	}
+	return (count + 1);
 }
 
 
 
 int ft_pipex(t_minishell **main, int *i, t_alloc **garbage)
 {
-    int status = 0;
-	int j = 0;
-    int cmd_index = 0;
-	int next_pipe = 0;
-	int num_commands = count_total_commands((*main)->command);
-	int is_first_command_cat = 0;
-    pid_t *pids = malloc(sizeof(pid_t) * num_commands); 
+	int		status;
+	int		j;
+	int		cmd_index;
+	int		next_pipe;
+	int		num_commands;
+	int 	is_first_command_cat;
+	pid_t	*pids;
+
+	status = 0;
+	is_first_command_cat = 0;
+	next_pipe = 0;
+	cmd_index = 0;
+	j = 0;
+	num_commands = count_total_commands((*main)->command);
+	pids = malloc(sizeof(pid_t) * num_commands);
 	if (!pids)
-		return -1;
-	if (strcmp((*main)->command[0].word, "cat") == 0 && (*main)->command[1].type == PIPE) {
-            is_first_command_cat = 1;
-			(*i)++;
-    }
-	for (int j = 0; (*main)->command[*i].word != NULL; j++)
+		return (-1);
+	if (ft_strcmp((*main)->command[0].word, "cat") == 0 && \
+	(*main)->command[1].type == PIPE)
 	{
-       	handle_command_args(main, i, garbage);
-	    next_pipe = ((*main)->command[*i + 1].word != NULL && (*main)->command[*i].type == PIPE);
-		initialize_process(main, next_pipe);
-        if ((*main)->pid == 0)
+			is_first_command_cat = 1;
+			(*i)++;
+	}
+	while ((*main)->command[*i].word != NULL)
+	{
+		handle_command_args(main, i, garbage);
+		//printf("commandes: %s\n", (*main)->command[0].word);
+		if (is_builtin((*main)->command[0].word) && \
+		(*main)->command[*i].type == 0)
 		{
+			execute_builtins(main, garbage);
+			return (0);
+		}
+		next_pipe = ((*main)->command[*i + 1].word != NULL && \
+		(*main)->command[*i].type == PIPE);
+		initialize_process(main, next_pipe);
+		if ((*main)->pid == 0)
 			execute_child_process(main, i, garbage, next_pipe);
-        } 
-		else 
+		else
 		{
 			pids[cmd_index++] = (*main)->pid;
-            handle_parent_process(main, i, &status, next_pipe);
-        }
-        while ((*main)->command[*i].word != NULL && (*main)->command[*i].type != PIPE)
-		{
+			handle_parent_process(main, i, &status, next_pipe);
+		}
+		if ((*main)->is_heredoc_used)
+		while ((*main)->command[*i].word != NULL && \
+		(*main)->command[*i].type != PIPE)
 			(*i)++;
-        }
-        if ((*main)->command[*i].word != NULL && (*main)->command[*i].type == PIPE)
-		{
+		if ((*main)->command[*i].word != NULL && \
+		(*main)->command[*i].type == PIPE)
 			(*i)++;
-        }
-    }
-    while (j < cmd_index)
-    {
-        waitpid(pids[j], &status, 0);
+		if ((*main)->filefd != -1)
+			close((*main)->filefd);
 		j++;
-    }
-    free(pids);
+	}
+	j = 0;
+	while (j < cmd_index)
+	{
+		waitpid(pids[j], &status, 0);
+		j++;
+	}
+	free(pids);
 	if (is_first_command_cat)
 	{
 		*i = 0;
@@ -312,9 +328,9 @@ int ft_pipex(t_minishell **main, int *i, t_alloc **garbage)
 		initialize_process(main, 0);
 		if ((*main)->pid == 0)
 			execute_child_process(main, i, garbage, 0);
-		else 
+		else
 			waitpid((*main)->pid, &status, 0);
 	}
-    return (1);
+	return (1);
 }
 

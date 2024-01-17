@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julietteandrieux <julietteandrieux@stud    +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:03:22 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/16 21:31:35 by julietteand      ###   ########.fr       */
+/*   Updated: 2024/01/17 17:24:33 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,6 @@ enum e_type {
 # define DOUBLE_QUOTE 34
 # define UNDERSCORE 95
 # define SPECIAL_EXIT_CODE 255
-# define SPACE 32
 
 /* ******************************* STRUCTURES ******************************* */
 
@@ -91,7 +90,8 @@ typedef struct s_minishell {
 	int					code_status;
 	int					status;
 	int					redir;
-	int					nb_cmds; 
+	int					outfilefd;
+	int					infilefd;
 	pid_t				pid;
 	char				*line;
 	char				*h_line;
@@ -171,7 +171,7 @@ void		handle_command(t_minishell **main, t_alloc **garbage);
 
 /* ******************************* BUILTINS ******************************* */
 
-int			ft_cd(t_minishell **main);
+int			ft_cd(t_minishell **main, t_alloc **garbage);
 int			ft_echo(t_minishell **main);
 int			ft_env(t_minishell **main);
 int			ft_exit(t_minishell **main, t_alloc **garbage);
