@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/16 02:37:09 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/17 15:11:56 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,15 +108,54 @@ char	**create_cmd_args(t_minishell **main, int *i, t_alloc **garbage)
 	return (cmd_args);
 }
 
+void	init_redirect(t_minishell **main, int *i, t_alloc **garbage)
+{
+	int	pid;
+	int	status;
+
+	status = 0;
+	pipe((*main)->com);
+	pid = fork();
+	if (!pid)
+	{
+		close((*main)->com[0]);
+		ft_redirect(main, i, garbage);
+		if (execute_builtins(main, garbage) == -1)
+			execute_command(main, garbage);
+		write((*main)->com[1], i, sizeof(*i));
+		close((*main)->com[1]);
+		exit(EXIT_SUCCESS);
+	}
+	close((*main)->com[1]);
+	waitpid(pid, &status, 0);
+	if (WIFEXITED(status))
+		(*main)->code_status = WEXITSTATUS(status);
+	
+}
+
 void	handle_command(t_minishell **main, t_alloc **garbage)
 {
 	int			i;
 
 	i = 0;
 	(*main)->cmd_args = NULL;
+	(*main)->nb_cmd = 0;
 	(*main)->command = ft_parsing(main, garbage);
 	if ((*main)->command == NULL)
 		return ;
-	while ((*main)->command[i].type != 0)
-		execution(main, &i, garbage);
+	(*main)->cmd_args = create_cmd_args(main, &i, garbage);
+	if (init_heredoc(main, &i, garbage) == -1)
+		perror("heredoc delimiter");
+	if (will_be_piped(main, &i))
+	{
+		(*main)->total_cmd = init_pids(main, garbage);
+		ft_pipex(main, &i, garbage);
+	}
+	else if (check_redir(main, &i))
+		init_redirect(main, &i, garbage);
+	else
+	{
+		if (execute_builtins(main, garbage) == -1)
+			execute_non_builtin(main, garbage);
+	}
 }

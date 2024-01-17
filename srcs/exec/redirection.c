@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 17:13:45 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/16 02:01:24 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/17 03:23:22 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ int	get_right_input(t_minishell **main, int *i, t_alloc **garbage)
 			get_all_redir(main, i, garbage);
 		}
 	}
-	if ((*main)->infilefd == -1 || !(((*main)->infilefd = open(filename, O_RDONLY, 0644)) == -1))
+	if ((*main)->infilefd == -1 || ((*main)->infilefd = open(filename, O_RDONLY, 0644)) == -1)
 	{
 		if (is_input(main, i) || is_output(main, i))
 		{

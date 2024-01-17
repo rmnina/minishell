@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 16:22:53 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/14 22:07:18 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/17 04:53:43 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,8 @@ int	ft_heredoc(t_minishell **main, int *i, t_alloc **garbage)
 	int	j;
 
 	j = 0;
-	(*main)->h_delimiter = get_delimiter(main, i, garbage);
+	if (!(*main)->h_delimiter)
+		(*main)->h_delimiter = get_delimiter(main, i, garbage);
 	while ((*main)->h_delimiter[j])
 	{	
 		if (pipe((*main)->fd) == -1)

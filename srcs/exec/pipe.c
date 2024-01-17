@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:20:25 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/16 02:58:51 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/17 16:12:40 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	init_pids(t_minishell **main, t_alloc **garbage)
 	int	i;
 	int	j;
 
-	count = 0;
+	count = 1;
 	i = 0;
 	j = 0;
 	while ((*main)->command[j].type)
@@ -37,7 +37,7 @@ int	init_pids(t_minishell **main, t_alloc **garbage)
 		(*main)->pid[i] = 1;
 		i++;
 	}
-	(*main)->pid[i] = 0;
+	(*main)->pid[i] = -2;
 	return (count);
 }
 
@@ -106,7 +106,7 @@ int	check_redir(t_minishell **main, int *i)
 	j = 0;
 	while ((*main)->command[*i + j].type && (*main)->command[*i + j].type != PIPE)
 	{
-		if ((*main)->command[*i + j].type >= RIGHT_CHEV \
+		if ((*main)->command[*i + j].type >= LEFT_CHEV \
 		&& (*main)->command[*i + j].type <= DB_LEFT_CHEV)
 			return (1);
 		j++;
@@ -114,27 +114,33 @@ int	check_redir(t_minishell **main, int *i)
 	return (0);
 }
 
-int	execution(t_minishell **main, int *i, t_alloc **garbage)
+void	wait_pids(t_minishell **main, int *i)
 {
-	(*main)->nb_cmd = 0;
-	init_process_signal();
-	if (init_heredoc(main, i, garbage) == -1)
-		perror("heredoc delimiter");
-	(*main)->total_cmd = init_pids(main, garbage);
-	(*main)->cmd_args = create_cmd_args(main, i, garbage);
-	if (will_be_piped(main, i))
+	int	j;
+	int	status;
+	
+	j = 0;
+	status = 0;
+	while ((*main)->pid[j] != -2)
 	{
-		if (ft_pipex(main, i, garbage) == -1)
-			return (-1);
+		close((*main)->com[1]);
+		close((*main)->fd[1]);
+		if (waitpid((*main)->pid[j], &status, 0) == -1)
+		{
+			(*main)->code_status = 255;
+			perror("waitpid");
+			exit(255);
+		}
+		// if ((*main)->old_fd != -1)
+		// 	close ((*main)->old_fd);
+		// if (!will_be_piped(main, i))
+		// 	close((*main)->fd[0]);
+		if (WIFEXITED(status))
+			(*main)->code_status = WEXITSTATUS(status);
+		j++;
 	}
-	if ((*main)->command[*i].type >= LEFT_CHEV && (*main)->command[*i].type <= DB_RIGHT_CHEV)
-	{
-		if (ft_redirect(main, i, garbage) == -1)
-			return (-1);
-	}
-	if (execute_builtins(main, garbage) == -1)
-		execute_command(main, garbage);
-	return (1);
+	read((*main)->com[0], i, sizeof(*i));
+	close((*main)->com[0]);
 }
 
 void	child_process(t_minishell **main, int *i, t_alloc **garbage)
@@ -145,130 +151,209 @@ void	child_process(t_minishell **main, int *i, t_alloc **garbage)
 		if (((*main)->redir = ft_redirect(main, i, garbage)) == -1)
 			exit(EXIT_FAILURE);
 	}
-	if (execute_builtins(main, garbage) == -1)
-		execute_command(main, garbage);
 	write((*main)->com[1], i, sizeof(*i));
 	close((*main)->com[1]);
+	if (execute_builtins(main, garbage) == -1)
+		execute_command(main, garbage);
 	exit(EXIT_SUCCESS);
 }
 
-int	first_pipe(t_minishell **main, int *i, t_alloc **garbage)
+int first_pipe(t_minishell **main, int *i, t_alloc **garbage)
 {
-	int	status;
-
-	status = 0;
+    dprintf(2, "je suis bien rentré ici\n");
 	if (pipe((*main)->fd) == -1)
-		return (-1);
-	(*main)->pid[(*main)->nb_cmd] = fork();
-	(*main)->nb_cmd++;
-	if ((*main)->pid[(*main)->nb_cmd - 1] == -1)
-		return (-1);
-	if ((*main)->pid[(*main)->nb_cmd - 1] == 0)
-	{
+        return (-1);
+    (*main)->nb_cmd++;
+    (*main)->pid[(*main)->nb_cmd - 1] = fork();
+    if ((*main)->pid[(*main)->nb_cmd - 1] == -1)
+        return (-1);
+    if ((*main)->pid[(*main)->nb_cmd - 1] == 0)
+    {
 		close((*main)->fd[0]);
-		dup2((*main)->fd[1], STDIN_FILENO);
+		if ((*main)->command[*i].type == PIPE && dup2((*main)->fd[1], STDOUT_FILENO) < 0)
+		{
+			(*main)->code_status = 1, 
+			(exit(EXIT_FAILURE));
+		}
 		close((*main)->fd[1]);
+		// dup2((*main)->fd[0], STDIN_FILENO);
+        child_process(main, i, garbage);
+    }
+    else
+    {
+		close((*main)->com[1]);
+        close((*main)->fd[1]);
+		(*main)->old_fd = dup(STDIN_FILENO);
+		// dup2((*main)->fd[0], STDIN_FILENO);
+		if (!(*main)->command[*i].type)
+			close((*main)->fd[0]);
+    }
+    return (0);
+}
+
+int middle_pipe(t_minishell **main, int *i, t_alloc **garbage)
+{
+    if (pipe((*main)->fd) == -1)
+        return (-1);
+    (*main)->nb_cmd++;
+    (*main)->pid[(*main)->nb_cmd - 1] = fork();
+    if ((*main)->pid[(*main)->nb_cmd - 1] == -1)
+        return (-1);
+    if ((*main)->pid[(*main)->nb_cmd - 1] == 0)
+    {
+        close((*main)->fd[0]);
+        if (dup2((*main)->old_fd, STDIN_FILENO) < 0)
+		{
+			(*main)->code_status = 1, 
+			(exit(EXIT_FAILURE));
+		}
+        // close((*main)->old_fd);
+        if (dup2((*main)->fd[1], STDOUT_FILENO) < 0)
+		{
+			(*main)->code_status = 1, 
+			(exit(EXIT_FAILURE));
+		}
+        // close((*main)->fd[1]);
+        child_process(main, i, garbage);
+    }
+    else
+    {
+        close((*main)->old_fd);
+        (*main)->old_fd = dup((*main)->fd[0]);
+	    if (!(*main)->command[*i].type)
+			close((*main)->fd[0]);
+        // close((*main)->fd[1]);
+		// close((*main)->com[1]);
+    }
+    return 0;
+}
+
+int last_pipe(t_minishell **main, int *i, t_alloc **garbage)
+{
+    if (pipe((*main)->fd) == -1)
+        return (-1);
+    (*main)->nb_cmd++;
+    (*main)->pid[(*main)->nb_cmd - 1] = fork();
+    if ((*main)->pid[(*main)->nb_cmd - 1] == -1)
+        return (-1);
+    if ((*main)->pid[(*main)->nb_cmd - 1] == 0)
+    {
+    	close((*main)->fd[0]);
+		if ((*main)->command[*i].type == PIPE && dup2((*main)->fd[1], STDOUT_FILENO) < 0)
+		{
+			(*main)->code_status = 1, 
+			(exit(EXIT_FAILURE));
+		}
+	    else 
+			close((*main)->fd[1]);
+		if (dup2((*main)->old_fd, STDIN_FILENO) < 0)
+		{
+			(*main)->code_status = 1, 
+			(exit(EXIT_FAILURE));
+		}
+        // close((*main)->old_fd);
+        child_process(main, i, garbage);
+    }
+    else
+    {
+        close((*main)->old_fd);
+		if (!(*main)->command[*i].type)
+			close((*main)->fd[0]);
+    }
+    return 0;
+}
+
+int	pipelines(t_minishell **main, int *i, t_alloc **garbage)
+{
+	if (pipe((*main)->fd) == -1)
+        return (-1);
+    (*main)->nb_cmd++;
+    (*main)->pid[(*main)->nb_cmd - 1] = fork();
+    if ((*main)->pid[(*main)->nb_cmd - 1] == -1)
+        return (-1);
+    if ((*main)->pid[(*main)->nb_cmd - 1] == 0)
+    {
+		close((*main)->fd[0]);
+		if ((*main)->command[*i].type == PIPE && dup2((*main)->fd[1], STDOUT_FILENO) < 0)
+		{
+			(*main)->code_status = 1, 
+			(exit(EXIT_FAILURE));
+		}
+		if ((*main)->old_fd != -1 && dup2((*main)->old_fd, STDIN_FILENO) < 0)
+		{
+			(*main)->code_status = 1, 
+			(exit(EXIT_FAILURE));
+		}
 		child_process(main, i, garbage);
 	}
 	else
 	{
+		if (will_be_piped(main, i))
+			(*main)->old_fd = dup((*main)->fd[0]);
 		close((*main)->com[1]);
 		close((*main)->fd[1]);
-		(*main)->old_fd = dup((*main)->fd[0]);
-		waitpid((*main)->pid[(*main)->nb_cmd - 1], &status, 0);
+		if (waitpid((*main)->pid[(*main)->nb_cmd - 1], &(*main)->status, 0) == -1)
+		{
+			(*main)->code_status = 255;
+			perror("waitpid");
+			exit(255);
+		}
+		if ((*main)->old_fd == -1)
+			(*main)->old_fd = dup(STDIN_FILENO);
+		else if ((*main)->old_fd != -1 && !will_be_piped(main, i))
+			close ((*main)->old_fd);
+		if (!(*main)->command[*i].type)
+			close((*main)->fd[0]);
 		read((*main)->com[0], i, sizeof(*i));
 		close((*main)->com[0]);
-		if (WIFEXITED(status))
-			(*main)->code_status = WEXITSTATUS(status);
-		
+		if (WIFEXITED((*main)->status))
+			(*main)->code_status = WEXITSTATUS((*main)->status);
 	}
 	return (0);
 }
 
-int	middle_pipe(t_minishell **main, int *i, t_alloc **garbage)
+void	restore_fds(t_minishell **main)
 {
-	int	status;
-	
-	status = 0;
-	if (pipe((*main)->fd) == -1)
-		return (-1);
-	(*main)->pid[(*main)->nb_cmd] = fork();
-	(*main)->nb_cmd++;
-	if ((*main)->pid[(*main)->nb_cmd - 1] == -1)
-		return (-1);
-	if ((*main)->pid[(*main)->nb_cmd - 1] == 0)
-	{
-		close((*main)->fd[0]);
-		dup2((*main)->old_fd, STDIN_FILENO);
+	if ((*main)->fd[0] > 0)
+		dup2(STDIN_FILENO, ((*main)->fd[0]));
+	if ((*main)->fd[1] > 0)
+		dup2(STDOUT_FILENO, ((*main)->fd[1]));;
+	if ((*main)->old_fd > 0)
 		close((*main)->old_fd);
-		dup2((*main)->fd[1], STDOUT_FILENO);
-		close((*main)->fd[1]);
-		child_process(main, i, garbage);
-	}
-	else
-	{
-		close((*main)->com[1]);
-		close((*main)->old_fd);
-		(*main)->old_fd = dup((*main)->fd[0]);
-		close((*main)->fd[0]);
-		close((*main)->fd[1]);
-		waitpid((*main)->pid[(*main)->nb_cmd - 1], &status, 0);
-		read((*main)->com[0], i, sizeof(*i));
-		close((*main)->com[0]);
-		if (WIFEXITED(status))
-			(*main)->code_status = WEXITSTATUS(status);
-		
-	}
-	return (0);
-}
-
-int	last_pipe(t_minishell **main, int *i, t_alloc **garbage)
-{
-	int	status;
-	
-	status = 0;
-	if (pipe((*main)->fd) == -1)
-		return (-1);
-	(*main)->pid[(*main)->nb_cmd] = fork();
-	(*main)->nb_cmd++;
-	if ((*main)->pid[(*main)->nb_cmd - 1] == -1)
-		return (-1);
-	if ((*main)->pid[(*main)->nb_cmd - 1] == 0)
-	{
-		close((*main)->fd[0]);
-		dup2((*main)->old_fd, STDIN_FILENO);
-		close((*main)->old_fd);
-		child_process(main, i, garbage);
-	}
-	else
-	{
-		close((*main)->com[1]);
-		waitpid((*main)->pid[(*main)->nb_cmd - 1], &status, 0);
-		close((*main)->old_fd);
-		read((*main)->com[0], i, sizeof(*i));
-		close((*main)->com[0]);
-		if (WIFEXITED(status))
-			(*main)->code_status = WEXITSTATUS(status);
-		
-	}
-	return (0);
 }
 
 int	ft_pipex(t_minishell **main, int *i, t_alloc **garbage)
 {
+	// init_process_signal();
 	if (pipe((*main)->com) == -1)
 		return (-1);
-	if (is_first_pipe(main, i))
-		first_pipe(main, i, garbage);
-	else if (is_last_pipe(main, i))
-		last_pipe(main, i, garbage);
-	else
-		middle_pipe(main, i, garbage);
-	if ((*main)->nb_cmd < (*main)->total_cmd && will_be_piped(main, i))
+	while ((*main)->command[*i].type)
 	{
+		if (is_first_pipe(main, i))
+			first_pipe(main, i, garbage);
+		else if (is_last_pipe(main, i))
+			last_pipe(main, i, garbage);
+		else
+			middle_pipe(main, i, garbage);
+		(*i)++;
 		(*main)->cmd_args = create_cmd_args(main, i, garbage);
-		ft_pipex(main, i, garbage);
+		if (!(*main)->command[*i].type)
+			last_pipe(main, i, garbage);
 	}
+	wait_pids(main, i);
+	// if (execute_builtins(main, garbage) == -1)
+	// 	execute_non_builtin(main, garbage);
+	// if ((*main)->nb_cmd == (*main)->total_cmd)
+	// {
+	// 	last_pipe(main, i, garbage);
+	// 	dup2((*main)->old_fd, STDIN_FILENO);
+	// }
+	// if ((*main)->nb_cmd < (*main)->total_cmd && will_be_piped(main, i))
+	// {
+	// 	(*i)++;
+	// 	(*main)->cmd_args = create_cmd_args(main, i, garbage);
+	// 	ft_pipex(main, i, garbage);
+	// }
 	return (0);
 }
 

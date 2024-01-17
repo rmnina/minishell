@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:03:22 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/16 02:02:42 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/17 03:07:57 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,6 +157,7 @@ void		execute_command(t_minishell **main, t_alloc **garbage);
 
 /* ------------------------------ MAIN ------------------------------ */
 
+int			init_pids(t_minishell **main, t_alloc **garbage);
 int			ft_heredoc(t_minishell **main, int *i, t_alloc **garbage);
 // void		ft_heredoc_args(t_minishell **main, int i, t_alloc **garbage);
 // int			heredoc_child(t_minishell **main, int *i, t_alloc **garbage);
@@ -218,5 +219,8 @@ int			is_output(t_minishell **main, int *i);
 int			redir_input(t_minishell **main, char *filename);
 int			redir_append(t_minishell **main, char *filename);
 int			redir_output(t_minishell **main, char *filename);
+int			will_be_piped(t_minishell **main, int *i);
+int			init_heredoc(t_minishell **main, int *i, t_alloc **garbage);
+int			check_redir(t_minishell **main, int *i);
 
 #endif
