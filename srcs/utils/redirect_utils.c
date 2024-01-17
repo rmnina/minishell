@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 17:16:38 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/17 03:21:40 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/17 18:11:43 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ int	redir_output(t_minishell **main, char *filename)
 	if (fd == -1)
 		return (-1);
 	dup = dup2(fd, STDOUT_FILENO);
+	close(fd);
 	close((*main)->fd[1]);
 	if (dup == -1)
 		return (-1);
@@ -36,6 +37,7 @@ int	redir_append(t_minishell **main, char *filename)
 	if (fd == -1)
 		return (-1);
 	dup = dup2(fd, STDOUT_FILENO);
+	close(fd);
 	close((*main)->fd[1]);
 	if (dup == -1)
 		return (-1);
@@ -51,6 +53,7 @@ int	redir_input(t_minishell **main, char *filename)
 	if (fd == -1)
 		return (-1);
 	dup = dup2(fd, STDIN_FILENO);
+	close(fd);
 	close((*main)->fd[0]);
 	if (dup == -1)
 		return (-1);
