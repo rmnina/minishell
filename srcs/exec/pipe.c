@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:20:25 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/17 19:52:41 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/18 13:14:08 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,11 +158,15 @@
 void	handle_command_args(t_minishell **main, int *i, t_alloc **garbage)
 {
 	(*main)->redir = 0;
-	printf("commandes avant handle: %s\n", (*main)->command[0].word);
 	(*main)->cmd_args = create_cmd_args(main, i, garbage);
 	if ((*main)->command[*i].type == DB_LEFT_CHEV)
 	{
 		ft_heredoc(main, i, garbage);
+		if ((*main)->cmd_args[*i] == NULL)
+		{
+			(*main)->cmd_args = NULL;
+			(*main)->cmd_args = create_cmd_args(main, i, garbage);
+		}
 	}
 	if ((*main)->command[*i].type >= LEFT_CHEV && \
 	(*main)->command[*i].type <= RIGHT_CHEV)
@@ -185,7 +189,6 @@ void	initialize_process(t_minishell **main, int next_pipe)
 
 void	execute_child_process(t_minishell **main, int *i, t_alloc **garbage, int next_pipe)
 {
-	//printf("Debut de execute_child_process. infilefd: %d, outfilefd: %d\n", (*main)->infilefd, (*main)->outfilefd);
 	if ((*main)->redir == 1 || (*main)->command[*i].type == DB_RIGHT_CHEV)
 		(*main)->redir = ft_redirect(main, i, garbage);
 	if ((*main)->redir == -1)
@@ -202,7 +205,9 @@ void	execute_child_process(t_minishell **main, int *i, t_alloc **garbage, int ne
 	}
 	close((*main)->fd[0]);
 	if (execute_builtins(main, garbage) == -1)
+	{
 		execute_command(main, garbage);
+	}
 	exit(EXIT_SUCCESS);
 }
 
@@ -211,7 +216,6 @@ void	handle_parent_process(t_minishell **main, int *i, int *status, int next_pip
 	int	original_stdin;
 
 	original_stdin = 0;
-	(*main)->is_heredoc_used = true;
 	if (*i > 0)
 		close((*main)->old_fd);
 	if (next_pipe)
@@ -232,7 +236,7 @@ void	handle_parent_process(t_minishell **main, int *i, int *status, int next_pip
 			exit(EXIT_FAILURE);
 		dup2(original_stdin, STDIN_FILENO);
 		close(original_stdin);
-
+		(*main)->is_heredoc_used = false;
 	}
 	if (WIFEXITED(*status))
 		(*main)->code_status = WEXITSTATUS(*status);
@@ -268,6 +272,7 @@ int ft_pipex(t_minishell **main, int *i, t_alloc **garbage)
 	int 	is_first_command_cat;
 	pid_t	*pids;
 
+	(*main)->is_heredoc_used = true;
 	status = 0;
 	is_first_command_cat = 0;
 	next_pipe = 0;
@@ -286,7 +291,6 @@ int ft_pipex(t_minishell **main, int *i, t_alloc **garbage)
 	while ((*main)->command[*i].word != NULL)
 	{
 		handle_command_args(main, i, garbage);
-		//printf("commandes: %s\n", (*main)->command[0].word);
 		if (is_builtin((*main)->command[0].word) && \
 		(*main)->command[*i].type == 0)
 		{
@@ -303,7 +307,6 @@ int ft_pipex(t_minishell **main, int *i, t_alloc **garbage)
 			pids[cmd_index++] = (*main)->pid;
 			handle_parent_process(main, i, &status, next_pipe);
 		}
-		if ((*main)->is_heredoc_used)
 		while ((*main)->command[*i].word != NULL && \
 		(*main)->command[*i].type != PIPE)
 			(*i)++;
