@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:03:22 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/18 18:43:10 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/18 19:09:17 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ typedef struct s_command {
 	int				type;
 }	t_command;
 
-typedef	struct s_export {
+typedef struct s_export {
 	int		envp_len;
 	int		len;
 	char	**new_envp;
@@ -124,7 +124,7 @@ t_minishell	*get_minishell(void);
 t_minishell	*init_minishell(char **envp);
 t_parser	*get_parser(t_alloc **garbage);
 t_parser	*init_parser(t_alloc **garbage);
-void		restore_minishell();
+void		restore_minishell(void);
 char		**set_env(char **envp, t_alloc **garbage);
 int			is_only_quotes(char *line, int *i);
 void		init_get_token(t_command *token);
@@ -160,8 +160,6 @@ void		execute_command(t_minishell **main, t_alloc **garbage);
 /* ------------------------------ MAIN ------------------------------ */
 
 void		ft_heredoc(t_minishell **main, int *i, t_alloc **garbage);
-// void		ft_heredoc_args(t_minishell **main, int i, t_alloc **garbage);
-// int			heredoc_child(t_minishell **main, int *i, t_alloc **garbage);
 int			get_right_input(t_minishell **main, int *i, t_alloc **garbage);
 int			ft_redirect(t_minishell **main, int *i, t_alloc **garbage);
 int			ft_pipex(t_minishell **main, int *i, t_alloc **garbage);
@@ -184,7 +182,7 @@ int			envp_length(char **envp);
 char		**copy_envp(char **envp, int new_size, t_alloc **garbage);
 void		add_or_update_env_var(char **envp, char *var, t_alloc **garbage);
 bool		search_identifiers(const char *str, char *ptr, bool *equals, bool *no_space);
-int 		ft_export(t_minishell **main, t_alloc **garbage);
+int			ft_export(t_minishell **main, t_alloc **garbage);
 
 /* ******************************* SIGNALS ******************************* */
 
