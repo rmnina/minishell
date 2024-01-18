@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_structs.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 10:43:20 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/15 01:09:11 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/18 15:23:24 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ t_minishell	*get_minishell(void)
 t_minishell	*init_minishell(char **envp)
 {
 	t_minishell	*main;
-	
+
 	main = get_minishell();
 	main->fd[0] = -1;
 	main->fd[1] = -1;

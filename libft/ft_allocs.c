@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_allocs.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 19:16:31 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/14 01:09:46 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/18 14:01:37 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ t_alloc	*create_garbage_node(void *ptr)
 {
 	t_alloc	*new;
 
+	new = NULL;
 	new = (t_alloc *)malloc(sizeof(t_alloc));
 	if (!new)
 		return (NULL);
@@ -46,7 +47,6 @@ void	add_garbage_node(t_alloc **garbage, t_alloc *new)
 	}
 	else
 		*garbage = new;
-	// printf("node = %p, garbage = %p\n", new->adr, garbage);
 }
 
 void	*garb_malloc(size_t type, size_t size, t_alloc **garbage)
@@ -55,6 +55,7 @@ void	*garb_malloc(size_t type, size_t size, t_alloc **garbage)
 	t_alloc	*new;
 
 	ptr = NULL;
+	new = NULL;
 	if (size && type)
 		ptr = malloc(type * size);
 	if (!ptr)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 05:00:11 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/14 16:32:55 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/18 15:21:39 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ bool	is_valid_identifier(char *str)
 	bool	equals;
 	bool	no_space;
 
+	ptr = NULL;
 	equals = false;
 	no_space = false;
 	if (!str)
@@ -56,7 +57,6 @@ void	compare_values(t_export *export, char **value, t_alloc **garbage)
 	else
 	{
 		export->formatted_value = ft_strdup(*value, garbage);
-		// export->formatted_value = ft_strdup(export->formatted_value, garbage);
 		export->new_var = ft_strjoin(export->var_name, "=", garbage);
 	    export->new_var = ft_strjoin(export->new_var, export->formatted_value, garbage);
 	}
@@ -67,6 +67,7 @@ void	handle_value_case(t_minishell **main, char *arg, t_alloc **garbage)
 	t_export	export;
 	char		*value;
 
+	value = NULL;
 	export.equal = ft_strchr(arg, '=');
 	if (!export.equal)
 	{
@@ -85,12 +86,12 @@ void	handle_value_case(t_minishell **main, char *arg, t_alloc **garbage)
 
 void    export_variable(t_minishell **main, t_alloc **garbage)
 {
-    char	*equal;
-	int 	i;
+	char	*equal;
+	int		i;
 
-    equal = NULL;
+	equal = NULL;
 	i = 1;
-    while ((*main)->cmd_args[i] != NULL)
+	while ((*main)->cmd_args[i] != NULL)
 	{
 		equal = ft_strchr((*main)->cmd_args[i], '=');
 		if (equal)
@@ -107,12 +108,12 @@ void    export_variable(t_minishell **main, t_alloc **garbage)
 	}
 }
 
-int ft_export(t_minishell **main, t_alloc **garbage)
+int	ft_export(t_minishell **main, t_alloc **garbage)
 {
 	if ((*main)->cmd_args[1] == NULL)
 		return (ft_env(main));
 	else
-        export_variable(main, garbage);
+		export_variable(main, garbage);
 	(*main)->code_status = 0;
 	return ((*main)->code_status);
 }

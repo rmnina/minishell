@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+         #
+#    By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/14 14:15:25 by jdufour           #+#    #+#              #
-#    Updated: 2024/01/15 00:52:37 by jdufour          ###   ########.fr        #
+#    Updated: 2024/01/18 17:04:14 by juandrie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,7 +41,8 @@ SRCS = srcs/main.c \
 	srcs/utils/heredoc_utils.c \
 	srcs/utils/joins.c \
 	srcs/utils/toolbox_utils.c \
-	srcs/utils/redirect_utils.c
+	srcs/utils/redirect_utils.c \
+	srcs/utils/cd_utils.c \
 
 OBJS = $(SRCS:.c=.o)
 

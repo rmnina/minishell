@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 16:22:53 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/17 19:53:35 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/18 15:15:05 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,9 @@ int	replace_var(t_minishell **main, char **new_line, int *i, t_alloc **garbage)
 			*new_line = ft_strjoin(*new_line, \
 			ft_itoa((*main)->code_status), garbage);
 		}
-		else if ((*main)->h_line[*i + 1] && (ft_isalnum((*main)->h_line[*i + 1]) || (*main)->h_line[*i + 1] == UNDERSCORE))
+		else if ((*main)->h_line[*i + 1] && \
+		(ft_isalnum((*main)->h_line[*i + 1]) \
+		|| (*main)->h_line[*i + 1] == UNDERSCORE))
 		{
 			name = get_env_var_name((*main)->h_line, i, garbage);
 			var = ft_getenv(main, name);
@@ -49,7 +51,8 @@ char	*heredoc_get_expand(t_minishell **main, t_alloc **garbage)
 	new_line = NULL;
 	while ((*main)->h_line[i])
 	{
-		if (!replace_var(main, &new_line, &i, garbage) && (*main)->h_line[i] != '$')
+		if (!replace_var(main, &new_line, &i, garbage) \
+		&& (*main)->h_line[i] != '$')
 			new_line = ft_strjoin_char(new_line, (*main)->h_line[i], garbage);
 		i++;
 	}
@@ -108,7 +111,8 @@ void	generate_temp_filename(t_minishell **main, t_alloc **garbage)
 void	init_temp_file(t_minishell **main, t_alloc **garbage)
 {
 	generate_temp_filename(main, garbage);
-	(*main)->tmp_fd = open((*main)->tmp_filename, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+	(*main)->tmp_fd = open((*main)->tmp_filename, \
+	O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if ((*main)->tmp_fd < 0)
 		exit(EXIT_FAILURE);
 }
@@ -118,7 +122,8 @@ void	read_add(t_minishell **main, int *j, t_alloc **garbage)
 	while (42)
 	{
 		(*main)->h_line = readline("> ");
-		if (!(*main)->h_line || ft_strcmp((*main)->h_line, (*main)->h_delimiter[*j]) == 0)
+		if (!(*main)->h_line || \
+		ft_strcmp((*main)->h_line, (*main)->h_delimiter[*j]) == 0)
 			break ;
 		if (heredoc_is_expand((*main)->h_line))
 			(*main)->h_line = heredoc_get_expand(main, garbage);

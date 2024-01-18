@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 17:31:57 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/17 17:15:16 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/18 18:49:15 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,27 +24,31 @@ void	replace_pwd(char *path, char **envp, t_alloc **garbage)
 		return ;
 }
 
-char	*change_directory(t_minishell **main, char *path)
+char	*change_directory(t_minishell **main, char *path, t_alloc **garbage)
 {
 	char	*new_path;
 
 	if (path == NULL)
+	{
+		printf("change_directory: path is NULL\n");
 		return (false);
-	new_path = realpath(path, NULL);
+	}
+	new_path = ft_realpath(path, NULL, garbage);
 	if (new_path == NULL)
 		return (NULL);
 	if (chdir(new_path) != 0)
 	{
+		perror("chdir failed");
 		free(new_path);
 		return (NULL);
 	}
-	(*main)->last_cd_path = (*main)->cd_path;
-	(*main)->cd_path = new_path;
-	free(new_path);
+	if ((*main)->cd_path != NULL)
+		(*main)->last_cd_path = ft_strdup((*main)->cd_path, garbage);
+	(*main)->cd_path = ft_strdup(new_path, garbage);
 	return (path);
 }
 
-int	cd_hyphen(t_minishell **main)
+int	cd_hyphen(t_minishell **main, t_alloc **garbage)
 {
 	if ((*main)->last_cd_path == NULL)
 	{
@@ -52,7 +56,7 @@ int	cd_hyphen(t_minishell **main)
 		return ((*main)->code_status = 1);
 	}
 	printf("%s\n", (*main)->last_cd_path);
-	if (!change_directory(main, (*main)->last_cd_path))
+	if (!change_directory(main, (*main)->last_cd_path, garbage))
 	{
 		perror("cd");
 		return ((*main)->code_status = 1);
@@ -60,12 +64,12 @@ int	cd_hyphen(t_minishell **main)
 	return ((*main)->code_status = 0);
 }
 
-int	cd_tilde(t_minishell **main)
+int	cd_tilde(t_minishell **main, t_alloc **garbage)
 {
 	char	*home_path;
 
 	home_path = ft_getenv(main, "HOME");
-	if (!change_directory(main, home_path))
+	if (!change_directory(main, home_path, garbage))
 	{
 		perror("cd");
 		return ((*main)->code_status = 1);
@@ -80,17 +84,17 @@ int	ft_cd(t_minishell **main, t_alloc **garbage)
 	path = NULL;
 	if ((*main)->cmd_args[1] == NULL || \
 	ft_strcmp((*main)->cmd_args[1], "~") == 0)
-		return (cd_tilde(main));
+		return (cd_tilde(main, garbage));
 	else if (ft_strcmp((*main)->cmd_args[1], "-") == 0)
-		return (cd_hyphen(main));
+		return (cd_hyphen(main, garbage));
 	else
 	{
 		if ((*main)->cmd_args[2])
 		{
-			printf("minishell : cd : too many arguments");
+			printf("minishell: cd: too many arguments\n");
 			return ((*main)->code_status = 1);
 		}
-		if ((path = change_directory(main, (*main)->cmd_args[1])) == NULL)
+		if ((path = change_directory(main, (*main)->cmd_args[1], garbage)) == NULL)
 		{
 			perror("cd");
 			return ((*main)->code_status = 1);

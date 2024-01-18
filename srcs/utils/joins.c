@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   joins.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/26 23:39:05 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/14 03:15:39 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/18 13:49:25 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,40 +72,3 @@ char	**ft_envjoin(char **envp, char *str, t_alloc **garbage)
 	return (new_envp);
 }
 
-// char	*ft_strdel(char *str, char c, int n, t_alloc **garbage)
-// {
-// 	char	*new_str;
-// 	int		i;
-// 	int		j;
-
-// 	i = 0;
-// 	j = 0;
-// 	new_str = garb_malloc(sizeof(char), ft_strlen(str), garbage);
-// 	while (str[i])
-// 	{
-// 		if (str[i] == c && i < n)
-// 			i++;
-// 		new_str[j] = str[i];
-// 		j++;
-// 		i++;
-// 	}
-// 	new_str[j] = '\0';
-// 	return (new_str);
-// }
-
-
-// char	**ft_append_var(char **env, char *str, int index_equal, t_alloc **garbage)
-// {
-// 	char	*parsed_str;
-// 	int		index_var;
-// 	char	*append_str;
-
-// 	parsed_str = ft_strdel(str, '+', index_equal, garbage);
-// 	append_str = ft_substr(str, index_equal + 1, ft_strlen(str), garbage);
-// 	index_var = is_new_var(env, parsed_str);
-// 	if (index_var == -1)
-// 		env = ft_envjoin(env, parsed_str, garbage);
-// 	else
-// 		env[index_var] = ft_strjoin(env[index_var], append_str, garbage);
-// 	return (env);
-// }

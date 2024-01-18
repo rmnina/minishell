@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 10:19:45 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/14 03:54:43 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/18 15:22:20 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ int	unset_single_variable(char ***envp, const char *name)
 	{
 		if (ft_strcmp_var((*envp)[i], name) == 0)
 		{
-			// free((*envp)[i]);
 			shift_env_variables(envp, i);
 			found = 1;
 			break ;

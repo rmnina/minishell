@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/18 13:14:27 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/18 15:01:19 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,6 @@ int	execute_non_builtin(t_minishell **main, t_alloc **garbage)
 	int		status;
 
 	status = 0;
-	//init_process_signal();
 	pid = fork();
 	if (pid == -1)
 	{
@@ -102,7 +101,8 @@ char	**create_cmd_args(t_minishell **main, int *i, t_alloc **garbage)
 		return (NULL);
 	while ((*main)->command[*i].type == WORD)
 	{
-		cmd_args[j] = ft_strjoin(cmd_args[j], (*main)->command[*i].word, garbage);
+		cmd_args[j] = ft_strjoin(cmd_args[j], \
+		(*main)->command[*i].word, garbage);
 		if (!cmd_args[j])
 			return (NULL);
 		*i += 1;
@@ -118,6 +118,7 @@ void	handle_command(t_minishell **main, t_alloc **garbage)
 
 	i = 0;
 	(*main)->cmd_args = NULL;
+	(*main)->command = NULL;
 	(*main)->command = ft_parsing(main, garbage);
 	if ((*main)->command == NULL)
 		return ;

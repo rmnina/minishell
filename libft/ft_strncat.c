@@ -1,41 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strjoin.c                                       :+:      :+:    :+:   */
+/*   ft_strncat.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/31 11:35:31 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/18 14:03:56 by juandrie         ###   ########.fr       */
+/*   Created: 2024/01/18 17:07:07 by juandrie          #+#    #+#             */
+/*   Updated: 2024/01/18 17:09:19 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_strjoin(char *s1, const char *s2, t_alloc **garbage)
+char	*ft_strncat(char *dest, const char *src, size_t n)
 {
-	int		size;
-	char	*res;
-	int		i;
+	size_t	dest_len;
+	size_t	i;
 
+	dest_len = 0;
 	i = 0;
-	res = 0;
-	size = ft_strlen(s1) + ft_strlen(s2);
-	res = garb_malloc(sizeof(char), size + 1, garbage);
-	if (!(res))
-		return (NULL);
-	while (s1 && s1[i])
+	while (dest[dest_len] != '\0')
+		dest_len++;
+	while (i < n && src[i] != '\0')
 	{
-		res[i] = s1[i];
+		dest[dest_len + i] = src[i];
 		i++;
 	}
-	while (*s2)
-	{
-		res[i] = *s2;
-		i++;
-		s2++;
-	}
-	res[i] = '\0';
-	return (res);
+	dest[dest_len + i] = '\0';
+	return (dest);
 }
-

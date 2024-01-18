@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   toolbox_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 05:26:30 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/15 00:38:25 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/18 16:38:16 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,3 +78,4 @@ int	is_builtin(char *command)
 	}
 	return (0);
 }
+

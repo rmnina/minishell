@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:45:11 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/16 13:39:30 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/18 14:42:44 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ int	ft_minishell(t_minishell *main, t_alloc **garbage)
 
 	while (1)
 	{
-		//init_signal();
 		if (init_sigactionsa(&sa) == -1)
 			return (1);
 		main->line = readline("minishell > ");
@@ -35,16 +34,13 @@ int	ft_minishell(t_minishell *main, t_alloc **garbage)
 		{
 			add_history(main->line);
 			handle_command(&main, garbage);
-			// if (code->code_status == SPECIAL_EXIT_CODE)
-			// 	break ;
-		} 
+		}
 		if (main->line)
 			free(main->line);
 		if (g_sigstatus != 0)
 			main->code_status = g_sigstatus;
 		g_sigstatus = 0; 
-		// if (garbage)
-		// 	free_garbage(garbage, 0);
+
 		restore_minishell();
 	}
 	return (0);
