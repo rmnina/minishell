@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:20:25 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/19 02:22:58 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/19 22:23:18 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,6 +176,7 @@ int first_pipe(t_minishell **main, int *i, t_alloc **garbage)
         return (-1);
     if ((*main)->pid[(*main)->nb_cmd - 1] == 0)
     {
+		close((*main)->fd[0]);
 		if ((*main)->command[*i].type == PIPE)
 			dup2((*main)->fd[1], STDOUT_FILENO);
 		close((*main)->fd[1]);

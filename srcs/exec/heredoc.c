@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 16:22:53 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/19 02:27:33 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/19 22:25:25 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,17 +110,17 @@ int	ft_heredoc(t_minishell **main, int *i, t_alloc **garbage)
 			exit(EXIT_FAILURE);
 		read_add(main, &j, garbage);
 		j++;
+		close((*main)->tmp_fd);
 	}
-	close((*main)->tmp_fd);
-	// if ((*main)->fd[1] != -1)
-	// 	close((*main)->fd[1]);
+	if ((*main)->fd[1] != -1)
+		close((*main)->fd[1]);
 	open((*main)->tmp_filename, O_RDONLY);
 	if ((*main)->tmp_fd < 0)
 		exit(EXIT_FAILURE);
 	// if ((*main)->fd[0] == -1)
 	dup2((*main)->tmp_fd, STDIN_FILENO);
-	// else
-	// 	dup2((*main)->tmp_fd, (*main)->fd[0]);
+	// if ((*main)->fd[0] != -1)
+	// 	close((*main)->fd[0]);
 	close((*main)->tmp_fd);
 	return (0);
 }
