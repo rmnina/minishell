@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 22:46:17 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/17 23:08:41 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/18 01:38:33 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,8 +65,9 @@ int	get_all_inputs(t_minishell **main, int *i, t_alloc **garbage)
 	filename = ft_strdup((*main)->command[*i + 1].word, garbage);
 	if (!filename)
 		return (-1);
-	if (open(filename, O_RDONLY, 0644) == -1)
+	if (((*main)->infilefd = open(filename, O_RDONLY, 0644)) == -1)
 		return (-1);
+	close((*main)->infilefd);
 	check_next_args(main, i, garbage);
 	if (is_output(main, i))
 	{

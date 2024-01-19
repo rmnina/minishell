@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 22:46:25 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/18 00:44:42 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/18 01:38:48 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,9 +54,12 @@ char	*get_last_out_filename(t_minishell **main, int *i, t_alloc **garbage)
 	filename = NULL;
 	while ((*main)->command[j].type && (*main)->command[j].type != PIPE)
 		j++;
-	while (j > 0 && (*main)->command[j].type != RIGHT_CHEV && (*main)->command[j].type != DB_RIGHT_CHEV)
+	while (j > 0 && (*main)->command[j].type != RIGHT_CHEV \
+	&& (*main)->command[j].type != DB_RIGHT_CHEV)
 		j--;
-	return (filename = ft_strdup((*main)->command[j + 1].word, garbage));
+	if ((*main)->command[j + 1].type)
+		filename = ft_strdup((*main)->command[j + 1].word, garbage);
+	return (filename);
 }
 
 int get_last_out_type(t_minishell **main, int *i)
@@ -68,7 +71,8 @@ int get_last_out_type(t_minishell **main, int *i)
 	type = 0;
 	while ((*main)->command[j].type && (*main)->command[j].type != PIPE)
 		j++;
-	while (j > 0 && (*main)->command[j].type != RIGHT_CHEV && (*main)->command[j].type != DB_RIGHT_CHEV)
+	while (j > 0 && (*main)->command[j].type != RIGHT_CHEV \
+	&& (*main)->command[j].type != DB_RIGHT_CHEV)
 		j--;
 	return (type = (*main)->command[j].type);
 }
@@ -84,20 +88,20 @@ int	get_all_outputs(t_minishell **main, int *i, t_alloc **garbage)
 		if (browse_outputs(main, i, &filename, garbage) == -1)
 			return (-1);
 	}
-	filename = ft_strdup((*main)->command[*i + 1].word, garbage);
-	if (!filename)
-		return (-1);
+	// filename = ft_strdup((*main)->command[*i + 1].word, garbage);
+	// if (!filename)
+	// 	return (-1);
 	check_next_args(main, i, garbage);
 	if (is_input(main, i))
 	{
 		filename = ft_strdup((*main)->command[*i + 1].word, garbage);
 		if (!filename)
 			return (-1);
-		dprintf(2, "filename = %s, type = %d\n", filename, (*main)->command[*i].type);
 		if ((*main)->command[*i].type == RIGHT_CHEV)
 			(*main)->outfilefd = open(filename, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 		else if ((*main)->command[*i].type == DB_RIGHT_CHEV)
 			(*main)->outfilefd = open(filename, O_CREAT | O_WRONLY | O_APPEND, 0644);
+		close ((*main)->outfilefd);
 		(*i) += 2;
 		if (get_all_inputs(main, i, garbage) == -1)
 			return (-1);

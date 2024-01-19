@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/17 21:55:29 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/19 02:19:43 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,11 @@ void	execute_command(t_minishell **main, t_alloc **garbage)
 	(*main)->path = find_command_path((*main)->cmd_args[0], garbage);
 	if (!(*main)->path)
 	{
-		write(2, (*main)->cmd_args[0], sizeof((*main)->cmd_args[0]));
+		if ((*main)->cmd_args[0])
+		{
+			ft_putstr_fd((*main)->cmd_args[0], 2);
+			ft_putstr_fd(": ", 2);
+		}
 		perror("command not found");
 		exit(127);
 	}
@@ -115,12 +119,39 @@ void	init_redirect(t_minishell **main, int *i, t_alloc **garbage)
 	int	status;
 
 	status = 0;
-	pipe((*main)->com);
 	pid = fork();
 	if (!pid)
 	{
-		close((*main)->com[0]);
-		if (ft_redirect(main, i, garbage) != -1)
+		if ((*main)->command[*i].type == DB_LEFT_CHEV)
+		{
+			ft_heredoc(main, i, garbage);
+			if ((*main)->cmd_args[0] == NULL)
+				(*main)->cmd_args = create_cmd_args(main, i, garbage);
+		}
+		else if (ft_redirect(main, i, garbage) != -1)
+		{
+			(*main)->code_status = 1;
+			exit(EXIT_FAILURE);
+		}
+		if (execute_builtins(main, garbage) == -1)
+			execute_command(main, garbage);
+		exit(EXIT_SUCCESS);
+	}
+	waitpid(pid, &status, 0);
+	if (WIFEXITED(status))
+		(*main)->code_status = WEXITSTATUS(status);	
+}
+
+void	fork_heredoc(t_minishell **main, int *i, t_alloc **garbage)
+{
+	int	pid;
+	int	status;
+
+	status = 0;
+	pid = fork();
+	if (!pid)
+	{
+		if (ft_heredoc(main, i, garbage) != -1)
 		{
 			if (execute_builtins(main, garbage) == -1)
 				execute_command(main, garbage);
@@ -130,15 +161,11 @@ void	init_redirect(t_minishell **main, int *i, t_alloc **garbage)
 			(*main)->code_status = 1;
 			exit(EXIT_FAILURE);
 		}
-		write((*main)->com[1], i, sizeof(*i));
-		close((*main)->com[1]);
 		exit(EXIT_SUCCESS);
 	}
-	close((*main)->com[1]);
 	waitpid(pid, &status, 0);
 	if (WIFEXITED(status))
-		(*main)->code_status = WEXITSTATUS(status);
-	
+		(*main)->code_status = WEXITSTATUS(status);	
 }
 
 void	handle_command(t_minishell **main, t_alloc **garbage)
@@ -152,8 +179,6 @@ void	handle_command(t_minishell **main, t_alloc **garbage)
 	if ((*main)->command == NULL)
 		return ;
 	(*main)->cmd_args = create_cmd_args(main, &i, garbage);
-	if (init_heredoc(main, &i, garbage) == -1)
-		perror("heredoc delimiter");
 	if (will_be_piped(main, &i))
 	{
 		(*main)->total_cmd = init_pids(main, garbage);

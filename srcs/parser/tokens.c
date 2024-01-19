@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:04:36 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/15 16:22:22 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/18 01:53:06 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,18 +22,26 @@ t_command	get_special_type_token(t_minishell **main, int *i, t_alloc **garbage)
 {
 	t_command	token;
 
-	token.word = NULL;
-	if (special_types(main, i) == DB_LEFT_CHEV || special_types(main, i) == DB_RIGHT_CHEV \
-	|| special_types(main, i) == CODE)
+	init_get_token(&token);
+	if ((*main)->line[*i] && (special_types(main, i) == DB_LEFT_CHEV \
+	|| special_types(main, i) == DB_RIGHT_CHEV || special_types(main, i) == CODE))
 	{
-		token.word = char_to_str((*main)->line[*i], garbage);
-		token.word = ft_strjoin_char(token.word, (*main)->line[*i + 1], garbage);
-		*i += 2;
+		// token.word = char_to_str((*main)->line[*i], garbage);
+		token.word = ft_strjoin_char(token.word, (*main)->line[*i], garbage);
+		*i += 1;
+		if ((*main)->line[*i])
+		{
+			token.word = ft_strjoin_char(token.word, (*main)->line[*i], garbage);
+			*i += 1;
+		}
 	}
 	else
 	{
-		token.word = char_to_str((*main)->line[*i], garbage);
-		*i += 1;
+		if ((*main)->line[*i])
+		{
+			token.word = ft_strjoin_char(token.word, (*main)->line[*i], garbage);
+			*i += 1;
+		}
 	}
 	get_token_type(main, &token);
 	return (token);

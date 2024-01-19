@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:03:22 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/18 00:46:06 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/19 02:09:02 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,8 @@ typedef	struct s_export {
 }	t_export;
 
 typedef struct s_minishell {
-	int					com[2];
+	int					fd_stdin;
+	int					fd_stdout;
 	int					fd[2];
 	int					infilefd;
 	int					outfilefd;

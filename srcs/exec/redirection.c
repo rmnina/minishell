@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 17:13:45 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/17 23:17:03 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/19 02:17:55 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,9 @@ int check_next_redir(t_minishell **main, int *i)
 
 int	handle_redirect(t_minishell **main, int *i, t_alloc **garbage)
 {
+	int	ret;
+	
+	ret = 0;
 	if ((*main)->command[*i].type == DB_RIGHT_CHEV || \
 		(*main)->command[*i].type == RIGHT_CHEV)
 	{
@@ -57,7 +60,7 @@ int	handle_redirect(t_minishell **main, int *i, t_alloc **garbage)
 		{
 			(*main)->code_status = 1;
 			write(2, "error : file could not be opened\n", 34);
-			return (-1);
+			ret = -1;
 		}
 	}
 	else if ((*main)->command[*i].type == LEFT_CHEV)
@@ -66,26 +69,21 @@ int	handle_redirect(t_minishell **main, int *i, t_alloc **garbage)
 		{
 			(*main)->code_status = 1;
 			write(2, "error : file could not be opened\n", 34);
-			return (-1);
+			ret = -1;
 		}
 	}
 	if (check_redir(main, i) == 0)
 		*i += 2;
 	else
 		*i += 1;
-	return (0);
+	return (ret);
 }
 
 int	ft_redirect(t_minishell **main, int *i, t_alloc **garbage)
 {
 	(*main)->infilefd = -2;
 	(*main)->outfilefd = -2;
-	
-	if ((*main)->command[*i].type == DB_LEFT_CHEV)
-	{
-		ft_heredoc(main, i, garbage);
-		return (0);
-	}
+
 	if (handle_redirect(main, i, garbage) == -1)
 		return (-1);
 	return (1);

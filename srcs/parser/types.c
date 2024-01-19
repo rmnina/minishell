@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:04:44 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/14 22:26:55 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/18 01:52:39 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,19 +91,23 @@ int	special_types(t_minishell **main, int *i)
 
 void	get_token_type(t_minishell **main, t_command *token)
 {
-	if (token->word[0] == '|' && (*main)->parser->case_quotes == FALSE)
+	if (token->word[0] && token->word[0] == '|' \
+	&& (*main)->parser->case_quotes == FALSE)
 		token->type = PIPE;
-	else if (token->word[0] == '<' && token->word[1] && token->word[1] == '<' \
-	&& (*main)->parser->case_quotes == FALSE)
+	else if (token->word[0] && token->word[0] == '<' \
+	&& token->word[1] && token->word[1] == '<' && (*main)->parser->case_quotes == FALSE)
 		token->type = DB_LEFT_CHEV;
-	else if (token->word[0] == '<' && (*main)->parser->case_quotes == FALSE)
-		token->type = LEFT_CHEV;
-	else if (token->word[0] == '>' && token->word[1] && token->word[1] == '>' \
+	else if (token->word[0] && token->word[0] == '<' \
 	&& (*main)->parser->case_quotes == FALSE)
+		token->type = LEFT_CHEV;
+	else if (token->word[0] && token->word[0] == '>' \
+	&& token->word[1] && token->word[1] == '>' && (*main)->parser->case_quotes == FALSE)
 		token->type = DB_RIGHT_CHEV;
-	else if (token->word[0] == '>' && (*main)->parser->case_quotes == FALSE)
+	else if (token->word[0] && token->word[0] == '>' \
+	&& (*main)->parser->case_quotes == FALSE)
 		token->type = RIGHT_CHEV;
-	else if (is_expand(token->word) && (*main)->parser->case_single == FALSE)
+	else if (token->word && is_expand(token->word) \
+	&& (*main)->parser->case_single == FALSE)
 		token->type = EXPAND;
 	// else if (token->word[0] == '$' && token->word[1] && token->word[1] == '?' 
 	// && (*main)->parser->case_quotes == FALSE)
