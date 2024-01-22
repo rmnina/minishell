@@ -3,16 +3,13 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+         #
+#    By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/31 12:01:53 by jdufour           #+#    #+#              #
-<<<<<<< HEAD
-#    Updated: 2024/01/18 17:06:57 by juandrie         ###   ########.fr        #
-=======
-#    Updated: 2024/01/19 23:38:38 by jdufour          ###   ########.fr        #
->>>>>>> jovica
+#    Updated: 2024/01/22 19:25:30 by juandrie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
+
 
 NAME = libft.a
 
@@ -20,6 +17,7 @@ SRCS = ft_isalnum.c\
 ft_isprint.c\
 ft_memmove.c\
 ft_putnbr_fd.c\
+ft_strstr.c\
 ft_strdup.c\
 ft_strndup.c\
 ft_strlcpy.c\

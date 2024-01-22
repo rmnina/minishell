@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 17:31:57 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/22 15:11:13 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/22 17:38:34 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,10 @@ char	*change_directory(t_minishell **main, char *path, t_alloc **garbage)
 	if (chdir(new_path) != 0)
 		return (NULL);
 	if ((*main)->cd_path != NULL)
+	{
+		// if ((*main)->last_cd_path)
 		(*main)->last_cd_path = ft_strdup((*main)->cd_path, garbage);
+	}
 	(*main)->cd_path = ft_strdup(new_path, garbage);
 	return (path);
 }
@@ -78,6 +81,8 @@ int	ft_cd(t_minishell **main, t_alloc **garbage)
 	char	*path;
 
 	path = NULL;
+	if ((*main)->last_cd_path == NULL)
+		(*main)->last_cd_path = getcwd(NULL, 0);
 	if ((*main)->cmd_args[1] == NULL || \
 	ft_strcmp((*main)->cmd_args[1], "~") == 0)
 		return (cd_tilde(main, garbage));
