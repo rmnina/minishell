@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 17:16:38 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/17 16:39:21 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/22 12:40:27 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ int	redir_output(t_minishell **main, char *filename)
 	if (fd == -1)
 		return (-1);
 	dup = dup2(fd, STDOUT_FILENO);
+	close(fd);
+	if ((*main)->fd[1] != -1)
 	close((*main)->fd[1]);
 	if (dup == -1)
 		return (-1);
@@ -36,7 +38,9 @@ int	redir_append(t_minishell **main, char *filename)
 	if (fd == -1)
 		return (-1);
 	dup = dup2(fd, STDOUT_FILENO);
-	close((*main)->fd[1]);
+	close(fd);
+	if ((*main)->fd[1] != -1)
+		close((*main)->fd[1]);
 	if (dup == -1)
 		return (-1);
 	return (dup);
@@ -51,7 +55,9 @@ int	redir_input(t_minishell **main, char *filename)
 	if (fd == -1)
 		return (-1);
 	dup = dup2(fd, STDIN_FILENO);
-	close((*main)->fd[0]);
+	close(fd);
+	if ((*main)->fd[0] != -1)
+		close((*main)->fd[0]);
 	if (dup == -1)
 		return (-1);
 	return (dup);
@@ -59,17 +65,26 @@ int	redir_input(t_minishell **main, char *filename)
 
 int	is_output(t_minishell **main, int *i)
 {
-	if ((*main)->command[*i + 2].type && \
-	((*main)->command[*i + 2].type == DB_RIGHT_CHEV \
-	|| (*main)->command[*i + 2].type == RIGHT_CHEV))
+	int	j;
+
+	j = check_next_redir(main, i);
+	if (j == 0)
+		return (0);
+	if ((*main)->command[*i + j].type && ((*main)->command[*i + j].type == DB_RIGHT_CHEV \
+	|| (*main)->command[*i + j].type == RIGHT_CHEV))
 		return (1);
 	return (0);
 }
 
 int	is_input(t_minishell **main, int *i)
 {
-	if ((*main)->command[*i + 2].type \
-	&& ((*main)->command[*i + 2].type == LEFT_CHEV))
+	int	j;
+
+	j = check_next_redir(main, i);
+	if (j == 0)
+		return (0);
+	if ((*main)->command[*i + j].type \
+	&& ((*main)->command[*i + j].type == LEFT_CHEV))
 		return (1);
 	return (0);
 }

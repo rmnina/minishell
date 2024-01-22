@@ -6,7 +6,7 @@
 #    By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/14 14:15:25 by jdufour           #+#    #+#              #
-#    Updated: 2024/01/18 17:04:14 by juandrie         ###   ########.fr        #
+#    Updated: 2024/01/22 14:45:56 by juandrie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,6 +32,8 @@ SRCS = srcs/main.c \
 	srcs/exec/heredoc.c \
 	srcs/exec/path.c \
 	srcs/exec/redirection.c \
+	srcs/exec/redir_infile.c \
+	srcs/exec/redir_outfile.c \
 	srcs/lexer/lexer.c \
 	srcs/parser/expand.c \
 	srcs/parser/init_parser.c \
@@ -78,4 +80,10 @@ fclean: clean
 
 re: fclean all
 
+run: $(NAME)
+	@echo "$(GREEN)Lancement de $(NAME) dans une nouvelle fenêtre de terminal...$(NC)"
+	@xterm -fa 'Monospace' -fs 12 -e './$(NAME)' &
+
 .PHONY: all clean fclean re
+
+

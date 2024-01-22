@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/19 01:57:10 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/09 00:02:31 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/18 01:59:51 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,18 +28,19 @@ char	*ft_strjoin_char(char *s1, const char c, t_alloc **garbage)
 	res = garb_malloc(sizeof(char), size + 2, garbage);
 	if (!(res))
 		return (NULL);
-	if (size == 0)
-	{
-		res[size] = c;
-		res[size + 1] = '\0';
-		return (res);
-	}
+	// if (size == 0)
+	// {
+	// 	res[size] = c;
+	// 	res[size + 1] = '\0';
+	// 	return (res);
+	// }
 	while (s1 && s1[i])
 	{
 		res[i] = s1[i];
 		i++;
 	}
-	res[i++] = c;
+	res[i] = c;
+	i++;
 	res[i] = '\0';
 	// free(s1);
 	return (res);

@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:45:11 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/18 14:42:44 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/22 14:38:55 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,11 @@ int	g_sigstatus = 0;
 
 int	ft_minishell(t_minishell *main, t_alloc **garbage)
 {
-	struct sigaction	sa;
 
 	while (1)
 	{
-		if (init_sigactionsa(&sa) == -1)
-			return (1);
-		main->line = readline("minishell > ");
+		init_signal();
+		main->line = readline(ANSI_COLOR_GREEN "minishell > " ANSI_COLOR_RESET);
 		if (main->line == NULL)
 		{
 			printf("exit\n");

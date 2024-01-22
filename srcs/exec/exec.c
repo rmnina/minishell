@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/18 15:01:19 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/22 14:18:01 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,12 @@ void	execute_command(t_minishell **main, t_alloc **garbage)
 	(*main)->path = find_command_path((*main)->cmd_args[0], garbage);
 	if (!(*main)->path)
 	{
-		perror("Command not found");
+		if ((*main)->cmd_args[0])
+		{
+			ft_putstr_fd((*main)->cmd_args[0], 2);
+			ft_putstr_fd(": ", 2);
+		}
+		perror("command not found");
 		exit(127);
 	}
 	execve((*main)->path, (*main)->cmd_args, (*main)->envp);
@@ -65,6 +70,7 @@ int	execute_non_builtin(t_minishell **main, t_alloc **garbage)
 	int		status;
 
 	status = 0;
+	init_process_signal();
 	pid = fork();
 	if (pid == -1)
 	{
@@ -73,13 +79,11 @@ int	execute_non_builtin(t_minishell **main, t_alloc **garbage)
 	}
 	else if (pid == 0)
 	{
-		init_sigquit();
 		execute_command(main, garbage);
 		exit(EXIT_FAILURE);
 	}
 	else
 	{
-		process_prompt();
 		waitpid(pid, &status, 0);
 		if (WIFEXITED(status))
 			(*main)->code_status = WEXITSTATUS(status);
@@ -103,8 +107,6 @@ char	**create_cmd_args(t_minishell **main, int *i, t_alloc **garbage)
 	{
 		cmd_args[j] = ft_strjoin(cmd_args[j], \
 		(*main)->command[*i].word, garbage);
-		if (!cmd_args[j])
-			return (NULL);
 		*i += 1;
 		j++;
 	}
@@ -112,19 +114,85 @@ char	**create_cmd_args(t_minishell **main, int *i, t_alloc **garbage)
 	return (cmd_args);
 }
 
+void	init_redirect(t_minishell **main, int *i, t_alloc **garbage)
+{
+	int	pid;
+	int	status;
+
+	status = 0;
+	pid = fork();
+	if (!pid)
+	{
+		if ((*main)->command[*i].type == DB_LEFT_CHEV)
+		{
+			ft_heredoc(main, i, garbage);
+			if ((*main)->cmd_args[0] == NULL)
+				(*main)->cmd_args = create_cmd_args(main, i, garbage);
+		}
+		else if (ft_redirect(main, i, garbage) != -1)
+		{
+			(*main)->code_status = 1;
+			exit(EXIT_FAILURE);
+		}
+		if (execute_builtins(main, garbage) == -1)
+			execute_command(main, garbage);
+		exit(EXIT_SUCCESS);
+	}
+	waitpid(pid, &status, 0);
+	if (WIFEXITED(status))
+		(*main)->code_status = WEXITSTATUS(status);	
+}
+
+void	fork_heredoc(t_minishell **main, int *i, t_alloc **garbage)
+{
+	int	pid;
+	int	status;
+
+	status = 0;
+	pid = fork();
+	if (!pid)
+	{
+		if (ft_heredoc(main, i, garbage) != -1)
+		{
+			if (execute_builtins(main, garbage) == -1)
+				execute_command(main, garbage);
+		}
+		else
+		{
+			(*main)->code_status = 1;
+			exit(EXIT_FAILURE);
+		}
+		exit(EXIT_SUCCESS);
+	}
+	waitpid(pid, &status, 0);
+	if (WIFEXITED(status))
+		(*main)->code_status = WEXITSTATUS(status);	
+}
+
 void	handle_command(t_minishell **main, t_alloc **garbage)
 {
-	int	i;
+	int			i;
 
 	i = 0;
 	(*main)->cmd_args = NULL;
-	(*main)->command = NULL;
+	(*main)->nb_cmd = 0;
 	(*main)->command = ft_parsing(main, garbage);
 	if ((*main)->command == NULL)
 		return ;
-	if ((*main)->command[i].type != 0)
+	(*main)->cmd_args = create_cmd_args(main, &i, garbage);
+	if (will_be_piped(main, &i))
+	{
+		(*main)->total_cmd = init_pids(main, garbage);
 		ft_pipex(main, &i, garbage);
-
+	}
+	else if (check_redir(main, &i) != -1)
+		init_redirect(main, &i, garbage);
+	else
+	{
+		if (execute_builtins(main, garbage) == -1)
+			execute_non_builtin(main, garbage);
+	}
+	unlink((*main)->tmp_filename);
 }
 
 

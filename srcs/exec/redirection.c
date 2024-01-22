@@ -6,119 +6,87 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 17:13:45 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/17 18:31:58 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/22 14:16:38 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-
-int	get_all_redir(t_minishell **main, int *i, t_alloc **garbage)
+void	check_next_args(t_minishell **main, int *i, t_alloc **garbage)
 {
-	char	*filename;
+	int	j;
+	int	k;
 
-	filename = NULL;
-	if (is_output(main, i))
+	j = 0;
+	k = 0;
+	if ((*main)->command[*i + 2].type && (*main)->command[*i + 2].type == WORD)
 	{
-		while (is_output(main, i))
-		{
-			filename = ft_strdup((*main)->command[*i + 1].word, garbage);
-			if (!filename)
-				return (-1);
-			(*main)->outfilefd = open(filename, O_CREAT | O_WRONLY, 0644);
-			 //printf("Ouverture de fichier pour la sortie: %s, outfilefd: %d\n", filename, (*main)->outfilefd);
-			//close((*main)->outfilefd);
-			*i += 2;
-		}
+		(*i) += 2;
+		while ((*main)->command[*i + j].type && \
+		(*main)->command[*i + j].type == WORD)
+			j++;
 	}
-	filename = ft_strdup((*main)->command[*i + 1].word, garbage);
-	if (!filename)
-		return (-1);
-	if (is_input(main, i))
+	while (k < j)
 	{
-		(*main)->outfilefd = open(filename, O_CREAT | O_WRONLY, 0644);
-		close((*main)->outfilefd);
-		get_right_input(main, i, garbage);
+		(*main)->cmd_args = ft_strjoin_args(main, i, garbage);
+		(*i)++;
+		k++;
 	}
-	if ((*main)->command[*i].type == RIGHT_CHEV)
-		(*main)->outfilefd = redir_output(main, filename);
-	else if ((*main)->command[*i].type == DB_RIGHT_CHEV)
-		(*main)->filefd = redir_append(main, filename);
+}
+
+int	check_next_redir(t_minishell **main, int *i)
+{
+	int	j;
+
+	j = 1;
+	while ((*main)->command[*i + j].type && \
+	(*main)->command[*i + j].type != PIPE)
+	{
+		if ((*main)->command[*i + j].type >= LEFT_CHEV \
+		&& (*main)->command[*i + j].type <= DB_LEFT_CHEV)
+			return (j);
+		j++;
+	}
 	return (0);
 }
 
-int	get_right_input(t_minishell **main, int *i, t_alloc **garbage)
+int	handle_redirect(t_minishell **main, int *i, t_alloc **garbage)
 {
-	char	*filename;
+	int	ret;
 
-	filename = NULL;
-	if (is_input(main, i))
-	{
-		while (is_input(main, i))
-		{
-			filename = ft_strdup((*main)->command[*i + 1].word, garbage);
-			// if (((*main)->infilefd = open(filename, O_RDONLY, 0644)) == -1)
-			// 	break ;
-			((*main)->infilefd = open(filename, O_RDONLY));
-			//printf("Ouverture de fichier pour l'entrée: %s, infilefd: %d\n", filename, (*main)->infilefd);
-			//close((*main)->infilefd);
-			*i += 2;
-		}
-	}
-	filename = ft_strdup((*main)->command[*i + 1].word, garbage);
-	if (is_output(main, i))
-	{
-		if (!(((*main)->infilefd = open(filename, O_RDONLY, 0644)) == -1))
-		{
-			*i += 2;
-			get_all_redir(main, i, garbage);
-		}
-	}
-	if ((*main)->infilefd == -1 || \
-	(((*main)->infilefd = open(filename, O_RDONLY, 0644)) == -1))
-	{
-		if (is_input(main, i) || is_output(main, i))
-		{
-			while (is_input(main, i) || is_output(main, i))
-				*i += 2;
-		}
-	}
-	else
-		(*main)->infilefd = redir_input(main, filename);
-	return (1);
-}
-
-
-void	handle_redirect(t_minishell **main, int *i, t_alloc **garbage)
-{
+	ret = 0;
 	if ((*main)->command[*i].type == DB_RIGHT_CHEV || \
 		(*main)->command[*i].type == RIGHT_CHEV)
 	{
-		if (get_all_redir(main, i, garbage) == -1)
-			exit(EXIT_FAILURE);
+		if (get_all_outputs(main, i, garbage) == -1)
+		{
+			(*main)->code_status = 1;
+			write(2, "error : file could not be opened\n", 34);
+			ret = -1;
+		}
 	}
 	else if ((*main)->command[*i].type == LEFT_CHEV)
-		get_right_input(main, i, garbage);
+	{
+		if (get_all_inputs(main, i, garbage) == -1)
+		{
+			(*main)->code_status = 1;
+			write(2, "error : file could not be opened\n", 34);
+			ret = -1;
+		}
+	}
+	if (check_redir(main, i) == 0)
+		*i += 2;
+	else
+		*i += 1;
+	return (ret);
 }
 
 int	ft_redirect(t_minishell **main, int *i, t_alloc **garbage)
 {
-	//printf("Entrée dans ft_redirect. Commande actuelle: %s\n", (*main)->command[*i].word);
-	// (*main)->infilefd = -2;
-	// (*main)->outfilefd = -2;
+	(*main)->infilefd = -2;
+	(*main)->outfilefd = -2;
 
-	if ((*main)->command[*i].type == DB_LEFT_CHEV)
-	{
-		ft_heredoc(main, i, garbage);
-		return (0);
-	}
-	handle_redirect(main, i, garbage);
-	*i += 2;
-	if ((*main)->infilefd == -1 || (*main)->outfilefd == -1)
-	{
-		write(2, "error : file could not be opened\n", 34);
+	if (handle_redirect(main, i, garbage) == -1)
 		return (-1);
-	}
-	//printf("Sortie de ft_redirect. infilefd: %d, outfilefd: %d\n", (*main)->infilefd, (*main)->outfilefd);
 	return (1);
 }

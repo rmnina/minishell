@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/26 23:39:05 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/18 13:49:25 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/22 12:54:06 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,3 +72,25 @@ char	**ft_envjoin(char **envp, char *str, t_alloc **garbage)
 	return (new_envp);
 }
 
+char	**ft_strjoin_args(t_minishell **main, int *i, t_alloc **garbage)
+{
+	char	**new_args;
+	int		j;
+	int		count;
+
+	j = 0;
+	count = 0;
+	while ((*main)->cmd_args[count])
+		count++;
+	count++;
+	new_args = garb_malloc(sizeof(char *), count + 1, garbage);
+	while ((*main)->cmd_args[j])
+	{
+		new_args[j] = ft_strjoin(new_args[j], (*main)->cmd_args[j], garbage);
+		j++;
+	}
+	new_args[j] = ft_strjoin(new_args[j], (*main)->command[*i].word, garbage);
+	j++;
+	new_args[j] = NULL;
+	return (new_args);
+}

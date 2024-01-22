@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 17:31:57 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/18 18:49:15 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/22 15:11:13 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,11 +37,7 @@ char	*change_directory(t_minishell **main, char *path, t_alloc **garbage)
 	if (new_path == NULL)
 		return (NULL);
 	if (chdir(new_path) != 0)
-	{
-		perror("chdir failed");
-		free(new_path);
 		return (NULL);
-	}
 	if ((*main)->cd_path != NULL)
 		(*main)->last_cd_path = ft_strdup((*main)->cd_path, garbage);
 	(*main)->cd_path = ft_strdup(new_path, garbage);

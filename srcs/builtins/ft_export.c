@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 05:00:11 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/18 15:21:39 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/22 16:37:55 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,28 +46,62 @@ void	compare_values(t_export *export, char **value, t_alloc **garbage)
 	{
 		export->formatted_value = ft_strjoin("\\", *value, garbage);
 		export->new_var = ft_strjoin(export->var_name, "=", garbage);
-	    export->new_var = ft_strjoin(export->new_var, export->formatted_value, garbage);
+		export->new_var = \
+		ft_strjoin(export->new_var, export->formatted_value, garbage);
 	}
 	else if (**value == '"' || **value == '\'')
 	{
 		export->formatted_value = ft_strdup(*value, garbage);
 		export->new_var = ft_strjoin(export->var_name, "=", garbage);
-	    export->new_var = ft_strjoin(export->new_var, export->formatted_value, garbage);
+		export->new_var = \
+		ft_strjoin(export->new_var, export->formatted_value, garbage);
 	}
 	else
 	{
 		export->formatted_value = ft_strdup(*value, garbage);
 		export->new_var = ft_strjoin(export->var_name, "=", garbage);
-	    export->new_var = ft_strjoin(export->new_var, export->formatted_value, garbage);
+		export->new_var = \
+		ft_strjoin(export->new_var, export->formatted_value, garbage);
 	}
 }
+// void	export_append(t_minishell **main, char *var_name, char *value_to_append, t_alloc **garbage)
+// {
+// 	char	*old_value;
+// 	char	*new_value;
+// 	char	*export_str;
+// 	char	*final_export;
+
+// 	old_value = getenv(var_name);
+// 	new_value = NULL;
+// 	if (old_value)
+// 		new_value = ft_strjoin(old_value, value_to_append, garbage);
+// 	else
+// 		new_value = ft_strdup(value_to_append, garbage);
+
+// 	export_str = ft_strjoin(var_name, "=", garbage);
+// 	final_export = ft_strjoin(export_str, new_value, garbage);
+// 	add_or_update_env_var((*main)->envp, final_export, garbage);
+// }
+
+
 
 void	handle_value_case(t_minishell **main, char *arg, t_alloc **garbage)
 {
 	t_export	export;
 	char		*value;
+	// char		*plus_equal;
+	// char		*var_name;
+	// char		*value_to_append;
 
 	value = NULL;
+	// plus_equal = ft_strchr(arg, "+=");
+	// if (plus_equal)
+	// {
+	// 	*plus_equal = '\0';
+	// 	var_name = ft_strndup(arg, plus_equal - arg, garbage);
+	// 	value_to_append = plus_equal + 2;
+	// 	export_append(main, var_name, value_to_append, garbage);
+	// }
 	export.equal = ft_strchr(arg, '=');
 	if (!export.equal)
 	{
@@ -102,7 +136,8 @@ void    export_variable(t_minishell **main, t_alloc **garbage)
 		else
 		{
 			if (is_valid_identifier((*main)->cmd_args[i]))
-				add_or_update_env_var((*main)->envp, (*main)->cmd_args[i], garbage);
+				add_or_update_env_var \
+				((*main)->envp, (*main)->cmd_args[i], garbage);
 		}
 		i++;
 	}

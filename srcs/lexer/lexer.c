@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 02:11:36 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/14 17:36:35 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/18 02:33:51 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 int	ft_error(t_minishell **main, char *str, int i)
 {
 	ft_putstr_fd(str, 2);
+	write(2, "\n", 1);
 	(*main)->code_status = i;
 	return (-1);
 }

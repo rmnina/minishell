@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 16:22:53 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/18 15:15:05 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/22 14:21:25 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,22 +133,30 @@ void	read_add(t_minishell **main, int *j, t_alloc **garbage)
 	}
 }
 
-void	ft_heredoc(t_minishell **main, int *i, t_alloc **garbage)
+int	ft_heredoc(t_minishell **main, int *i, t_alloc **garbage)
 {
 	int	j;
 
 	j = 0;
-	(*main)->h_delimiter = get_delimiter(main, i, garbage);
+	if (!(*main)->h_delimiter)
+		(*main)->h_delimiter = get_delimiter(main, i, garbage);
 	while ((*main)->h_delimiter[j])
 	{	
-		init_temp_file(main, garbage);
+		(*main)->tmp_fd = \
+		open((*main)->tmp_filename, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+		if ((*main)->tmp_fd < 0)
+			exit(EXIT_FAILURE);
 		read_add(main, &j, garbage);
 		j++;
+		close((*main)->tmp_fd);
 	}
-	(*main)->tmp_fd = open((*main)->tmp_filename, O_RDONLY);
+	if ((*main)->fd[1] != -1)
+		close((*main)->fd[1]);
+	open((*main)->tmp_filename, O_RDONLY);
 	if ((*main)->tmp_fd < 0)
 		exit(EXIT_FAILURE);
 	dup2((*main)->tmp_fd, STDIN_FILENO);
 	close((*main)->tmp_fd);
+	return (0);
 }
 

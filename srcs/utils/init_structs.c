@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 10:43:20 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/18 15:23:24 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/22 12:38:39 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,15 @@ t_minishell	*init_minishell(char **envp)
 	main->fd[0] = -1;
 	main->fd[1] = -1;
 	main->old_fd = -1;
-	main->filefd = -1;
-	main->com[0] = -1;
-	main->com[1] = -1;
+	main->infilefd = -1;
+	main->outfilefd = -1;
+	main->tmp_fd = -1;
 	main->redir = 0;
 	main->status = -1;
-	main->pid = 0;
+	main->nb_cmd = 0;
+	main->total_cmd = 0;
+	main->tmp_filename = "/tmp/minishell.txt";
+	main->pid = NULL;
 	main->line = NULL;
 	main->h_line = NULL;
 	main->path = NULL;
@@ -52,15 +55,18 @@ void	restore_minishell()
 
 	main = get_minishell();
 
-	main->com[0] = -1;
-	main->com[1] = -1;
 	main->redir = 0;
 	main->fd[0] = -1;
 	main->fd[1] = -1;
-	main->filefd = -1;
+	main->tmp_fd = -1;
+	main->infilefd = -1;
+	main->outfilefd = -1;
+	main->nb_cmd = 0;
+	main->total_cmd = 0;
 	main->old_fd = -1;
 	main->status = -1;
-	main->pid = 0;
+	main->tmp_filename = "/tmp/minishell.txt";
+	main->pid = NULL;
 	main->line = NULL;
 	main->h_line = NULL;
 	main->path = NULL;
@@ -94,3 +100,4 @@ t_parser	*init_parser(t_alloc **garbage)
 	parser->vpos = 0;
 	return (parser);
 }
+
