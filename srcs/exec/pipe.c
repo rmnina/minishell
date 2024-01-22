@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:20:25 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/22 14:12:34 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/22 16:43:16 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,11 +61,13 @@ int	is_first_pipe(t_minishell **main, int *i)
 	int	count;
 
 	count = 0;
-	while ((*main)->command[count].type != PIPE)
+	while (count < *i)
+	{
+		if ((*main)->command[*i].type == PIPE)
+			return (0);
 		count++;
-	if (count == *i)
-		return (1);
-	return (0);
+	}
+	return (1);
 }
 
 int	is_last_pipe(t_minishell **main, int *i)
@@ -82,25 +84,25 @@ int	is_last_pipe(t_minishell **main, int *i)
 	return (1);
 }
 
-int	init_heredoc(t_minishell **main, int *i, t_alloc **garbage)
-{
-	if (*i == 0 && (*main)->command[*i].type == DB_LEFT_CHEV)
-	{
-		(*main)->h_delimiter = get_delimiter(main, i, garbage);
-		if ((*main)->h_delimiter == NULL)
-			return (-1);
-		return (1);
-	}
-	else if (*i > 0 && (*main)->command[*i - 1].type == PIPE \
-	&& (*main)->command[*i].type == DB_LEFT_CHEV)
-	{
-		(*main)->h_delimiter = get_delimiter(main, i, garbage);
-		if ((*main)->h_delimiter == NULL)
-			return (-1);
-		return (1);
-	}
-	return (0);
-}
+// int	init_heredoc(t_minishell **main, int *i, t_alloc **garbage)
+// {
+// 	if (*i == 0 && (*main)->command[*i].type == DB_LEFT_CHEV)
+// 	{
+// 		(*main)->h_delimiter = get_delimiter(main, i, garbage);
+// 		if ((*main)->h_delimiter == NULL)
+// 			return (-1);
+// 		return (1);
+// 	}
+// 	else if (*i > 0 && (*main)->command[*i - 1].type == PIPE 
+// 	&& (*main)->command[*i].type == DB_LEFT_CHEV)
+// 	{
+// 		(*main)->h_delimiter = get_delimiter(main, i, garbage);
+// 		if ((*main)->h_delimiter == NULL)
+// 			return (-1);
+// 		return (1);
+// 	}
+// 	return (0);
+// }
 
 int	will_be_piped(t_minishell **main, int *i)
 {
@@ -154,7 +156,7 @@ void	wait_pids(t_minishell **main)
 
 void	child_process(t_minishell **main, int *i, t_alloc **garbage)
 {
-	if (check_redir(main, i) == 0)
+	if (check_redir(main, i) == 0 && (*main)->command[*i].type != DB_LEFT_CHEV)
 	{
 		if (((*main)->redir = ft_redirect(main, i, garbage)) == -1)
 		{
@@ -162,6 +164,8 @@ void	child_process(t_minishell **main, int *i, t_alloc **garbage)
 			exit(EXIT_FAILURE);
 		}
 	}
+	// if (is_heredoc(main, i))
+	// 	ft_heredoc(main, i, garbage);
 	if (execute_builtins(main, garbage) == -1)
 		execute_command(main, garbage);
 	exit(EXIT_SUCCESS);
@@ -172,18 +176,17 @@ void	child_process(t_minishell **main, int *i, t_alloc **garbage)
 int first_pipe(t_minishell **main, int *i, t_alloc **garbage)
 {
 	if (pipe((*main)->fd) == -1)
-		return (-1);
-	if (is_heredoc(main, i))
-		ft_heredoc(main, i, garbage);
-	(*main)->nb_cmd++;
-	(*main)->pid[(*main)->nb_cmd - 1] = fork();
-	if ((*main)->pid[(*main)->nb_cmd - 1] == -1)
-		return (-1);
-	if ((*main)->pid[(*main)->nb_cmd - 1] == 0)
-	{
+        return (-1);
+    (*main)->nb_cmd++;
+    (*main)->pid[(*main)->nb_cmd - 1] = fork();
+    if ((*main)->pid[(*main)->nb_cmd - 1] == -1)
+        return (-1);
+    if ((*main)->pid[(*main)->nb_cmd - 1] == 0)
+    {
 		close((*main)->fd[0]);
-		if ((*main)->command[*i].type == PIPE)
-			dup2((*main)->fd[1], STDOUT_FILENO);
+		if (is_heredoc(main, i))
+			ft_heredoc(main, i, garbage);
+		dup2((*main)->fd[1], STDOUT_FILENO);
 		close((*main)->fd[1]);
 		child_process(main, i, garbage);
 	}
@@ -203,16 +206,16 @@ int first_pipe(t_minishell **main, int *i, t_alloc **garbage)
 int middle_pipe(t_minishell **main, int *i, t_alloc **garbage)
 {
 	if (pipe((*main)->fd) == -1)
-		return (-1);
-	if (is_heredoc(main, i))
-		ft_heredoc(main, i, garbage);
-	(*main)->nb_cmd++;
-	(*main)->pid[(*main)->nb_cmd - 1] = fork();
-	if ((*main)->pid[(*main)->nb_cmd - 1] == -1)
-		return (-1);
-	if ((*main)->pid[(*main)->nb_cmd - 1] == 0)
-	{
+        return (-1);
+    (*main)->nb_cmd++;
+    (*main)->pid[(*main)->nb_cmd - 1] = fork();
+    if ((*main)->pid[(*main)->nb_cmd - 1] == -1)
+        return (-1);
+    if ((*main)->pid[(*main)->nb_cmd - 1] == 0)
+    {
 		close((*main)->fd[0]);
+		if (is_heredoc(main, i))
+			ft_heredoc(main, i, garbage);
 		dup2((*main)->fd[1], STDOUT_FILENO);
 		dup2((*main)->old_fd, STDIN_FILENO);
 		close((*main)->fd[1]);
@@ -236,17 +239,17 @@ int middle_pipe(t_minishell **main, int *i, t_alloc **garbage)
 int last_pipe(t_minishell **main, int *i, t_alloc **garbage)
 {
 	if (pipe((*main)->fd) == -1)
-		return (-1);
-	if (is_heredoc(main, i))
-		ft_heredoc(main, i, garbage);
-	(*main)->nb_cmd++;
-	(*main)->pid[(*main)->nb_cmd - 1] = fork();
-	if ((*main)->pid[(*main)->nb_cmd - 1] == -1)
-		return (-1);
-	if ((*main)->pid[(*main)->nb_cmd - 1] == 0)
-	{
-		close((*main)->fd[0]);
+        return (-1);
+    (*main)->nb_cmd++;
+    (*main)->pid[(*main)->nb_cmd - 1] = fork();
+    if ((*main)->pid[(*main)->nb_cmd - 1] == -1)
+        return (-1);
+    if ((*main)->pid[(*main)->nb_cmd - 1] == 0)
+    {
+    	close((*main)->fd[0]);
 		close((*main)->fd[1]);
+		if (is_heredoc(main, i))
+			ft_heredoc(main, i, garbage);
 		if (dup2((*main)->old_fd, STDIN_FILENO) < 0)
 		{
 			(*main)->code_status = 1;
@@ -281,11 +284,15 @@ void	restore_fds(t_minishell **main)
 		close((*main)->outfilefd);
 	if ((*main)->old_fd > 0)
 		close((*main)->old_fd);
+	if ((*main)->fd_stdout)
+		close((*main)->fd_stdout);
 }
 
 int	ft_pipex(t_minishell **main, int *i, t_alloc **garbage)
 {
 	init_process_signal();
+	(*main)->fd_stdout = dup(STDOUT_FILENO);
+	(*main)->fd_stdin = dup(STDIN_FILENO);
 	while ((*main)->nb_cmd < (*main)->total_cmd - 1)
 	{
 		if (is_first_pipe(main, i))
