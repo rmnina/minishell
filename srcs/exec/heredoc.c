@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 16:22:53 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/20 00:46:31 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/23 22:22:31 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,18 +111,21 @@ int	ft_heredoc(t_minishell **main, int *i, t_alloc **garbage)
 		j++;
 		close((*main)->tmp_fd);
 	}
-	// if ((*main)->fd[1] != -1)
-	// 	close((*main)->fd[1]);
 	open((*main)->tmp_filename, O_RDONLY);
 	if ((*main)->tmp_fd < 0)
 		exit(EXIT_FAILURE);
-	if ((*main)->fd[0] == -1)
-		dup2((*main)->tmp_fd, STDIN_FILENO);
-	else
-		dup2((*main)->tmp_fd, STDIN_FILENO);
+	dup2((*main)->tmp_fd, STDIN_FILENO);
+	close((*main)->tmp_fd);	
+	// open((*main)->tmp_filename, O_RDONLY);
+	// if ((*main)->tmp_fd < 0)
+	// 	exit(EXIT_FAILURE);
+	// dup2((*main)->tmp_fd, STDIN_FILENO);
+	// close((*main)->tmp_fd);
+	// if ((*main)->fd[1] != -1)
+	// 	close((*main)->fd[1]);
 	// if ((*main)->fd[0] != -1)
 	// 	close((*main)->fd[0]);
-	close((*main)->tmp_fd);
-	return (0);
+	// close((*main)->tmp_fd);
+	return (1);
 }
 

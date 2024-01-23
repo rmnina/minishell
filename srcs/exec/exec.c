@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/19 22:57:40 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/23 18:02:50 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,7 @@ void	init_redirect(t_minishell **main, int *i, t_alloc **garbage)
 			if ((*main)->cmd_args[0] == NULL)
 				(*main)->cmd_args = create_cmd_args(main, i, garbage);
 		}
-		else if (ft_redirect(main, i, garbage) != -1)
+		else if (ft_redirect(main, i, garbage) == -1)
 		{
 			(*main)->code_status = 1;
 			exit(EXIT_FAILURE);

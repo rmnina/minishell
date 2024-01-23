@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:03:22 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/19 02:09:02 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/23 20:43:15 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,8 +82,6 @@ typedef	struct s_export {
 }	t_export;
 
 typedef struct s_minishell {
-	int					fd_stdin;
-	int					fd_stdout;
 	int					fd[2];
 	int					infilefd;
 	int					outfilefd;
@@ -91,7 +89,7 @@ typedef struct s_minishell {
 	int					code_status;
 	int					status;
 	int					tmp_fd;
-	int					redir;
+	int					heredoc;
 	int					total_cmd;
 	int					nb_cmd;
 	pid_t				*pid;
@@ -165,6 +163,7 @@ int			ft_heredoc(t_minishell **main, int *i, t_alloc **garbage);
 int			ft_redirect(t_minishell **main, int *i, t_alloc **garbage);
 int			ft_pipex(t_minishell **main, int *i, t_alloc **garbage);
 char		**create_cmd_args(t_minishell **main, int *i, t_alloc **garbage);
+void		init_redirect(t_minishell **main, int *i, t_alloc **garbage);
 void		handle_command(t_minishell **main, t_alloc **garbage);
 int			get_all_inputs(t_minishell **main, int *i, t_alloc **garbage);
 int			get_all_outputs(t_minishell **main, int *i, t_alloc **garbage);
