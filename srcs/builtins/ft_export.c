@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 05:00:11 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/22 19:12:10 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/23 11:59:23 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 bool	is_valid_identifier(char *str)
 {
-	printf("is_valid_identifier: str = %s\n", str);
+	//printf("is_valid_identifier: str = %s\n", str);
 	char	*ptr;
 	bool	equals;
 	bool	no_space;
@@ -78,7 +78,7 @@ bool	is_valid_identifier(char *str)
 
 void	compare_values(t_export *export, char **value, t_alloc **garbage)
 {
-	printf("compare_values: value = %s\n", *value);
+	//printf("compare_values: value = %s\n", *value);
 	if (!**value || **value == '\0')
 		export->new_var = ft_strjoin(export->var_name, "=", garbage);
 	else if (**value == '$')
@@ -92,15 +92,14 @@ void	compare_values(t_export *export, char **value, t_alloc **garbage)
 	{
 		export->formatted_value = ft_strdup(*value, garbage);
 		export->new_var = ft_strjoin(export->var_name, "=", garbage);
-		export->new_var = \
-		ft_strjoin(export->new_var, export->formatted_value, garbage);
+		export->new_var = ft_strjoin(export->new_var, export->formatted_value, garbage);
 	}
 	else
 	{
-		export->formatted_value = ft_strdup(*value, garbage);
+		export->formatted_value = ft_strjoin("\"", *value, garbage);
+		export->formatted_value = ft_strjoin(export->formatted_value, "\"", garbage);
 		export->new_var = ft_strjoin(export->var_name, "=", garbage);
-		export->new_var = \
-		ft_strjoin(export->new_var, export->formatted_value, garbage);
+		export->new_var = ft_strjoin(export->new_var, export->formatted_value, garbage);
 	}
 }
 void	export_append(t_minishell **main, char *var_name, char *value_to_append, t_alloc **garbage)
@@ -110,23 +109,23 @@ void	export_append(t_minishell **main, char *var_name, char *value_to_append, t_
 	char	*export_str;
 	char	*final_export;
 
-	printf("export_append: var_name = %s, value_to_append = %s\n", var_name, value_to_append);
+	//printf("export_append: var_name = %s, value_to_append = %s\n", var_name, value_to_append);
 	old_value = getenv(var_name);
-	printf("export_append: old_value = %s\n", old_value ? old_value : "NULL");
+	//printf("export_append: old_value = %s\n", old_value ? old_value : "NULL");
 	new_value = NULL;
 	if (old_value)
 	{
 		new_value = ft_strjoin(old_value, value_to_append, garbage);
-		printf("export_append: new_value = %s\n", new_value);
+		//printf("export_append: new_value = %s\n", new_value);
 	}
 	else
 	{
 		new_value = ft_strdup(value_to_append, garbage);
-		printf("export_append: new_value = %s\n", new_value);
+		//printf("export_append: new_value = %s\n", new_value);
 	}
 	export_str = ft_strjoin(var_name, "=", garbage);
 	final_export = ft_strjoin(export_str, new_value, garbage);
-	printf("export_append: final_export = %s\n", final_export);
+	//printf("export_append: final_export = %s\n", final_export);
 	add_or_update_env_var((*main)->envp, final_export, garbage);
 }
 
@@ -140,7 +139,7 @@ void	handle_value_case(t_minishell **main, char *arg, t_alloc **garbage)
 	char		*var_name;
 	char		*value_to_append;
 
-	printf("handle_value_case: arg = %s\n", arg);
+	//printf("handle_value_case: arg = %s\n", arg);
 	value = NULL;
 	plus_equal = ft_strstr(arg, "+=");
 	export.equal = ft_strchr(arg, '=');
@@ -149,15 +148,15 @@ void	handle_value_case(t_minishell **main, char *arg, t_alloc **garbage)
 		*plus_equal = '\0';
 		var_name = ft_strndup(arg, plus_equal - arg, garbage);
 		value_to_append = plus_equal + 2;
-		printf("handle_value_case: var_name = %s, value_to_append = %s\n", var_name, value_to_append);
+		//printf("handle_value_case: var_name = %s, value_to_append = %s\n", var_name, value_to_append);
 		export_append(main, var_name, value_to_append, garbage);
 		return ;
 	}
-	else if (!export.equal)
+	if (!export.equal)
 	{
 		if (is_valid_identifier(arg))
 		{
-			export.new_var = ft_strjoin(arg, "=", garbage);
+			export.new_var = ft_strjoin(arg, "=\"\"", garbage);
 			add_or_update_env_var((*main)->envp, export.new_var, garbage);
 		}
 		return ;
@@ -176,10 +175,10 @@ void    export_variable(t_minishell **main, t_alloc **garbage)
 
 	equal = NULL;
 	i = 1;
-	printf("export_variable: Start\n");
+	//printf("export_variable: Start\n");
 	while ((*main)->cmd_args[i] != NULL)
 	{
-		printf("export_variable: cmd_arg[%d] = %s\n", i, (*main)->cmd_args[i]);
+		//printf("export_variable: cmd_arg[%d] = %s\n", i, (*main)->cmd_args[i]);
 		equal = ft_strchr((*main)->cmd_args[i], '=');
 		if (equal)
 		{
@@ -196,13 +195,30 @@ void    export_variable(t_minishell **main, t_alloc **garbage)
 	}
 }
 
-int	ft_export(t_minishell **main, t_alloc **garbage)
+int ft_export(t_minishell **main, t_alloc **garbage)
 {
-	printf("ft_export: Start\n");
+	int		i;
+	char	*equal;
+
+	equal = NULL;
 	if ((*main)->cmd_args[1] == NULL)
-		return (ft_env(main));
+	{
+		i = 0;
+		while ((*main)->envp[i] != NULL)
+		{
+			equal = ft_strchr((*main)->envp[i], '=');
+			if (equal && *(equal + 1) == '\0')
+				printf("export %.*s=\"\"\n", (int)(equal - (*main)->envp[i]), (*main)->envp[i]);
+			else
+				printf("export %s\n", (*main)->envp[i]);
+			i++;
+		}
+		(*main)->code_status = 0;
+		return ((*main)->code_status);
+	}
 	else
 		export_variable(main, garbage);
 	(*main)->code_status = 0;
 	return ((*main)->code_status);
 }
+

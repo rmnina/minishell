@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 09:11:51 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/22 18:57:19 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/23 11:19:30 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,24 +69,24 @@ void	add_or_update_env_var(char **envp, char *var, t_alloc **garbage)
 
 bool	search_identifiers(const char *str, char *ptr, bool *equals, bool *no_space)
 {
-	 printf("search_identifiers: Start - str = %s, current char = %c, equals = %s, no_space = %s\n",
-           str, *ptr, (*equals) ? "true" : "false", (*no_space) ? "true" : "false");
+	// printf("search_identifiers: Start - str = %s, current char = %c, equals = %s, no_space = %s\n",
+           //str, *ptr, (*equals) ? "true" : "false", (*no_space) ? "true" : "false");
 	if (*ptr == '=')
 	{
 		*equals = true;
-		printf("search_identifiers: Found '='\n");
+		//printf("search_identifiers: Found '='\n");
 	}
 	else if (*equals)
 	{
 		if (!*no_space && *ptr != ' ')
 		{
 			*no_space = true;
-			printf("search_identifiers: Found first non-space character after '='\n");
+			//printf("search_identifiers: Found first non-space character after '='\n");
 		}
 	}
 	else if (*no_space && *ptr == ' ')
 	{
-		printf("search_identifiers: Found space after non-space characters\n");
+		//printf("search_identifiers: Found space after non-space characters\n");
 		return (false);
 	}
 	else if (!(*ptr == '_' || ft_isalnum(*ptr)))
