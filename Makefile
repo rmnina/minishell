@@ -6,7 +6,7 @@
 #    By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/14 14:15:25 by jdufour           #+#    #+#              #
-#    Updated: 2024/01/22 14:45:56 by juandrie         ###   ########.fr        #
+#    Updated: 2024/01/23 19:20:17 by juandrie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,6 +24,7 @@ SRCS = srcs/main.c \
 	srcs/builtins/exit.c \
 	srcs/builtins/ft_export.c \
 	srcs/builtins/export_utils.c \
+	srcs/builtins/export_utils2.c \
 	srcs/builtins/pwd.c \
 	srcs/builtins/unset.c \
 	srcs/builtins/signals.c \

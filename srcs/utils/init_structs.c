@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 10:43:20 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/22 19:26:00 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/23 20:05:21 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,19 +19,8 @@ t_minishell	*get_minishell(void)
 	return (&main);
 }
 
-t_minishell	*init_minishell(char **envp)
+void	configure_minishell(t_minishell *main, char **envp)
 {
-	t_minishell	*main;
-
-	main = get_minishell();
-	main->fd_stdout = -1;
-	main->fd_stdin = -1;
-	main->fd[0] = -1;
-	main->fd[1] = -1;
-	main->old_fd = -1;
-	main->infilefd = -1;
-	main->outfilefd = -1;
-	main->tmp_fd = -1;
 	main->redir = 0;
 	main->status = -1;
 	main->nb_cmd = 0;
@@ -48,15 +37,30 @@ t_minishell	*init_minishell(char **envp)
 	main->envp = envp;
 	main->command = NULL;
 	main->parser = NULL;
-	return (main);
 }
 
-void	restore_minishell()
+t_minishell	*init_minishell(char **envp)
 {
 	t_minishell	*main;
 
 	main = get_minishell();
+	main->fd_stdout = -1;
+	main->fd_stdin = -1;
+	main->fd[0] = -1;
+	main->fd[1] = -1;
+	main->old_fd = -1;
+	main->infilefd = -1;
+	main->outfilefd = -1;
+	main->tmp_fd = -1;
+	configure_minishell(main, envp);
+	return (main);
+}
 
+void	restore_minishell(void)
+{
+	t_minishell	*main;
+
+	main = get_minishell();
 	main->redir = 0;
 	main->fd[0] = -1;
 	main->fd[1] = -1;
@@ -79,29 +83,3 @@ void	restore_minishell()
 	main->command = NULL;
 	main->parser = NULL;
 }
-
-t_parser	*get_parser(t_alloc **garbage)
-{
-	t_parser	*parser;
-
-	parser = garb_malloc(sizeof(t_parser), 1, garbage);
-	if (parser == NULL)
-		return (NULL);
-	return (parser);
-}
-
-t_parser	*init_parser(t_alloc **garbage)
-{
-	t_parser	*parser;
-
-	parser = get_parser(garbage);
-	if (parser == NULL)
-		return (NULL);
-	parser->case_double = FALSE;
-	parser->case_single = FALSE;
-	parser->case_quotes = FALSE;
-	parser->var = NULL;
-	parser->vpos = 0;
-	return (parser);
-}
-

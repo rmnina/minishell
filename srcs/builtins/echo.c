@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 16:06:16 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/18 15:18:04 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/23 19:39:25 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,4 +71,3 @@ int	ft_echo(t_minishell **main)
 	(*main)->code_status = 0;
 	return (0);
 }
-

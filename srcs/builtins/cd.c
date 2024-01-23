@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 17:31:57 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/22 17:38:34 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/23 19:38:19 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,29 +22,6 @@ void	replace_pwd(char *path, char **envp, t_alloc **garbage)
 	envp[i] = ft_strjoin("PWD=\0", path, garbage);
 	if (!envp[i])
 		return ;
-}
-
-char	*change_directory(t_minishell **main, char *path, t_alloc **garbage)
-{
-	char	*new_path;
-
-	if (path == NULL)
-	{
-		printf("change_directory: path is NULL\n");
-		return (false);
-	}
-	new_path = ft_realpath(path, NULL, garbage);
-	if (new_path == NULL)
-		return (NULL);
-	if (chdir(new_path) != 0)
-		return (NULL);
-	if ((*main)->cd_path != NULL)
-	{
-		// if ((*main)->last_cd_path)
-		(*main)->last_cd_path = ft_strdup((*main)->cd_path, garbage);
-	}
-	(*main)->cd_path = ft_strdup(new_path, garbage);
-	return (path);
 }
 
 int	cd_hyphen(t_minishell **main, t_alloc **garbage)
@@ -78,31 +55,33 @@ int	cd_tilde(t_minishell **main, t_alloc **garbage)
 
 int	ft_cd(t_minishell **main, t_alloc **garbage)
 {
-	char	*path;
-
-	path = NULL;
 	if ((*main)->last_cd_path == NULL)
 		(*main)->last_cd_path = getcwd(NULL, 0);
-	if ((*main)->cmd_args[1] == NULL || \
-	ft_strcmp((*main)->cmd_args[1], "~") == 0)
+	if ((*main)->cmd_args[1] == NULL \
+	|| ft_strcmp((*main)->cmd_args[1], "~") == 0)
 		return (cd_tilde(main, garbage));
 	else if (ft_strcmp((*main)->cmd_args[1], "-") == 0)
 		return (cd_hyphen(main, garbage));
 	else
-	{
-		if ((*main)->cmd_args[2])
-		{
-			printf("minishell: cd: too many arguments\n");
-			return ((*main)->code_status = 1);
-		}
-		if ((path = change_directory(main, (*main)->cmd_args[1], garbage)) == NULL)
-		{
-			perror("cd");
-			return ((*main)->code_status = 1);
-		}
-		else
-			replace_pwd(path, (*main)->envp, garbage);
-	}
-	return ((*main)->code_status = 0);
+		return (ft_cd_main(main, garbage));
 }
 
+int	ft_cd_main(t_minishell **main, t_alloc **garbage)
+{
+	char	*path;
+
+	if ((*main)->cmd_args[2])
+	{
+		printf("minishell: cd: too many arguments\n");
+		return ((*main)->code_status = 1);
+	}
+	path = change_directory(main, (*main)->cmd_args[1], garbage);
+	if (path == NULL)
+	{
+		perror("cd");
+		return ((*main)->code_status = 1);
+	}
+	else
+		replace_pwd(path, (*main)->envp, garbage);
+	return ((*main)->code_status = 0);
+}

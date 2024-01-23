@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 05:26:30 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/22 12:41:01 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/23 19:57:36 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	check_spaces(t_minishell **main, int *i)
 
 int	ft_strcmp_var(const char *s1, const char *s2)
 {
-	int	i;
+	int				i;
 	unsigned char	*str1;
 	unsigned char	*str2;
 
@@ -78,4 +78,3 @@ int	is_builtin(char *command)
 	}
 	return (0);
 }
-

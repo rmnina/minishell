@@ -6,12 +6,11 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 16:39:20 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/18 18:52:14 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/23 19:55:51 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-
 
 int	resolve_path(const char *path, char *resolved)
 {
@@ -59,3 +58,22 @@ char	*ft_realpath(char *path, char *resolved_path, t_alloc **garbage)
 	return (final_path);
 }
 
+char	*change_directory(t_minishell **main, char *path, t_alloc **garbage)
+{
+	char	*new_path;
+
+	if (path == NULL)
+	{
+		printf("change_directory: path is NULL\n");
+		return (false);
+	}
+	new_path = ft_realpath(path, NULL, garbage);
+	if (new_path == NULL)
+		return (NULL);
+	if (chdir(new_path) != 0)
+		return (NULL);
+	if ((*main)->cd_path != NULL)
+		(*main)->last_cd_path = ft_strdup((*main)->cd_path, garbage);
+	(*main)->cd_path = ft_strdup(new_path, garbage);
+	return (path);
+}

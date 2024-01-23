@@ -6,12 +6,11 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 15:13:20 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/22 12:49:51 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/23 19:24:12 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-
 
 void	sigint_handler(int signum)
 {	
@@ -50,4 +49,3 @@ void	init_process_signal(void)
 	signal(SIGINT, sigint_process_handler);
 	signal(SIGQUIT, sigquit_process_handler);
 }
-

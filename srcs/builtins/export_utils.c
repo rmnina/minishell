@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 09:11:51 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/23 11:19:30 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/23 19:26:08 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,33 +67,31 @@ void	add_or_update_env_var(char **envp, char *var, t_alloc **garbage)
 	}
 }
 
-bool	search_identifiers(const char *str, char *ptr, bool *equals, bool *no_space)
+bool	identifiers(const char *str, char *ptr, bool *equals, bool *no_space)
 {
-	printf("Début de search_identifiers avec str = %s, caractère actuel = %c\n", str, *ptr);
-	if (*ptr == '=')
+	int	i;
+
+	i = 0;
+	if (ptr[i] == '=')
 	{
 		*equals = true;
 	}
 	else if (*equals)
 	{
-		if (!*no_space && *ptr != ' ')
+		if (!*no_space && ptr[i] != ' ')
 		{
 			*no_space = true;
-			printf("Pas d'espace après '=', no_space mis à true\n");
 		}
 	}
-	else if (*no_space && *ptr == ' ')
+	else if (*no_space && ptr[i] == ' ')
 	{
-		printf("Espace trouvé après non-espace, invalide\n");
 		return (false);
 	}
-	else if (!(*ptr == '_' || ft_isalnum(*ptr)))
+	else if (!(ptr[i] == '_' || ft_isalnum(ptr[i]) || \
+	(ptr[i] == '+' && ptr[i + 1] == '=')))
 	{
-		printf("Caractère invalide trouvé : %c\n", *ptr);
 		printf("export: `%s': not a valid identifier\n", str);
 		return (false);
 	}
-	printf("Fin de search_identifiers, caractère valide\n");
 	return (true);
 }
-

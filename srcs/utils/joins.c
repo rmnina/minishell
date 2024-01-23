@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/26 23:39:05 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/22 12:54:06 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/23 19:56:54 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,8 @@ char	**ft_envjoin(char **envp, char *str, t_alloc **garbage)
 	new_envp = garb_malloc(sizeof(char *), (size + 2), garbage);
 	while (envp[index])
 	{
-		new_envp[index] = garb_malloc(sizeof(char), (ft_strlen(envp[index]) + 1), garbage);
+		new_envp[index] = garb_malloc(sizeof(char), \
+		(ft_strlen(envp[index]) + 1), garbage);
 		ft_strcpy(new_envp[index], envp[index]);
 		index++;
 	}
