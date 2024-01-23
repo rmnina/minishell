@@ -14,11 +14,11 @@
 
 bool	is_valid_identifier(char *str)
 {
-	//printf("is_valid_identifier: str = %s\n", str);
 	char	*ptr;
 	bool	equals;
 	bool	no_space;
 
+	printf("Début de is_valid_identifier avec str = %s\n", str ? str : "NULL");
 	ptr = NULL;
 	equals = false;
 	no_space = false;
@@ -26,59 +26,32 @@ bool	is_valid_identifier(char *str)
 		return (false);
 	if (*str == ' ' || *str == '=' || !(*str == '_' || ft_isalpha(*str)))
 	{
+		printf("Str commence par un caractère invalide : %c\n", *str);
 		printf("export: `%s': not a valid identifier\n", str);
 		return (false);
 	}
 	ptr = str + 1;
 	while (*ptr)
 	{
+		printf("Vérification du caractère : %c\n", *ptr);
 		if (!search_identifiers(str, ptr, &equals, &no_space))
+		{
+			printf("Caractère invalide trouvé : %c\n", *ptr);
 			return (false);
+		}
+		if (*ptr == '+' && *(ptr + 1) == '=')
+		{
+			printf("Opérateur += trouvé\n");
+			return (true);
+		}
 		ptr++;
 	}
+	printf("Fin de is_valid_identifier, identifiant valide\n");
 	return (true);
 }
 
-// bool is_valid_identifier(char *str) {
-//     printf("is_valid_identifier: str = %s\n", str);
-
-//     if (!str) return false;
-
-//     char *equal_sign = ft_strchr(str, '=');
-//     char *plus_equal = ft_strstr(str, "+=");
-
-//     // Traiter le cas += séparément
-//     if (plus_equal) {
-//         // Vérifiez que tous les caractères avant "+=" sont valides pour un identifiant
-//         for (char *ptr = str; ptr < plus_equal; ++ptr) {
-//             if (!(*ptr == '_' || ft_isalnum(*ptr))) {
-//                 printf("export: `%s': not a valid identifier (invalid character before +=)\n", str);
-//                 return false;
-//             }
-//         }
-//         return true;
-//     }
-
-//     // Limiter la vérification au nom de la variable si '=' est présent
-//     char *end_ptr = equal_sign ? equal_sign : str + ft_strlen(str);
-
-//     // Vérifiez que le nom de la variable est valide
-//     for (char *ptr = str; ptr < end_ptr; ++ptr) {
-//         if (!(*ptr == '_' || ft_isalnum(*ptr))) {
-//             printf("export: `%s': not a valid identifier (invalid character)\n", str);
-//             return false;
-//         }
-//     }
-
-//     return true;
-// }
-
-
-
-
 void	compare_values(t_export *export, char **value, t_alloc **garbage)
 {
-	//printf("compare_values: value = %s\n", *value);
 	if (!**value || **value == '\0')
 		export->new_var = ft_strjoin(export->var_name, "=", garbage);
 	else if (**value == '$')
@@ -107,29 +80,21 @@ void	export_append(t_minishell **main, char *var_name, char *value_to_append, t_
 	char	*old_value;
 	char	*new_value;
 	char	*export_str;
-	char	*final_export;
 
-	//printf("export_append: var_name = %s, value_to_append = %s\n", var_name, value_to_append);
 	old_value = getenv(var_name);
-	//printf("export_append: old_value = %s\n", old_value ? old_value : "NULL");
 	new_value = NULL;
-	if (old_value)
+	if (old_value && value_to_append)
 	{
 		new_value = ft_strjoin(old_value, value_to_append, garbage);
-		//printf("export_append: new_value = %s\n", new_value);
 	}
 	else
 	{
 		new_value = ft_strdup(value_to_append, garbage);
-		//printf("export_append: new_value = %s\n", new_value);
 	}
 	export_str = ft_strjoin(var_name, "=", garbage);
-	final_export = ft_strjoin(export_str, new_value, garbage);
-	//printf("export_append: final_export = %s\n", final_export);
-	add_or_update_env_var((*main)->envp, final_export, garbage);
+	export_str = ft_strjoin(export_str, new_value, garbage);
+	add_or_update_env_var((*main)->envp, export_str, garbage);
 }
-
-
 
 void	handle_value_case(t_minishell **main, char *arg, t_alloc **garbage)
 {
@@ -139,7 +104,6 @@ void	handle_value_case(t_minishell **main, char *arg, t_alloc **garbage)
 	char		*var_name;
 	char		*value_to_append;
 
-	//printf("handle_value_case: arg = %s\n", arg);
 	value = NULL;
 	plus_equal = ft_strstr(arg, "+=");
 	export.equal = ft_strchr(arg, '=');
@@ -148,9 +112,11 @@ void	handle_value_case(t_minishell **main, char *arg, t_alloc **garbage)
 		*plus_equal = '\0';
 		var_name = ft_strndup(arg, plus_equal - arg, garbage);
 		value_to_append = plus_equal + 2;
-		//printf("handle_value_case: var_name = %s, value_to_append = %s\n", var_name, value_to_append);
-		export_append(main, var_name, value_to_append, garbage);
-		return ;
+		if (is_valid_identifier(var_name))
+        {
+            export_append(main, var_name, value_to_append, garbage);
+        }
+        return;
 	}
 	if (!export.equal)
 	{
@@ -175,10 +141,8 @@ void    export_variable(t_minishell **main, t_alloc **garbage)
 
 	equal = NULL;
 	i = 1;
-	//printf("export_variable: Start\n");
 	while ((*main)->cmd_args[i] != NULL)
 	{
-		//printf("export_variable: cmd_arg[%d] = %s\n", i, (*main)->cmd_args[i]);
 		equal = ft_strchr((*main)->cmd_args[i], '=');
 		if (equal)
 		{
