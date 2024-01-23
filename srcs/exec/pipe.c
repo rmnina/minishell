@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:20:25 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/23 22:25:17 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/23 22:59:15 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -203,7 +203,8 @@ int middle_pipe(t_minishell **main, int *i, t_alloc **garbage)
 		close((*main)->fd[0]);
 		dup2((*main)->fd[1], STDOUT_FILENO);
 		close((*main)->fd[1]);
-       	dup2((*main)->old_fd, STDIN_FILENO);
+		if (!(*main)->heredoc)
+       		dup2((*main)->old_fd, STDIN_FILENO);
 		close ((*main)->old_fd);
         child_process(main, i, garbage);
     }
@@ -272,6 +273,7 @@ void	pipex_loop(t_minishell **main, int *i, t_alloc **garbage)
 	}
 	(*i)++;
 	(*main)->cmd_args = create_cmd_args(main, i, garbage);
+	(*main)->heredoc = 0;
 }
 
 int	ft_pipex(t_minishell **main, int *i, t_alloc **garbage)
@@ -285,11 +287,8 @@ int	ft_pipex(t_minishell **main, int *i, t_alloc **garbage)
 	if (is_heredoc(main, i))
 		(*main)->heredoc = ft_heredoc(main, i, garbage);
 	last_pipe(main, i, garbage);
-	if ((*main)->heredoc)
-	{
-		dup2(fd_stdin, STDIN_FILENO);
-		close(fd_stdin);
-	}
+	dup2(fd_stdin, STDIN_FILENO);
+	close(fd_stdin);
 	wait_pids(main);
 	restore_fds(main);
 	return (0);
