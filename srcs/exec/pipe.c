@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:20:25 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/23 22:59:15 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/24 00:07:33 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	init_pids(t_minishell **main, t_alloc **garbage)
 	}
 	if (count == 0)
 		return (0);
-	(*main)->pid = garb_malloc(sizeof(pid_t), count + 1, garbage);
+	(*main)->pid = garb_malloc(sizeof(pid_t), count + 1, EXEC, garbage);
 	if ((*main)->pid == NULL)
 		return (-1);
 	while (i < count)
@@ -205,13 +205,15 @@ int middle_pipe(t_minishell **main, int *i, t_alloc **garbage)
 		close((*main)->fd[1]);
 		if (!(*main)->heredoc)
        		dup2((*main)->old_fd, STDIN_FILENO);
-		close ((*main)->old_fd);
+		if ((*main)->old_fd > 0)
+			close((*main)->old_fd);
         child_process(main, i, garbage);
     }
     else
     {
         close((*main)->fd[1]);
-		close((*main)->old_fd);
+		if ((*main)->old_fd > 0)
+			close((*main)->old_fd);
         (*main)->old_fd = dup((*main)->fd[0]);
 		close((*main)->fd[0]);
     }
@@ -232,14 +234,16 @@ int last_pipe(t_minishell **main, int *i, t_alloc **garbage)
 		close((*main)->fd[1]);
 		if (!(*main)->heredoc)
 			dup2((*main)->old_fd, STDIN_FILENO);
-        close((*main)->old_fd);
+        if ((*main)->old_fd > 0)
+			close((*main)->old_fd);
         child_process(main, i, garbage);
     }
     else
     {
         close((*main)->fd[0]);
 		close((*main)->fd[1]);
-		close((*main)->old_fd);
+		if ((*main)->old_fd > 0)
+			close((*main)->old_fd);
     }
     return (0);
 }

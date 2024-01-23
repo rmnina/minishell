@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:04:36 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/18 01:53:06 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/24 00:14:49 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,11 @@ t_command	get_special_type_token(t_minishell **main, int *i, t_alloc **garbage)
 	|| special_types(main, i) == DB_RIGHT_CHEV || special_types(main, i) == CODE))
 	{
 		// token.word = char_to_str((*main)->line[*i], garbage);
-		token.word = ft_strjoin_char(token.word, (*main)->line[*i], garbage);
+		token.word = ft_strjoin_char(token.word, (*main)->line[*i], PARSING, garbage);
 		*i += 1;
 		if ((*main)->line[*i])
 		{
-			token.word = ft_strjoin_char(token.word, (*main)->line[*i], garbage);
+			token.word = ft_strjoin_char(token.word, (*main)->line[*i], PARSING, garbage);
 			*i += 1;
 		}
 	}
@@ -39,7 +39,7 @@ t_command	get_special_type_token(t_minishell **main, int *i, t_alloc **garbage)
 	{
 		if ((*main)->line[*i])
 		{
-			token.word = ft_strjoin_char(token.word, (*main)->line[*i], garbage);
+			token.word = ft_strjoin_char(token.word, (*main)->line[*i], PARSING, garbage);
 			*i += 1;
 		}
 	}
@@ -109,7 +109,7 @@ t_command	get_token(t_minishell **main, int *i, t_alloc **garbage)
 		else if (!is_quotes(main, i) && special_types(main, i) != EXPAND)
 		{
 			// printf("line = %c\n", (*main)->line[*i]);
-			token.word = ft_strjoin_char(token.word, (*main)->line[*i], garbage);
+			token.word = ft_strjoin_char(token.word, (*main)->line[*i], PARSING, garbage);
 			*i += 1;
 		}
 	}
@@ -135,21 +135,21 @@ t_command	*get_command(t_minishell **main, t_alloc **garbage)
 			break ;
 		token = get_token(main, &i, garbage);
 		if (!token.word)
-			token.word = garb_malloc(sizeof(char), 1, garbage);
+			token.word = garb_malloc(sizeof(char), 1, PARSING, garbage);
 		if (!token.type || token.type < 1 || token.type > 8)
 			token.type = WORD;
-		command = ft_struct_join(command, token, garbage);
+		command = ft_struct_join(command, token, PARSING, garbage);
 		if ((*main)->parser->var != NULL)
 		{
 			while ((*main)->parser->var != NULL)
 			{
 				init_get_token(&token);
 				get_lex_expand(main, &i, &token, garbage);
-				command = ft_struct_join(command, token, garbage);
+				command = ft_struct_join(command, token, PARSING, garbage);
 			}
 		}
 	}
-	return (command = ft_struct_join(command, token_null(&token, garbage), garbage));
+	return (command = ft_struct_join(command, token_null(&token, garbage), PARSING, garbage));
 }
 
 t_command	*ft_parsing(t_minishell **main, t_alloc **garbage)

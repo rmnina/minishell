@@ -6,7 +6,7 @@
 #    By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/31 12:01:53 by jdufour           #+#    #+#              #
-#    Updated: 2024/01/19 23:38:38 by jdufour          ###   ########.fr        #
+#    Updated: 2024/01/23 23:45:58 by jdufour          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,7 +37,6 @@ ft_memcmp.c\
 ft_putchar_fd.c\
 ft_split.c\
 ft_strjoin.c\
-ft_strjoinchar.c\
 ft_strmapi.c\
 ft_substr.c\
 ft_calloc.c\
@@ -53,7 +52,6 @@ ft_itoa.c\
 ft_strtrim.c\
 ft_printf.c\
 ft_format.c\
-ft_allocs.c\
 
 SRCS_BONUS = ft_lstadd_front.c\
 	    ft_lstadd_back.c\

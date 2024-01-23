@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 10:43:20 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/23 20:31:45 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/24 00:28:04 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ void	restore_minishell()
 	t_minishell	*main;
 
 	main = get_minishell();
-
 	main->heredoc = 0;
 	main->fd[0] = -1;
 	main->fd[1] = -1;
@@ -80,7 +79,7 @@ t_parser	*get_parser(t_alloc **garbage)
 {
 	t_parser	*parser;
 
-	parser = garb_malloc(sizeof(t_parser), 1, garbage);
+	parser = garb_malloc(sizeof(t_parser), 1, PARSING, garbage);
 	if (parser == NULL)
 		return (NULL);
 	return (parser);

@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 05:00:11 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/14 16:32:55 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/23 23:58:57 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,25 +40,25 @@ bool	is_valid_identifier(char *str)
 void	compare_values(t_export *export, char **value, t_alloc **garbage)
 {
 	if (!**value || **value == '\0')
-		export->new_var = ft_strjoin(export->var_name, "=", garbage);
+		export->new_var = ft_g_strjoin(export->var_name, "=", EXEC, garbage);
 	else if (**value == '$')
 	{
-		export->formatted_value = ft_strjoin("\\", *value, garbage);
-		export->new_var = ft_strjoin(export->var_name, "=", garbage);
-	    export->new_var = ft_strjoin(export->new_var, export->formatted_value, garbage);
+		export->formatted_value = ft_g_strjoin("\\", *value, EXEC, garbage);
+		export->new_var = ft_g_strjoin(export->var_name, "=", EXEC, garbage);
+	    export->new_var = ft_g_strjoin(export->new_var, export->formatted_value, EXEC, garbage);
 	}
 	else if (**value == '"' || **value == '\'')
 	{
-		export->formatted_value = ft_strdup(*value, garbage);
-		export->new_var = ft_strjoin(export->var_name, "=", garbage);
-	    export->new_var = ft_strjoin(export->new_var, export->formatted_value, garbage);
+		export->formatted_value = ft_g_strdup(*value, EXEC, garbage);
+		export->new_var = ft_g_strjoin(export->var_name, "=", EXEC, garbage);
+	    export->new_var = ft_g_strjoin(export->new_var, export->formatted_value, EXEC, garbage);
 	}
 	else
 	{
-		export->formatted_value = ft_strdup(*value, garbage);
+		export->formatted_value = ft_g_strdup(*value, EXEC, garbage);
 		// export->formatted_value = ft_strdup(export->formatted_value, garbage);
-		export->new_var = ft_strjoin(export->var_name, "=", garbage);
-	    export->new_var = ft_strjoin(export->new_var, export->formatted_value, garbage);
+		export->new_var = ft_g_strjoin(export->var_name, "=", EXEC, garbage);
+	    export->new_var = ft_g_strjoin(export->new_var, export->formatted_value, EXEC, garbage);
 	}
 }
 
@@ -72,12 +72,12 @@ void	handle_value_case(t_minishell **main, char *arg, t_alloc **garbage)
 	{
 		if (is_valid_identifier(arg))
 		{
-			export.new_var = ft_strjoin(arg, "=", garbage);
+			export.new_var = ft_g_strjoin(arg, "=", EXEC, garbage);
 			add_or_update_env_var((*main)->envp, export.new_var, garbage);
 		}
 		return ;
 	}
-	export.var_name = ft_strndup(arg, export.equal - arg, garbage);
+	export.var_name = ft_g_strndup(arg, export.equal - arg, EXEC, garbage);
 	value = export.equal + 1;
 	compare_values(&export, &value, garbage);
 	add_or_update_env_var((*main)->envp, export.new_var, garbage);

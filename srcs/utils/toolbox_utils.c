@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 05:26:30 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/17 19:29:06 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/24 00:15:32 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	ft_count(t_command *command, int *i)
 
 t_command	token_null(t_command *token, t_alloc **garbage)
 {
-	token->word = garb_malloc(sizeof(char), 1, garbage);
+	token->word = garb_malloc(sizeof(char), 1, PARSING, garbage);
 	token->word[0] = '\0';
 	token->type = 0;
 	return (*token);

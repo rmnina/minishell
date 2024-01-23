@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:04:36 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/11 07:41:13 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/23 23:55:52 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int	exit_non_numeric_code(t_minishell **main, t_alloc **garbage)
 	write(2, "exit\nminishell: exit: numeric argument required\n", 49);
 	(*main)->code_status = 2; 
 	if (garbage)
-		free_garbage(garbage, 0);
+		free_garbage(garbage);
 	exit((*main)->code_status);
 }
 
@@ -46,7 +46,7 @@ int	exit_with_code(t_minishell **main, t_alloc **garbage)
 {
 	(*main)->code_status = ft_atoi((*main)->cmd_args[1]);
 	if (garbage)
-		free_garbage(garbage, 0);
+		free_garbage(garbage);
 	printf("exit\n");
 	exit((*main)->code_status);
 }
@@ -55,7 +55,7 @@ int	exit_no_code(t_minishell **main, t_alloc **garbage)
 {
 	printf("exit\n");
 	if (garbage)
-		free_garbage(garbage, 0);
+		free_garbage(garbage);
 	exit((*main)->code_status);
 }
 
