@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 05:00:11 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/23 19:24:28 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/24 11:50:06 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,27 +43,27 @@ bool	is_valid_identifier(char *str)
 void	compare_values(t_export *export, char **value, t_alloc **garbage)
 {
 	if (!**value || **value == '\0')
-		export->new_var = ft_strjoin(export->var_name, "=", garbage);
+		export->new_var = ft_g_strjoin(export->var_name, "=", EXEC, garbage);
 	else if (**value == '$')
 	{
-		export->formatted_value = ft_strjoin("\\", *value, garbage);
-		export->new_var = ft_strjoin(export->var_name, "=", garbage);
+		export->formatted_value = ft_g_strjoin("\\", *value, EXEC, garbage);
+		export->new_var = ft_g_strjoin(export->var_name, "=", EXEC, garbage);
 		export->new_var = \
-		ft_strjoin(export->new_var, export->formatted_value, garbage);
+		ft_g_strjoin(export->new_var, export->formatted_value, EXEC, garbage);
 	}
 	else if (**value == '"' || **value == '\'')
 	{
-		export->formatted_value = ft_strdup(*value, garbage);
-		export->new_var = ft_strjoin(export->var_name, "=", garbage);
+		export->formatted_value = ft_g_strdup(*value, EXEC, garbage);
+		export->new_var = ft_g_strjoin(export->var_name, "=", EXEC, garbage);
 		export->new_var = \
-		ft_strjoin(export->new_var, export->formatted_value, garbage);
+		ft_g_strjoin(export->new_var, export->formatted_value, EXEC, garbage);
 	}
 	else
 	{
-		export->formatted_value = ft_strdup(*value, garbage);
-		export->new_var = ft_strjoin(export->var_name, "=", garbage);
+		export->formatted_value = ft_g_strdup(*value, EXEC, garbage);
+		export->new_var = ft_g_strjoin(export->var_name, "=", EXEC, garbage);
 		export->new_var = \
-		ft_strjoin(export->new_var, export->formatted_value, garbage);
+		ft_g_strjoin(export->new_var, export->formatted_value, EXEC, garbage);
 	}
 }
 
@@ -78,14 +78,14 @@ char *value_to_append, t_alloc **garbage)
 	new_value = NULL;
 	if (old_value && value_to_append)
 	{
-		new_value = ft_strjoin(old_value, value_to_append, garbage);
+		new_value = ft_strjoin(old_value, value_to_append);
 	}
 	else
 	{
-		new_value = ft_strdup(value_to_append, garbage);
+		new_value = ft_strdup(value_to_append);
 	}
-	export_str = ft_strjoin(var_name, "=", garbage);
-	export_str = ft_strjoin(export_str, new_value, garbage);
+	export_str = ft_strjoin(var_name, "=");
+	export_str = ft_strjoin(export_str, new_value);
 	add_or_update_env_var((*main)->envp, export_str, garbage);
 }
 

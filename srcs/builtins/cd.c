@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 17:31:57 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/23 19:38:19 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/24 11:30:50 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	replace_pwd(char *path, char **envp, t_alloc **garbage)
 	i = 0;
 	while (envp[i] && ft_strncmp("PWD", envp[i], 3) != 0)
 		i++;
-	envp[i] = ft_strjoin("PWD=\0", path, garbage);
+	envp[i] = ft_g_strjoin("PWD=\0", path, ENV, garbage);
 	if (!envp[i])
 		return ;
 }

@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:03:22 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/23 19:36:55 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/24 11:29:41 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,9 @@ enum e_type {
 	DB_RIGHT_CHEV,
 	DB_LEFT_CHEV,
 	EXPAND,
+	PARSING,
+	EXEC,
+	ENV,
 };
 
 # define SINGLE_QUOTE 39
@@ -83,9 +86,13 @@ typedef struct s_export {
 	char	*formatted_value;
 }	t_export;
 
+typedef struct s_alloc {
+	void			*adr;
+	int				cat;
+	struct s_alloc	*next;
+}	t_alloc;
+
 typedef struct s_minishell {
-	int					fd_stdin;
-	int					fd_stdout;
 	int					fd[2];
 	int					infilefd;
 	int					outfilefd;
@@ -93,7 +100,7 @@ typedef struct s_minishell {
 	int					code_status;
 	int					status;
 	int					tmp_fd;
-	int					redir;
+	int					heredoc;
 	int					total_cmd;
 	int					nb_cmd;
 	pid_t				*pid;
@@ -168,6 +175,7 @@ int			ft_heredoc(t_minishell **main, int *i, t_alloc **garbage);
 int			ft_redirect(t_minishell **main, int *i, t_alloc **garbage);
 int			ft_pipex(t_minishell **main, int *i, t_alloc **garbage);
 char		**create_cmd_args(t_minishell **main, int *i, t_alloc **garbage);
+void		init_redirect(t_minishell **main, int *i, t_alloc **garbage);
 void		handle_command(t_minishell **main, t_alloc **garbage);
 int			get_all_inputs(t_minishell **main, int *i, t_alloc **garbage);
 int			get_all_outputs(t_minishell **main, int *i, t_alloc **garbage);
@@ -180,7 +188,7 @@ int			ft_echo(t_minishell **main);
 int			ft_env(t_minishell **main);
 int			ft_exit(t_minishell **main, t_alloc **garbage);
 int			ft_pwd(t_minishell **main);
-int			ft_unset(t_minishell **main, char **names);
+int			ft_unset(t_minishell **main, char **names, t_alloc **garbage);
 
 /* ------------------------------ FT_EXPORT ------------------------------ */
 
@@ -210,10 +218,25 @@ void		init_process_signal(void);
 
 /* ******************************* UTILS ******************************* */
 
+/* ------------------------------ MEMORY ------------------------------ */
+
+t_command	*ft_struct_join(t_command *tok1, t_command tok2, int cat, t_alloc **garbage);
+char		**ft_envjoin(char **envp, char *str, int cat, t_alloc **garbage);
+char		**ft_strjoin_args(t_minishell **main, int *i, int cat, t_alloc **garbage);
+char		*ft_strjoin_char(char *s1, const char c, int cat, t_alloc **garbage);
+char		*ft_g_strjoin(char *s1, const char *s2, int cat, t_alloc **garbage);
+void		part_free_garb(t_alloc **garbage, int cat);
+void		free_garbage(t_alloc **garbage);
+t_alloc		*create_garbage_node(void *ptr, int cat);
+t_alloc		*ft_garblast(t_alloc *last);
+void		add_garbage_node(t_alloc **garbage, t_alloc *new);
+void		*garb_malloc(size_t type, size_t size, int cat, t_alloc **garbage);
+char		*ft_g_strndup(char *src, size_t n, int cat, t_alloc **garbage);
+char		*ft_g_strdup(char *src, int cat, t_alloc **garbage);
+void    	free_small_garb(t_alloc **garbage);
+void    	free_adr(t_alloc **garbage, void *adr);
+
 t_command	token_null(t_command *token, t_alloc **garbage);
-t_command	*ft_struct_join(t_command *tok1, t_command tok2, t_alloc **garbage);
-char		*char_to_str(char c, t_alloc **garbage);
-char		**ft_envjoin(char **envp, char *str, t_alloc **garbage);
 int			ft_count(t_command *command, int *i);
 int			is_builtin(char *command);
 int			heredoc_is_expand(char *line);
@@ -229,13 +252,11 @@ int			redir_input(t_minishell **main, char *filename);
 int			redir_append(t_minishell **main, char *filename);
 int			redir_output(t_minishell **main, char *filename);
 int			will_be_piped(t_minishell **main, int *i);
-int			init_heredoc(t_minishell **main, int *i, t_alloc **garbage);
 int			check_redir(t_minishell **main, int *i);
 int 		check_next_redir(t_minishell **main, int *i);
 void		check_next_args(t_minishell **main, int *i, t_alloc **garbage);
 char		*get_last_out_filename(t_minishell **main, int *i, t_alloc **garbage);
 char		*get_last_in_filename(t_minishell **main, int *i, t_alloc **garbage);
-char		**ft_strjoin_args(t_minishell **main, int *i, t_alloc **garbage);
 int			browse_outputs(t_minishell **main, int *i, char **filename, t_alloc **garbage);
 int			browse_inputs(t_minishell **main, int *i, char **filename, t_alloc **garbage);
 char		*ft_realpath(char *path, char *resolved_path, t_alloc **garbage);

@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/23 19:36:25 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/24 11:29:16 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	execute_builtins(t_minishell **main, t_alloc **garbage)
 		return (ft_pwd(main));
 	if (ft_strcmp((*main)->cmd_args[0], "unset") == 0
 		&& ft_strlen((*main)->cmd_args[0]) == ft_strlen("unset"))
-		return (ft_unset(main, (*main)->cmd_args + 1));
+		return (ft_unset(main, (*main)->cmd_args + 1, garbage));
 	return (-1);
 }
 
@@ -100,13 +100,12 @@ char	**create_cmd_args(t_minishell **main, int *i, t_alloc **garbage)
 	j = 0;
 	cmd_args = NULL;
 	num_args = ft_count((*main)->command, i);
-	cmd_args = garb_malloc(sizeof(char *), num_args + 1, garbage);
+	cmd_args = garb_malloc(sizeof(char *), num_args + 1, EXEC, garbage);
 	if (!cmd_args)
 		return (NULL);
 	while ((*main)->command[*i].type == WORD)
 	{
-		cmd_args[j] = ft_strjoin(cmd_args[j], \
-		(*main)->command[*i].word, garbage);
+		cmd_args[j] = ft_g_strjoin(cmd_args[j], (*main)->command[*i].word, EXEC, garbage);
 		*i += 1;
 		j++;
 	}
@@ -123,16 +122,19 @@ void	init_redirect(t_minishell **main, int *i, t_alloc **garbage)
 	pid = fork();
 	if (!pid)
 	{
-		if ((*main)->command[*i].type == DB_LEFT_CHEV)
+		while ((*main)->command[*i].type)
 		{
-			ft_heredoc(main, i, garbage);
-			if ((*main)->cmd_args[0] == NULL)
-				(*main)->cmd_args = create_cmd_args(main, i, garbage);
-		}
-		if (ft_redirect(main, i, garbage) == -1)
-		{
-			(*main)->code_status = 1;
-			exit(EXIT_FAILURE);
+			if ((*main)->command[*i].type == DB_LEFT_CHEV)
+			{
+				ft_heredoc(main, i, garbage);
+				if ((*main)->cmd_args[0] == NULL)
+					(*main)->cmd_args = create_cmd_args(main, i, garbage);
+			}
+			if (ft_redirect(main, i, garbage) == -1)
+			{
+				(*main)->code_status = 1;
+				exit(EXIT_FAILURE);
+			}
 		}
 		if (execute_builtins(main, garbage) == -1)
 			execute_command(main, garbage);

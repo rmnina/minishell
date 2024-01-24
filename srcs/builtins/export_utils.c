@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 09:11:51 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/23 19:26:08 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/24 11:31:48 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	search_var(char **envp, t_export *export, char *var, t_alloc **garbage)
 		{
 			if (var[export->len] == '=')
 			{
-				envp[i] = ft_strdup(var, garbage);
+				envp[i] = ft_g_strdup(var, ENV, garbage);
 				if (envp[i] == NULL)
 					return (found = -1);
 			}
@@ -62,7 +62,7 @@ void	add_or_update_env_var(char **envp, char *var, t_alloc **garbage)
 		return ;
 	if (found == 0)
 	{
-		envp[export.envp_len] = ft_strdup(var, garbage);
+		envp[export.envp_len] = ft_g_strdup(var, ENV, garbage);
 		envp[export.envp_len + 1] = NULL;
 	}
 }

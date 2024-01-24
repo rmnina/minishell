@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 19:18:24 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/23 19:26:30 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/24 11:51:15 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,13 @@ void	handle_plus_equal_case(t_minishell **main, char *arg, t_alloc **garbage)
 	if (plus_equal)
 	{
 		*plus_equal = '\0';
-		var_name = ft_strndup(arg, plus_equal - arg, garbage);
+		var_name = ft_strndup(arg, plus_equal - arg);
 		value_to_append = plus_equal + 2;
 		if (is_valid_identifier(var_name))
 			export_append(main, var_name, value_to_append, garbage);
 		return ;
 	}
-	export.var_name = ft_strndup(arg, export.equal - arg, garbage);
+	export.var_name = ft_strndup(arg, export.equal - arg);
 	value = export.equal + 1;
 	compare_values(&export, &value, garbage);
 	add_or_update_env_var((*main)->envp, export.new_var, garbage);
@@ -46,12 +46,12 @@ void	handle_add_update_case(t_minishell **main, char *arg, t_alloc **garbage)
 	{
 		if (is_valid_identifier(arg))
 		{
-			export.new_var = ft_strjoin(arg, "=", garbage);
+			export.new_var = ft_strjoin(arg, "=");
 			add_or_update_env_var((*main)->envp, export.new_var, garbage);
 		}
 		return ;
 	}
-	export.var_name = ft_strndup(arg, export.equal - arg, garbage);
+	export.var_name = ft_strndup(arg, export.equal - arg);
 	value = export.equal + 1;
 	compare_values(&export, &value, garbage);
 	add_or_update_env_var((*main)->envp, export.new_var, garbage);

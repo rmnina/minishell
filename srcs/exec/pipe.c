@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:20:25 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/22 19:25:41 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/24 11:35:51 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	init_pids(t_minishell **main, t_alloc **garbage)
 	}
 	if (count == 0)
 		return (0);
-	(*main)->pid = garb_malloc(sizeof(pid_t), count + 1, garbage);
+	(*main)->pid = garb_malloc(sizeof(pid_t), count + 1, EXEC, garbage);
 	if ((*main)->pid == NULL)
 		return (-1);
 	while (i < count)
@@ -158,14 +158,12 @@ void	child_process(t_minishell **main, int *i, t_alloc **garbage)
 {
 	if (check_redir(main, i) == 0 && (*main)->command[*i].type != DB_LEFT_CHEV)
 	{
-		if (((*main)->redir = ft_redirect(main, i, garbage)) == -1)
+		if ((ft_redirect(main, i, garbage)) == -1)
 		{
 			(*main)->code_status = 1;
 			exit(EXIT_FAILURE);
 		}
 	}
-	// if (is_heredoc(main, i))
-	// 	ft_heredoc(main, i, garbage);
 	if (execute_builtins(main, garbage) == -1)
 		execute_command(main, garbage);
 	exit(EXIT_SUCCESS);
@@ -184,23 +182,17 @@ int first_pipe(t_minishell **main, int *i, t_alloc **garbage)
     if ((*main)->pid[(*main)->nb_cmd - 1] == 0)
     {
 		close((*main)->fd[0]);
-		if (is_heredoc(main, i))
-			ft_heredoc(main, i, garbage);
 		dup2((*main)->fd[1], STDOUT_FILENO);
 		close((*main)->fd[1]);
-		child_process(main, i, garbage);
-	}
-	else
-	{
+        child_process(main, i, garbage);
+    }
+    else
+    {
 		close((*main)->fd[1]);
 		(*main)->old_fd = dup((*main)->fd[0]);
 		close((*main)->fd[0]);
-		if ((*main)->infilefd > 0)
-			close ((*main)->infilefd);
-		if ((*main)->outfilefd > 0)
-			close ((*main)->outfilefd);
-	}
-	return (0);
+    }
+    return (0);
 }
 
 int middle_pipe(t_minishell **main, int *i, t_alloc **garbage)
@@ -214,26 +206,23 @@ int middle_pipe(t_minishell **main, int *i, t_alloc **garbage)
     if ((*main)->pid[(*main)->nb_cmd - 1] == 0)
     {
 		close((*main)->fd[0]);
-		if (is_heredoc(main, i))
-			ft_heredoc(main, i, garbage);
 		dup2((*main)->fd[1], STDOUT_FILENO);
-		dup2((*main)->old_fd, STDIN_FILENO);
 		close((*main)->fd[1]);
-		close ((*main)->old_fd);
-		child_process(main, i, garbage);
-	}
-	else
-	{
-		close((*main)->fd[1]);
-		close((*main)->old_fd);
-		(*main)->old_fd = dup((*main)->fd[0]);
+		if (!(*main)->heredoc)
+       		dup2((*main)->old_fd, STDIN_FILENO);
+		if ((*main)->old_fd > 0)
+			close((*main)->old_fd);
+        child_process(main, i, garbage);
+    }
+    else
+    {
+        close((*main)->fd[1]);
+		if ((*main)->old_fd > 0)
+			close((*main)->old_fd);
+        (*main)->old_fd = dup((*main)->fd[0]);
 		close((*main)->fd[0]);
-		if ((*main)->infilefd > 0)
-			close ((*main)->infilefd);
-		if ((*main)->outfilefd > 0)
-			close ((*main)->outfilefd);
-	}
-	return (0);
+    }
+    return (0);
 }
 
 int last_pipe(t_minishell **main, int *i, t_alloc **garbage)
@@ -246,30 +235,22 @@ int last_pipe(t_minishell **main, int *i, t_alloc **garbage)
         return (-1);
     if ((*main)->pid[(*main)->nb_cmd - 1] == 0)
     {
-    	close((*main)->fd[0]);
+		close((*main)->fd[0]);
 		close((*main)->fd[1]);
-		if (is_heredoc(main, i))
-			ft_heredoc(main, i, garbage);
-		if (dup2((*main)->old_fd, STDIN_FILENO) < 0)
-		{
-			(*main)->code_status = 1;
-			(exit(EXIT_FAILURE));
-		}
-		close((*main)->old_fd);
-		child_process(main, i, garbage);
-	}
-	else
-	{
+		if (!(*main)->heredoc)
+			dup2((*main)->old_fd, STDIN_FILENO);
+        if ((*main)->old_fd > 0)
+			close((*main)->old_fd);
+        child_process(main, i, garbage);
+    }
+    else
+    {
+        close((*main)->fd[0]);
 		close((*main)->fd[1]);
-		close((*main)->old_fd);
-		if (!(*main)->command[*i].type)
-			close((*main)->fd[0]);
-		if ((*main)->infilefd > 0)
-			close ((*main)->infilefd);
-		if ((*main)->outfilefd > 0)
-			close ((*main)->outfilefd);
-	}
-	return (0);
+		if ((*main)->old_fd > 0)
+			close((*main)->old_fd);
+    }
+    return (0);
 }
 
 void	restore_fds(t_minishell **main)
@@ -284,31 +265,39 @@ void	restore_fds(t_minishell **main)
 		close((*main)->outfilefd);
 	if ((*main)->old_fd > 0)
 		close((*main)->old_fd);
-	if ((*main)->fd_stdout)
-		close((*main)->fd_stdout);
+}
+
+void	pipex_loop(t_minishell **main, int *i, t_alloc **garbage)
+{
+	if (is_heredoc(main, i))
+		(*main)->heredoc = ft_heredoc(main, i, garbage);
+	if (is_first_pipe(main, i))
+		first_pipe(main, i, garbage);
+	else
+		middle_pipe(main, i, garbage);
+	if (check_redir(main, i) == 0)
+	{
+		while ((*main)->command[*i].type && (*main)->command[*i].type != PIPE)
+			(*i)++;
+	}
+	(*i)++;
+	(*main)->cmd_args = create_cmd_args(main, i, garbage);
+	(*main)->heredoc = 0;
 }
 
 int	ft_pipex(t_minishell **main, int *i, t_alloc **garbage)
 {
+	int	fd_stdin;
+	
+	fd_stdin = open("/dev/tty", O_RDONLY);
 	init_process_signal();
-	(*main)->fd_stdout = dup(STDOUT_FILENO);
-	(*main)->fd_stdin = dup(STDIN_FILENO);
 	while ((*main)->nb_cmd < (*main)->total_cmd - 1)
-	{
-		if (is_first_pipe(main, i))
-			first_pipe(main, i, garbage);
-		else
-			middle_pipe(main, i, garbage);
-		if (check_redir(main, i) == 0)
-		{
-			while ((*main)->command[*i].type && \
-			(*main)->command[*i].type != PIPE)
-				(*i)++;
-		}
-		(*i)++;
-		(*main)->cmd_args = create_cmd_args(main, i, garbage);
-	}
+		pipex_loop(main, i, garbage);
+	if (is_heredoc(main, i))
+		(*main)->heredoc = ft_heredoc(main, i, garbage);
 	last_pipe(main, i, garbage);
+	dup2(fd_stdin, STDIN_FILENO);
+	close(fd_stdin);
 	wait_pids(main);
 	restore_fds(main);
 	return (0);

@@ -6,7 +6,7 @@
 #    By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/14 14:15:25 by jdufour           #+#    #+#              #
-#    Updated: 2024/01/23 19:20:17 by juandrie         ###   ########.fr        #
+#    Updated: 2024/01/24 12:04:28 by juandrie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,11 +41,15 @@ SRCS = srcs/main.c \
 	srcs/parser/types.c \
 	srcs/parser/tokens.c \
 	srcs/utils/init_structs.c \
+	srcs/utils/init_structs2.c \
 	srcs/utils/heredoc_utils.c \
-	srcs/utils/joins.c \
 	srcs/utils/toolbox_utils.c \
 	srcs/utils/redirect_utils.c \
 	srcs/utils/cd_utils.c \
+	srcs/utils/allocs/allocs.c \
+	srcs/utils/allocs/frees.c \
+	srcs/utils/allocs/struct.c \
+	srcs/utils/allocs/joins.c \
 
 OBJS = $(SRCS:.c=.o)
 

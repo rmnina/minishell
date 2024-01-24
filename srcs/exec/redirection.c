@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 17:13:45 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/22 14:16:38 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/24 11:36:27 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	check_next_args(t_minishell **main, int *i, t_alloc **garbage)
 	}
 	while (k < j)
 	{
-		(*main)->cmd_args = ft_strjoin_args(main, i, garbage);
+		(*main)->cmd_args = ft_strjoin_args(main, i, EXEC, garbage);
 		(*i)++;
 		k++;
 	}
