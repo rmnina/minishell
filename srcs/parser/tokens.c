@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokens.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:04:36 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/24 00:14:49 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/24 16:33:42 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,9 @@ t_command	get_special_type_token(t_minishell **main, int *i, t_alloc **garbage)
 {
 	t_command	token;
 
-	init_get_token(&token);
-	if ((*main)->line[*i] && (special_types(main, i) == DB_LEFT_CHEV \
-	|| special_types(main, i) == DB_RIGHT_CHEV || special_types(main, i) == CODE))
+	token.word = NULL;
+	if (special_types(main, i) == DB_LEFT_CHEV || special_types(main, i) == DB_RIGHT_CHEV \
+	|| special_types(main, i) == CODE)
 	{
 		// token.word = char_to_str((*main)->line[*i], garbage);
 		token.word = ft_strjoin_char(token.word, (*main)->line[*i], PARSING, garbage);
@@ -55,15 +55,18 @@ t_command	get_special_type_token(t_minishell **main, int *i, t_alloc **garbage)
 
 int	parse_quotes(t_minishell **main, int *i)
 {
-	if (((*main)->parser->case_double == FALSE && (*main)->parser->case_single == FALSE \
+	if (((*main)->parser->case_double == FALSE && \
+	(*main)->parser->case_single == FALSE \
 	&& (*main)->line[*i] == 32) || (*main)->line[*i] == '\0')
 		return (1);
-	if ((*main)->line[*i] == SINGLE_QUOTE && (*main)->parser->case_double == FALSE)
+	if ((*main)->line[*i] == SINGLE_QUOTE && \
+	(*main)->parser->case_double == FALSE)
 	{
 		*i += 1;
 		return (2);
 	}
-	else if ((*main)->line[*i] == DOUBLE_QUOTE && (*main)->parser->case_single == FALSE)
+	else if ((*main)->line[*i] == DOUBLE_QUOTE && \
+	(*main)->parser->case_single == FALSE)
 	{
 		*i += 1;
 		return (3);
@@ -73,12 +76,15 @@ int	parse_quotes(t_minishell **main, int *i)
 
 int	is_quotes(t_minishell **main, int *i)
 {
-	if (((*main)->parser->case_double == FALSE && (*main)->parser->case_single == FALSE \
+	if (((*main)->parser->case_double == FALSE && \
+	(*main)->parser->case_single == FALSE \
 	&& (*main)->line[*i] == 32) || (*main)->line[*i] == '\0')
 		return (1);
-	if ((*main)->line[*i] == SINGLE_QUOTE && (*main)->parser->case_double == FALSE)
+	if ((*main)->line[*i] == SINGLE_QUOTE && \
+	(*main)->parser->case_double == FALSE)
 		return (2);
-	else if ((*main)->line[*i] == DOUBLE_QUOTE && (*main)->parser->case_single == FALSE)
+	else if ((*main)->line[*i] == DOUBLE_QUOTE && \
+	(*main)->parser->case_single == FALSE)
 		return (3);
 	return (0);
 }
@@ -94,9 +100,11 @@ t_command	get_token(t_minishell **main, int *i, t_alloc **garbage)
 	while ((*main)->line[*i])
 	{
 		is_in_quote((*main)->line[*i], (*main)->parser);
-		if (special_types(main, i) == EXPAND && (*main)->parser->case_single == FALSE)
+		if (special_types(main, i) == EXPAND && \
+		(*main)->parser->case_single == FALSE)
 			get_lex_expand(main, i, &token, garbage);
-		if ((*main)->parser->case_quotes == FALSE && special_types(main, i) != 0 \
+		if ((*main)->parser->case_quotes == FALSE && \
+		special_types(main, i) != 0 \
 		&& special_types(main, i) != EXPAND)
 		{
 			if (token.word != NULL)
@@ -157,6 +165,7 @@ t_command	*ft_parsing(t_minishell **main, t_alloc **garbage)
 	t_command	*command;
 	t_parser	*parser;
 
+	command = NULL;
 	parser = init_parser(garbage);
 	if (parser == NULL)
 		return (NULL);

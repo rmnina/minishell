@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   toolbox_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 05:26:30 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/24 00:15:32 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/24 11:39:06 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	check_spaces(t_minishell **main, int *i)
 
 int	ft_strcmp_var(const char *s1, const char *s2)
 {
-	int	i;
+	int				i;
 	unsigned char	*str1;
 	unsigned char	*str2;
 

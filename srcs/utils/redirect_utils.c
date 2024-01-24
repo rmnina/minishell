@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirect_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 17:16:38 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/19 00:18:17 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/23 19:58:02 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ int	redir_output(t_minishell **main, char *filename)
 		return (-1);
 	dup = dup2(fd, STDOUT_FILENO);
 	close(fd);
-	if ((*main)->fd[1] != -1)
 	close((*main)->fd[1]);
 	if (dup == -1)
 		return (-1);
@@ -39,8 +38,7 @@ int	redir_append(t_minishell **main, char *filename)
 		return (-1);
 	dup = dup2(fd, STDOUT_FILENO);
 	close(fd);
-	if ((*main)->fd[1] != -1)
-		close((*main)->fd[1]);
+	close((*main)->fd[1]);
 	if (dup == -1)
 		return (-1);
 	return (dup);
@@ -56,8 +54,7 @@ int	redir_input(t_minishell **main, char *filename)
 		return (-1);
 	dup = dup2(fd, STDIN_FILENO);
 	close(fd);
-	if ((*main)->fd[0] != -1)
-		close((*main)->fd[0]);
+	close((*main)->fd[0]);
 	if (dup == -1)
 		return (-1);
 	return (dup);
@@ -70,7 +67,8 @@ int	is_output(t_minishell **main, int *i)
 	j = check_next_redir(main, i);
 	if (j == 0)
 		return (0);
-	if ((*main)->command[*i + j].type && ((*main)->command[*i + j].type == DB_RIGHT_CHEV \
+	if ((*main)->command[*i + j].type && \
+	((*main)->command[*i + j].type == DB_RIGHT_CHEV \
 	|| (*main)->command[*i + j].type == RIGHT_CHEV))
 		return (1);
 	return (0);

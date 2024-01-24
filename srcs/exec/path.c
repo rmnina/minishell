@@ -3,16 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   path.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 10:21:29 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/24 00:06:30 by jdufour          ###   ########.fr       */
+<<<<<<< HEAD
+/*   Updated: 2024/01/24 17:55:47 by jdufour          ###   ########.fr       */
+=======
+/*   Updated: 2024/01/24 19:12:39 by juandrie         ###   ########.fr       */
+>>>>>>> juliette
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-char	*find_command_in_segment(char *segment, char *command, t_alloc **garbage)
+char	*find_command_in_segment(char *segment, char *command, \
+t_alloc **garbage)
 {
 	char	full_path[PATH_MAX];
 
@@ -23,7 +28,7 @@ char	*find_command_in_segment(char *segment, char *command, t_alloc **garbage)
 	ft_strcat(full_path, "/");
 	ft_strcat(full_path, command);
 	if (access(full_path, X_OK) == 0)
-		return (ft_g_strdup(full_path, EXEC, garbage));
+		return (ft_g_strdup(full_path, PARSING, garbage));
 	return (NULL);
 }
 
@@ -36,7 +41,7 @@ char	*find_command_path(char *command, t_alloc **garbage)
 
 	found_path = NULL;
 	if (ft_strchr(command, '/') != NULL)
-		return (ft_g_strdup(command, EXEC, garbage));
+		return (ft_g_strdup(command, PARSING, garbage));
 	path_env = getenv("PATH");
 	if (!path_env)
 		return (NULL);

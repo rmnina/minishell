@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:03:22 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/24 00:18:58 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/24 19:38:19 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,6 @@ enum e_type {
 	DB_LEFT_CHEV,
 	EXPAND,
 	PARSING,
-	EXEC,
 	ENV,
 };
 
@@ -58,6 +57,8 @@ enum e_type {
 # define DOUBLE_QUOTE 34
 # define UNDERSCORE 95
 # define SPECIAL_EXIT_CODE 255
+# define ANSI_COLOR_GREEN   "\x1b[32m"
+# define ANSI_COLOR_RESET   "\x1b[0m"
 
 /* ******************************* STRUCTURES ******************************* */
 
@@ -74,7 +75,7 @@ typedef struct s_command {
 	int				type;
 }	t_command;
 
-typedef	struct s_export {
+typedef struct s_export {
 	int		envp_len;
 	int		len;
 	char	**new_envp;
@@ -99,6 +100,7 @@ typedef struct s_minishell {
 	int					status;
 	int					tmp_fd;
 	int					heredoc;
+	int					heredoc_used;
 	int					total_cmd;
 	int					nb_cmd;
 	pid_t				*pid;
@@ -111,6 +113,7 @@ typedef struct s_minishell {
 	char				**cmd_args;
 	char				**h_delimiter;
 	char				**envp;
+	bool				is_heredoc_used;
 	struct s_command	*command;
 	struct s_parser		*parser;
 }	t_minishell;
@@ -132,12 +135,12 @@ t_minishell	*get_minishell(void);
 t_minishell	*init_minishell(char **envp);
 t_parser	*get_parser(t_alloc **garbage);
 t_parser	*init_parser(t_alloc **garbage);
-void		restore_minishell();
+void		restore_minishell(void);
 char		**set_env(char **envp, t_alloc **garbage);
 int			is_only_quotes(char *line, int *i);
 void		init_get_token(t_command *token);
 void		init_get_expand(t_minishell **main, t_command *token, int *i, t_alloc **garbage);
-
+t_export	init_export_struct(void);
 /* ------------------------------ EXPAND ------------------------------ */
 
 int			is_expand(char *line);
@@ -192,21 +195,26 @@ int			ft_unset(t_minishell **main, char **names, t_alloc **garbage);
 int			envp_length(char **envp);
 char		**copy_envp(char **envp, int new_size, t_alloc **garbage);
 void		add_or_update_env_var(char **envp, char *var, t_alloc **garbage);
-bool		search_identifiers(const char *str, char *ptr, bool *equals, bool *no_space);
-int 		ft_export(t_minishell **main, t_alloc **garbage);
+bool		identifiers(const char *str, char *ptr, bool *equals, bool *no_space);
+int			ft_export(t_minishell **main, t_alloc **garbage);
+void		handle_value_case(t_minishell **main, char *arg, t_alloc **garbage);
+bool		is_valid_identifier(char *str);
+void		export_append(t_minishell **main, char *var_name, char *value_to_append, t_alloc **garbage);
+void		compare_values(t_export *export, char **value, t_alloc **garbage);
 
 /* ******************************* SIGNALS ******************************* */
 
-void		child_handler(int signum);
-int			process_prompt(void);
+// void		child_handler(int signum);
+// int			process_prompt(void);
 void		sigint_handler(int signum);
 void		sigint_process_handler(int signum);
-int			init_sigquit(void);
-int			init_parent_signals(void);
-void		sigquit_handler(int signum);
-void		sig_process_handler(int signum);
+// int			init_sigquit(void);
+// int			init_parent_signals(void);
+// void		sigquit_handler(int signum);
+// void		sig_process_handler(int signum);
 void		init_signal(void);
 void		init_process_signal(void);
+// int			init_sigactionsa(struct sigaction *sa);
 
 /* ******************************* UTILS ******************************* */
 
@@ -243,13 +251,32 @@ int			is_output(t_minishell **main, int *i);
 int			redir_input(t_minishell **main, char *filename);
 int			redir_append(t_minishell **main, char *filename);
 int			redir_output(t_minishell **main, char *filename);
-int			will_be_piped(t_minishell **main, int *i);
 int			check_redir(t_minishell **main, int *i);
 int 		check_next_redir(t_minishell **main, int *i);
 void		check_next_args(t_minishell **main, int *i, t_alloc **garbage);
+char		*ft_realpath(char *path, char *resolved_path, t_alloc **garbage);
+char		*change_directory(t_minishell **main, char *path, t_alloc **garbage);
+int			ft_cd_main(t_minishell **main, t_alloc **garbage);
+
+/* ------------------------------ REDIRECTIONS ------------------------------ */
+
+int			get_all_outputs(t_minishell **main, int *i, t_alloc **garbage);
+int			get_last_out_type(t_minishell **main, int *i);
 char		*get_last_out_filename(t_minishell **main, int *i, t_alloc **garbage);
 char		*get_last_in_filename(t_minishell **main, int *i, t_alloc **garbage);
 int			browse_outputs(t_minishell **main, int *i, char **filename, t_alloc **garbage);
 int			browse_inputs(t_minishell **main, int *i, char **filename, t_alloc **garbage);
+
+/* ------------------------------ PIPE ------------------------------ */
+
+void		child_process(t_minishell **main, int *i, t_alloc **garbage);
+int			is_heredoc(t_minishell **main, int *i);
+int			is_first_pipe(t_minishell **main, int *i);
+int			first_pipe(t_minishell **main, int *i, t_alloc **garbage);
+int			will_be_piped(t_minishell **main, int *i);
+void		wait_pids(t_minishell **main);
+int			middle_pipe(t_minishell **main, int *i, t_alloc **garbage);
+void		restore_fds(t_minishell **main);
+int			last_pipe(t_minishell **main, int *i, t_alloc **garbage);
 
 #endif

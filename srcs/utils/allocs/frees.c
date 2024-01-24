@@ -6,48 +6,59 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 23:43:42 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/24 00:26:52 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/24 18:02:28 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/minishell.h"
 
-void    free_adr(t_alloc **garbage, void *adr)
+void	free_adr(t_alloc **garbage, void *adr)
 {
-	if ((*garbage)->adr == adr)
-	{	
-		free(adr);
-		(*garbage)->adr = NULL;
+	t_alloc	*temp;
+
+	if (!(*garbage))
+		return ;
+	temp = *garbage;
+	while (temp->next && temp->adr != adr)
+	{
+		*garbage = temp->next;
+		if (temp->adr == adr)
+		{
+			free(temp->adr);
+			temp->adr = NULL;
+			free(temp);
+		}
+		temp = *garbage;
 	}
-	while ((*garbage)->adr != adr)
-		(*garbage) = (*garbage)->next;
-	free(adr);
-	(*garbage)->adr = NULL;
 }
 
-void    free_small_garb(t_alloc **garbage)
+void	free_small_garb(t_alloc **garbage)
 {
-    part_free_garb(garbage, PARSING);
-    part_free_garb(garbage, EXEC);
+	part_free_garb(garbage, PARSING);
+	part_free_garb(garbage, PARSING);
 }
 
 void	part_free_garb(t_alloc **garbage, int cat)
 {
-	if ((*garbage)->cat && (*garbage)->cat == cat)
+	t_alloc	*temp;
+
+	if (!(*garbage))
+		return ;
+	temp = *garbage;
+	while (temp != NULL)
 	{
-		if ((*garbage)->adr)
-            free((*garbage)->adr);
-		(*garbage)->adr = NULL;
-	}
-	while (*garbage)
-	{
-		if ((*garbage)->cat == cat)
+		*garbage = temp->next;
+		if (temp->cat == cat)
 		{
-			if ((*garbage)->adr)
-                free((*garbage)->adr);
-			(*garbage)->adr = NULL;
+			temp->next = NULL;
+			if (temp->adr)
+			{
+				free(temp->adr);
+				temp->adr = NULL;
+			}
+			free(temp);
 		}
-		*garbage = (*garbage)->next;
+		temp = *garbage;
 	}
 }
 

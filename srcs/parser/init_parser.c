@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_parser.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 20:18:37 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/24 00:13:16 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/24 11:39:56 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ void	init_get_expand(t_minishell **main, t_command *token, int *i, t_alloc **gar
 int	is_only_quotes(char *line, int *i)
 {
 	int	j;
-	
+
 	j = *i;
 	if (line[j] == SINGLE_QUOTE)
 	{

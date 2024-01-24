@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 09:11:51 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/23 23:56:25 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/24 15:51:32 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ void	add_or_update_env_var(char **envp, char *var, t_alloc **garbage)
 	t_export	export;
 	int			found;
 
+	export = init_export_struct();
 	export.len = 0;
 	export.envp_len = 0;
 	while (var[export.len] != '=' && var[export.len] != '\0')
@@ -67,18 +68,28 @@ void	add_or_update_env_var(char **envp, char *var, t_alloc **garbage)
 	}
 }
 
-bool	search_identifiers(const char *str, char *ptr, bool *equals, bool *no_space)
+bool	identifiers(const char *str, char *ptr, bool *equals, bool *no_space)
 {
-	if (*ptr == '=')
+	int	i;
+
+	i = 0;
+	if (ptr[i] == '=')
+	{
 		*equals = true;
+	}
 	else if (*equals)
 	{
-		if (!*no_space && *ptr != ' ')
+		if (!*no_space && ptr[i] != ' ')
+		{
 			*no_space = true;
+		}
 	}
-	else if (*no_space && *ptr == ' ')
+	else if (*no_space && ptr[i] == ' ')
+	{
 		return (false);
-	else if (!(*ptr == '_' || ft_isalnum(*ptr)))
+	}
+	else if (!(ptr[i] == '_' || ft_isalnum(ptr[i]) || \
+	(ptr[i] == '+' && ptr[i + 1] == '=')))
 	{
 		printf("export: `%s': not a valid identifier\n", str);
 		return (false);

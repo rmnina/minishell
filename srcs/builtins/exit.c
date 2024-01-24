@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:04:36 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/23 23:55:52 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/24 11:31:24 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ bool	ft_is_valid_code(char *str)
 int	exit_non_numeric_code(t_minishell **main, t_alloc **garbage)
 {
 	write(2, "exit\nminishell: exit: numeric argument required\n", 49);
-	(*main)->code_status = 2; 
+	(*main)->code_status = 2;
 	if (garbage)
 		free_garbage(garbage);
 	exit((*main)->code_status);
@@ -66,7 +66,8 @@ int	ft_exit(t_minishell **main, t_alloc **garbage)
 		if (ft_is_valid_code((*main)->cmd_args[1]))
 		{
 			if ((*main)->cmd_args[2])
-				return ((*main)->code_status = 1, write(2, "minishell: exit: too many arguments\n", 37));
+				return ((*main)->code_status = 1, \
+				write(2, "minishell: exit: too many arguments\n", 37));
 			else
 				exit_with_code(main, garbage);
 		}
