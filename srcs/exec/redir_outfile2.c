@@ -6,13 +6,14 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/24 18:23:32 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/24 18:24:44 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/24 18:26:51 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int	handle_output(t_minishell **main, int *i, char **filename, t_alloc **garbage)
+int	handle_output(t_minishell **main, int *i, char **filename, \
+t_alloc **garbage)
 {
 	if (is_output(main, i))
 	{
@@ -23,7 +24,7 @@ int	handle_output(t_minishell **main, int *i, char **filename, t_alloc **garbage
 	return (0);
 }
 
-int finalize_out(t_minishell **main, int *i, char **filename, t_alloc **garbage)
+int	finalize_out(t_minishell **main, int *i, char **filename, t_alloc **garbage)
 {
 	int	type;
 
@@ -52,8 +53,7 @@ int finalize_out(t_minishell **main, int *i, char **filename, t_alloc **garbage)
 	return (0);
 }
 
-
-int get_all_outputs(t_minishell **main, int *i, t_alloc **garbage)
+int	get_all_outputs(t_minishell **main, int *i, t_alloc **garbage)
 {
 	char	*filename;
 

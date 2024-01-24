@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:03:22 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/24 15:52:31 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/24 18:29:22 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -262,4 +262,6 @@ int			browse_inputs(t_minishell **main, int *i, char **filename, t_alloc **garba
 char		*ft_realpath(char *path, char *resolved_path, t_alloc **garbage);
 char		*change_directory(t_minishell **main, char *path, t_alloc **garbage);
 int			ft_cd_main(t_minishell **main, t_alloc **garbage);
+int			get_all_outputs(t_minishell **main, int *i, t_alloc **garbage);
+int			get_last_out_type(t_minishell **main, int *i);
 #endif
