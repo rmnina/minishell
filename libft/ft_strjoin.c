@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 11:35:31 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/09 00:02:26 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/24 21:36:23 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ char	*ft_strjoin(char *s1, const char *s2, t_alloc **garbage)
 	int		i;
 
 	i = 0;
+	res = 0;
 	size = ft_strlen(s1) + ft_strlen(s2);
 	res = garb_malloc(sizeof(char), size + 1, garbage);
 	if (!(res))
@@ -35,6 +36,5 @@ char	*ft_strjoin(char *s1, const char *s2, t_alloc **garbage)
 		s2++;
 	}
 	res[i] = '\0';
-	// free(s1);
 	return (res);
 }

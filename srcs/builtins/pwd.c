@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 18:42:47 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/14 06:03:43 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/23 19:39:46 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,5 +30,3 @@ int	ft_pwd(t_minishell **main)
 	}
 	return ((*main)->code_status);
 }
-
-

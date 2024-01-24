@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 16:06:16 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/11 16:30:29 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/24 20:00:24 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,4 +76,3 @@ int	ft_echo(t_minishell **main)
 	(*main)->code_status = 0;
 	return (0);
 }
-

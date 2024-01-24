@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 17:13:45 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/19 02:17:55 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/24 20:04:28 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,24 +21,26 @@ void	check_next_args(t_minishell **main, int *i, t_alloc **garbage)
 	k = 0;
 	if ((*main)->command[*i + 2].type && (*main)->command[*i + 2].type == WORD)
 	{
-    	(*i) += 2;
-		while ((*main)->command[*i + j].type && (*main)->command[*i + j].type == WORD)
+		(*i) += 2;
+		while ((*main)->command[*i + j].type && \
+		(*main)->command[*i + j].type == WORD)
 			j++;
 	}
 	while (k < j)
 	{
-		(*main)->cmd_args = ft_strjoin_args(main, i, garbage);
+		(*main)->cmd_args = ft_strjoin_args(main, i, EXEC, garbage);
 		(*i)++;
 		k++;
 	}
 }
 
-int check_next_redir(t_minishell **main, int *i)
+int	check_next_redir(t_minishell **main, int *i)
 {
-	int j;
+	int	j;
 
 	j = 1;
-	while ((*main)->command[*i + j].type && (*main)->command[*i + j].type != PIPE)
+	while ((*main)->command[*i + j].type && \
+	(*main)->command[*i + j].type != PIPE)
 	{
 		if ((*main)->command[*i + j].type >= LEFT_CHEV \
 		&& (*main)->command[*i + j].type <= DB_LEFT_CHEV)
@@ -51,7 +53,7 @@ int check_next_redir(t_minishell **main, int *i)
 int	handle_redirect(t_minishell **main, int *i, t_alloc **garbage)
 {
 	int	ret;
-	
+
 	ret = 0;
 	if ((*main)->command[*i].type == DB_RIGHT_CHEV || \
 		(*main)->command[*i].type == RIGHT_CHEV)

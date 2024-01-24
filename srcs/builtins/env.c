@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 11:20:46 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/11 07:40:47 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/23 19:39:12 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,4 +25,3 @@ int	ft_env(t_minishell **main)
 	(*main)->code_status = 0;
 	return (0);
 }
-

@@ -6,7 +6,7 @@
 #    By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/14 14:15:25 by jdufour           #+#    #+#              #
-#    Updated: 2024/01/17 22:52:30 by jdufour          ###   ########.fr        #
+#    Updated: 2024/01/24 21:36:05 by jdufour          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,26 +24,40 @@ SRCS = srcs/main.c \
 	srcs/builtins/exit.c \
 	srcs/builtins/ft_export.c \
 	srcs/builtins/export_utils.c \
+	srcs/builtins/export_utils2.c \
 	srcs/builtins/pwd.c \
 	srcs/builtins/unset.c \
 	srcs/builtins/signals.c \
 	srcs/exec/pipe.c \
+	srcs/exec/pipe2.c \
+	srcs/exec/pipe3.c \
+	srcs/exec/pipe4.c \
 	srcs/exec/exec.c \
+	srcs/exec/exec2.c \
 	srcs/exec/heredoc.c \
+	srcs/exec/heredoc2.c \
 	srcs/exec/path.c \
 	srcs/exec/redirection.c \
+	srcs/exec/redirection2.c \
 	srcs/exec/redir_infile.c \
 	srcs/exec/redir_outfile.c \
+	srcs/exec/redir_outfile2.c \
 	srcs/lexer/lexer.c \
 	srcs/parser/expand.c \
 	srcs/parser/init_parser.c \
 	srcs/parser/types.c \
 	srcs/parser/tokens.c \
 	srcs/utils/init_structs.c \
+	srcs/utils/init_structs2.c \
 	srcs/utils/heredoc_utils.c \
 	srcs/utils/joins.c \
 	srcs/utils/toolbox_utils.c \
 	srcs/utils/redirect_utils.c \
+	srcs/utils/cd_utils.c \
+	srcs/utils/allocs/allocs.c \
+	srcs/utils/allocs/frees.c \
+	srcs/utils/allocs/struct.c \
+	srcs/utils/allocs/joins.c \
 
 OBJS = $(SRCS:.c=.o)
 
@@ -79,4 +93,10 @@ fclean: clean
 
 re: fclean all
 
+run: $(NAME)
+	@echo "$(GREEN)Lancement de $(NAME) dans une nouvelle fenêtre de terminal...$(NC)"
+	@xterm -fa 'Monospace' -fs 12 -e './$(NAME)' &
+
 .PHONY: all clean fclean re
+
+
