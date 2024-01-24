@@ -1,39 +1,46 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strjoin.c                                       :+:      :+:    :+:   */
+/*   ft_strjoinchar.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/31 11:35:31 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/09 00:02:26 by jdufour          ###   ########.fr       */
+/*   Created: 2023/11/19 01:57:10 by jdufour           #+#    #+#             */
+/*   Updated: 2024/01/18 01:59:51 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_strjoin(char *s1, const char *s2, t_alloc **garbage)
+char	*ft_strjoin_char(char *s1, const char c, t_alloc **garbage)
 {
 	int		size;
 	char	*res;
 	int		i;
 
 	i = 0;
-	size = ft_strlen(s1) + ft_strlen(s2);
-	res = garb_malloc(sizeof(char), size + 1, garbage);
+	size = 0;
+	if (s1)
+	{
+		while (s1 && s1[size])
+			size++;
+	}
+	res = garb_malloc(sizeof(char), size + 2, garbage);
 	if (!(res))
 		return (NULL);
+	// if (size == 0)
+	// {
+	// 	res[size] = c;
+	// 	res[size + 1] = '\0';
+	// 	return (res);
+	// }
 	while (s1 && s1[i])
 	{
 		res[i] = s1[i];
 		i++;
 	}
-	while (*s2)
-	{
-		res[i] = *s2;
-		i++;
-		s2++;
-	}
+	res[i] = c;
+	i++;
 	res[i] = '\0';
 	// free(s1);
 	return (res);

@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 10:19:45 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/24 00:33:26 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/14 03:54:43 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	unset_single_variable(char ***envp, const char *name)
 	{
 		if (ft_strcmp_var((*envp)[i], name) == 0)
 		{
-			// free_adr(garbage, &(*envp)[i]);
+			// free((*envp)[i]);
 			shift_env_variables(envp, i);
 			found = 1;
 			break ;
@@ -45,12 +45,11 @@ int	unset_single_variable(char ***envp, const char *name)
 	return (found);
 }
 
-int	ft_unset(t_minishell **main, char **names, t_alloc **garbage)
+int	ft_unset(t_minishell **main, char **names)
 {
 	int	i;
 	int	found;
 
-	(void)garbage;
 	i = 0;
 	found = 0;
 	while (names[i] != NULL)

@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 16:22:53 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/24 00:05:54 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/23 22:53:45 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,14 +24,14 @@ int	replace_var(t_minishell **main, char **new_line, int *i, t_alloc **garbage)
 		if ((*main)->h_line[*i + 1] && (*main)->h_line[*i + 1] == '?')
 		{
 			*i += 2;
-			*new_line = ft_g_strjoin(*new_line, ft_itoa((*main)->code_status), EXEC, garbage);
+			*new_line = ft_strjoin(*new_line, ft_itoa((*main)->code_status), garbage);
 		}
 		else if ((*main)->h_line[*i + 1] && (ft_isalnum((*main)->h_line[*i + 1]) || (*main)->h_line[*i + 1] == UNDERSCORE))
 		{
 			name = get_env_var_name((*main)->h_line, i, garbage);
 			var = ft_getenv(main, name);
 			if (var)
-				*new_line = ft_g_strjoin(*new_line, var, EXEC, garbage);
+				*new_line = ft_strjoin(*new_line, var, garbage);
 			(*i)--;
 		}
 		return (1);
@@ -49,7 +49,7 @@ char	*heredoc_get_expand(t_minishell **main, t_alloc **garbage)
 	while ((*main)->h_line[i])
 	{
 		if (!replace_var(main, &new_line, &i, garbage) && (*main)->h_line[i] != '$')
-			new_line = ft_strjoin_char(new_line, (*main)->h_line[i], EXEC, garbage);
+			new_line = ft_strjoin_char(new_line, (*main)->h_line[i], garbage);
 		i++;
 	}
 	return (new_line);
@@ -68,11 +68,11 @@ char	**get_delimiter(t_minishell **main, int *i, t_alloc **garbage)
 		size++;
 	}
     j = 0;
-	(*main)->h_delimiter = garb_malloc(sizeof(char *), size + 1, EXEC, garbage);
+	(*main)->h_delimiter = garb_malloc(sizeof(char *), size + 1, garbage);
 	while ((*main)->command[*i].type == DB_LEFT_CHEV)
 	{
 		(*i)++;
-		(*main)->h_delimiter[j] = ft_g_strdup((*main)->command[*i].word, EXEC, garbage);
+		(*main)->h_delimiter[j] = ft_strdup((*main)->command[*i].word, garbage);
 		if (!(*main)->h_delimiter[j])
 			return (NULL);
 		j++;
@@ -116,6 +116,16 @@ int	ft_heredoc(t_minishell **main, int *i, t_alloc **garbage)
 		exit(EXIT_FAILURE);
 	dup2((*main)->tmp_fd, STDIN_FILENO);
 	close((*main)->tmp_fd);	
+	// open((*main)->tmp_filename, O_RDONLY);
+	// if ((*main)->tmp_fd < 0)
+	// 	exit(EXIT_FAILURE);
+	// dup2((*main)->tmp_fd, STDIN_FILENO);
+	// close((*main)->tmp_fd);
+	// if ((*main)->fd[1] != -1)
+	// 	close((*main)->fd[1]);
+	// if ((*main)->fd[0] != -1)
+	// 	close((*main)->fd[0]);
+	// close((*main)->tmp_fd);
 	return (1);
 }
 
