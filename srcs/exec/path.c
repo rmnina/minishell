@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   path.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 10:21:29 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/24 00:06:30 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/24 19:12:39 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-char	*find_command_in_segment(char *segment, char *command, t_alloc **garbage)
+char	*find_command_in_segment(char *segment, char *command, \
+t_alloc **garbage)
 {
 	char	full_path[PATH_MAX];
 

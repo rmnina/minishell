@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:03:22 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/24 18:29:22 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/24 19:04:13 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -251,17 +251,32 @@ int			is_output(t_minishell **main, int *i);
 int			redir_input(t_minishell **main, char *filename);
 int			redir_append(t_minishell **main, char *filename);
 int			redir_output(t_minishell **main, char *filename);
-int			will_be_piped(t_minishell **main, int *i);
 int			check_redir(t_minishell **main, int *i);
 int 		check_next_redir(t_minishell **main, int *i);
 void		check_next_args(t_minishell **main, int *i, t_alloc **garbage);
+char		*ft_realpath(char *path, char *resolved_path, t_alloc **garbage);
+char		*change_directory(t_minishell **main, char *path, t_alloc **garbage);
+int			ft_cd_main(t_minishell **main, t_alloc **garbage);
+
+/* ------------------------------ REDIRECTIONS ------------------------------ */
+
+int			get_all_outputs(t_minishell **main, int *i, t_alloc **garbage);
+int			get_last_out_type(t_minishell **main, int *i);
 char		*get_last_out_filename(t_minishell **main, int *i, t_alloc **garbage);
 char		*get_last_in_filename(t_minishell **main, int *i, t_alloc **garbage);
 int			browse_outputs(t_minishell **main, int *i, char **filename, t_alloc **garbage);
 int			browse_inputs(t_minishell **main, int *i, char **filename, t_alloc **garbage);
-char		*ft_realpath(char *path, char *resolved_path, t_alloc **garbage);
-char		*change_directory(t_minishell **main, char *path, t_alloc **garbage);
-int			ft_cd_main(t_minishell **main, t_alloc **garbage);
-int			get_all_outputs(t_minishell **main, int *i, t_alloc **garbage);
-int			get_last_out_type(t_minishell **main, int *i);
+
+/* ------------------------------ PIPE ------------------------------ */
+
+void		child_process(t_minishell **main, int *i, t_alloc **garbage);
+int			is_heredoc(t_minishell **main, int *i);
+int			is_first_pipe(t_minishell **main, int *i);
+int			first_pipe(t_minishell **main, int *i, t_alloc **garbage);
+int			will_be_piped(t_minishell **main, int *i);
+void		wait_pids(t_minishell **main);
+int			middle_pipe(t_minishell **main, int *i, t_alloc **garbage);
+void		restore_fds(t_minishell **main);
+int			last_pipe(t_minishell **main, int *i, t_alloc **garbage);
+
 #endif

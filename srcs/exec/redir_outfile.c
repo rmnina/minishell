@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 22:46:25 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/24 18:24:37 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/24 18:31:37 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,4 +82,3 @@ int	get_last_out_type(t_minishell **main, int *i)
 		j--;
 	return (type = (*main)->command[j].type);
 }
-

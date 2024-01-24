@@ -6,7 +6,7 @@
 #    By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/14 14:15:25 by jdufour           #+#    #+#              #
-#    Updated: 2024/01/24 18:28:39 by juandrie         ###   ########.fr        #
+#    Updated: 2024/01/24 19:15:35 by juandrie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,10 +29,16 @@ SRCS = srcs/main.c \
 	srcs/builtins/unset.c \
 	srcs/builtins/signals.c \
 	srcs/exec/pipe.c \
+	srcs/exec/pipe2.c \
+	srcs/exec/pipe3.c \
+	srcs/exec/pipe4.c \
 	srcs/exec/exec.c \
+	srcs/exec/exec2.c \
 	srcs/exec/heredoc.c \
+	srcs/exec/heredoc2.c \
 	srcs/exec/path.c \
 	srcs/exec/redirection.c \
+	srcs/exec/redirection2.c \
 	srcs/exec/redir_infile.c \
 	srcs/exec/redir_outfile.c \
 	srcs/exec/redir_outfile2.c \
