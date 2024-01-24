@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:03:22 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/24 00:18:58 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/24 17:55:51 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,6 @@ enum e_type {
 	DB_LEFT_CHEV,
 	EXPAND,
 	PARSING,
-	EXEC,
 	ENV,
 };
 
@@ -99,6 +98,7 @@ typedef struct s_minishell {
 	int					status;
 	int					tmp_fd;
 	int					heredoc;
+	int					heredoc_used;
 	int					total_cmd;
 	int					nb_cmd;
 	pid_t				*pid;

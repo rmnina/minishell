@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 22:46:25 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/24 00:20:31 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/24 17:55:47 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int	browse_outputs(t_minishell **main, int *i, char **filename, t_alloc **garbag
 {
 	while (is_output(main, i))
 	{
-		*filename = ft_g_strdup((*main)->command[*i + 1].word, EXEC, garbage);
+		*filename = ft_g_strdup((*main)->command[*i + 1].word, PARSING, garbage);
 		if (!*filename)
 			return (perror("filename alloc"), (*main)->code_status = 255, -1);
 		if ((*main)->command[*i].type == RIGHT_CHEV)
@@ -35,7 +35,7 @@ int	browse_outputs(t_minishell **main, int *i, char **filename, t_alloc **garbag
 			*i += 2;
 			while (check_redir(main, i) != 0)
 			{
-				(*main)->cmd_args = ft_strjoin_args(main, i, EXEC, garbage);
+				(*main)->cmd_args = ft_strjoin_args(main, i, PARSING, garbage);
 				(*i)++;
 			}
 		}
@@ -58,7 +58,7 @@ char	*get_last_out_filename(t_minishell **main, int *i, t_alloc **garbage)
 	&& (*main)->command[j].type != DB_RIGHT_CHEV)
 		j--;
 	if ((*main)->command[j + 1].type)
-		filename = ft_g_strdup((*main)->command[j + 1].word, EXEC, garbage);
+		filename = ft_g_strdup((*main)->command[j + 1].word, PARSING, garbage);
 	return (filename);
 }
 
@@ -94,7 +94,7 @@ int	get_all_outputs(t_minishell **main, int *i, t_alloc **garbage)
 	check_next_args(main, i, garbage);
 	if (is_input(main, i))
 	{
-		filename = ft_g_strdup((*main)->command[*i + 1].word, EXEC, garbage);
+		filename = ft_g_strdup((*main)->command[*i + 1].word, PARSING, garbage);
 		if (!filename)
 			return (-1);
 		if ((*main)->command[*i].type == RIGHT_CHEV)

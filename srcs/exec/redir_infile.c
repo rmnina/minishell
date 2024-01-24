@@ -6,17 +6,18 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 22:46:17 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/24 00:20:10 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/24 17:55:47 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int	browse_inputs(t_minishell **main, int *i, char **filename, t_alloc **garbage)
+int	browse_inputs(t_minishell **main, int *i, \
+char **filename, t_alloc **garbage)
 {
 	while (is_input(main, i))
 	{
-		*filename = ft_g_strdup((*main)->command[*i + 1].word, EXEC, garbage);
+		*filename = ft_g_strdup((*main)->command[*i + 1].word, PARSING, garbage);
 		if (!*filename)
 			return (perror("filename alloc"), (*main)->code_status = 255, -1);
 		if (((*main)->infilefd = open(*filename, O_RDONLY, 0644)) == -1)
@@ -27,7 +28,7 @@ int	browse_inputs(t_minishell **main, int *i, char **filename, t_alloc **garbage
 			*i += 2;
 			while (check_redir(main, i) != 0)
 			{
-				(*main)->cmd_args = ft_strjoin_args(main, i, EXEC, garbage);
+				(*main)->cmd_args = ft_strjoin_args(main, i, PARSING, garbage);
 				(*i)++;
 			}
 		}
@@ -48,7 +49,8 @@ char	*get_last_in_filename(t_minishell **main, int *i, t_alloc **garbage)
 		j++;
 	while (j > 0 && (*main)->command[j].type != LEFT_CHEV)
 		j--;
-	return (filename = ft_g_strdup((*main)->command[j + 1].word, EXEC, garbage));
+	return (filename = ft_g_strdup((*main)->command[j + 1].word, \
+	PARSING, garbage));
 }
 
 
@@ -62,7 +64,7 @@ int	get_all_inputs(t_minishell **main, int *i, t_alloc **garbage)
 		if (browse_inputs(main, i, &filename, garbage) == -1)
 			return (-1);
 	}
-	filename = ft_g_strdup((*main)->command[*i + 1].word, EXEC, garbage);
+	filename = ft_g_strdup((*main)->command[*i + 1].word, PARSING, garbage);
 	if (!filename)
 		return (-1);
 	if (((*main)->infilefd = open(filename, O_RDONLY, 0644)) == -1)

@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:45:11 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/24 00:28:50 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/24 17:53:17 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	ft_minishell(t_minishell *main, t_alloc **garbage)
 		if (main->line)
 		{
 			free(main->line);
-			// free_small_garb(garbage);
+			free_small_garb(garbage);
 		}
 		if (g_sigstatus != 0)
 			main->code_status = g_sigstatus;

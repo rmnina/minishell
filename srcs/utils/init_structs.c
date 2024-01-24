@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 10:43:20 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/24 00:28:04 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/24 15:29:11 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ t_minishell	*init_minishell(char **envp)
 	main->outfilefd = -1;
 	main->tmp_fd = -1;
 	main->heredoc = 0;
+	main->heredoc_used = 0;
 	main->status = -1;
 	main->nb_cmd = 0;
 	main->total_cmd = 0;
@@ -55,6 +56,7 @@ void	restore_minishell()
 
 	main = get_minishell();
 	main->heredoc = 0;
+	main->heredoc_used = 0;
 	main->fd[0] = -1;
 	main->fd[1] = -1;
 	main->tmp_fd = -1;

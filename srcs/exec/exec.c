@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/24 00:04:50 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/24 17:54:35 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ void	execute_command(t_minishell **main, t_alloc **garbage)
 			ft_putstr_fd((*main)->cmd_args[0], 2);
 			ft_putstr_fd(": ", 2);
 		}
+		free_small_garb(garbage);
 		perror("command not found");
 		exit(127);
 	}
@@ -100,12 +101,13 @@ char	**create_cmd_args(t_minishell **main, int *i, t_alloc **garbage)
 	j = 0;
 	cmd_args = NULL;
 	num_args = ft_count((*main)->command, i);
-	cmd_args = garb_malloc(sizeof(char *), num_args + 1, EXEC, garbage);
+	cmd_args = garb_malloc(sizeof(char *), num_args + 1, PARSING, garbage);
 	if (!cmd_args)
 		return (NULL);
 	while ((*main)->command[*i].type == WORD)
 	{
-		cmd_args[j] = ft_g_strjoin(cmd_args[j], (*main)->command[*i].word, EXEC, garbage);
+		cmd_args[j] = ft_g_strjoin(cmd_args[j], \
+		(*main)->command[*i].word, PARSING, garbage);
 		*i += 1;
 		j++;
 	}
@@ -133,11 +135,13 @@ void	init_redirect(t_minishell **main, int *i, t_alloc **garbage)
 			if (ft_redirect(main, i, garbage) == -1)
 			{
 				(*main)->code_status = 1;
+				free_small_garb(garbage);
 				exit(EXIT_FAILURE);
 			}
 		}
 		if (execute_builtins(main, garbage) == -1)
 			execute_command(main, garbage);
+		free_small_garb(garbage);
 		exit(EXIT_SUCCESS);
 	}
 	waitpid(pid, &status, 0);
@@ -194,5 +198,6 @@ void	handle_command(t_minishell **main, t_alloc **garbage)
 		if (execute_builtins(main, garbage) == -1)
 			execute_non_builtin(main, garbage);
 	}
-	unlink((*main)->tmp_filename);
+	if ((*main)->tmp_filename)
+		unlink((*main)->tmp_filename);
 }

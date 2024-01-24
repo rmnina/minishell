@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 17:13:45 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/24 00:19:32 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/24 17:55:47 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	check_next_args(t_minishell **main, int *i, t_alloc **garbage)
 	}
 	while (k < j)
 	{
-		(*main)->cmd_args = ft_strjoin_args(main, i, EXEC, garbage);
+		(*main)->cmd_args = ft_strjoin_args(main, i, PARSING, garbage);
 		(*i)++;
 		k++;
 	}
