@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   struct.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/23 23:44:38 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/23 23:44:58 by jdufour          ###   ########.fr       */
+/*   Created: 2023/12/08 19:16:31 by jdufour           #+#    #+#             */
+/*   Updated: 2024/01/24 11:38:10 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ t_alloc	*create_garbage_node(void *ptr, int cat)
 {
 	t_alloc	*new;
 
+	new = NULL;
 	new = (t_alloc *)malloc(sizeof(t_alloc));
 	if (!new)
 		return (NULL);

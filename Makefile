@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+         #
+#    By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/14 14:15:25 by jdufour           #+#    #+#              #
-#    Updated: 2024/01/24 00:18:05 by jdufour          ###   ########.fr        #
+#    Updated: 2024/01/24 12:04:28 by juandrie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,6 +24,7 @@ SRCS = srcs/main.c \
 	srcs/builtins/exit.c \
 	srcs/builtins/ft_export.c \
 	srcs/builtins/export_utils.c \
+	srcs/builtins/export_utils2.c \
 	srcs/builtins/pwd.c \
 	srcs/builtins/unset.c \
 	srcs/builtins/signals.c \
@@ -40,9 +41,11 @@ SRCS = srcs/main.c \
 	srcs/parser/types.c \
 	srcs/parser/tokens.c \
 	srcs/utils/init_structs.c \
+	srcs/utils/init_structs2.c \
 	srcs/utils/heredoc_utils.c \
 	srcs/utils/toolbox_utils.c \
 	srcs/utils/redirect_utils.c \
+	srcs/utils/cd_utils.c \
 	srcs/utils/allocs/allocs.c \
 	srcs/utils/allocs/frees.c \
 	srcs/utils/allocs/struct.c \
@@ -82,4 +85,10 @@ fclean: clean
 
 re: fclean all
 
+run: $(NAME)
+	@echo "$(GREEN)Lancement de $(NAME) dans une nouvelle fenêtre de terminal...$(NC)"
+	@xterm -fa 'Monospace' -fs 12 -e './$(NAME)' &
+
 .PHONY: all clean fclean re
+
+

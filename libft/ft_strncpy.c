@@ -1,32 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   ft_strncpy.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/13 18:42:47 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/23 19:39:46 by juandrie         ###   ########.fr       */
+/*   Created: 2024/01/18 17:12:17 by juandrie          #+#    #+#             */
+/*   Updated: 2024/01/18 17:14:07 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "libft.h"
 
-int	ft_pwd(t_minishell **main)
+char	*ft_strncpy(char *dest, const char *src, size_t n)
 {
-	char	*cwd;
+	size_t	i;
 
-	cwd = getcwd(NULL, 0);
-	if (cwd != NULL)
+	i = 0;
+	while (i < n && src[i] != '\0')
 	{
-		printf("%s\n", cwd);
-		free (cwd);
-		(*main)->code_status = 0;
+		dest[i] = src[i];
+		i++;
 	}
-	else
+	while (i < n)
 	{
-		perror("pwd");
-		(*main)->code_status = 1;
+		dest[i] = '\0';
+		i++;
 	}
-	return ((*main)->code_status);
+	return (dest);
 }

@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/24 17:54:35 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/24 18:11:24 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -201,3 +201,5 @@ void	handle_command(t_minishell **main, t_alloc **garbage)
 	if ((*main)->tmp_filename)
 		unlink((*main)->tmp_filename);
 }
+
+

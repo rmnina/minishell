@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 22:46:17 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/24 17:55:47 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/24 18:13:44 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ char **filename, t_alloc **garbage)
 
 char	*get_last_in_filename(t_minishell **main, int *i, t_alloc **garbage)
 {
-	int 	j;
+	int		j;
 	char	*filename;
 
 	j = *i;

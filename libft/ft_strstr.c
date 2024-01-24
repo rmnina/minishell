@@ -1,41 +1,42 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strjoin.c                                       :+:      :+:    :+:   */
+/*   ft_strstr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/31 11:35:31 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/24 11:40:17 by juandrie         ###   ########.fr       */
+/*   Created: 2024/01/22 18:10:49 by juandrie          #+#    #+#             */
+/*   Updated: 2024/01/22 18:17:43 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_strjoin(char *s1, const char *s2)
+char	*ft_strstr(const char *haystack, const char *needle)
 {
-	int		size;
-	char	*res;
-	int		i;
+	const char	*p;
+	const char	*begin;
+	const char	*pattern;
 
-	i = 0;
-	res = 0;
-	size = ft_strlen(s1) + ft_strlen(s2);
-	res = malloc(sizeof(char) * size + 1);
-	if (!(res))
-		return (NULL);
-	while (s1 && s1[i])
+	p = haystack;
+	if (!*needle)
+		return ((char *)haystack);
+	while (*p != '\0')
 	{
-		res[i] = s1[i];
-		i++;
+		if (*p == *needle)
+		{
+			begin = p;
+			pattern = needle;
+			while (*pattern != '\0' && *p == *pattern)
+			{
+				++p;
+				++pattern;
+			}
+			if (*pattern == '\0')
+				return ((char *)begin);
+			p = begin;
+		}
+		++p;
 	}
-	while (*s2)
-	{
-		res[i] = *s2;
-		i++;
-		s2++;
-	}
-	res[i] = '\0';
-	return (res);
+	return (NULL);
 }
-
