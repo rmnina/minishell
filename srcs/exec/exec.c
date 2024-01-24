@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/24 11:29:16 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/24 16:39:37 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ void	execute_command(t_minishell **main, t_alloc **garbage)
 			ft_putstr_fd(": ", 2);
 		}
 		perror("command not found");
+		free_garbage(garbage);
 		exit(127);
 	}
 	execve((*main)->path, (*main)->cmd_args, (*main)->envp);

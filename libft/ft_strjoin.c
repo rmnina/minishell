@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 11:35:31 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/24 11:40:17 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/24 16:48:09 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,4 +38,3 @@ char	*ft_strjoin(char *s1, const char *s2)
 	res[i] = '\0';
 	return (res);
 }
-

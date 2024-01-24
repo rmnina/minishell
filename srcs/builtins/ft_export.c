@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 05:00:11 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/24 11:50:06 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/24 15:39:52 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,14 +78,14 @@ char *value_to_append, t_alloc **garbage)
 	new_value = NULL;
 	if (old_value && value_to_append)
 	{
-		new_value = ft_strjoin(old_value, value_to_append);
+		new_value = ft_g_strjoin(old_value, value_to_append, ENV, garbage);
 	}
 	else
 	{
-		new_value = ft_strdup(value_to_append);
+		new_value = ft_g_strdup(value_to_append, ENV, garbage);
 	}
-	export_str = ft_strjoin(var_name, "=");
-	export_str = ft_strjoin(export_str, new_value);
+	export_str = ft_g_strjoin(var_name, "=", ENV, garbage);
+	export_str = ft_g_strjoin(export_str, new_value, ENV, garbage);
 	add_or_update_env_var((*main)->envp, export_str, garbage);
 }
 
