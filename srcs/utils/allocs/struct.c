@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 19:16:31 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/24 11:38:10 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/24 19:24:39 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,5 +48,4 @@ void	add_garbage_node(t_alloc **garbage, t_alloc *new)
 	}
 	else
 		*garbage = new;
-	// printf("node = %p, garbage = %p\n", new->adr, garbage);
 }

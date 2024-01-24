@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   frees.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 23:43:42 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/24 00:26:52 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/24 19:26:34 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/minishell.h"
 
-void    free_adr(t_alloc **garbage, void *adr)
+void	free_adr(t_alloc **garbage, void *adr)
 {
 	if ((*garbage)->adr == adr)
 	{	
@@ -25,10 +25,10 @@ void    free_adr(t_alloc **garbage, void *adr)
 	(*garbage)->adr = NULL;
 }
 
-void    free_small_garb(t_alloc **garbage)
+void	free_small_garb(t_alloc **garbage)
 {
-    part_free_garb(garbage, PARSING);
-    part_free_garb(garbage, EXEC);
+	part_free_garb(garbage, PARSING);
+	part_free_garb(garbage, EXEC);
 }
 
 void	part_free_garb(t_alloc **garbage, int cat)
@@ -36,7 +36,7 @@ void	part_free_garb(t_alloc **garbage, int cat)
 	if ((*garbage)->cat && (*garbage)->cat == cat)
 	{
 		if ((*garbage)->adr)
-            free((*garbage)->adr);
+			free((*garbage)->adr);
 		(*garbage)->adr = NULL;
 	}
 	while (*garbage)
@@ -44,7 +44,7 @@ void	part_free_garb(t_alloc **garbage, int cat)
 		if ((*garbage)->cat == cat)
 		{
 			if ((*garbage)->adr)
-                free((*garbage)->adr);
+				free((*garbage)->adr);
 			(*garbage)->adr = NULL;
 		}
 		*garbage = (*garbage)->next;

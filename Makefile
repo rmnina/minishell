@@ -6,7 +6,7 @@
 #    By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/14 14:15:25 by jdufour           #+#    #+#              #
-#    Updated: 2024/01/24 19:15:35 by juandrie         ###   ########.fr        #
+#    Updated: 2024/01/24 19:42:02 by juandrie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,6 +43,7 @@ SRCS = srcs/main.c \
 	srcs/exec/redir_outfile.c \
 	srcs/exec/redir_outfile2.c \
 	srcs/lexer/lexer.c \
+	srcs/lexer/lexer2.c \
 	srcs/parser/expand.c \
 	srcs/parser/init_parser.c \
 	srcs/parser/types.c \
