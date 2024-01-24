@@ -6,7 +6,11 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:03:22 by jdufour           #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2024/01/24 19:38:19 by jdufour          ###   ########.fr       */
+=======
+/*   Updated: 2024/01/24 18:26:19 by jdufour          ###   ########.fr       */
+>>>>>>> bbc7f77432f013053cd10998c7d7d565ca051551
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -266,6 +270,7 @@ char		*get_last_out_filename(t_minishell **main, int *i, t_alloc **garbage);
 char		*get_last_in_filename(t_minishell **main, int *i, t_alloc **garbage);
 int			browse_outputs(t_minishell **main, int *i, char **filename, t_alloc **garbage);
 int			browse_inputs(t_minishell **main, int *i, char **filename, t_alloc **garbage);
+<<<<<<< HEAD
 
 /* ------------------------------ PIPE ------------------------------ */
 
@@ -279,4 +284,9 @@ int			middle_pipe(t_minishell **main, int *i, t_alloc **garbage);
 void		restore_fds(t_minishell **main);
 int			last_pipe(t_minishell **main, int *i, t_alloc **garbage);
 
+=======
+char		*ft_realpath(char *path, char *resolved_path, t_alloc **garbage);
+char		*change_directory(t_minishell **main, char *path, t_alloc **garbage);
+int			ft_cd_main(t_minishell **main, t_alloc **garbage);
+>>>>>>> bbc7f77432f013053cd10998c7d7d565ca051551
 #endif

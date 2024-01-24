@@ -6,14 +6,22 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/24 18:23:32 by juandrie          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2024/01/24 18:26:51 by juandrie         ###   ########.fr       */
+=======
+/*   Updated: 2024/01/24 18:24:44 by juandrie         ###   ########.fr       */
+>>>>>>> bbc7f77432f013053cd10998c7d7d565ca051551
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
+<<<<<<< HEAD
 int	handle_output(t_minishell **main, int *i, char **filename, \
 t_alloc **garbage)
+=======
+int	handle_output(t_minishell **main, int *i, char **filename, t_alloc **garbage)
+>>>>>>> bbc7f77432f013053cd10998c7d7d565ca051551
 {
 	if (is_output(main, i))
 	{
@@ -24,7 +32,11 @@ t_alloc **garbage)
 	return (0);
 }
 
+<<<<<<< HEAD
 int	finalize_out(t_minishell **main, int *i, char **filename, t_alloc **garbage)
+=======
+int finalize_out(t_minishell **main, int *i, char **filename, t_alloc **garbage)
+>>>>>>> bbc7f77432f013053cd10998c7d7d565ca051551
 {
 	int	type;
 
@@ -53,7 +65,12 @@ int	finalize_out(t_minishell **main, int *i, char **filename, t_alloc **garbage)
 	return (0);
 }
 
+<<<<<<< HEAD
 int	get_all_outputs(t_minishell **main, int *i, t_alloc **garbage)
+=======
+
+int get_all_outputs(t_minishell **main, int *i, t_alloc **garbage)
+>>>>>>> bbc7f77432f013053cd10998c7d7d565ca051551
 {
 	char	*filename;
 
@@ -63,4 +80,8 @@ int	get_all_outputs(t_minishell **main, int *i, t_alloc **garbage)
 	if (finalize_out(main, i, &filename, garbage) == -1)
 		return (-1);
 	return (0);
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> bbc7f77432f013053cd10998c7d7d565ca051551

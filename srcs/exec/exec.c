@@ -6,7 +6,11 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2024/01/24 19:44:20 by jdufour          ###   ########.fr       */
+=======
+/*   Updated: 2024/01/24 18:28:29 by jdufour          ###   ########.fr       */
+>>>>>>> bbc7f77432f013053cd10998c7d7d565ca051551
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +111,12 @@ char	**create_cmd_args(t_minishell **main, int *i, t_alloc **garbage)
 		return (NULL);
 	while ((*main)->command[*i].type == WORD)
 	{
+<<<<<<< HEAD
 		cmd_args[j] = ft_g_strjoin(cmd_args[j], (*main)->command[*i].word, PARSING, garbage);
+=======
+		cmd_args[j] = ft_g_strjoin(cmd_args[j], \
+		(*main)->command[*i].word, PARSING, garbage);
+>>>>>>> bbc7f77432f013053cd10998c7d7d565ca051551
 		*i += 1;
 		j++;
 	}
@@ -135,11 +144,13 @@ void	init_redirect(t_minishell **main, int *i, t_alloc **garbage)
 			if (ft_redirect(main, i, garbage) == -1)
 			{
 				(*main)->code_status = 1;
+				free_small_garb(garbage);
 				exit(EXIT_FAILURE);
 			}
 		}
 		if (execute_builtins(main, garbage) == -1)
 			execute_command(main, garbage);
+		free_small_garb(garbage);
 		exit(EXIT_SUCCESS);
 	}
 	waitpid(pid, &status, 0);

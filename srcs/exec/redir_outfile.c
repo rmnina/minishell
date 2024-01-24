@@ -6,7 +6,11 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 22:46:25 by jdufour           #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2024/01/24 19:46:43 by jdufour          ###   ########.fr       */
+=======
+/*   Updated: 2024/01/24 18:29:19 by jdufour          ###   ########.fr       */
+>>>>>>> bbc7f77432f013053cd10998c7d7d565ca051551
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,3 +86,7 @@ int	get_last_out_type(t_minishell **main, int *i)
 		j--;
 	return (type = (*main)->command[j].type);
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> bbc7f77432f013053cd10998c7d7d565ca051551
