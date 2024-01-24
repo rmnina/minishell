@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 22:46:17 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/24 18:13:44 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/24 18:28:47 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@ char **filename, t_alloc **garbage)
 		*filename = ft_g_strdup((*main)->command[*i + 1].word, PARSING, garbage);
 		if (!*filename)
 			return (perror("filename alloc"), (*main)->code_status = 255, -1);
-		if (((*main)->infilefd = open(*filename, O_RDONLY, 0644)) == -1)
+		(*main)->infilefd = open(*filename, O_RDONLY, 0644);
+		if ((*main)->infilefd == -1)
 			return (-1);
 		close((*main)->infilefd);
 		if (check_next_redir(main, i) != 2)
@@ -49,12 +50,21 @@ char	*get_last_in_filename(t_minishell **main, int *i, t_alloc **garbage)
 		j++;
 	while (j > 0 && (*main)->command[j].type != LEFT_CHEV)
 		j--;
-	return (filename = ft_g_strdup((*main)->command[j + 1].word, \
-	PARSING, garbage));
+	return (filename = \
+	ft_g_strdup((*main)->command[j + 1].word, EXEC, garbage));
 }
 
+void	prepare_file_descriptors(t_minishell **main, int *i, t_alloc **garbage)
+{
+	check_next_args(main, i, garbage);
+	if (is_output(main, i))
+	{
+		(*i) += 2;
+		get_all_outputs(main, i, garbage);
+	}
+}
 
-int	get_all_inputs(t_minishell **main, int *i, t_alloc **garbage)
+int	get_input_files(t_minishell **main, int *i, t_alloc **garbage)
 {
 	char	*filename;
 
@@ -67,17 +77,21 @@ int	get_all_inputs(t_minishell **main, int *i, t_alloc **garbage)
 	filename = ft_g_strdup((*main)->command[*i + 1].word, PARSING, garbage);
 	if (!filename)
 		return (-1);
-	if (((*main)->infilefd = open(filename, O_RDONLY, 0644)) == -1)
+	(*main)->infilefd = open(filename, O_RDONLY, 0644);
+	if ((*main)->infilefd == -1)
 		return (-1);
 	close((*main)->infilefd);
-	check_next_args(main, i, garbage);
-	if (is_output(main, i))
-	{
-		(*i) += 2;
-		get_all_outputs(main, i, garbage);
-	}
+	prepare_file_descriptors(main, i, garbage);
 	filename = get_last_in_filename(main, i, garbage);
-	if (((*main)->infilefd = redir_input(main, filename)) == -1)
+	(*main)->infilefd = redir_input(main, filename);
+	if ((*main)->infilefd == -1)
+		return (-1);
+	return (1);
+}
+
+int	get_all_inputs(t_minishell **main, int *i, t_alloc **garbage)
+{
+	if (get_input_files(main, i, garbage) == -1)
 		return (-1);
 	return (1);
 }

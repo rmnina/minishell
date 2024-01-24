@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 09:11:51 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/24 11:31:48 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/24 15:51:32 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ void	add_or_update_env_var(char **envp, char *var, t_alloc **garbage)
 	t_export	export;
 	int			found;
 
+	export = init_export_struct();
 	export.len = 0;
 	export.envp_len = 0;
 	while (var[export.len] != '=' && var[export.len] != '\0')

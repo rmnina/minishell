@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:03:22 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/24 18:05:19 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/24 18:26:19 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,7 +140,7 @@ char		**set_env(char **envp, t_alloc **garbage);
 int			is_only_quotes(char *line, int *i);
 void		init_get_token(t_command *token);
 void		init_get_expand(t_minishell **main, t_command *token, int *i, t_alloc **garbage);
-
+t_export	init_export_struct(void);
 /* ------------------------------ EXPAND ------------------------------ */
 
 int			is_expand(char *line);

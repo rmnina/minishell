@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 20:04:47 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/24 12:05:04 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/24 15:49:34 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,4 +35,14 @@ t_parser	*init_parser(t_alloc **garbage)
 	parser->var = NULL;
 	parser->vpos = 0;
 	return (parser);
+}
+
+t_export	init_export_struct(void)
+{
+	t_export	export;
+
+	export.var_name = NULL;
+	export.equal = NULL;
+	export.new_var = NULL;
+	return (export);
 }

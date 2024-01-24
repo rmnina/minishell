@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 05:00:11 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/24 18:08:18 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/24 18:28:03 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,11 +77,11 @@ char *value_to_append, t_alloc **garbage)
 	old_value = getenv(var_name);
 	new_value = NULL;
 	if (old_value && value_to_append)
-		new_value = ft_g_strjoin(old_value, value_to_append, PARSING, garbage);
+		new_value = ft_g_strjoin(old_value, value_to_append, ENV, garbage);
 	else
-		new_value = ft_g_strdup(value_to_append, PARSING, garbage);
-	export_str = ft_g_strjoin(var_name, "=", PARSING, garbage);
-	export_str = ft_g_strjoin(export_str, new_value, PARSING, garbage);
+		new_value = ft_g_strdup(value_to_append, ENV, garbage);
+	export_str = ft_g_strjoin(var_name, "=", ENV, garbage);
+	export_str = ft_g_strjoin(export_str, new_value, ENV, garbage);
 	add_or_update_env_var((*main)->envp, export_str, garbage);
 }
 

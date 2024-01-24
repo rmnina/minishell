@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/24 18:11:24 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/24 18:28:29 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ void	execute_command(t_minishell **main, t_alloc **garbage)
 		}
 		free_small_garb(garbage);
 		perror("command not found");
+		free_garbage(garbage);
 		exit(127);
 	}
 	execve((*main)->path, (*main)->cmd_args, (*main)->envp);
