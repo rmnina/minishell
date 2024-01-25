@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export_utils2.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 19:18:24 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/24 22:38:23 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/25 17:10:19 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,8 @@ void	handle_value_case(t_minishell **main, char *arg, t_alloc **garbage)
 
 	variable_modified = handle_plus_equal_case(main, arg, garbage);
 	if (variable_modified == 0)
+	{
 		return ;
+	}
 	handle_add_update_case(main, arg, garbage);
 }

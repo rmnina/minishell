@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:03:22 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/25 10:52:34 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/25 17:53:43 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -286,6 +286,7 @@ int			last_pipe(t_minishell **main, int *i, t_alloc **garbage);
 
 int			ft_count(t_command *command, int *i);
 void		check_spaces(t_minishell **main, int *i);
+int			is_only_spaces(const char *str);
 
 /* ------------------------------ MEMORY ------------------------------ */
 

@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 05:00:11 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/25 14:30:52 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/25 17:06:38 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ char *value_to_append, t_alloc **garbage)
 	char	*new_value;
 	char	*export_str;
 
-	old_value = getenv(var_name);
+	old_value = ft_getenv(main, var_name);
 	new_value = NULL;
 	if (old_value && value_to_append)
 		new_value = ft_g_strjoin(old_value, value_to_append, ENV, garbage);

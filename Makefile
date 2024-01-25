@@ -6,7 +6,7 @@
 #    By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/14 14:15:25 by jdufour           #+#    #+#              #
-#    Updated: 2024/01/25 14:56:42 by juandrie         ###   ########.fr        #
+#    Updated: 2024/01/25 16:17:06 by juandrie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -88,10 +88,6 @@ fclean: clean
 	@make fclean -C libft/
 
 re: fclean all
-
-run: $(NAME)
-	@echo "$(GREEN)Lancement de $(NAME) dans une nouvelle fenêtre de terminal...$(NC)"
-	@xterm -fa 'Monospace' -fs 12 -e './$(NAME)' &
 
 .PHONY: all clean fclean re
 

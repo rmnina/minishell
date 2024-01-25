@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:45:11 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/25 10:49:46 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/25 17:22:15 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	ft_minishell(t_minishell *main, t_alloc **garbage)
 				free_garbage(garbage);
 			break ;
 		}
-		if (main->line[0] != 0)
+		if (main->line[0] != 0) //&& !is_only_spaces(main->line)
 		{
 			add_history(main->line);
 			handle_command(&main, garbage);

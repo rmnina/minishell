@@ -6,13 +6,14 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 10:21:29 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/25 14:17:56 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/25 17:13:46 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-char	*find_command_in_segment(char *segment, char *command, t_alloc **garbage)
+char	*find_command_in_segment(char *segment, char *command, \
+t_alloc **garbage)
 {
 	char	full_path[PATH_MAX];
 
