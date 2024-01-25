@@ -1,32 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   heredoc_utils.c                                    :+:      :+:    :+:   */
+/*   toolbox_utils2.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/11 06:32:53 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/23 19:56:05 by juandrie         ###   ########.fr       */
+/*   Created: 2024/01/24 23:39:25 by jdufour           #+#    #+#             */
+/*   Updated: 2024/01/24 23:39:38 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int	heredoc_is_expand(char *line)
+int	ft_error(t_minishell **main, char *str, int i)
 {
-	int		i;
-
-	i = 0;
-	while (line[i])
-	{
-		if (line[i] == '$' && line[i + 1])
-		{
-			if (line[i + 1] == '?')
-				return (1);
-			if (ft_isalnum(line[i + 1]) || line[i + 1] == UNDERSCORE)
-				return (1);
-		}
-		i++;
-	}
-	return (0);
+	ft_putstr_fd(str, 2);
+	write(2, "\n", 1);
+	(*main)->code_status = i;
+	return (-1);
 }

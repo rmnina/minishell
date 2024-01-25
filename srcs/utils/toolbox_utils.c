@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 05:26:30 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/24 21:34:48 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/24 23:40:05 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,9 @@ int	ft_count(t_command *command, int *i)
 	return (size);
 }
 
-// This function creates a null t_command token. It will be added at the
-// end of the array, so we can iterate on it by having an exit condition.
-
 t_command	token_null(t_command *token, t_alloc **garbage)
 {
-	token->word = garb_malloc(sizeof(char), 1, garbage);
+	token->word = garb_malloc(sizeof(char), 1, PARSING, garbage);
 	token->word[0] = '\0';
 	token->type = 0;
 	return (*token);

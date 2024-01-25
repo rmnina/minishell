@@ -6,24 +6,11 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 02:11:36 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/18 02:33:51 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/25 00:03:19 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-
-int	ft_error(t_minishell **main, char *str, int i)
-{
-	ft_putstr_fd(str, 2);
-	write(2, "\n", 1);
-	(*main)->code_status = i;
-	return (-1);
-}
-
-// This function checks for lexer errors in quotes. It uses the 
-// booleand set by is_in_quotes(), and returns an error if the 
-// latter indicates the presence of an unmatch opening quote
-// without a closing quote.
 
 int	error_quotes(t_minishell **main)
 {
@@ -38,19 +25,16 @@ int	error_quotes(t_minishell **main)
 		i++;
 	}
 	if ((*main)->parser->case_double == TRUE)
-		return (ft_error(main, "minishell: syntax error near unexpected token \"", 2));
+		return (ft_error(main, \
+		"minishell: syntax error near unexpected token \"", 2));
 	else if ((*main)->parser->case_single == TRUE)
-		return (ft_error(main, "minishell: syntax error near unexpected token \'", 2));
+		return (ft_error(main, \
+		"minishell: syntax error near unexpected token \'", 2));
 	(*main)->parser->case_double = FALSE;
 	(*main)->parser->case_single = FALSE;
 	(*main)->parser->case_quotes = FALSE;
 	return (0);
 }
-
-// The 2 following functions checks for parsing error once the array
-// of structures has been created. The first one verifies the syntax 
-// of commands with pipes or redirections ; the seconds only focuses
-// on the number of > or <.
 
 int	error_use_types(t_command *command, t_minishell **main)
 {
@@ -61,14 +45,42 @@ int	error_use_types(t_command *command, t_minishell **main)
 		return (-1);
 	if (command[0].type == PIPE)
 		return \
-		(ft_error(main, "minishell : syntax error near unexpected token '|'", 2));
+		(ft_error(main, \
+		"minishell : syntax error near unexpected token '|'", 2));
 	while (command[i].type)
 		i++;
 	i--;
 	if (command[i].type == RIGHT_CHEV || command[i].type == LEFT_CHEV \
 	|| command[i].type == DB_RIGHT_CHEV || command[i].type == DB_LEFT_CHEV)
 		return \
-		(ft_error(main, "minishell : syntax error near unexpected token 'newline'", 2));
+		(ft_error(main, \
+		"minishell : syntax error near unexpected token 'newline'", 2));
+	if (command[i].type == PIPE)
+		return \
+		(ft_error(main, \
+		"minishell : syntax error : unexpected end of file", 2));
+	return (0);
+}
+
+int	error_chev(t_command *command, int *i, int *j, t_minishell **main)
+{
+	if (command[*i].type && !command[*j].type \
+	&& (command[*i].type >= LEFT_CHEV && command[*i].type <= DB_LEFT_CHEV))
+		return \
+		(ft_error(main, \
+		"minishell: syntax error near unexpected token 'newline'", 2));
+	if (command[*i].type && command[*j].type && \
+	((command[*i].type == DB_RIGHT_CHEV && command[*j].type == RIGHT_CHEV) || \
+	(command[*i].type == DB_RIGHT_CHEV && command[*j].type == DB_RIGHT_CHEV)))
+		return \
+		(ft_error(main, \
+		"minishell: syntax error near unexpected token '>'", 2));
+	else if (command[*i].type && command[*j].type && \
+	((command[*i].type == DB_LEFT_CHEV && command[*j].type == LEFT_CHEV) || \
+	(command[*i].type == DB_LEFT_CHEV && command[*j].type == DB_LEFT_CHEV)))
+		return \
+		(ft_error(main, \
+		"minishell: syntax error near unexpected token '<'", 2));
 	return (0);
 }
 
@@ -82,27 +94,17 @@ int	error_nonexistent_type(t_command *command, t_minishell **main)
 	if (command[i].type && !command[j].type && \
 	(command[i].type >= LEFT_CHEV && command[i].type <= DB_LEFT_CHEV))
 		return \
-		(ft_error(main, "minishell: syntax error near unexpected token 'newline'", 2));
+		(ft_error(main, \
+		"minishell: syntax error near unexpected token 'newline'", 2));
 	while (command[i].type && command[j].type)
 	{
-		if (command[i].type && !command[j].type \
-		&& (command[i].type >= LEFT_CHEV && command[i].type <= DB_LEFT_CHEV))
-			return \
-			(ft_error(main, "minishell: syntax error near unexpected token 'newline'", 2));
-		if (command[i].type && command[j].type && \
-		((command[i].type == DB_RIGHT_CHEV && command[j].type == RIGHT_CHEV) || \
-		(command[i].type == DB_RIGHT_CHEV && command[j].type == DB_RIGHT_CHEV)))
-			return \
-			(ft_error(main, "minishell: syntax error near unexpected token '>'", 2));
-		else if (command[i].type && command[j].type && \
-		((command[i].type == DB_LEFT_CHEV && command[j].type == LEFT_CHEV) || \
-		(command[i].type == DB_LEFT_CHEV && command[j].type == DB_LEFT_CHEV)))
-			return \
-			(ft_error(main, "minishell: syntax error near unexpected token '<'", 2));
+		if (error_chev(command, &i, &j, main) == -1)
+			return (-1);
 		else if (command[i].type && command[j].type && \
 		((command[i].type == PIPE && command[j].type == PIPE)))
 			return \
-			(ft_error(main, "minishell: syntax error near unexpected token '|'", 2));
+			(ft_error(main, \
+			"minishell: syntax error near unexpected token '|'", 2));
 		i++;
 		j++;
 	}

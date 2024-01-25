@@ -6,11 +6,11 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 05:00:11 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/24 20:01:08 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/24 22:38:27 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "../../../includes/minishell.h"
 
 bool	is_valid_identifier(char *str)
 {

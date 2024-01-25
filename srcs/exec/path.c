@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 10:21:29 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/24 20:02:56 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/25 02:42:46 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ t_alloc **garbage)
 	return (NULL);
 }
 
-char	*find_command_path(char *command, t_alloc **garbage)
+char	*find_command_path(t_minishell **main, char *command, t_alloc **garbage)
 {
 	char	*path_env;
 	char	*start;
@@ -38,7 +38,7 @@ char	*find_command_path(char *command, t_alloc **garbage)
 	found_path = NULL;
 	if (ft_strchr(command, '/') != NULL)
 		return (ft_g_strdup(command, EXEC, garbage));
-	path_env = getenv("PATH");
+	path_env = ft_getenv(main, "PATH");
 	if (!path_env)
 		return (NULL);
 	start = path_env;

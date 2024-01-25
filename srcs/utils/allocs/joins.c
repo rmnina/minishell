@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/26 23:39:05 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/24 21:34:21 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/24 21:55:37 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,16 +38,6 @@ t_command	*ft_struct_join(t_command *tok1, t_command tok2, int cat, t_alloc **ga
 	res[size].word = NULL;
 	return (res);
 }
-
-// char	*char_to_str(char c, int cat, t_alloc **garbage)
-// {
-// 	char	*res;
-
-// 	res = garb_malloc(sizeof(char), 2, cat, garbage);
-// 	res[1] = '\0';
-// 	res[0] = c;
-// 	return (res);
-// }
 
 char	**ft_envjoin(char **envp, char *str, int cat, t_alloc **garbage)
 {

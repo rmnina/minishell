@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   redirect_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 17:16:38 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/23 19:58:02 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/25 01:12:12 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "../../../includes/minishell.h"
 
 int	redir_output(t_minishell **main, char *filename)
 {
@@ -22,7 +22,8 @@ int	redir_output(t_minishell **main, char *filename)
 		return (-1);
 	dup = dup2(fd, STDOUT_FILENO);
 	close(fd);
-	close((*main)->fd[1]);
+	if ((*main)->fd[1] != -1)
+		close((*main)->fd[1]);
 	if (dup == -1)
 		return (-1);
 	return (dup);
@@ -38,7 +39,8 @@ int	redir_append(t_minishell **main, char *filename)
 		return (-1);
 	dup = dup2(fd, STDOUT_FILENO);
 	close(fd);
-	close((*main)->fd[1]);
+	if ((*main)->fd[1] != -1)
+		close((*main)->fd[1]);
 	if (dup == -1)
 		return (-1);
 	return (dup);
@@ -54,7 +56,8 @@ int	redir_input(t_minishell **main, char *filename)
 		return (-1);
 	dup = dup2(fd, STDIN_FILENO);
 	close(fd);
-	close((*main)->fd[0]);
+	if ((*main)->fd[0] != -1)
+		close((*main)->fd[0]);
 	if (dup == -1)
 		return (-1);
 	return (dup);

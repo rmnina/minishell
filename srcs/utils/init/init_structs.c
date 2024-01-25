@@ -6,11 +6,11 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 10:43:20 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/24 21:33:47 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/24 23:30:41 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "../../../includes/minishell.h"
 
 t_minishell	*get_minishell(void)
 {
