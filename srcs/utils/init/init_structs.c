@@ -6,11 +6,11 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 10:43:20 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/11 10:45:42 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/24 23:30:41 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "../../../includes/minishell.h"
 
 t_minishell	*get_minishell(void)
 {
@@ -19,15 +19,15 @@ t_minishell	*get_minishell(void)
 	return (&main);
 }
 
-t_minishell	*init_minishell(char **envp)
+void	configure_minishell(t_minishell *main, char **envp)
 {
-	t_minishell	*main;
-	
-	main = get_minishell();
-	main->pipe_fd[0] = -1;
-	main->pipe_fd[1] = -1;
-	main->pos = 0;
-	main->pid = 0;
+	main->status = -1;
+	main->heredoc = 0;
+	main->heredoc_used = 0;
+	main->nb_cmd = 0;
+	main->total_cmd = 0;
+	main->tmp_filename = "/tmp/minishell.txt";
+	main->pid = NULL;
 	main->line = NULL;
 	main->h_line = NULL;
 	main->path = NULL;
@@ -38,18 +38,42 @@ t_minishell	*init_minishell(char **envp)
 	main->envp = envp;
 	main->command = NULL;
 	main->parser = NULL;
+}
+
+t_minishell	*init_minishell(char **envp)
+{
+	t_minishell	*main;
+
+	main = get_minishell();
+	main->fd[0] = -1;
+	main->fd[1] = -1;
+	main->old_fd = -1;
+	main->infilefd = -1;
+	main->outfilefd = -1;
+	main->tmp_fd = -1;
+	configure_minishell(main, envp);
 	return (main);
 }
 
-void	restore_minishell()
+void	restore_minishell(void)
 {
 	t_minishell	*main;
-	
+
 	main = get_minishell();
-	main->pipe_fd[0] = -1;
-	main->pipe_fd[1] = -1;
-	main->pos = 0;
-	main->pid = 0;
+
+	main->heredoc = 0;
+	main->heredoc_used = 0;
+	main->fd[0] = -1;
+	main->fd[1] = -1;
+	main->tmp_fd = -1;
+	main->infilefd = -1;
+	main->outfilefd = -1;
+	main->nb_cmd = 0;
+	main->total_cmd = 0;
+	main->old_fd = -1;
+	main->status = -1;
+	main->tmp_filename = "/tmp/minishell.txt";
+	main->pid = NULL;
 	main->line = NULL;
 	main->h_line = NULL;
 	main->path = NULL;
@@ -57,25 +81,4 @@ void	restore_minishell()
 	main->h_delimiter = NULL;
 	main->command = NULL;
 	main->parser = NULL;
-}
-
-t_parser	*get_parser(t_alloc **garbage)
-{
-	t_parser	*parser;
-
-	parser = garb_malloc(sizeof(t_parser *), 1, garbage);
-	return (parser);
-}
-
-t_parser	*init_parser(t_alloc **garbage)
-{
-	t_parser	*parser;
-
-	parser = get_parser(garbage);
-	parser->case_double = FALSE;
-	parser->case_single = FALSE;
-	parser->case_quotes = FALSE;
-	parser->var = NULL;
-	parser->vpos = 0;
-	return (parser);
 }

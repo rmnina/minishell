@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 05:26:30 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/11 15:13:29 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/24 23:40:05 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,45 @@ int	ft_count(t_command *command, int *i)
 	return (size);
 }
 
+t_command	token_null(t_command *token, t_alloc **garbage)
+{
+	token->word = garb_malloc(sizeof(char), 1, PARSING, garbage);
+	token->word[0] = '\0';
+	token->type = 0;
+	return (*token);
+}
+
+void	check_spaces(t_minishell **main, int *i)
+{
+	if ((*main)->line[*i] == 32)
+	{
+		while ((*main)->line[*i] && (*main)->line[*i] == 32)
+			(*i)++;
+	}
+}
+
+int	ft_strcmp_var(const char *s1, const char *s2)
+{
+	int				i;
+	unsigned char	*str1;
+	unsigned char	*str2;
+
+	i = 0;
+	str1 = (unsigned char *)s1;
+	str2 = (unsigned char *)s2;
+	while (str1[i] && str2[i] && str1[i] == str2[i])
+	{
+		if (str1[i] && str2[i] && str1[i] == '=' && str2[i] == '=')
+			return (0);
+		i++;
+	}
+	if (i == ft_strlen(s2) && str1[i] && str1[i] == '=' && str2[i] == '\0')
+		return (0);
+	else if (i == ft_strlen(s1) && str2[i] && str2[i] == '=' && str1[i] == '\0')
+		return (0);
+	return (str1[i] - str2[i]);
+}
+
 int	is_builtin(char *command)
 {
 	if (ft_strcmp(command, "cd") == 0 \
@@ -35,24 +74,4 @@ int	is_builtin(char *command)
 		return (1);
 	}
 	return (0);
-}
-
-// This function creates a null t_command token. It will be added at the
-// end of the array, so we can iterate on it by having an exit condition.
-
-t_command	token_null(t_command *token, t_alloc **garbage)
-{
-	token->word = garb_malloc(sizeof(char), 1, garbage);
-	token->word[0] = '\0';
-	token->type = 0;
-	return (*token);
-}
-
-void	check_spaces(t_minishell **main, int *i)
-{
-	if ((*main)->line[*i] == 32)
-	{
-		while ((*main)->line[*i] && (*main)->line[*i] == 32)
-			(*i)++;
-	}
 }

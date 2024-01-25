@@ -1,32 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strndup.c                                       :+:      :+:    :+:   */
+/*   toolbox_utils2.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/12/28 17:07:39 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/24 21:46:11 by jdufour          ###   ########.fr       */
+/*   Created: 2024/01/24 23:39:25 by jdufour           #+#    #+#             */
+/*   Updated: 2024/01/24 23:39:38 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../../includes/minishell.h"
 
-char	*ft_strndup(char *src, size_t n)
+int	ft_error(t_minishell **main, char *str, int i)
 {
-	char	*dest;
-	size_t	len;
-
-	len = 0;
-	while (src[len] && len < n)
-		len++;
-	dest = malloc(sizeof(char) * (len + 1));
-	if (!(dest))
-		return (NULL);
-	dest[len] = '\0';
-	while (len--)
-	{
-		dest[len] = src[len];
-	}
-	return (dest);
+	ft_putstr_fd(str, 2);
+	write(2, "\n", 1);
+	(*main)->code_status = i;
+	return (-1);
 }

@@ -3,12 +3,13 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+         #
+#    By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/31 12:01:53 by jdufour           #+#    #+#              #
-#    Updated: 2023/12/28 17:13:09 by juandrie         ###   ########.fr        #
+#    Updated: 2024/01/24 23:56:23 by jdufour          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
+
 
 NAME = libft.a
 
@@ -37,7 +38,6 @@ ft_memcmp.c\
 ft_putchar_fd.c\
 ft_split.c\
 ft_strjoin.c\
-ft_strjoinchar.c\
 ft_strmapi.c\
 ft_substr.c\
 ft_calloc.c\
@@ -51,9 +51,11 @@ ft_strcmp.c\
 ft_tolower.c\
 ft_itoa.c\
 ft_strtrim.c\
+ft_strncat.c\
+ft_strncpy.c\
+ft_strstr.c\
 ft_printf.c\
 ft_format.c\
-ft_allocs.c\
 
 SRCS_BONUS = ft_lstadd_front.c\
 	    ft_lstadd_back.c\

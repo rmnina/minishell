@@ -1,32 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strndup.c                                       :+:      :+:    :+:   */
+/*   ft_strncpy.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/12/28 17:07:39 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/24 21:46:11 by jdufour          ###   ########.fr       */
+/*   Created: 2024/01/18 17:12:17 by juandrie          #+#    #+#             */
+/*   Updated: 2024/01/18 17:14:07 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_strndup(char *src, size_t n)
+char	*ft_strncpy(char *dest, const char *src, size_t n)
 {
-	char	*dest;
-	size_t	len;
+	size_t	i;
 
-	len = 0;
-	while (src[len] && len < n)
-		len++;
-	dest = malloc(sizeof(char) * (len + 1));
-	if (!(dest))
-		return (NULL);
-	dest[len] = '\0';
-	while (len--)
+	i = 0;
+	while (i < n && src[i] != '\0')
 	{
-		dest[len] = src[len];
+		dest[i] = src[i];
+		i++;
+	}
+	while (i < n)
+	{
+		dest[i] = '\0';
+		i++;
 	}
 	return (dest);
 }

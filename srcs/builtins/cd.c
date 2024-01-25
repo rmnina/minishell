@@ -6,78 +6,85 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 17:31:57 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/11 12:11:22 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/25 01:53:02 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-bool	change_directory(t_minishell **main, char *path)
+void	replace_pwd(char *path, char **envp, t_alloc **garbage)
 {
-	char	*new_path;
-	
-	if (path == NULL)
-		return (false);
-	new_path = realpath(path, NULL);
-	if (new_path == NULL)
-		return (false);
-	if (chdir(new_path) != 0)
-	{
-		free(new_path);
-		return (false);
-	}
-	free((*main)->last_cd_path);
-	(*main)->last_cd_path = (*main)->cd_path;
-	(*main)->cd_path = new_path;
-	return (true);
+	int		i;
+
+	i = 0;
+	while (envp[i] && ft_strncmp("PWD", envp[i], 3) != 0)
+		i++;
+	envp[i] = ft_g_strjoin("PWD=\0", path, ENV, garbage);
+	if (!envp[i])
+		return ;
 }
 
-int	cd_hyphen(t_minishell **main)
+int	cd_hyphen(t_minishell **main, t_alloc **garbage)
 {
 	if ((*main)->last_cd_path == NULL)
 	{
 		printf("cd: OLDPWD not set\n");
-		(*main)->code_status = 1;
-		return ((*main)->code_status);
+		return ((*main)->code_status = 1);
 	}
 	printf("%s\n", (*main)->last_cd_path);
-	if (!change_directory(main, (*main)->last_cd_path))
+	if (!change_directory(main, (*main)->last_cd_path, garbage))
 	{
+		free_small_garb(garbage);
 		perror("cd");
-		(*main)->code_status = 1;
-		return ((*main)->code_status);
+		return ((*main)->code_status = 1);
 	}
-	return ((*main)->code_status);
+	return ((*main)->code_status = 0);
 }
 
-int	cd_tilde(t_minishell **main)
+int	cd_tilde(t_minishell **main, t_alloc **garbage)
 {
 	char	*home_path;
-	
+
 	home_path = ft_getenv(main, "HOME");
-	if (!change_directory(main, home_path))
+	if (!change_directory(main, home_path, garbage))
+	{
+		free_small_garb(garbage);
+		perror("cd");
+		return ((*main)->code_status = 1);
+	}
+	return ((*main)->code_status = 0);
+}
+
+int	ft_cd_main(t_minishell **main, t_alloc **garbage)
+{
+	char	*path;
+	char	pwd[PATH_MAX];
+
+	if ((*main)->cmd_args[2])
+	{
+		printf("minishell: cd: too many arguments\n");
+		return ((*main)->code_status = 1);
+	}
+	path = change_directory(main, (*main)->cmd_args[1], garbage);
+	if (path == NULL)
 	{
 		perror("cd");
-		(*main)->code_status = 1;
+		return ((*main)->code_status = 1);
 	}
-	return ((*main)->code_status);
-}
-
-int	ft_cd(t_minishell **main)
-{
-	if ((*main)->cmd_args[1] == NULL || ft_strcmp((*main)->cmd_args[1], "~") == 0)
-		return (cd_tilde(main));
-	else if (ft_strcmp((*main)->cmd_args[1], "-") == 0)
-		return (cd_hyphen(main));
 	else
-	{
-		if (!change_directory(main, (*main)->cmd_args[1]))
-		{
-			perror("cd");
-			(*main)->code_status = 1;
-			return ((*main)->code_status);
-		}
-	}
-	return ((*main)->code_status);
+		replace_pwd(getcwd(pwd, sizeof(pwd)), (*main)->envp, garbage);
+	return ((*main)->code_status = 0);
 }
 
+int	ft_cd(t_minishell **main, t_alloc **garbage)
+{
+	if ((*main)->last_cd_path == NULL)
+		(*main)->last_cd_path = ft_getenv(main, "PWD");
+	if ((*main)->cmd_args[1] == NULL \
+	|| ft_strcmp((*main)->cmd_args[1], "~") == 0)
+		return (cd_tilde(main, garbage));
+	else if (ft_strcmp((*main)->cmd_args[1], "-") == 0)
+		return (cd_hyphen(main, garbage));
+	else
+		return (ft_cd_main(main, garbage));
+}
