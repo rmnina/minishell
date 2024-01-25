@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/22 20:14:00 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/24 11:40:44 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/25 14:16:04 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ void		ft_bzero(void *s, size_t n);
 void		*ft_memcpy(void *dest, const void *src, size_t size);
 void		*ft_memmove(void *dest, const void *src, size_t size);
 char		*ft_strstr(const char *haystack, const char *needle);
+size_t		ft_strspn(const char *s1, const char *s2);
 char		*ft_strcpy(char *dest, const char *src);
 size_t		ft_strlcpy(char *dst, const char *src, size_t size);
 char		*ft_strncpy(char *dest, const char *src, size_t n);

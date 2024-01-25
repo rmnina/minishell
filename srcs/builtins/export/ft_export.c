@@ -6,11 +6,11 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 05:00:11 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/24 15:39:52 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/25 14:30:52 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "../../../includes/minishell.h"
 
 bool	is_valid_identifier(char *str)
 {
@@ -43,27 +43,29 @@ bool	is_valid_identifier(char *str)
 void	compare_values(t_export *export, char **value, t_alloc **garbage)
 {
 	if (!**value || **value == '\0')
-		export->new_var = ft_g_strjoin(export->var_name, "=", EXEC, garbage);
+		export->new_var = ft_g_strjoin(export->var_name, "=", PARSING, garbage);
 	else if (**value == '$')
 	{
-		export->formatted_value = ft_g_strjoin("\\", *value, EXEC, garbage);
-		export->new_var = ft_g_strjoin(export->var_name, "=", EXEC, garbage);
-		export->new_var = \
-		ft_g_strjoin(export->new_var, export->formatted_value, EXEC, garbage);
+		export->formatted_value = ft_g_strjoin("\\", *value, PARSING, garbage);
+		export->new_var = ft_g_strjoin(export->var_name, "=", PARSING, garbage);
+		export->new_var = ft_g_strjoin(export->new_var, \
+		export->formatted_value, PARSING, garbage);
 	}
 	else if (**value == '"' || **value == '\'')
 	{
-		export->formatted_value = ft_g_strdup(*value, EXEC, garbage);
-		export->new_var = ft_g_strjoin(export->var_name, "=", EXEC, garbage);
+		export->formatted_value = ft_g_strdup(*value, PARSING, garbage);
+		export->new_var = ft_g_strjoin(export->var_name, "=", PARSING, garbage);
 		export->new_var = \
-		ft_g_strjoin(export->new_var, export->formatted_value, EXEC, garbage);
+		ft_g_strjoin(export->new_var, \
+		export->formatted_value, PARSING, garbage);
 	}
 	else
 	{
-		export->formatted_value = ft_g_strdup(*value, EXEC, garbage);
-		export->new_var = ft_g_strjoin(export->var_name, "=", EXEC, garbage);
+		export->formatted_value = ft_g_strdup(*value, PARSING, garbage);
+		export->new_var = ft_g_strjoin(export->var_name, "=", PARSING, garbage);
 		export->new_var = \
-		ft_g_strjoin(export->new_var, export->formatted_value, EXEC, garbage);
+		ft_g_strjoin(export->new_var, \
+		export->formatted_value, PARSING, garbage);
 	}
 }
 
@@ -77,13 +79,9 @@ char *value_to_append, t_alloc **garbage)
 	old_value = getenv(var_name);
 	new_value = NULL;
 	if (old_value && value_to_append)
-	{
 		new_value = ft_g_strjoin(old_value, value_to_append, ENV, garbage);
-	}
 	else
-	{
 		new_value = ft_g_strdup(value_to_append, ENV, garbage);
-	}
 	export_str = ft_g_strjoin(var_name, "=", ENV, garbage);
 	export_str = ft_g_strjoin(export_str, new_value, ENV, garbage);
 	add_or_update_env_var((*main)->envp, export_str, garbage);

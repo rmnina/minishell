@@ -5,12 +5,12 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/13 17:16:38 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/23 19:58:02 by juandrie         ###   ########.fr       */
+/*   Created: 2024/01/25 14:56:19 by juandrie          #+#    #+#             */
+/*   Updated: 2024/01/25 14:56:26 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "../../../includes/minishell.h"
 
 int	redir_output(t_minishell **main, char *filename)
 {

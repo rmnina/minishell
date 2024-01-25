@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   export_utils2.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 19:18:24 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/24 15:55:52 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/24 22:38:23 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "../../../includes/minishell.h"
 
 int	handle_plus_equal_case(t_minishell **main, char *arg, t_alloc **garbage)
 {

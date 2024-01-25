@@ -6,11 +6,11 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 09:11:51 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/24 15:51:32 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/25 14:31:56 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "../../../includes/minishell.h"
 
 int	envp_length(char **envp)
 {
@@ -80,14 +80,10 @@ bool	identifiers(const char *str, char *ptr, bool *equals, bool *no_space)
 	else if (*equals)
 	{
 		if (!*no_space && ptr[i] != ' ')
-		{
 			*no_space = true;
-		}
 	}
 	else if (*no_space && ptr[i] == ' ')
-	{
 		return (false);
-	}
 	else if (!(ptr[i] == '_' || ft_isalnum(ptr[i]) || \
 	(ptr[i] == '+' && ptr[i + 1] == '=')))
 	{

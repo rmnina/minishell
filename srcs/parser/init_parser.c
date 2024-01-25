@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_parser.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 20:18:37 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/24 11:39:56 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/25 02:44:10 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,16 @@ char	**set_env(char **envp, t_alloc **garbage)
 {
 	char	pwd[PATH_MAX];
 
-	envp = ft_envjoin(envp, ft_g_strjoin("PWD=", getcwd(pwd, sizeof(pwd)), PARSING, garbage), ENV, garbage);
-	envp = ft_envjoin(envp, ft_g_strjoin("SHLVL=", "1", PARSING, garbage), ENV, garbage);
-	envp = ft_envjoin(envp, ft_g_strjoin("_=", "/usr/bin/env", PARSING, garbage), ENV, garbage);
+	envp = ft_envjoin(envp, ft_g_strjoin("PWD=", \
+	getcwd(pwd, sizeof(pwd)), ENV, garbage), ENV, garbage);
+	envp = ft_envjoin(envp, ft_g_strjoin("SHLVL=", \
+	"1", ENV, garbage), ENV, garbage);
+	envp = ft_envjoin(envp, ft_g_strjoin("_=", \
+	"/usr/bin/env", ENV, garbage), ENV, garbage);
+	envp = ft_envjoin(envp, ft_g_strjoin("PATH=", 
+	"/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:\
+	/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin", \
+	ENV, garbage), ENV, garbage);
 	return (envp);
 }
 
@@ -31,14 +38,16 @@ char	*ft_getenv(t_minishell **main, const char *name)
 	len = ft_strlen(name);
 	while ((*main)->envp[i] != NULL)
 	{
-		if (ft_strncmp((*main)->envp[i], name, len) == 0 && (*main)->envp[i][len] == '=')
+		if (ft_strncmp((*main)->envp[i], name, len) == 0 \
+		&& (*main)->envp[i][len] == '=')
 			return &((*main)->envp[i][len + 1]);
 		i++;
 	}
 	return (NULL);
 }
 
-void	init_get_expand(t_minishell **main, t_command *token, int *i, t_alloc **garbage)
+void	init_get_expand(t_minishell **main, t_command *token, \
+int *i, t_alloc **garbage)
 {
 	char	*name;
 

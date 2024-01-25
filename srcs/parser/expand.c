@@ -6,14 +6,11 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 15:15:34 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/24 00:09:17 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/25 02:16:27 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-
-// This function scans the token following the $ to retrieve the
-// name of the expand, as it is required by the getenv function.
 
 char	*get_env_var_name(char *line, int *i, t_alloc **garbage)
 {
@@ -29,10 +26,6 @@ char	*get_env_var_name(char *line, int *i, t_alloc **garbage)
 	return (name);
 }
 
-// This function will be used in get_lex_expand(). It lets us know
-// whether or not the name of the environnment variable retrieved 
-// by getenv is a multi-part one.
-
 void	get_next_part_env_var(t_parser *parser, int *j)
 {
 	if (!parser->var[*j])
@@ -44,20 +37,15 @@ void	get_next_part_env_var(t_parser *parser, int *j)
 		parser->vpos = *j;
 }
 
-// This function creates the token corresponding to the environnement 
-// variable retrieved by getenv. If the variable is composed of more
-// than one word, this function will be called again by get_command()
-// thanks to the elements modified in the t_parser structs by the
-// previous function.
-
-int	get_lex_expand(t_minishell **main, int *i, t_command *token, t_alloc **garbage)
+int	get_lex_expand(t_minishell **main, int *i, \
+t_command *token, t_alloc **garbage)
 {
 	int		j;
 
 	j = (*main)->parser->vpos;
 	init_get_expand(main, token, i, garbage);
 	if ((*main)->parser->var == NULL)
-		return (-1);
+		return ((*main)->parser->vpos = -1);
 	while ((*main)->parser->var[j])
 	{
 		if ((*main)->parser->var[j] == 32)
@@ -67,7 +55,8 @@ int	get_lex_expand(t_minishell **main, int *i, t_command *token, t_alloc **garba
 		}
 		else if ((*main)->parser->var[j] != 32)
 		{
-			token->word = ft_strjoin_char(token->word, (*main)->parser->var[j], PARSING, garbage);
+			token->word = ft_strjoin_char(token->word, \
+			(*main)->parser->var[j], PARSING, garbage);
 			j++;
 		}
 	}

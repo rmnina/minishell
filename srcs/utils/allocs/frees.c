@@ -6,7 +6,7 @@
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 23:43:42 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/24 19:26:34 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/25 10:47:36 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,22 @@
 
 void	free_adr(t_alloc **garbage, void *adr)
 {
-	if ((*garbage)->adr == adr)
-	{	
-		free(adr);
-		(*garbage)->adr = NULL;
+	t_alloc	*temp;
+
+	if (!(*garbage))
+		return ;
+	temp = *garbage;
+	while (temp->next && temp->adr != adr)
+	{
+		*garbage = temp->next;
+		if (temp->adr == adr)
+		{
+			free(temp->adr);
+			temp->adr = NULL;
+			free(temp);
+		}
+		temp = *garbage;
 	}
-	while ((*garbage)->adr != adr)
-		(*garbage) = (*garbage)->next;
-	free(adr);
-	(*garbage)->adr = NULL;
 }
 
 void	free_small_garb(t_alloc **garbage)
@@ -31,23 +38,66 @@ void	free_small_garb(t_alloc **garbage)
 	part_free_garb(garbage, EXEC);
 }
 
+t_alloc	*free_first_nodes(t_alloc **garbage, int cat)
+{
+	t_alloc	*temp;
+
+	temp = *garbage;
+	while (temp && temp->cat == cat)
+	{
+		*garbage = temp->next;
+		temp->next = NULL;
+		if (temp->adr)
+		{
+			free(temp->adr);
+			temp->adr = NULL;
+		}
+		free(temp);
+		temp = *garbage;
+	}
+	return (temp);
+}
+
+int	free_middle_nodes(void **pos, t_alloc **temp, t_alloc **prev, int cat)
+{
+	*pos = (*temp)->next;
+	if ((*temp)->cat == cat)
+	{
+		(*temp)->next = NULL;
+		if ((*temp)->adr)
+		{
+			free((*temp)->adr);
+			(*temp)->adr = NULL;
+		}
+		free(*temp);
+		(*prev)->next = *pos;
+		return (1);
+	}
+	return (0);
+}
+
 void	part_free_garb(t_alloc **garbage, int cat)
 {
-	if ((*garbage)->cat && (*garbage)->cat == cat)
+	t_alloc	*temp;
+	void	*pos;
+	t_alloc	*prev;
+
+	if (!(*garbage))
+		return ;
+	pos = *garbage;
+	temp = *garbage;
+	prev = temp;
+	if (temp->cat == cat)
 	{
-		if ((*garbage)->adr)
-			free((*garbage)->adr);
-		(*garbage)->adr = NULL;
+		temp = free_first_nodes(garbage, cat);
+		pos = *garbage;
+		prev = temp;
 	}
-	while (*garbage)
+	while (temp)
 	{
-		if ((*garbage)->cat == cat)
-		{
-			if ((*garbage)->adr)
-				free((*garbage)->adr);
-			(*garbage)->adr = NULL;
-		}
-		*garbage = (*garbage)->next;
+		if (!free_middle_nodes(&pos, &temp, &prev, cat))
+			prev = temp;
+		temp = pos;
 	}
 }
 

@@ -6,7 +6,7 @@
 #    By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/14 14:15:25 by jdufour           #+#    #+#              #
-#    Updated: 2024/01/24 19:42:02 by juandrie         ###   ########.fr        #
+#    Updated: 2024/01/25 14:56:42 by juandrie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,45 +19,41 @@ NAME = minishell
 
 SRCS = srcs/main.c \
 	srcs/builtins/cd.c \
+	srcs/builtins/cd_utils.c \
 	srcs/builtins/echo.c \
 	srcs/builtins/env.c \
 	srcs/builtins/exit.c \
-	srcs/builtins/ft_export.c \
-	srcs/builtins/export_utils.c \
-	srcs/builtins/export_utils2.c \
+	srcs/builtins/export/ft_export.c \
+	srcs/builtins/export/export_utils.c \
+	srcs/builtins/export/export_utils2.c \
 	srcs/builtins/pwd.c \
 	srcs/builtins/unset.c \
 	srcs/builtins/signals.c \
+	srcs/exec/heredoc/exec_heredoc.c \
+	srcs/exec/heredoc/expand_heredoc.c \
 	srcs/exec/pipe.c \
-	srcs/exec/pipe2.c \
-	srcs/exec/pipe3.c \
-	srcs/exec/pipe4.c \
+	srcs/exec/redirection/redir_infile.c \
+	srcs/exec/redirection/redir_outfile.c \
+	srcs/exec/redirection/redirection.c \
+	srcs/exec/redirection/redirect_utils.c \
+	srcs/exec/exec_process.c \
 	srcs/exec/exec.c \
-	srcs/exec/exec2.c \
-	srcs/exec/heredoc.c \
-	srcs/exec/heredoc2.c \
 	srcs/exec/path.c \
-	srcs/exec/redirection.c \
-	srcs/exec/redirection2.c \
-	srcs/exec/redir_infile.c \
-	srcs/exec/redir_outfile.c \
-	srcs/exec/redir_outfile2.c \
 	srcs/lexer/lexer.c \
 	srcs/lexer/lexer2.c \
 	srcs/parser/expand.c \
 	srcs/parser/init_parser.c \
 	srcs/parser/types.c \
 	srcs/parser/tokens.c \
-	srcs/utils/init_structs.c \
-	srcs/utils/init_structs2.c \
-	srcs/utils/heredoc_utils.c \
-	srcs/utils/toolbox_utils.c \
-	srcs/utils/redirect_utils.c \
-	srcs/utils/cd_utils.c \
+	srcs/parser/ft_parsing.c \
 	srcs/utils/allocs/allocs.c \
-	srcs/utils/allocs/frees.c \
-	srcs/utils/allocs/struct.c \
-	srcs/utils/allocs/joins.c \
+	srcs/utils/allocs/frees.c\
+	srcs/utils/allocs/joins.c\
+	srcs/utils/allocs/structs.c\
+	srcs/utils/init/init_structs.c \
+	srcs/utils/init/init_structs2.c \
+	srcs/utils/toolbox_utils.c \
+	srcs/utils/toolbox_utils2.c \
 
 OBJS = $(SRCS:.c=.o)
 

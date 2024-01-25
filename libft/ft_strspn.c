@@ -1,32 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strndup.c                                       :+:      :+:    :+:   */
+/*   ft_strspn.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
+/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/12/28 17:07:39 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/24 21:46:11 by jdufour          ###   ########.fr       */
+/*   Created: 2024/01/25 14:10:48 by juandrie          #+#    #+#             */
+/*   Updated: 2024/01/25 14:13:41 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_strndup(char *src, size_t n)
+size_t	ft_strspn(const char *s1, const char *s2)
 {
-	char	*dest;
-	size_t	len;
+	const char	*p1;
+	const char	*p2;
 
-	len = 0;
-	while (src[len] && len < n)
-		len++;
-	dest = malloc(sizeof(char) * (len + 1));
-	if (!(dest))
-		return (NULL);
-	dest[len] = '\0';
-	while (len--)
+	p1 = s1;
+	while (*p1)
 	{
-		dest[len] = src[len];
+		p2 = s2;
+		while (*p2)
+		{
+			if (*p1 == *p2)
+				break ;
+			p2++;
+		}
+		if (!*p2)
+			break ;
+		p1++;
 	}
-	return (dest);
+	return (p1 - s1);
 }

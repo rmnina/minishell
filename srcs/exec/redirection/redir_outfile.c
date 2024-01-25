@@ -5,37 +5,33 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/17 22:46:25 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/24 18:31:37 by juandrie         ###   ########.fr       */
+/*   Created: 2024/01/25 14:47:36 by juandrie          #+#    #+#             */
+/*   Updated: 2024/01/25 14:48:15 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "../../../includes/minishell.h"
 
-int	process_output(t_minishell **main, int *i, char **filename)
-{
-	if ((*main)->command[*i].type == RIGHT_CHEV)
-		(*main)->outfilefd = \
-		open(*filename, O_CREAT | O_WRONLY | O_TRUNC, 0644);
-	else if ((*main)->command[*i].type == DB_RIGHT_CHEV)
-		(*main)->outfilefd = \
-		open(*filename, O_CREAT | O_WRONLY | O_APPEND, 0644);
-	if ((*main)->outfilefd == -1)
-		return (-1);
-	close((*main)->outfilefd);
-	return (1);
-}
-
-int	browse_outputs(t_minishell **main, int *i, char **filename, \
-t_alloc **garbage)
+int	browse_outputs(t_minishell **main, int *i, char **filename, t_alloc **garbage)
 {
 	while (is_output(main, i))
 	{
 		*filename = ft_g_strdup((*main)->command[*i + 1].word, EXEC, garbage);
 		if (!*filename)
 			return (perror("filename alloc"), (*main)->code_status = 255, -1);
-		if (process_output(main, i, filename) == -1)
-			return (-1);
+		if ((*main)->command[*i].type == RIGHT_CHEV)
+		{
+			if (((*main)->outfilefd = \
+			open(*filename, O_CREAT | O_WRONLY | O_TRUNC, 0644)) == -1)
+				return (-1);
+		}
+		else if ((*main)->command[*i].type == DB_RIGHT_CHEV)
+		{
+			if (((*main)->outfilefd = \
+			open(*filename, O_CREAT | O_WRONLY | O_APPEND, 0644)) == -1)
+				return (-1);
+		}
+		close((*main)->outfilefd);
 		if (check_next_redir(main, i) != 2)
 		{
 			*i += 2;
@@ -81,4 +77,41 @@ int	get_last_out_type(t_minishell **main, int *i)
 	&& (*main)->command[j].type != DB_RIGHT_CHEV)
 		j--;
 	return (type = (*main)->command[j].type);
+}
+
+int	get_all_outputs(t_minishell **main, int *i, t_alloc **garbage)
+{
+	char	*filename;
+	int		type;
+
+	filename = NULL;
+	if (is_output(main, i))
+	{
+		if (browse_outputs(main, i, &filename, garbage) == -1)
+			return (-1);
+	}
+	check_next_args(main, i, garbage);
+	if (is_input(main, i))
+	{
+		filename = ft_g_strdup((*main)->command[*i + 1].word, EXEC, garbage);
+		if (!filename)
+			return (-1);
+		if ((*main)->command[*i].type == RIGHT_CHEV)
+			(*main)->outfilefd = \
+			open(filename, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+		else if ((*main)->command[*i].type == DB_RIGHT_CHEV)
+			(*main)->outfilefd = \
+			open(filename, O_CREAT | O_WRONLY | O_APPEND, 0644);
+		close ((*main)->outfilefd);
+		(*i) += 2;
+		if (get_all_inputs(main, i, garbage) == -1)
+			return (-1);
+	}
+	filename = get_last_out_filename(main, i, garbage);
+	type = get_last_out_type(main, i);
+	if (type == RIGHT_CHEV)
+		(*main)->outfilefd = redir_output(main, filename);
+	else if (type == DB_RIGHT_CHEV)
+		(*main)->outfilefd = redir_append(main, filename);
+	return (0);
 }

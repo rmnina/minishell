@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   toolbox_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 05:26:30 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/24 11:39:06 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/24 23:40:05 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,6 @@ int	ft_count(t_command *command, int *i)
 		size++;
 	return (size);
 }
-
-// This function creates a null t_command token. It will be added at the
-// end of the array, so we can iterate on it by having an exit condition.
 
 t_command	token_null(t_command *token, t_alloc **garbage)
 {

@@ -1,18 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   heredoc.c                                          :+:      :+:    :+:   */
+/*   expand_heredoc.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 16:22:53 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/24 19:23:13 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/24 22:20:34 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "../../../includes/minishell.h"
 
-int	handle_special_variable(t_minishell **main, char **new_line, int *i, \
+int	heredoc_is_expand(char *line)
+{
+	int		i;
+
+	i = 0;
+	while (line[i])
+	{
+		if (line[i] == '$' && line[i + 1])
+		{
+			if (line[i + 1] == '?')
+				return (1);
+			if (ft_isalnum(line[i + 1]) || line[i + 1] == UNDERSCORE)
+				return (1);
+		}
+		i++;
+	}
+	return (0);
+}
+
+int	handle_h_code_status(t_minishell **main, char **new_line, int *i, \
 t_alloc **garbage)
 {
 	*i += 2;
@@ -21,7 +40,7 @@ t_alloc **garbage)
 	return (1);
 }
 
-int	handle_regular_variable(t_minishell **main, char **new_line, int *i, \
+int	get_h_expand_var(t_minishell **main, char **new_line, int *i, \
 t_alloc **garbage)
 {
 	char	*name;
@@ -40,15 +59,11 @@ int	replace_var(t_minishell **main, char **new_line, int *i, t_alloc **garbage)
 	if ((*main)->h_line[*i] == '$')
 	{
 		if ((*main)->h_line[*i + 1] && (*main)->h_line[*i + 1] == '?')
-		{
-			return (handle_special_variable(main, new_line, i, garbage));
-		}
+			return (handle_h_code_status(main, new_line, i, garbage));
 		else if ((*main)->h_line[*i + 1] && \
 		(ft_isalnum((*main)->h_line[*i + 1]) \
 		|| (*main)->h_line[*i + 1] == UNDERSCORE))
-		{
-			return (handle_regular_variable(main, new_line, i, garbage));
-		}
+			return (get_h_expand_var(main, new_line, i, garbage));
 	}
 	return (0);
 }
@@ -69,31 +84,4 @@ char	*heredoc_get_expand(t_minishell **main, t_alloc **garbage)
 		i++;
 	}
 	return (new_line);
-}
-
-char	**get_delimiter(t_minishell **main, int *i, t_alloc **garbage)
-{
-	int		j;
-	int		size;
-
-	j = 0;
-	size = 0;
-	while ((*main)->command[*i + j].type == DB_LEFT_CHEV)
-	{
-		j += 2;
-		size++;
-	}
-	j = 0;
-	(*main)->h_delimiter = garb_malloc(sizeof(char *), size + 1, EXEC, garbage);
-	while ((*main)->command[*i].type == DB_LEFT_CHEV)
-	{
-		(*i)++;
-		(*main)->h_delimiter[j] = ft_g_strdup((*main)->command[*i].word, \
-		EXEC, garbage);
-		if (!(*main)->h_delimiter[j])
-			return (NULL);
-		j++;
-		(*i)++;
-	}
-	return ((*main)->h_delimiter);
 }

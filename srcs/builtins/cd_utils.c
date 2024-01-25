@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd_utils.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 16:39:20 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/24 12:02:29 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/25 01:39:43 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ char	*ft_realpath(char *path, char *resolved_path, t_alloc **garbage)
 	if (resolved_path == NULL)
 	{
 		final_path = (char *)garb_malloc(sizeof(char), \
-		ft_strlen(temp) + 1, 0, garbage);
+		ft_strlen(temp) + 1, EXEC, garbage);
 		if (final_path == NULL)
 			return (NULL);
 		ft_strcpy(final_path, temp);
@@ -73,7 +73,7 @@ char	*change_directory(t_minishell **main, char *path, t_alloc **garbage)
 	if (chdir(new_path) != 0)
 		return (NULL);
 	if ((*main)->cd_path != NULL)
-		(*main)->last_cd_path = ft_strdup((*main)->cd_path);
-	(*main)->cd_path = ft_strdup(new_path);
+		(*main)->last_cd_path = ft_g_strdup((*main)->cd_path, ENV, garbage);
+	(*main)->cd_path = ft_g_strdup(new_path, EXEC, garbage);
 	return (path);
 }

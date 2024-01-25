@@ -6,7 +6,7 @@
 #    By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/31 12:01:53 by jdufour           #+#    #+#              #
-#    Updated: 2024/01/24 11:40:30 by juandrie         ###   ########.fr        #
+#    Updated: 2024/01/25 14:16:20 by juandrie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,11 +17,9 @@ SRCS = ft_isalnum.c\
 ft_isprint.c\
 ft_memmove.c\
 ft_putnbr_fd.c\
-ft_strstr.c\
 ft_strdup.c\
 ft_strndup.c\
 ft_strlcpy.c\
-ft_strncpy.c\
 ft_strnstr.c\
 ft_toupper.c\
 ft_atoi.c\
@@ -48,14 +46,17 @@ ft_memcpy.c\
 ft_putendl_fd.c\
 ft_strchr.c\
 ft_strlcat.c\
-ft_strncat.c\
 ft_strncmp.c\
 ft_strcmp.c\
 ft_tolower.c\
 ft_itoa.c\
 ft_strtrim.c\
+ft_strncat.c\
+ft_strncpy.c\
+ft_strstr.c\
 ft_printf.c\
 ft_format.c\
+ft_strspn.c\
 
 SRCS_BONUS = ft_lstadd_front.c\
 	    ft_lstadd_back.c\

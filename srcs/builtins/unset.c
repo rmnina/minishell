@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 10:19:45 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/24 11:34:21 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/24 20:01:21 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,12 +44,11 @@ int	unset_single_variable(char ***envp, const char *name)
 	return (found);
 }
 
-int	ft_unset(t_minishell **main, char **names, t_alloc **garbage)
+int	ft_unset(t_minishell **main, char **names)
 {
 	int	i;
 	int	found;
 
-	(void)garbage;
 	i = 0;
 	found = 0;
 	while (names[i] != NULL)

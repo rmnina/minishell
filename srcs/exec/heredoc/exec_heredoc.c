@@ -1,47 +1,42 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   heredoc2.c                                         :+:      :+:    :+:   */
+/*   exec_heredoc.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/24 19:14:54 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/24 19:22:12 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/25 11:03:11 by juandrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "../../../includes/minishell.h"
 
-void	generate_temp_filename(t_minishell **main)
+char	**get_delimiter(t_minishell **main, int *i, t_alloc **garbage)
 {
-	int		fd;
-	char	random_string[11];
-	char	buffer;
-	int		i;
+	int		j;
+	int		size;
 
-	fd = open("/dev/urandom", O_RDONLY);
-	i = 0;
-	buffer = 0;
-	while (i < 10)
+	j = 0;
+	size = 0;
+	while ((*main)->command[*i + j].type == DB_LEFT_CHEV)
 	{
-		read(fd, &buffer, 1);
-		random_string[i] = (buffer % 26) + 'a';
-		++i;
+		j += 2;
+		size++;
 	}
-	random_string[10] = '\0';
-	close(fd);
-	(*main)->tmp_filename = ft_strjoin("/tmp/heredoc_", random_string);
-	if (!(*main)->tmp_filename)
-		exit(EXIT_FAILURE);
-}
-
-void	init_temp_file(t_minishell **main)
-{
-	generate_temp_filename(main);
-	(*main)->tmp_fd = open((*main)->tmp_filename, \
-	O_CREAT | O_WRONLY | O_TRUNC, 0644);
-	if ((*main)->tmp_fd < 0)
-		exit(EXIT_FAILURE);
+	j = 0;
+	(*main)->h_delimiter = garb_malloc(sizeof(char *), size + 1, EXEC, garbage);
+	while ((*main)->command[*i].type == DB_LEFT_CHEV)
+	{
+		(*i)++;
+		(*main)->h_delimiter[j] = ft_g_strdup((*main)->command[*i].word, \
+		EXEC, garbage);
+		if (!(*main)->h_delimiter[j])
+			return (NULL);
+		j++;
+		(*i)++;
+	}
+	return ((*main)->h_delimiter);
 }
 
 void	read_add(t_minishell **main, int *j, t_alloc **garbage)
