@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_heredoc.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: julietteandrieux <julietteandrieux@stud    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/24 19:14:54 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/25 17:53:30 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/25 20:19:18 by julietteand      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,18 +75,22 @@ char	**get_delimiter(t_minishell **main, int *i, t_alloc **garbage)
 
 void	read_add(t_minishell **main, int *j, t_alloc **garbage)
 {
+	int	line_count;
+
+	line_count = 0;
 	while (42)
 	{
+		line_count++; 
 		(*main)->h_line = readline("> ");
 		if (!(*main)->h_line)
 		{
-			printf("minishell: warning: here-document at line %s delimited by end-of-file (wanted `%s')\n", (*main)->h_line, (*main)->h_delimiter[*j]);
+			printf("minishell: warning: here-document at line %d delimited by end-of-file (wanted `%s')\n", line_count, (*main)->h_delimiter[*j]);
 			break ;
 		}
 		else if (ft_strcmp((*main)->h_line, (*main)->h_delimiter[*j]) == 0)
 		{
 			free((*main)->h_line);
-			rbreak ;
+			break ;
 		}
 		if (heredoc_is_expand((*main)->h_line))
 			(*main)->h_line = heredoc_get_expand(main, garbage);
@@ -94,7 +98,6 @@ void	read_add(t_minishell **main, int *j, t_alloc **garbage)
 		write((*main)->tmp_fd, "\n", 1);
 		free((*main)->h_line);
 	}
-	return (0);
 }
 
 int	ft_heredoc(t_minishell **main, int *i, t_alloc **garbage)

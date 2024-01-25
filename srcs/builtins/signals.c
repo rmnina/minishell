@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: julietteandrieux <julietteandrieux@stud    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 15:13:20 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/23 19:24:12 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/25 20:28:22 by julietteand      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
