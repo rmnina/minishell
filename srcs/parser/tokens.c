@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:04:36 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/25 02:34:21 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/28 22:11:51 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,7 @@ t_alloc **garbage)
 
 	token.word = NULL;
 	if (special_types(main, i) == DB_LEFT_CHEV \
-	|| special_types(main, i) == DB_RIGHT_CHEV \
-	|| special_types(main, i) == CODE)
+	|| special_types(main, i) == DB_RIGHT_CHEV)
 		get_db_token(main, i, &token, garbage);
 	else
 	{
@@ -90,7 +89,6 @@ t_command	get_token(t_minishell **main, int *i, t_alloc **garbage)
 	t_command	token;
 
 	init_get_token(&token);
-	(*main)->parser->vpos = 0;
 	while ((*main)->line[*i])
 	{
 		is_in_quote((*main)->line[*i], (*main)->parser);
@@ -98,22 +96,30 @@ t_command	get_token(t_minishell **main, int *i, t_alloc **garbage)
 		(*main)->parser->case_single == FALSE)
 		{
 			get_lex_expand(main, i, &token, garbage);
-			if (!(*main)->line[*i])
+			if (!(*main)->line[*i] || (*main)->line[*i] == 32)
 				break ;
 		}
 		if ((*main)->parser->case_quotes == FALSE && \
 		special_types(main, i) != 0 \
-		&& special_types(main, i) != EXPAND)
+		&& special_types(main, i) != EXPAND && special_types(main, i) != CODE)
 		{
-			(*main)->parser->vpos = 0;
 			if (token.word != NULL)
 				break ;
 			else
 				return (token = get_special_type_token(main, i, garbage));
 		}
+		if ((*main)->parser->case_single == FALSE && \
+		special_types(main, i) == CODE)
+		{
+			token.word = \
+			ft_g_strjoin(token.word, ft_g_itoa((*main)->code_status, PARSING, garbage)\
+			, PARSING, garbage);
+			*i += 2;
+		}
 		if (parse_quotes(main, i) == 1 || !(*main)->line[*i])
 			break ;
-		else if (!is_quotes(main, i) && special_types(main, i) != EXPAND)
+		else if (!is_quotes(main, i) && !((*main)->parser->case_single == FALSE \
+		&& (special_types(main, i) == EXPAND || special_types(main, i) == CODE)))
 		{
 			token.word = ft_strjoin_char(token.word, \
 			(*main)->line[*i], PARSING, garbage);

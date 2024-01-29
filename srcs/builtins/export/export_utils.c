@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 09:11:51 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/24 23:52:04 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/28 22:33:04 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,24 +68,18 @@ void	add_or_update_env_var(char **envp, char *var, t_alloc **garbage)
 	}
 }
 
-bool	identifiers(const char *str, char *ptr, bool *equals, bool *no_space)
+bool	search_identifiers(const char *str, char *ptr, bool *equals, bool *no_space)
 {
-	int	i;
-
-	i = 0;
-	if (ptr[i] == '=')
-	{
+	if (*ptr == '=')
 		*equals = true;
-	}
 	else if (*equals)
 	{
-		if (!*no_space && ptr[i] != ' ')
+		if (!*no_space && *ptr != ' ')
 			*no_space = true;
 	}
-	else if (*no_space && ptr[i] == ' ')
+	else if (*no_space && *ptr == ' ')
 		return (false);
-	else if (!(ptr[i] == '_' || ft_isalnum(ptr[i]) || \
-	(ptr[i] == '+' && ptr[i + 1] == '=')))
+	else if (!(*ptr == '_' || ft_isalnum(*ptr)))
 	{
 		printf("export: `%s': not a valid identifier\n", str);
 		return (false);

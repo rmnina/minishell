@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 15:15:34 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/25 02:16:27 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/28 19:28:04 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,10 +45,15 @@ t_command *token, t_alloc **garbage)
 	j = (*main)->parser->vpos;
 	init_get_expand(main, token, i, garbage);
 	if ((*main)->parser->var == NULL)
-		return ((*main)->parser->vpos = -1);
+	{
+		if (token->word != NULL)
+			return (0);
+		else
+			return ((*main)->parser->vpos = -1);
+	}
 	while ((*main)->parser->var[j])
 	{
-		if ((*main)->parser->var[j] == 32)
+		if ((*main)->parser->var[j] == 32 || !(*main)->parser->var[j])
 		{
 			j++;
 			break ;

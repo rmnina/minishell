@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 20:18:37 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/25 02:44:10 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/28 19:28:14 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ int *i, t_alloc **garbage)
 	if ((*main)->parser->var == NULL)
 	{
 		name = get_env_var_name((*main)->line, i, garbage);
+		is_in_quote((*main)->line[*i], (*main)->parser);
 		(*main)->parser->var = ft_getenv(main, name);
 	}
 	if (!token->word)

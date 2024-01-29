@@ -6,7 +6,7 @@
 #    By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/14 14:15:25 by jdufour           #+#    #+#              #
-#    Updated: 2024/01/24 23:50:54 by jdufour          ###   ########.fr        #
+#    Updated: 2024/01/28 23:38:23 by jdufour          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,10 +25,10 @@ SRCS = srcs/main.c \
 	srcs/builtins/exit.c \
 	srcs/builtins/export/ft_export.c \
 	srcs/builtins/export/export_utils.c \
-	srcs/builtins/export/export_utils2.c \
 	srcs/builtins/pwd.c \
 	srcs/builtins/unset.c \
 	srcs/builtins/signals.c \
+	srcs/builtins/signals_heredoc.c \
 	srcs/exec/heredoc/exec_heredoc.c \
 	srcs/exec/heredoc/expand_heredoc.c \
 	srcs/exec/pipe/checks.c \
@@ -44,6 +44,7 @@ SRCS = srcs/main.c \
 	srcs/exec/exec.c \
 	srcs/exec/path.c \
 	srcs/lexer/lexer.c \
+	srcs/lexer/lexer_error.c \
 	srcs/parser/expand.c \
 	srcs/parser/init_parser.c \
 	srcs/parser/types.c \
@@ -51,6 +52,7 @@ SRCS = srcs/main.c \
 	srcs/parser/ft_parsing.c \
 	srcs/utils/allocs/allocs.c \
 	srcs/utils/allocs/frees.c\
+	srcs/utils/allocs/frees_utils.c \
 	srcs/utils/allocs/joins.c\
 	srcs/utils/allocs/structs.c\
 	srcs/utils/init/init_structs.c \
@@ -62,7 +64,7 @@ OBJS = $(SRCS:.c=.o)
 
 CC = gcc
 
-FLAGS = -g3 -ggdb -Wall -Wextra -Werror
+FLAGS = -g -Wall -Wextra -Werror
 
 RM = rm -rf
 
@@ -91,10 +93,6 @@ fclean: clean
 	@make fclean -C libft/
 
 re: fclean all
-
-run: $(NAME)
-	@echo "$(GREEN)Lancement de $(NAME) dans une nouvelle fenêtre de terminal...$(NC)"
-	@xterm -fa 'Monospace' -fs 12 -e './$(NAME)' &
 
 .PHONY: all clean fclean re
 

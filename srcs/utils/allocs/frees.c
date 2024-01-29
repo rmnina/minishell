@@ -6,74 +6,33 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 23:43:42 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/25 01:06:52 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/28 23:37:12 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/minishell.h"
 
-void	free_adr(t_alloc **garbage, void *adr)
+void	free_adr(void *adr, t_alloc **garbage)
 {
 	t_alloc	*temp;
-
+	t_alloc	*prev;
+	void	*pos;
+	
 	if (!(*garbage))
 		return ;
 	temp = *garbage;
+	pos = *garbage;
+	prev = NULL;
+	if (free_first_adr(garbage, adr))
+		return ;
 	while (temp->next && temp->adr != adr)
 	{
-		*garbage = temp->next;
-		if (temp->adr == adr)
-		{
-			free(temp->adr);
-			temp->adr = NULL;
-			free(temp);
-		}
-		temp = *garbage;
+		if (free_middle_adr(&pos, &temp, &prev, adr))
+			return ;
+		else
+			prev = temp;
+		temp = pos;
 	}
-}
-
-void	free_small_garb(t_alloc **garbage)
-{
-	part_free_garb(garbage, PARSING);
-	part_free_garb(garbage, EXEC);
-}
-
-t_alloc	*free_first_nodes(t_alloc **garbage, int cat)
-{
-	t_alloc	*temp;
-
-	temp = *garbage;
-	while (temp && temp->cat == cat)
-	{
-		*garbage = temp->next;
-		temp->next = NULL;
-		if (temp->adr)
-		{
-			free(temp->adr);
-			temp->adr = NULL;
-		}
-		free(temp);
-		temp = *garbage;
-	}
-	return (temp);
-}
-
-int	free_middle_nodes(void **pos, t_alloc **temp, t_alloc **prev, int cat)
-{
-	*pos = (*temp)->next;
-	if ((*temp)->cat == cat)
-	{
-		(*temp)->next = NULL;
-		if ((*temp)->adr)
-		{
-			free((*temp)->adr);
-			(*temp)->adr = NULL;
-		}
-		free(*temp);
-		(*prev)->next = *pos;
-		return (1);
-	}
-	return (0);
 }
 
 void	part_free_garb(t_alloc **garbage, int cat)
@@ -101,25 +60,14 @@ void	part_free_garb(t_alloc **garbage, int cat)
 	}
 }
 
+void	free_small_garb(t_alloc **garbage)
+{
+	part_free_garb(garbage, PARSING);
+	part_free_garb(garbage, EXEC);
+}
+
 void	free_garbage(t_alloc **garbage)
 {
-	t_alloc	*temp;
-
-	if (!(*garbage))
-		return ;
-	temp = *garbage;
-	while (temp != NULL)
-	{
-		*garbage = temp->next;
-		temp->next = NULL;
-		if (temp->adr != NULL)
-		{
-			free(temp->adr);
-			temp->adr = NULL;
-		}
-		free(temp);
-		temp = *garbage;
-	}
-	*garbage = NULL;
-	garbage = NULL;
+	free_small_garb(garbage);
+	part_free_garb(garbage, ENV);
 }

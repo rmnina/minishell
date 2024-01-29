@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   allocs.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juandrie <juandrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/28 17:07:39 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/24 11:59:22 by juandrie         ###   ########.fr       */
+/*   Updated: 2024/01/28 23:41:55 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,53 @@ char	*ft_g_strdup(char *src, int cat, t_alloc **garbage)
 	}
 	dest[i] = '\0';
 	return (dest);
+}
+
+static int	ft_int_size(long int n)
+{
+	int	size;
+
+	size = 0;
+	if (n < 0)
+	{
+		size++;
+		n *= -1;
+	}	
+	if (n == 0)
+		size = 1;
+	while (n > 0)
+	{
+		size++;
+		n = n / 10;
+	}
+	return (size);
+}
+
+char	*ft_g_itoa(int n, int cat, t_alloc **garbage)
+{
+	long int	new_n;
+	int			size;
+	char		*res;
+
+	new_n = (long int) n;
+	size = ft_int_size(new_n) - 1;
+	res = garb_malloc(sizeof(char), (size + 2), cat, garbage);
+	if (!(res))
+		return (NULL);
+	if (new_n < 0)
+	{
+		new_n *= -1;
+		res[0] = '-';
+	}
+	if (new_n == 0)
+		res[0] = '0';
+	while (new_n > 0)
+	{
+		res[size] = (new_n % 10) + '0';
+		new_n /= 10;
+		size--;
+	}
+	return (res);
 }
 
 void	*garb_malloc(size_t type, size_t size, int cat, t_alloc **garbage)

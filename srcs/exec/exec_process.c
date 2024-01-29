@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/25 03:03:32 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/29 01:14:52 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,11 @@ int	execute_builtins(t_minishell **main, t_alloc **garbage)
 void	execute_command(t_minishell **main, t_alloc **garbage)
 {
 	(*main)->path = NULL;
-	if (!(*main)->cmd_args)
+	if ((*main)->cmd_args[0][0] == '\0')
 	{
-		perror("Error creating command args");
-		exit(EXIT_FAILURE);
+		printf("Command '' not found\n");
+		free_garbage(garbage);
+		exit(127);
 	}
 	(*main)->path = find_command_path(main, (*main)->cmd_args[0], garbage);
 	if (!(*main)->path)
@@ -56,12 +57,12 @@ void	execute_command(t_minishell **main, t_alloc **garbage)
 			ft_putstr_fd((*main)->cmd_args[0], 2);
 			ft_putstr_fd(": ", 2);
 		}
-		free_small_garb(garbage);
+		free_garbage(garbage);
 		perror("command not found");
 		exit(127);
 	}
 	execve((*main)->path, (*main)->cmd_args, (*main)->envp);
-	free_small_garb(garbage);
+	free_garbage(garbage);
 	perror("execve");
 	exit(EXIT_FAILURE);
 }
@@ -82,6 +83,7 @@ int	execute_non_builtin(t_minishell **main, t_alloc **garbage)
 	else if (pid == 0)
 	{
 		execute_command(main, garbage);
+		free_garbage(garbage);
 		exit(EXIT_FAILURE);
 	}
 	else
@@ -99,6 +101,7 @@ void	child_redirect(t_minishell **main, int *i, t_alloc **garbage)
 	{
 		if ((*main)->command[*i].type == DB_LEFT_CHEV)
 		{
+			init_heredoc_signal();
 			ft_heredoc(main, i, garbage);
 			if ((*main)->cmd_args[0] == NULL)
 				(*main)->cmd_args = create_cmd_args(main, i, garbage);
@@ -106,12 +109,13 @@ void	child_redirect(t_minishell **main, int *i, t_alloc **garbage)
 		if (ft_redirect(main, i, garbage) == -1)
 		{
 			(*main)->code_status = 1;
+			free_garbage(garbage);
 			exit(EXIT_FAILURE);
 		}
 	}
 	if (execute_builtins(main, garbage) == -1)
 		execute_command(main, garbage);
-	free_small_garb(garbage);
+	free_garbage(garbage);
 	exit(EXIT_SUCCESS);
 }
 
@@ -121,6 +125,7 @@ void	init_redirect(t_minishell **main, int *i, t_alloc **garbage)
 	int	status;
 
 	status = 0;
+	init_process_signal();
 	pid = fork();
 	if (pid == 0)
 		child_redirect(main, i, garbage);

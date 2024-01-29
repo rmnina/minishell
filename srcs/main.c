@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:45:11 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/25 00:18:53 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/28 18:20:42 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,10 @@ int g_sigstatus = 0;
 
 int ft_minishell(t_minishell *main, t_alloc **garbage)
 {
-
 	while (1)
 	{
 		init_signal();
-		main->line = readline(ANSI_COLOR_GREEN "minishell > " ANSI_COLOR_RESET);
+		main->line = readline("minishell > ");
 		if (main->line == NULL)
 		{
 			printf("exit\n");
@@ -28,7 +27,10 @@ int ft_minishell(t_minishell *main, t_alloc **garbage)
 				free_garbage(garbage);
 			break ;
 		}
-		if (main->line[0] != 0)
+		if (g_sigstatus != 0)
+			main->code_status = g_sigstatus;
+		g_sigstatus = 0;
+		if (main->line[0] != 0 && !is_only_spaces(main->line))
 		{
 			add_history(main->line);
 			handle_command(&main, garbage);
@@ -36,11 +38,8 @@ int ft_minishell(t_minishell *main, t_alloc **garbage)
 		if (main->line)
 		{
 			free(main->line);
-			// free_small_garb(garbage);
+			free_small_garb(garbage);
 		}
-		if (g_sigstatus != 0)
-			main->code_status = g_sigstatus;
-		g_sigstatus = 0;
 		restore_minishell();
 	}
 	return (0);

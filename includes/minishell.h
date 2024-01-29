@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:03:22 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/25 03:10:00 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/29 00:22:42 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,6 +128,7 @@ void		check_spaces(t_minishell **main, int *i);
 int			is_in_quote(char c, t_parser *quotes);
 int			error_quotes(t_minishell **main);
 int			ft_error(t_minishell **main, char *str, int i);
+int			wrong_use_type(t_command *command, t_minishell **main);
 int			ft_error_lexer(t_command *command, t_minishell **main);
 
 /* ******************************* PARSER ******************************* */
@@ -181,7 +182,7 @@ int			heredoc_is_expand(char *line);
 int			replace_var(t_minishell **main, char **new_line, int *i, t_alloc **garbage);
 char		*heredoc_get_expand(t_minishell **main, t_alloc **garbage);
 char		**get_delimiter(t_minishell **main, int *i, t_alloc **garbage);
-void		read_add(t_minishell **main, int *j, t_alloc **garbage);
+int			read_add(t_minishell **main, int *j, t_alloc **garbage);
 int			ft_heredoc(t_minishell **main, int *i, t_alloc **garbage);
 int			ft_redirect(t_minishell **main, int *i, t_alloc **garbage);
 int			ft_pipex(t_minishell **main, int *i, t_alloc **garbage);
@@ -195,7 +196,7 @@ int			get_all_outputs(t_minishell **main, int *i, t_alloc **garbage);
 /* ******************************* BUILTINS ******************************* */
 
 int			ft_cd(t_minishell **main, t_alloc **garbage);
-char		*ft_realpath(char *path, char *resolved_path, t_alloc **garbage);
+// char		*ft_realpath(t_minishell **main, char *path, char *resolved_path, t_alloc **garbage);
 char		*change_directory(t_minishell **main, char *path, t_alloc **garbage);
 int			ft_cd_main(t_minishell **main, t_alloc **garbage);
 int			ft_echo(t_minishell **main);
@@ -207,13 +208,11 @@ int			ft_unset(t_minishell **main, char **names);
 /* ------------------------------ FT_EXPORT ------------------------------ */
 
 int			envp_length(char **envp);
-char		**copy_envp(char **envp, int new_size, t_alloc **garbage);
 void		add_or_update_env_var(char **envp, char *var, t_alloc **garbage);
-bool		identifiers(const char *str, char *ptr, bool *equals, bool *no_space);
+bool		search_identifiers(const char *str, char *ptr, bool *equals, bool *no_space);
 int			ft_export(t_minishell **main, t_alloc **garbage);
 void		handle_value_case(t_minishell **main, char *arg, t_alloc **garbage);
 bool		is_valid_identifier(char *str);
-void		export_append(t_minishell **main, char *var_name, char *value_to_append, t_alloc **garbage);
 void		compare_values(t_export *export, char **value, t_alloc **garbage);
 
 /* ******************************* SIGNALS ******************************* */
@@ -222,19 +221,14 @@ void		sigint_handler(int signum);
 void		sigint_process_handler(int signum);
 void		init_signal(void);
 void		init_process_signal(void);
+void		init_heredoc_signal(void);
+void		init_heredoc_pipe_signal(void);
 
 /* ******************************* UTILS ******************************* */
 
 int			ft_count(t_command *command, int *i);
 int			ft_strcmp_var(const char *s1, const char *s2);
-int			is_input(t_minishell **main, int *i);
-int			is_output(t_minishell **main, int *i);
-int			redir_input(t_minishell **main, char *filename);
-int			redir_append(t_minishell **main, char *filename);
-int			redir_output(t_minishell **main, char *filename);
-int			check_redir(t_minishell **main, int *i);
-int 		check_next_redir(t_minishell **main, int *i);
-void		check_next_args(t_minishell **main, int *i, t_alloc **garbage);
+int			is_only_spaces(char *str);
 
 
 /* ------------------------------ MEMORY ------------------------------ */
@@ -244,16 +238,20 @@ char		**ft_envjoin(char **envp, char *str, int cat, t_alloc **garbage);
 char		**ft_strjoin_args(t_minishell **main, int *i, int cat, t_alloc **garbage);
 char		*ft_strjoin_char(char *s1, const char c, int cat, t_alloc **garbage);
 char		*ft_g_strjoin(char *s1, const char *s2, int cat, t_alloc **garbage);
-void		part_free_garb(t_alloc **garbage, int cat);
+int 		free_first_adr(t_alloc **garbage, void *adr);
+int 		free_middle_adr(void **pos, t_alloc **temp, t_alloc **prev, void *adr);
+t_alloc		*free_first_nodes(t_alloc **garbage, int cat);
+int			free_middle_nodes(void **pos, t_alloc **temp, t_alloc **prev, int cat);
 void		free_garbage(t_alloc **garbage);
 t_alloc		*create_garbage_node(void *ptr, int cat);
 t_alloc		*ft_garblast(t_alloc *last);
+char		*ft_g_itoa(int n, int cat, t_alloc **garbage);
 void		add_garbage_node(t_alloc **garbage, t_alloc *new);
 void		*garb_malloc(size_t type, size_t size, int cat, t_alloc **garbage);
 char		*ft_g_strndup(char *src, size_t n, int cat, t_alloc **garbage);
 char		*ft_g_strdup(char *src, int cat, t_alloc **garbage);
 void    	free_small_garb(t_alloc **garbage);
-void    	free_adr(t_alloc **garbage, void *adr);
+void    	free_adr(void *adr, t_alloc **garbage);
 
 /* ------------------------------ REDIRECTIONS ------------------------------ */
 
@@ -263,6 +261,14 @@ char		*get_last_out_filename(t_minishell **main, int *i, t_alloc **garbage);
 char		*get_last_in_filename(t_minishell **main, int *i, t_alloc **garbage);
 int			browse_outputs(t_minishell **main, int *i, char **filename, t_alloc **garbage);
 int			browse_inputs(t_minishell **main, int *i, char **filename, t_alloc **garbage);
+int			is_input(t_minishell **main, int *i);
+int			is_output(t_minishell **main, int *i);
+int			redir_input(t_minishell **main, char *filename);
+int			redir_append(t_minishell **main, char *filename);
+int			redir_output(t_minishell **main, char *filename);
+int			check_redir(t_minishell **main, int *i);
+int 		check_next_redir(t_minishell **main, int *i);
+void		check_next_args(t_minishell **main, int *i, t_alloc **garbage);
 
 /* ------------------------------ PIPE ------------------------------ */
 

@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/24 23:24:36 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/25 02:17:57 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/28 21:59:40 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,8 @@ t_command	get_expand_token(t_minishell **main, int *i, t_alloc **garbage)
 {
 	t_command	token;
 
-	while ((*main)->parser->var != NULL)
-	{
-		init_get_token(&token);
-		get_lex_expand(main, i, &token, garbage);
-	}
+	init_get_token(&token);
+	get_lex_expand(main, i, &token, garbage);
 	return (token);
 }
 
@@ -48,8 +45,11 @@ t_command	*get_command(t_minishell **main, t_alloc **garbage)
 		    command = ft_struct_join(command, token, PARSING, garbage);
 		if ((*main)->parser->var != NULL)
 		{
-			token = get_expand_token(main, &i, garbage);
-			command = ft_struct_join(command, token, PARSING, garbage);
+			while ((*main)->parser->var != NULL)
+			{
+				token = get_expand_token(main, &i, garbage);
+				command = ft_struct_join(command, token, PARSING, garbage);
+			}
 		}
 	}
 	return (command = ft_struct_join(command, \

@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 17:31:57 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/25 01:53:02 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/29 00:43:07 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,10 @@ int	cd_hyphen(t_minishell **main, t_alloc **garbage)
 		printf("cd: OLDPWD not set\n");
 		return ((*main)->code_status = 1);
 	}
-	printf("%s\n", (*main)->last_cd_path);
+	else
+		printf("%s\n", (*main)->last_cd_path);
 	if (!change_directory(main, (*main)->last_cd_path, garbage))
 	{
-		free_small_garb(garbage);
 		perror("cd");
 		return ((*main)->code_status = 1);
 	}
@@ -48,7 +48,6 @@ int	cd_tilde(t_minishell **main, t_alloc **garbage)
 	home_path = ft_getenv(main, "HOME");
 	if (!change_directory(main, home_path, garbage))
 	{
-		free_small_garb(garbage);
 		perror("cd");
 		return ((*main)->code_status = 1);
 	}
@@ -79,12 +78,17 @@ int	ft_cd_main(t_minishell **main, t_alloc **garbage)
 int	ft_cd(t_minishell **main, t_alloc **garbage)
 {
 	if ((*main)->last_cd_path == NULL)
-		(*main)->last_cd_path = ft_getenv(main, "PWD");
+		(*main)->last_cd_path = ft_g_strdup(ft_getenv(main, "PWD"), ENV, garbage);
 	if ((*main)->cmd_args[1] == NULL \
 	|| ft_strcmp((*main)->cmd_args[1], "~") == 0)
 		return (cd_tilde(main, garbage));
 	else if (ft_strcmp((*main)->cmd_args[1], "-") == 0)
 		return (cd_hyphen(main, garbage));
+	else if ((*main)->cmd_args[1][0] == '-' && (*main)->cmd_args[1][1])
+	{
+		printf("minishell: cd: -%c: invalid option\n", (*main)->cmd_args[1][1]);
+		return ((*main)->code_status = 2);
+	}
 	else
 		return (ft_cd_main(main, garbage));
 }

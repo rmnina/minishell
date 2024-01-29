@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/22 18:50:09 by jdufour           #+#    #+#             */
-/*   Updated: 2023/12/08 18:10:25 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/28 22:51:42 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,10 @@ int	ft_strlen(const char *str)
 	int	i;
 
 	i = 0;
-	while (str && str[i])
-		i++;
+	if (str)
+	{
+		while (str && str[i])
+			i++;
+	}
 	return (i);
 }
