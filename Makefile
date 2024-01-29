@@ -6,7 +6,7 @@
 #    By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/14 14:15:25 by jdufour           #+#    #+#              #
-#    Updated: 2024/01/28 23:38:23 by jdufour          ###   ########.fr        #
+#    Updated: 2024/01/29 01:22:00 by jdufour          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -64,7 +64,7 @@ OBJS = $(SRCS:.c=.o)
 
 CC = gcc
 
-FLAGS = -g -Wall -Wextra -Werror
+FLAGS = -Wall -Wextra -Werror
 
 RM = rm -rf
 
