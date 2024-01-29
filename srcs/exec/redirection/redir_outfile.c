@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/24 18:23:32 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/29 14:22:10 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/29 16:55:40 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,8 @@ int	check_inputs(t_minishell **main, int *i, char **filename, t_alloc **garbage)
 	return (0);
 }
 
-int	handle_output(t_minishell **main, int *i, char **filename, t_alloc **garbage)
+int	handle_output(t_minishell **main, int *i, char **filename, \
+t_alloc **garbage)
 {
 	if (is_output(main, i))
 	{
@@ -43,10 +44,10 @@ int	handle_output(t_minishell **main, int *i, char **filename, t_alloc **garbage
 	return (0);
 }
 
-int get_all_outputs(t_minishell **main, int *i, t_alloc **garbage)
+int	get_all_outputs(t_minishell **main, int *i, t_alloc **garbage)
 {
 	char	*filename;
-	int	type;
+	int		type;
 
 	filename = NULL;
 	if (handle_output(main, i, &filename, garbage) == -1)

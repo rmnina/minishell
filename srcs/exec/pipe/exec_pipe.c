@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/24 18:56:52 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/29 01:05:50 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/29 16:54:41 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,17 @@ int	pipex_loop(t_minishell **main, int *i, t_alloc **garbage)
 	return ((*main)->heredoc = 0);
 }
 
+int	heredoc_pipe(t_minishell **main, int *i, t_alloc **garbage)
+{
+	init_heredoc_pipe_signal();
+	(*main)->heredoc = ft_heredoc(main, i, garbage);
+	if ((*main)->heredoc == -1)
+		return (-1);
+	(*main)->heredoc_used = 1;
+	init_process_signal();
+	return (0);
+}
+
 int	ft_pipex(t_minishell **main, int *i, t_alloc **garbage)
 {
 	int	fd_stdin;
@@ -64,12 +75,8 @@ int	ft_pipex(t_minishell **main, int *i, t_alloc **garbage)
 	}
 	if (is_heredoc(main, i))
 	{
-		init_heredoc_pipe_signal();
-		(*main)->heredoc = ft_heredoc(main, i, garbage);
-		if ((*main)->heredoc == -1)
+		if (heredoc_pipe(main, i, garbage) == -1)
 			return (-1);
-		(*main)->heredoc_used = 1;
-		init_process_signal();
 	}
 	last_pipe(main, i, garbage);
 	if ((*main)->heredoc_used)

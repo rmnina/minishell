@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 09:11:51 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/29 14:33:47 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/29 16:49:15 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,8 @@ void	add_or_update_env_var(char **envp, char *var, t_alloc **garbage)
 	}
 }
 
-bool	search_identifiers(const char *str, char *ptr, bool *equals, bool *no_space)
+bool	search_identifiers(const char *str, char *ptr, bool *equals, \
+bool *no_space)
 {
 	if (*ptr == '=')
 		*equals = true;

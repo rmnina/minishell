@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 22:46:17 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/29 14:27:27 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/29 16:55:12 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@ char **filename, t_alloc **garbage)
 {
 	while (is_input(main, i))
 	{
-		*filename = ft_g_strdup((*main)->command[*i + 1].word, PARSING, garbage);
+		*filename = ft_g_strdup((*main)->command[*i + 1].word, \
+		PARSING, garbage);
 		if (!*filename)
 			return (perror("filename alloc"), (*main)->code_status = 255, -1);
 		(*main)->infilefd = open(*filename, O_RDONLY, 0644);

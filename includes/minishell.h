@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:03:22 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/29 12:51:49 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/29 17:35:02 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,7 +123,7 @@ extern int	g_sigstatus;
 
 /* ******************************* LEXER ******************************* */
 
-int			special_types(t_minishell **main, int *i);
+int			special(t_minishell **main, int *i);
 void		check_spaces(t_minishell **main, int *i);
 int			is_in_quote(char c, t_parser *quotes);
 int			error_quotes(t_minishell **main);
@@ -143,7 +143,8 @@ void		restore_minishell(void);
 char		**set_env(char **envp, t_alloc **garbage);
 int			is_only_quotes(char *line, int *i);
 void		init_get_token(t_command *token);
-void		init_get_expand(t_minishell **main, t_command *token, int *i, t_alloc **garbage);
+void		init_get_expand(t_minishell **main, t_command *token, \
+int *i, t_alloc **garbage);
 t_export	init_export_struct(void);
 
 /* ------------------------------ EXPAND ------------------------------ */
@@ -151,12 +152,17 @@ t_export	init_export_struct(void);
 int			is_expand(char *line);
 char		*get_env_var_name(char *line, int *i, t_alloc **garbage);
 char		*ft_getenv(t_minishell **main, const char *name);
-int			get_lex_expand(t_minishell **main, int *i, t_command *token, t_alloc **garbage);
+int			get_lex_expand(t_minishell **main, int *i, t_command *token, \
+t_alloc **garbage);
 
 /* ------------------------------ MAIN ------------------------------ */
 
 void		get_token_type(t_minishell **main, t_command *token);
-t_command	get_token(t_minishell **main, int *i, t_alloc **garbage);
+t_command	get_special_type_token(t_minishell **main, int *i, \
+t_alloc **garbage);
+int			parse_quotes(t_minishell **main, int *i);
+int			is_quotes(t_minishell **main, int *i);
+t_command	get_token1(t_minishell **main, int *i, t_alloc **garbage);
 t_command	token_null(t_command *token, t_alloc **garbage);
 t_command	*get_command(t_minishell **main, t_alloc **garbage);
 t_command	*ft_parsing(t_minishell **main, t_alloc **garbage);
@@ -165,8 +171,10 @@ t_command	*ft_parsing(t_minishell **main, t_alloc **garbage);
 
 /* ------------------------------ PATH ------------------------------*/
 
-char		*find_command_in_segment(char *segment, char *command, t_alloc **garbage);
-char		*find_command_path(t_minishell **main, char *command, t_alloc **garbage);
+char		*find_command_in_segment(char *segment, char *command, \
+t_alloc **garbage);
+char		*find_command_path(t_minishell **main, char *command, \
+t_alloc **garbage);
 
 /* ------------------------------ COMMANDS ------------------------------*/
 
@@ -179,7 +187,8 @@ void		execute_command(t_minishell **main, t_alloc **garbage);
 
 int			init_pids(t_minishell **main, t_alloc **garbage);
 int			heredoc_is_expand(char *line);
-int			replace_var(t_minishell **main, char **new_line, int *i, t_alloc **garbage);
+int			replace_var(t_minishell **main, char **new_line, int *i, \
+t_alloc **garbage);
 char		*heredoc_get_expand(t_minishell **main, t_alloc **garbage);
 char		**get_delimiter(t_minishell **main, int *i, t_alloc **garbage);
 int			read_add(t_minishell **main, int *j, t_alloc **garbage);
@@ -192,12 +201,11 @@ void		handle_command(t_minishell **main, t_alloc **garbage);
 int			get_all_inputs(t_minishell **main, int *i, t_alloc **garbage);
 int			get_all_outputs(t_minishell **main, int *i, t_alloc **garbage);
 
-
 /* ******************************* BUILTINS ******************************* */
 
 int			ft_cd(t_minishell **main, t_alloc **garbage);
-// char		*ft_realpath(t_minishell **main, char *path, char *resolved_path, t_alloc **garbage);
-char		*change_directory(t_minishell **main, char *path, t_alloc **garbage);
+char		*change_directory(t_minishell **main, char *path, \
+t_alloc **garbage);
 int			ft_cd_main(t_minishell **main, t_alloc **garbage);
 int			ft_echo(t_minishell **main);
 int			ft_env(t_minishell **main);
@@ -209,7 +217,8 @@ int			ft_unset(t_minishell **main, char **names);
 
 int			envp_length(char **envp);
 void		add_or_update_env_var(char **envp, char *var, t_alloc **garbage);
-bool		search_identifiers(const char *str, char *ptr, bool *equals, bool *no_space);
+bool		search_identifiers(const char *str, char *ptr, bool *equals, \
+bool *no_space);
 int			ft_export(t_minishell **main, t_alloc **garbage);
 void		handle_value_case(t_minishell **main, char *arg, t_alloc **garbage);
 bool		is_valid_identifier(t_minishell **main, char *str);
@@ -229,19 +238,24 @@ void		init_heredoc_pipe_signal(void);
 int			ft_count(t_command *command, int *i);
 int			ft_strcmp_var(const char *s1, const char *s2);
 int			is_only_spaces(char *str);
-
+void		error_path(t_minishell **main, t_alloc **garbage);
 
 /* ------------------------------ MEMORY ------------------------------ */
 
-t_command	*ft_struct_join(t_command *tok1, t_command tok2, int cat, t_alloc **garbage);
+t_command	*ft_struct_join(t_command *tok1, t_command tok2, int cat, \
+t_alloc **garbage);
 char		**ft_envjoin(char **envp, char *str, int cat, t_alloc **garbage);
-char		**ft_strjoin_args(t_minishell **main, int *i, int cat, t_alloc **garbage);
-char		*ft_strjoin_char(char *s1, const char c, int cat, t_alloc **garbage);
+char		**ft_strjoin_args(t_minishell **main, int *i, int cat, \
+t_alloc **garbage);
+char		*ft_strjoin_char(char *s1, const char c, int cat, t_alloc \
+**garbage);
 char		*ft_g_strjoin(char *s1, const char *s2, int cat, t_alloc **garbage);
-int 		free_first_adr(t_alloc **garbage, void *adr);
-int 		free_middle_adr(void **pos, t_alloc **temp, t_alloc **prev, void *adr);
+int			free_first_adr(t_alloc **garbage, void *adr);
+int			free_middle_adr(void **pos, t_alloc **temp, t_alloc **prev, \
+void *adr);
 t_alloc		*free_first_nodes(t_alloc **garbage, int cat);
-int			free_middle_nodes(void **pos, t_alloc **temp, t_alloc **prev, int cat);
+int			free_middle_nodes(void **pos, t_alloc **temp, t_alloc **prev, \
+int cat);
 void		free_garbage(t_alloc **garbage);
 t_alloc		*create_garbage_node(void *ptr, int cat);
 t_alloc		*ft_garblast(t_alloc *last);
@@ -250,24 +264,28 @@ void		add_garbage_node(t_alloc **garbage, t_alloc *new);
 void		*garb_malloc(size_t type, size_t size, int cat, t_alloc **garbage);
 char		*ft_g_strndup(char *src, size_t n, int cat, t_alloc **garbage);
 char		*ft_g_strdup(char *src, int cat, t_alloc **garbage);
-void    	free_small_garb(t_alloc **garbage);
-void    	free_adr(void *adr, t_alloc **garbage);
+void		free_small_garb(t_alloc **garbage);
+void		free_adr(void *adr, t_alloc **garbage);
 
 /* ------------------------------ REDIRECTIONS ------------------------------ */
 
 int			get_all_outputs(t_minishell **main, int *i, t_alloc **garbage);
 int			get_last_out_type(t_minishell **main, int *i);
-char		*get_last_out_filename(t_minishell **main, int *i, t_alloc **garbage);
-char		*get_last_in_filename(t_minishell **main, int *i, t_alloc **garbage);
-int			browse_outputs(t_minishell **main, int *i, char **filename, t_alloc **garbage);
-int			browse_inputs(t_minishell **main, int *i, char **filename, t_alloc **garbage);
+char		*get_last_out_filename(t_minishell **main, int *i, \
+t_alloc **garbage);
+char		*get_last_in_filename(t_minishell **main, int *i, \
+t_alloc **garbage);
+int			browse_outputs(t_minishell **main, int *i, char **filename, \
+t_alloc **garbage);
+int			browse_inputs(t_minishell **main, int *i, char **filename, \
+t_alloc **garbage);
 int			is_input(t_minishell **main, int *i);
 int			is_output(t_minishell **main, int *i);
 int			redir_input(t_minishell **main, char *filename);
 int			redir_append(t_minishell **main, char *filename);
 int			redir_output(t_minishell **main, char *filename);
 int			check_redir(t_minishell **main, int *i);
-int 		check_next_redir(t_minishell **main, int *i);
+int			check_next_redir(t_minishell **main, int *i);
 void		check_next_args(t_minishell **main, int *i, t_alloc **garbage);
 
 /* ------------------------------ PIPE ------------------------------ */

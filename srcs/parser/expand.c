@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 15:15:34 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/28 19:28:04 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/29 17:03:13 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,14 @@ void	get_next_part_env_var(t_parser *parser, int *j)
 		parser->vpos = *j;
 }
 
+int	first_part_var(t_minishell **main, t_command *token)
+{
+	if (token->word != NULL)
+		return (0);
+	else
+		return ((*main)->parser->vpos = -1);
+}
+
 int	get_lex_expand(t_minishell **main, int *i, \
 t_command *token, t_alloc **garbage)
 {
@@ -45,12 +53,7 @@ t_command *token, t_alloc **garbage)
 	j = (*main)->parser->vpos;
 	init_get_expand(main, token, i, garbage);
 	if ((*main)->parser->var == NULL)
-	{
-		if (token->word != NULL)
-			return (0);
-		else
-			return ((*main)->parser->vpos = -1);
-	}
+		return (first_part_var(main, token));
 	while ((*main)->parser->var[j])
 	{
 		if ((*main)->parser->var[j] == 32 || !(*main)->parser->var[j])

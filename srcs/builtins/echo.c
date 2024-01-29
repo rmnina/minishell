@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 16:06:16 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/28 20:16:37 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/29 16:44:45 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,19 +36,6 @@ int	are_flags_n(char **cmd_args, int *i)
 	return (0);
 }
 
-// int	code_status(t_minishell **main, char *str)
-// {
-// 	if (str && ft_strcmp(str, "$?") == 0)
-// 	{
-// 		if (!(*main)->code_status)
-// 			printf("0");
-// 		else
-// 			printf("%d", (*main)->code_status);
-// 		return (1);
-// 	}
-// 	return (0);
-// }
-
 int	ft_echo(t_minishell **main)
 {
 	int	i;
@@ -60,7 +47,6 @@ int	ft_echo(t_minishell **main)
 		line = 0;
 	while ((*main)->cmd_args[i])
 	{
-		// if (!code_status(main, (*main)->cmd_args[i]))
 		printf("%s", (*main)->cmd_args[i]);
 		if ((*main)->cmd_args[i + 1])
 			printf(" ");

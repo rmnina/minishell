@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/24 19:14:54 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/28 21:38:04 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/29 16:52:16 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ char	**get_delimiter(t_minishell **main, int *i, t_alloc **garbage)
 		j += 2;
 		size++;
 	}
-    j = 0;
+	j = 0;
 	(*main)->h_delimiter = garb_malloc(sizeof(char *), size + 1, EXEC, garbage);
 	while ((*main)->command[*i].type == DB_LEFT_CHEV)
 	{
@@ -51,7 +51,9 @@ int	read_add(t_minishell **main, int *j, t_alloc **garbage)
 		ft_strcmp((*main)->h_line, (*main)->h_delimiter[*j]) == 0)
 		{
 			if (!(*main)->h_line)
-				write(2, "minishell : warning: here-document delimited by end-of-file\n", 61);
+				write (2, \
+				"minishell : warning: here-document delimited by end-of-file\n", \
+				61);
 			break ;
 		}
 		if (heredoc_is_expand((*main)->h_line))

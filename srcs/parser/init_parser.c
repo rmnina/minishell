@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 20:18:37 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/28 19:28:14 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/29 17:11:16 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@ char	**set_env(char **envp, t_alloc **garbage)
 	"1", ENV, garbage), ENV, garbage);
 	envp = ft_envjoin(envp, ft_g_strjoin("_=", \
 	"/usr/bin/env", ENV, garbage), ENV, garbage);
-	envp = ft_envjoin(envp, ft_g_strjoin("PATH=", 
-	"/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:\
+	envp = ft_envjoin(envp, ft_g_strjoin("PATH=", \
+	"/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin: \
 	/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin", \
 	ENV, garbage), ENV, garbage);
 	return (envp);
@@ -40,7 +40,7 @@ char	*ft_getenv(t_minishell **main, const char *name)
 	{
 		if (ft_strncmp((*main)->envp[i], name, len) == 0 \
 		&& (*main)->envp[i][len] == '=')
-			return &((*main)->envp[i][len + 1]);
+			return (&((*main)->envp[i][len + 1]));
 		i++;
 	}
 	return (NULL);

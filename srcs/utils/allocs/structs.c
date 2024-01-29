@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 23:44:38 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/24 21:55:02 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/29 17:14:10 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,5 +47,4 @@ void	add_garbage_node(t_alloc **garbage, t_alloc *new)
 	}
 	else
 		*garbage = new;
-	// printf("node = %p, garbage = %p\n", new->adr, garbage);
 }

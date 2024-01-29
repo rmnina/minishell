@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/24 23:39:25 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/28 21:50:56 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/29 17:13:41 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,4 +29,16 @@ int	is_only_spaces(char *str)
 	if (!str[i])
 		return (1);
 	return (0);
+}
+
+void	error_path(t_minishell **main, t_alloc **garbage)
+{
+	if ((*main)->cmd_args[0])
+	{
+		ft_putstr_fd((*main)->cmd_args[0], 2);
+		ft_putstr_fd(": ", 2);
+	}
+	free_garbage(garbage);
+	perror("command not found");
+	exit(127);
 }

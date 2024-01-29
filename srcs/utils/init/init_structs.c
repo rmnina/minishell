@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 10:43:20 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/24 23:30:41 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/29 17:13:53 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,6 @@ void	restore_minishell(void)
 	t_minishell	*main;
 
 	main = get_minishell();
-
 	main->heredoc = 0;
 	main->heredoc_used = 0;
 	main->fd[0] = -1;

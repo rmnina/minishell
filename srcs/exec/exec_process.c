@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/29 14:54:05 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/29 16:49:50 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,18 +38,6 @@ int	execute_builtins(t_minishell **main, t_alloc **garbage)
 		&& ft_strlen((*main)->cmd_args[0]) == ft_strlen("unset"))
 		return (ft_unset(main, (*main)->cmd_args + 1));
 	return (-1);
-}
-
-void	error_path(t_minishell **main, t_alloc **garbage)
-{
-	if ((*main)->cmd_args[0])
-	{
-		ft_putstr_fd((*main)->cmd_args[0], 2);
-		ft_putstr_fd(": ", 2);
-	}
-	free_garbage(garbage);
-	perror("command not found");
-	exit(127);
 }
 
 void	execute_command(t_minishell **main, t_alloc **garbage)

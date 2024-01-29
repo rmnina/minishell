@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 23:43:42 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/28 23:37:12 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/29 17:14:00 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	free_adr(void *adr, t_alloc **garbage)
 	t_alloc	*temp;
 	t_alloc	*prev;
 	void	*pos;
-	
+
 	if (!(*garbage))
 		return ;
 	temp = *garbage;

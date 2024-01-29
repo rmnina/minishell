@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 17:31:57 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/29 14:34:25 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/29 16:44:21 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,8 @@ int	ft_cd_main(t_minishell **main, t_alloc **garbage)
 int	ft_cd(t_minishell **main, t_alloc **garbage)
 {
 	if ((*main)->last_cd_path == NULL)
-		(*main)->last_cd_path = ft_g_strdup(ft_getenv(main, "PWD"), ENV, garbage);
+		(*main)->last_cd_path = ft_g_strdup(ft_getenv(main, "PWD"), \
+		ENV, garbage);
 	if ((*main)->cmd_args[1] == NULL \
 	|| ft_strcmp((*main)->cmd_args[1], "~") == 0)
 		return (cd_tilde(main, garbage));

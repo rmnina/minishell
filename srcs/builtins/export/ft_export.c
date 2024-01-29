@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 05:00:11 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/29 14:34:00 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/29 16:48:55 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,17 +27,13 @@ bool	is_valid_identifier(t_minishell **main, char *str)
 		write(2, "export: '", 10);
 		write(2, str, ft_strlen(str));
 		write(2, "': not a valid identifier\n", 27);
-		(*main)->code_status = 1;
-		return (false);
+		return ((*main)->code_status = 1, false);
 	}
 	ptr = str + 1;
 	while (*ptr)
 	{
 		if (!search_identifiers(str, ptr, &equals, &no_space))
-		{
-			(*main)->code_status = 1;
-			return (false);
-		}
+			return ((*main)->code_status = 1, false);
 		ptr++;
 	}
 	return (true);
@@ -51,19 +47,22 @@ void	compare_values(t_export *export, char **value, t_alloc **garbage)
 	{
 		export->formatted_value = ft_g_strjoin("\\", *value, EXEC, garbage);
 		export->new_var = ft_g_strjoin(export->var_name, "=", EXEC, garbage);
-	    export->new_var = ft_g_strjoin(export->new_var, export->formatted_value, EXEC, garbage);
+		export->new_var = ft_g_strjoin(export->new_var, \
+		export->formatted_value, EXEC, garbage);
 	}
 	else if (**value == '"' || **value == '\'')
 	{
 		export->formatted_value = ft_g_strdup(*value, EXEC, garbage);
 		export->new_var = ft_g_strjoin(export->var_name, "=", EXEC, garbage);
-	    export->new_var = ft_g_strjoin(export->new_var, export->formatted_value, EXEC, garbage);
+		export->new_var = ft_g_strjoin(export->new_var, \
+		export->formatted_value, EXEC, garbage);
 	}
 	else
 	{
 		export->formatted_value = ft_g_strdup(*value, EXEC, garbage);
 		export->new_var = ft_g_strjoin(export->var_name, "=", EXEC, garbage);
-	    export->new_var = ft_g_strjoin(export->new_var, export->formatted_value, EXEC, garbage);
+		export->new_var = ft_g_strjoin(export->new_var, \
+		export->formatted_value, EXEC, garbage);
 	}
 }
 
@@ -88,14 +87,14 @@ void	handle_value_case(t_minishell **main, char *arg, t_alloc **garbage)
 	add_or_update_env_var((*main)->envp, export.new_var, garbage);
 }
 
-void    export_variable(t_minishell **main, t_alloc **garbage)
+void	export_variable(t_minishell **main, t_alloc **garbage)
 {
-    char	*equal;
-	int 	i;
+	char	*equal;
+	int		i;
 
-    equal = NULL;
+	equal = NULL;
 	i = 1;
-    while ((*main)->cmd_args[i] != NULL)
+	while ((*main)->cmd_args[i] != NULL)
 	{
 		equal = ft_strchr((*main)->cmd_args[i], '=');
 		if (equal)
@@ -106,18 +105,19 @@ void    export_variable(t_minishell **main, t_alloc **garbage)
 		else
 		{
 			if (is_valid_identifier(main, (*main)->cmd_args[i]))
-				add_or_update_env_var((*main)->envp, (*main)->cmd_args[i], garbage);
+				add_or_update_env_var((*main)->envp, \
+				(*main)->cmd_args[i], garbage);
 		}
 		i++;
 	}
 }
 
-int ft_export(t_minishell **main, t_alloc **garbage)
+int	ft_export(t_minishell **main, t_alloc **garbage)
 {
 	(*main)->code_status = 0;
 	if ((*main)->cmd_args[1] == NULL)
 		return (ft_env(main));
 	else
-        export_variable(main, garbage);
+		export_variable(main, garbage);
 	return ((*main)->code_status);
 }

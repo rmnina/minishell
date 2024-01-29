@@ -6,13 +6,14 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/26 23:39:05 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/24 21:55:37 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/29 17:13:06 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/minishell.h"
 
-t_command	*ft_struct_join(t_command *tok1, t_command tok2, int cat, t_alloc **garbage)
+t_command	*ft_struct_join(t_command *tok1, t_command tok2, int cat, \
+t_alloc **garbage)
 {
 	int			size;
 	t_command	*res;
@@ -52,17 +53,20 @@ char	**ft_envjoin(char **envp, char *str, int cat, t_alloc **garbage)
 	new_envp = garb_malloc(sizeof(char *), (size + 2), cat, garbage);
 	while (envp[index])
 	{
-		new_envp[index] = garb_malloc(sizeof(char), (ft_strlen(envp[index]) + 1), cat, garbage);
+		new_envp[index] = garb_malloc(sizeof(char), \
+		(ft_strlen(envp[index]) + 1), cat, garbage);
 		ft_strcpy(new_envp[index], envp[index]);
 		index++;
 	}
-	new_envp[size] = garb_malloc(sizeof(char), (ft_strlen(str) + 1), cat, garbage);
+	new_envp[size] = garb_malloc(sizeof(char), \
+	(ft_strlen(str) + 1), cat, garbage);
 	new_envp[size + 1] = NULL;
 	ft_strcpy(new_envp[size], str);
 	return (new_envp);
 }
 
-char	**ft_strjoin_args(t_minishell **main, int *i, int cat, t_alloc **garbage)
+char	**ft_strjoin_args(t_minishell **main, int *i, int cat, \
+t_alloc **garbage)
 {
 	char	**new_args;
 	int		j;
@@ -76,10 +80,12 @@ char	**ft_strjoin_args(t_minishell **main, int *i, int cat, t_alloc **garbage)
 	new_args = garb_malloc(sizeof(char *), count + 1, cat, garbage);
 	while ((*main)->cmd_args[j])
 	{
-		new_args[j] = ft_g_strjoin(new_args[j], (*main)->cmd_args[j], cat, garbage);
+		new_args[j] = ft_g_strjoin(new_args[j], \
+		(*main)->cmd_args[j], cat, garbage);
 		j++;
 	}
-	new_args[j] = ft_g_strjoin(new_args[j], (*main)->command[*i].word, cat, garbage);
+	new_args[j] = ft_g_strjoin(new_args[j], \
+	(*main)->command[*i].word, cat, garbage);
 	j++;
 	new_args[j] = NULL;
 	return (new_args);
