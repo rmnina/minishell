@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 22:46:17 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/24 22:35:12 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/29 14:27:27 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,14 +54,16 @@ char	*get_last_in_filename(t_minishell **main, int *i, t_alloc **garbage)
 	ft_g_strdup((*main)->command[j + 1].word, EXEC, garbage));
 }
 
-void	check_outputs(t_minishell **main, int *i, t_alloc **garbage)
+int	check_outputs(t_minishell **main, int *i, t_alloc **garbage)
 {
 	check_next_args(main, i, garbage);
 	if (is_output(main, i))
 	{
 		(*i) += 2;
-		get_all_outputs(main, i, garbage);
+		if (get_all_outputs(main, i, garbage) == -1)
+			return (-1);
 	}
+	return (0);
 }
 
 int	get_input_files(t_minishell **main, int *i, t_alloc **garbage)
@@ -81,7 +83,8 @@ int	get_input_files(t_minishell **main, int *i, t_alloc **garbage)
 	if ((*main)->infilefd == -1)
 		return (-1);
 	close((*main)->infilefd);
-	check_outputs(main, i, garbage);
+	if (check_outputs(main, i, garbage) == -1)
+		return (-1);
 	filename = get_last_in_filename(main, i, garbage);
 	(*main)->infilefd = redir_input(main, filename);
 	if ((*main)->infilefd == -1)

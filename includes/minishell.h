@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:03:22 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/29 00:22:42 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/29 12:51:49 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -212,7 +212,7 @@ void		add_or_update_env_var(char **envp, char *var, t_alloc **garbage);
 bool		search_identifiers(const char *str, char *ptr, bool *equals, bool *no_space);
 int			ft_export(t_minishell **main, t_alloc **garbage);
 void		handle_value_case(t_minishell **main, char *arg, t_alloc **garbage);
-bool		is_valid_identifier(char *str);
+bool		is_valid_identifier(t_minishell **main, char *str);
 void		compare_values(t_export *export, char **value, t_alloc **garbage);
 
 /* ******************************* SIGNALS ******************************* */

@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 09:11:51 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/28 22:33:04 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/29 14:33:47 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,9 @@ bool	search_identifiers(const char *str, char *ptr, bool *equals, bool *no_space
 		return (false);
 	else if (!(*ptr == '_' || ft_isalnum(*ptr)))
 	{
-		printf("export: `%s': not a valid identifier\n", str);
+		write(2, "export: '", 10);
+		write(2, str, ft_strlen(str));
+		write(2, "': not a valid identifier\n", 27);
 		return (false);
 	}
 	return (true);

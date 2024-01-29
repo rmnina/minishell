@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/24 18:23:32 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/24 23:53:55 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/29 14:22:10 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ int	check_inputs(t_minishell **main, int *i, char **filename, t_alloc **garbage)
 	else if ((*main)->command[*i].type == DB_RIGHT_CHEV)
 		(*main)->outfilefd = \
 		open(*filename, O_CREAT | O_WRONLY | O_APPEND, 0644);
+	if (access(*filename, X_OK) != 0)
+		return (-1);
 	close((*main)->outfilefd);
 	*i += 2;
 	if (get_all_inputs(main, i, garbage) == -1)
@@ -60,5 +62,7 @@ int get_all_outputs(t_minishell **main, int *i, t_alloc **garbage)
 		(*main)->outfilefd = redir_output(main, filename);
 	else if (type == DB_RIGHT_CHEV)
 		(*main)->outfilefd = redir_append(main, filename);
+	if ((*main)->outfilefd == -1)
+		return (-1);
 	return (0);
 }

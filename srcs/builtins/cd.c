@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 17:31:57 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/29 00:43:07 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/29 14:34:25 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ int	ft_cd_main(t_minishell **main, t_alloc **garbage)
 
 	if ((*main)->cmd_args[2])
 	{
-		printf("minishell: cd: too many arguments\n");
+		write(2, "minishell: cd: too many arguments\n", 35);
 		return ((*main)->code_status = 1);
 	}
 	path = change_directory(main, (*main)->cmd_args[1], garbage);

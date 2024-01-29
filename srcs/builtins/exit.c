@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:04:36 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/24 23:51:21 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/29 13:04:12 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ bool	ft_is_valid_code(char *str)
 	{
 		if (str[i] < '0' || str[i] > '9')
 		{
-			if (str[i] == '-' && i == 0)
+			if ((str[i] == '-' || str[i] == '+') && i == 0)
 				i++;
 			else
 				return (FALSE);

@@ -6,19 +6,24 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/24 23:24:36 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/28 21:59:40 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/29 15:07:30 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-t_command	get_expand_token(t_minishell **main, int *i, t_alloc **garbage)
+t_command	*get_expand_token(t_minishell **main, t_command **command, \
+int *i, t_alloc **garbage)
 {
 	t_command	token;
 
-	init_get_token(&token);
-	get_lex_expand(main, i, &token, garbage);
-	return (token);
+	while ((*main)->parser->var != NULL)
+	{
+		init_get_token(&token);
+		get_lex_expand(main, i, &token, garbage);
+		*command = ft_struct_join(*command, token, PARSING, garbage);
+	}
+	return (*command);
 }
 
 
@@ -33,6 +38,7 @@ t_command	*get_command(t_minishell **main, t_alloc **garbage)
 	while ((*main)->line[i])
 	{
 		check_spaces(main, &i);
+		(*main)->parser->vpos = 0;
 		if (!(*main)->line[i])
 			break ;
 		token = get_token(main, &i, garbage);
@@ -44,13 +50,7 @@ t_command	*get_command(t_minishell **main, t_alloc **garbage)
         if ((*main)->parser->vpos != -1)
 		    command = ft_struct_join(command, token, PARSING, garbage);
 		if ((*main)->parser->var != NULL)
-		{
-			while ((*main)->parser->var != NULL)
-			{
-				token = get_expand_token(main, &i, garbage);
-				command = ft_struct_join(command, token, PARSING, garbage);
-			}
-		}
+			command = get_expand_token(main, &command, &i, garbage);
 	}
 	return (command = ft_struct_join(command, \
 	token_null(&token, garbage), PARSING, garbage));

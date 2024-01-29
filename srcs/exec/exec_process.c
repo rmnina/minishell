@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:18:22 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/29 01:14:52 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/29 14:54:05 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,18 @@ int	execute_builtins(t_minishell **main, t_alloc **garbage)
 	return (-1);
 }
 
+void	error_path(t_minishell **main, t_alloc **garbage)
+{
+	if ((*main)->cmd_args[0])
+	{
+		ft_putstr_fd((*main)->cmd_args[0], 2);
+		ft_putstr_fd(": ", 2);
+	}
+	free_garbage(garbage);
+	perror("command not found");
+	exit(127);
+}
+
 void	execute_command(t_minishell **main, t_alloc **garbage)
 {
 	(*main)->path = NULL;
@@ -51,18 +63,14 @@ void	execute_command(t_minishell **main, t_alloc **garbage)
 	}
 	(*main)->path = find_command_path(main, (*main)->cmd_args[0], garbage);
 	if (!(*main)->path)
-	{
-		if ((*main)->cmd_args[0])
-		{
-			ft_putstr_fd((*main)->cmd_args[0], 2);
-			ft_putstr_fd(": ", 2);
-		}
-		free_garbage(garbage);
-		perror("command not found");
-		exit(127);
-	}
+		error_path(main, garbage);
 	execve((*main)->path, (*main)->cmd_args, (*main)->envp);
 	free_garbage(garbage);
+	if (access((*main)->cmd_args[0], X_OK) != 0)
+	{
+		perror("permission denied");
+		exit(126);
+	}
 	perror("execve");
 	exit(EXIT_FAILURE);
 }

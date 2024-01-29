@@ -6,13 +6,13 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 05:00:11 by jdufour           #+#    #+#             */
-/*   Updated: 2024/01/28 22:26:29 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/29 14:34:00 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/minishell.h"
 
-bool	is_valid_identifier(char *str)
+bool	is_valid_identifier(t_minishell **main, char *str)
 {
 	char	*ptr;
 	bool	equals;
@@ -24,14 +24,20 @@ bool	is_valid_identifier(char *str)
 		return (false);
 	if (*str == ' ' || *str == '=' || !(*str == '_' || ft_isalpha(*str)))
 	{
-		printf("export: `%s': not a valid identifier\n", str);
+		write(2, "export: '", 10);
+		write(2, str, ft_strlen(str));
+		write(2, "': not a valid identifier\n", 27);
+		(*main)->code_status = 1;
 		return (false);
 	}
 	ptr = str + 1;
 	while (*ptr)
 	{
 		if (!search_identifiers(str, ptr, &equals, &no_space))
+		{
+			(*main)->code_status = 1;
 			return (false);
+		}
 		ptr++;
 	}
 	return (true);
@@ -69,7 +75,7 @@ void	handle_value_case(t_minishell **main, char *arg, t_alloc **garbage)
 	export.equal = ft_strchr(arg, '=');
 	if (!export.equal)
 	{
-		if (is_valid_identifier(arg))
+		if (is_valid_identifier(main, arg))
 		{
 			export.new_var = ft_g_strjoin(arg, "=", EXEC, garbage);
 			add_or_update_env_var((*main)->envp, export.new_var, garbage);
@@ -94,12 +100,12 @@ void    export_variable(t_minishell **main, t_alloc **garbage)
 		equal = ft_strchr((*main)->cmd_args[i], '=');
 		if (equal)
 		{
-			if (equal && is_valid_identifier((*main)->cmd_args[i]))
+			if (equal && is_valid_identifier(main, (*main)->cmd_args[i]))
 				handle_value_case(main, (*main)->cmd_args[i], garbage);
 		}
 		else
 		{
-			if (is_valid_identifier((*main)->cmd_args[i]))
+			if (is_valid_identifier(main, (*main)->cmd_args[i]))
 				add_or_update_env_var((*main)->envp, (*main)->cmd_args[i], garbage);
 		}
 		i++;
@@ -108,10 +114,10 @@ void    export_variable(t_minishell **main, t_alloc **garbage)
 
 int ft_export(t_minishell **main, t_alloc **garbage)
 {
+	(*main)->code_status = 0;
 	if ((*main)->cmd_args[1] == NULL)
 		return (ft_env(main));
 	else
         export_variable(main, garbage);
-	(*main)->code_status = 0;
 	return ((*main)->code_status);
 }

@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 10:19:45 by juandrie          #+#    #+#             */
-/*   Updated: 2024/01/24 20:01:21 by jdufour          ###   ########.fr       */
+/*   Updated: 2024/01/29 12:51:01 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,6 @@ int	ft_unset(t_minishell **main, char **names)
 	}
 	if (found >= 1)
 		(*main)->code_status = 0;
-	(*main)->code_status = 1;
+	(*main)->code_status = 0;
 	return ((*main)->code_status);
 }
