@@ -135,7 +135,7 @@ Like Bash, our shell also had to integrate its own commands, i.e. some commands 
 
 I'd say **'cd'** and **'export'** were the most important, because they forced you to think about a lot of stuff. ‘Export' was really tricky because it also required a lot of parsing.
 
-Finally, we also had to handle signals such as **CTRL+C, CTRL+D** and **CTRL+\**, but other than that, that's about it. We didn't manage the bonus part, which involved dealing with operators such as ‘**||’**, ‘**&&’** and wildcards ‘*’, as we found the minishell challenging enough for what it was, and didn't really have any pedagogical interest in going that far.
+Finally, we also had to handle signals such as **'CTRL+C'**, **'CTRL+D'** and **'CTRL+ \ '**, but other than that, that's about it. We didn't manage the bonus part, which involved dealing with operators such as ‘**||’**, ‘**&&’** and wildcards ‘*’, as we found the minishell challenging enough for what it was, and didn't really have any pedagogical interest in going that far.
 
 If you'd like to try your hand at cracking our shell, you can retrieve it by doing :
 
