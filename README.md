@@ -72,6 +72,8 @@ Or to exit a cat | ls in as many \n as there are cat in the command:
 ```markdown
 > cat | cat | cat | ls
 
+
+
 >
 ```
 
